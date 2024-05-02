@@ -1,0 +1,49 @@
+name: OTPKitTests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Switch Xcode 15
+      run: sudo xcode-select -switch /Applications/Xcode_15.0.1.app
+
+    - name: Install xcodegen
+      run: brew install xcodegen
+
+    - name: Generate xcodeproj for OTPKit
+      run: xcodegen
+
+    # Build
+    - name: Build OneBusAway
+      run: xcodebuild clean build-for-testing
+        -scheme 'OTPKitDemo'
+        -destination 'platform=iOS Simulator,name=iPhone 15'
+        -quiet
+
+    # Unit Test
+    - name: OBAKit Unit Test
+      run: xcodebuild test-without-building
+        -only-testing:OTPKitTests
+        -project 'OTPKit.xcodeproj'
+        -scheme 'OTPKitDemo'
+        -destination 'platform=iOS Simulator,name=iPhone 15'
+        -resultBundlePath OTPKitTests.xcresult
+        -quiet
+
+    # Upload results
+    - uses: kishikawakatsumi/xcresulttool@v1.7.0
+      continue-on-error: true
+      with:
+        show-passed-tests: false    # Avoid truncation of annotations by GitHub by omitting succeeding tests.
+        path: |
+          OTPKitTests.xcresult
+      if: success() || failure()
