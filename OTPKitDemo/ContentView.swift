@@ -10,7 +10,7 @@ import OTPKit
 
 struct ContentView: View {
     let restApi = RestAPI()
-    
+
     var body: some View {
         VStack {
             Image(systemName: "globe")
