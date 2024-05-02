@@ -93,3 +93,4 @@ OTPKit.xcodeproj
 OTPKitDemo/Info.plist
 OTPKit/Info.plist
 OTPKitTests/Info.plist
+*.xcresult
