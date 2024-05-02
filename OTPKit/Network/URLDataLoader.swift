@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+public protocol URLDataLoader: NSObjectProtocol {
+    func dataTask(
+        with request: URLRequest,
+        completionHandler: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void
+    ) -> URLSessionDataTask
+    func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
+
+extension URLSession: URLDataLoader { }
