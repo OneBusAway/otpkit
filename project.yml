@@ -1,0 +1,56 @@
+name: "OTPKit"
+
+############
+# Options
+############
+
+settings:
+  base:
+    MARKETING_VERSION: 0.0.1
+
+options:
+  deploymentTarget:
+    iOS: "16.0"
+
+targets:
+  OTPKitDemo:
+    info:
+      path: OTPKitDemo/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    type: application
+    platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "org.onebusaway.otpkitdemo"
+    sources:
+      - OTPKitDemo
+    dependencies:
+      - target: OTPKit
+  OTPKit:
+    type: framework
+    platform: iOS
+    sources:
+      - OTPKit
+    info:
+      path: OTPKit/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: true
+        PRODUCT_BUNDLE_IDENTIFIER: "org.onebusaway.otpkit"
+        ENABLE_MODULE_VERIFIER: true
+        MODULE_VERIFIER_SUPPORTED_LANGUAGES: objective-c objective-c++
+        MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS: gnu11 gnu++14
+  OTPKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    dependencies:
+      - target: OTPKitDemo
+    sources:
+      - OTPKitTests
+    info:
+      path: OTPKitTests/Info.plist
+      properties:
+        NSPrincipalClass: OTPKitTests.OTPKitTestsSetup

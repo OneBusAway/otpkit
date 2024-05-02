@@ -88,3 +88,8 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+OTPKit.xcodeproj
+OTPKitDemo/Info.plist
+OTPKit/Info.plist
+OTPKitTests/Info.plist
