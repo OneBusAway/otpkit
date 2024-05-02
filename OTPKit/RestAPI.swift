@@ -9,9 +9,7 @@ import Foundation
 
 public class RestAPI {
 
-    public init() {
-        
-    }
+    public init() {}
 
     public func hello() -> String {
         return "Hello, OTPKit!"
