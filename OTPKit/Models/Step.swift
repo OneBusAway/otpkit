@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+/// Represents a detailed step within a leg of an itinerary, providing navigation details.
+public struct Step: Codable, Hashable {
+    /// Distance of this step in meters.
+    public let distance: Double
+
+    /// Name of the street involved in this step.
+    public let streetName: String
+
+    /// Optional description of the direction to take at this step (e.g., "left", "right").
+    public let direction: String?
+
+    /// Optional elevation change during this step, in meters.
+    public let elevationChange: Double?
 }

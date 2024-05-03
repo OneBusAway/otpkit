@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+/// Represents the response from the OpenTripPlanner (OTP) API.
+public struct OTPResponse: Codable, Hashable {
+    /// Parameters used in the request that generated this response.
+    public let requestParameters: RequestParameters
+
+    /// Optional `Plan` object containing detailed itinerary plans if the request was successful.
+    public let plan: Plan?
+
+    /// Optional `ErrorResponse` object containing error details if the request failed.
+    public let error: ErrorResponse?
 }

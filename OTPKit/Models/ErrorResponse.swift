@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+/// `ErrorResponse` represents an error structure used across the application to handle and represent
+/// OTP errors uniformly.
+public struct ErrorResponse: Codable, Hashable {
+    /// A unique identifier for the error.
+    public let id: Int
+
+    /// A descriptive message associated with the error, providing more detailed information about what went wrong.
+    /// This message can be presented to the user or used in debugging to provide context about the error.
+    public let message: String
 }

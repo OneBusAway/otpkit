@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+/// Represents a geographical location used in travel itineraries.
+public struct Place: Codable, Hashable {
+
+    /// Name or description of the place.
+    public let name: String
+
+    /// Longitude of the place.
+    public let lon: Double
+
+    /// Latitude of the place.
+    public let lat: Double
+
+    /// Type of vertex representing the place, such as 'NORMAL', 'STOP', or 'STATION'.
+    public let vertexType: String
 }

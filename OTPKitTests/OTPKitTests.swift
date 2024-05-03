@@ -1,25 +1,58 @@
-//
-//  OTPKitTests.swift
-//  OTPKitTests
-//
-//  Created by Aaron Brethorst on 5/2/24.
-//
+/*
+ * Copyright (C) Open Transit Software Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// swiftlint:disable force_cast line_length
 
 import XCTest
 @testable import OTPKit
 
-class OTPKitTests: XCTestCase {
+class OTPKitTests: OTPTestCase {
+    let soundTransitBaseURL = URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    func testPlanBasics() async throws {
+        let restApi = buildRestAPIClient()
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        let dataLoader = restApi.dataLoader as! MockDataLoader
 
-    func testHello() {
-        let restApi = RestAPI()
-        XCTAssertEqual(restApi.hello(), "Hello, OTPKit!")
+        dataLoader.mock(URLString: "https://otp.prod.sound.obaweb.org/otp/routers/default/plan?fromPlace=47.6097,-122.3331&toPlace=47.6154,-122.3208&time=8:00%20AM&date=05-10-2024&mode=TRANSIT,WALK&arriveBy=false&maxWalkDistance=800&wheelchair=false", with: Fixtures.loadData(file: "plan_basic_case.json"))
+
+        let result = try await restApi.fetchPlan(
+            fromPlace: "47.6097,-122.3331",
+            toPlace: "47.6154,-122.3208",
+            time: "8:00 AM",
+            date: "05-10-2024",
+            mode: "TRANSIT,WALK",
+            arriveBy: false,
+            maxWalkDistance: 800,
+            wheelchair: false
+        )
+
+        XCTAssertNotNil(result)
+
+        let plan = result.plan!
+
+        XCTAssertNotNil(plan)
+
+        XCTAssertEqual(plan.itineraries.count, 3)
+
+        let itinerary = plan.itineraries.first
+
+        XCTAssertEqual(itinerary?.duration, 595)
+
     }
 }
+
+// swiftlint:enable force_cast line_length

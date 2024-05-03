@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-import SwiftUI
+import Foundation
 
-@main
-struct OTPKitDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
-        }
-    }
+// swiftlint:disable identifier_name
+
+/// Represents a comprehensive travel plan containing multiple itineraries.
+public struct Plan: Codable, Hashable {
+
+    /// Date and time when the travel plan was generated.
+    public let date: Date
+
+    /// Starting point of the travel plan.
+    public let from: Place
+
+    /// Destination point of the travel plan.
+    public let to: Place
+
+    /// List of `Itinerary` objects providing different routing options within the travel plan.
+    public let itineraries: [Itinerary]
 }
+
+// swiftlint:enable identifier_name
