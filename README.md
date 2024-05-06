@@ -9,7 +9,7 @@ OpenTripPlanner library for iOS, written in Swift.
 
 ## Architecture
 
-More to come on this in the future, but for now it's worth mentioning that OTPKit uses OTP 1.x's REST API to communicate with OpenTripPlanner servers.
+More to come on this in the future, but for now it's worth mentioning that OTPKit uses OTP 1.x's REST API to communicate with OpenTripPlanner servers because the servers we care most about this framework working with are all running on OTP 1.5.x.
 
 ## Code Quality
 
