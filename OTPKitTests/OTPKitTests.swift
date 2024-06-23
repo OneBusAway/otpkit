@@ -51,7 +51,6 @@ class OTPKitTests: OTPTestCase {
         let itinerary = plan.itineraries.first
 
         XCTAssertEqual(itinerary?.duration, 595)
-
     }
 }
 
