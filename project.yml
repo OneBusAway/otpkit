@@ -36,7 +36,7 @@ targets:
       - path: ./scripts/swiftlint.sh
         basedOnDependencyAnalysis: false
         name: Swiftlint
-      - path: ./scripts/swiftFormat.sh
+      - path: ./scripts/swiftformat.sh
         basedOnDependencyAnalysis: false
         name: SwiftFormat
     info:
