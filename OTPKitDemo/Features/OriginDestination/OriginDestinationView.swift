@@ -8,29 +8,54 @@
 import SwiftUI
 
 struct OriginDestinationView: View {
+    @StateObject private var viewModel = OriginDestinationViewModel()
+    
+    @StateObject private var originDestinationEnvironment = OriginDestinationSheetEnvironment()
+    
+    @State private var isSheetOpened = false
+    
     var body: some View {
         List {
-            HStack(spacing: 16) {
-                Image(systemName: "paperplane.fill")
-                    .foregroundColor(.white)
-                    .background(
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 30, height: 30)
-                    )
-                Text("Origin UI")
-            }
-            HStack(spacing: 16) {
-                Image(systemName: "mappin")
-                    .foregroundColor(.white)
-                    .background(
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 30, height: 30)
-                    )
-                Text("Destination UI")
-            }
+            Button(action: {
+                isSheetOpened.toggle()
+                originDestinationEnvironment.sheetState = .origin
+            }, label: {
+                HStack(spacing: 16) {
+                    Image(systemName: "paperplane.fill")
+                        .foregroundColor(.white)
+                        .background(
+                            Circle()
+                                .fill(Color.green)
+                                .frame(width: 30, height: 30)
+                        )
+                    Text("Origin UI")
+                }
+            })
+            
+            Button(action: {
+                isSheetOpened.toggle()
+                originDestinationEnvironment.sheetState = .destination
+            }, label: {
+                HStack(spacing: 16) {
+                    Image(systemName: "mappin")
+                        .foregroundColor(.white)
+                        .background(
+                            Circle()
+                                .fill(Color.green)
+                                .frame(width: 30, height: 30)
+                        )
+                    Text("Destination UI")
+                }
+            })
+
+
         }
+        .sheet(isPresented: $isSheetOpened) {
+            OriginDestinationSheetView()
+                .environmentObject(originDestinationEnvironment)
+                .presentationDetents([.medium])
+        }
+
     }
 }
 

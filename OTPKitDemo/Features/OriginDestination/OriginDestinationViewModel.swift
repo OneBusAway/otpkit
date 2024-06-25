@@ -7,6 +7,6 @@
 
 import Foundation
 
-final class OriginDestinationViewModel {
-    
+final class OriginDestinationViewModel: ObservableObject {
+//    @Published var sheetState: OriginDestinationSheetState = .origin
 }
