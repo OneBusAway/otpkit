@@ -18,7 +18,6 @@ import Foundation
 
 /// Represents a geographical location used in travel itineraries.
 public struct Place: Codable, Hashable {
-
     /// Name or description of the place.
     public let name: String
 

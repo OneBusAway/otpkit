@@ -19,7 +19,6 @@ import Foundation
 // swiftlint:disable function_parameter_count
 
 public actor RestAPI {
-
     public init(
         baseURL: URL,
         dataLoader: URLDataLoader = URLSession.shared

@@ -20,7 +20,6 @@ import Foundation
 
 /// Represents a comprehensive travel plan containing multiple itineraries.
 public struct Plan: Codable, Hashable {
-
     /// Date and time when the travel plan was generated.
     public let date: Date
 

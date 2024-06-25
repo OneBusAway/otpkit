@@ -24,6 +24,7 @@ struct TripPlannerView: View {
             VStack {
                 if viewModel.isLoading {
                     ProgressView()
+
                         .progressViewStyle(CircularProgressViewStyle())
                         .navigationTitle("Fetching Plan")
                 } else if let plan = viewModel.planResponse?.plan {

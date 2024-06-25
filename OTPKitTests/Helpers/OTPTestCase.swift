@@ -6,21 +6,20 @@
 //
 
 import Foundation
-import XCTest
 @testable import OTPKit
+import XCTest
 
 public class OTPTestCase: XCTestCase {
-
     var userDefaults: UserDefaults!
 
-    open override func setUp() {
+    override open func setUp() {
         super.setUp()
         NSTimeZone.default = NSTimeZone(forSecondsFromGMT: 0) as TimeZone
         userDefaults = buildUserDefaults()
         userDefaults.removePersistentDomain(forName: userDefaultsSuiteName)
     }
 
-    open override func tearDown() {
+    override open func tearDown() {
         super.tearDown()
         NSTimeZone.resetSystemTimeZone()
         userDefaults.removePersistentDomain(forName: userDefaultsSuiteName)

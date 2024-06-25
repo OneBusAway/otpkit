@@ -18,7 +18,6 @@ import Foundation
 @testable import OTPKit
 
 class Fixtures {
-
     private class var testBundle: Bundle {
         Bundle(for: self)
     }

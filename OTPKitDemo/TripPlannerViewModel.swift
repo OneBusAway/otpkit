@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
 import OTPKit
+import SwiftUI
 
 // swiftlint:disable function_parameter_count
 
