@@ -36,6 +36,9 @@ targets:
       - path: ./scripts/swiftlint.sh
         basedOnDependencyAnalysis: false
         name: Swiftlint
+      - path: ./scripts/swiftFormat.sh
+        basedOnDependencyAnalysis: false
+        name: SwiftFormat
     info:
       path: OTPKit/Info.plist
       properties:
