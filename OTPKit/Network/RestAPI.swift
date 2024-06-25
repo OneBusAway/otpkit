@@ -19,7 +19,6 @@ import Foundation
 // swiftlint:disable function_parameter_count
 
 public actor RestAPI {
-
     public init(
         baseURL: URL,
         dataLoader: URLDataLoader = URLSession.shared
@@ -51,7 +50,7 @@ public actor RestAPI {
             URLQueryItem(name: "mode", value: mode),
             URLQueryItem(name: "arriveBy", value: arriveBy ? "true" : "false"),
             URLQueryItem(name: "maxWalkDistance", value: String(maxWalkDistance)),
-            URLQueryItem(name: "wheelchair", value: wheelchair ? "true" : "false")
+            URLQueryItem(name: "wheelchair", value: wheelchair ? "true" : "false"),
         ]
 
         let request = URLRequest(url: components.url!)

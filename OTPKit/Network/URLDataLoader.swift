@@ -24,4 +24,4 @@ public protocol URLDataLoader: NSObjectProtocol {
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
 
-extension URLSession: URLDataLoader { }
+extension URLSession: URLDataLoader {}

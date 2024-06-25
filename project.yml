@@ -33,12 +33,12 @@ targets:
     sources:
       - OTPKit
     postBuildScripts:
-      - path: ./scripts/swiftlint.sh
-        basedOnDependencyAnalysis: false
-        name: Swiftlint
       - path: ./scripts/swiftformat.sh
         basedOnDependencyAnalysis: false
         name: SwiftFormat
+      - path: ./scripts/swiftlint.sh
+        basedOnDependencyAnalysis: false
+        name: Swiftlint
     info:
       path: OTPKit/Info.plist
       properties:

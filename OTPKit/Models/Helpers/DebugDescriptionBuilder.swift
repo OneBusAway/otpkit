@@ -26,7 +26,7 @@ import Foundation
             descriptionBuilder.add(key: "id", value: id)
             return descriptionBuilder.description
         }
-*/
+ */
 public struct DebugDescriptionBuilder {
     let baseDescription: String
     var properties = [String: Any]()

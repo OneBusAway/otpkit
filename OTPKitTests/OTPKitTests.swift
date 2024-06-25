@@ -16,8 +16,8 @@
 
 // swiftlint:disable force_cast line_length
 
-import XCTest
 @testable import OTPKit
+import XCTest
 
 class OTPKitTests: OTPTestCase {
     let soundTransitBaseURL = URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
