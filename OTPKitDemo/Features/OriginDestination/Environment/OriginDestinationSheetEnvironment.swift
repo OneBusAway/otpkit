@@ -14,4 +14,5 @@ enum OriginDestinationSheetState {
 
 final class OriginDestinationSheetEnvironment: ObservableObject {
     @Published var sheetState: OriginDestinationSheetState = .origin
+    @Published var selectedValue: String = ""
 }

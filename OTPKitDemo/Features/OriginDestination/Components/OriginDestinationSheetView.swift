@@ -37,21 +37,29 @@ struct OriginDestinationSheetView: View {
                 TextField("Search for a restaurant", text: $search)
                     .autocorrectionDisabled()
             }
-            .padding([.top, .bottom], 8)
-            .padding([.leading, .trailing], 12)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
             .background(Color.gray.opacity(0.2))
             .clipShape(.rect(cornerRadius: 12))
-            .padding([.leading, .trailing], 16)
+            .padding(.horizontal, 16)
 
             Spacer()
 
             List {
                 ForEach(locationService.completions) { completion in
-                    Button(action: {}, label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(completion.title)
-                                .font(.headline)
-                            Text(completion.subTitle)
+                    Button(action: {
+                        sheetEnvironment.selectedValue = completion.title
+                        dismiss()
+                    }, label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(completion.title)
+                                    .font(.headline)
+                                Text(completion.subTitle)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
                         }
                     })
                     // 3
