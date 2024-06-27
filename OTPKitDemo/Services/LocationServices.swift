@@ -34,4 +34,3 @@ class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         completions = completer.results.map { .init(title: $0.title, subTitle: $0.subtitle) }
     }
 }
-
