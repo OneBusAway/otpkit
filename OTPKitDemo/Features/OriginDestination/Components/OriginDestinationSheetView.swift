@@ -34,7 +34,7 @@ struct OriginDestinationSheetView: View {
 
             HStack {
                 Image(systemName: "magnifyingglass")
-                TextField("Search for a restaurant", text: $search)
+                TextField("Search for a place", text: $search)
                     .autocorrectionDisabled()
             }
             .padding(.vertical, 8)
