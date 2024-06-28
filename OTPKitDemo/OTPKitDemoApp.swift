@@ -21,7 +21,6 @@ struct OTPKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
             OriginDestinationView()
-//                .environmentObject(TripPlannerViewModel())
         }
     }
 }

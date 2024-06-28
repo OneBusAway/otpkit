@@ -8,10 +8,15 @@
 import MapKit
 import SwiftUI
 
+/// OriginDestinationSheetView responsible for showing sheets
+///  consists of available origin/destination of OriginDestinationView
+/// - Attributes:
+///     - sheetEnvironment responsible for manage sheet states accross the view. See `OriginDestinationSheetEnvironment`
+///     - locationService responsible for manage autocompletion of origin/destination  search bar. See `LocationService`
 struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
-    // 1
+
     @StateObject private var locationService = LocationService()
     @State private var search: String = ""
 
@@ -62,7 +67,6 @@ struct OriginDestinationSheetView: View {
                                 .foregroundColor(.gray)
                         }
                     })
-                    // 3
                     .listRowBackground(Color.clear)
                 }
             }

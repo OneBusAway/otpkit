@@ -22,7 +22,7 @@ import SwiftUI
 // swiftlint:disable function_parameter_count
 
 // Define the ViewModel as an observable object
-class TripPlannerViewModel: ObservableObject {
+final class TripPlannerViewModel: ObservableObject {
     // Published property to update the view
     @Published var planResponse: OTPResponse?
     @Published var isLoading = false

@@ -8,9 +8,9 @@
 import MapKit
 import SwiftUI
 
+/// OriginDestinationView is the main view for setting up Origin/Destination in OTPKit.
+/// It consists a list of Origin and Destination along with the `MapKit`
 struct OriginDestinationView: View {
-    @StateObject private var viewModel = OriginDestinationViewModel()
-
     @StateObject private var originDestinationEnvironment = OriginDestinationSheetEnvironment()
 
     @State private var isSheetOpened = false
