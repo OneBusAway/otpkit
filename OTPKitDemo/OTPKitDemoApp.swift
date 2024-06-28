@@ -20,8 +20,7 @@ import SwiftUI
 struct OTPKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            TripPlannerView()
-                .environmentObject(TripPlannerViewModel())
+            OriginDestinationView()
         }
     }
 }
