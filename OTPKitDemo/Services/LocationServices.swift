@@ -10,17 +10,12 @@ import MapKit
 
 /// LocationServiceSearchCompletions is the main data model for `LocationService`
 /// This will be utilized as list object
-struct LocationServiceSearchCompletions: Identifiable {
-    let id = UUID()
-    let title: String
-    let subTitle: String
-}
 
 /// LocationService is the main class that's responsible for maanging MKLocalSearchCompleter
 class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
     private let completer: MKLocalSearchCompleter
 
-    @Published var completions = [LocationServiceSearchCompletions]()
+    @Published var completions = [Location]()
 
     init(completer: MKLocalSearchCompleter = MKLocalSearchCompleter()) {
         self.completer = completer
@@ -35,9 +30,36 @@ class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         completer.queryFragment = queryFragment
     }
 
-    /// completerDidUpdateResults is method that finished the search functionality and upadate the `completer`.
+    /// completerDidUpdateResults is method that finished the search functionality and update the `completer`.
     /// This is required function from `MKLocalSearchCompleterDelegate`
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        completions = completer.results.map { .init(title: $0.title, subTitle: $0.subtitle) }
+        completions.removeAll()
+
+        for result in completer.results {
+            let searchRequest = MKLocalSearch.Request(completion: result)
+            let search = MKLocalSearch(request: searchRequest)
+
+            search.start { [weak self] response, error in
+                guard let self = self, let response = response else {
+                    if let error = error {
+                        print("Error performing local search: \(error)")
+                    }
+                    return
+                }
+
+                if let mapItem = response.mapItems.first {
+                    let completion = Location(
+                        title: result.title,
+                        subTitle: result.subtitle,
+                        latitude: mapItem.placemark.coordinate.latitude,
+                        longitude: mapItem.placemark.coordinate.longitude
+                    )
+
+                    DispatchQueue.main.async {
+                        self.completions.append(completion)
+                    }
+                }
+            }
+        }
     }
 }

@@ -10,9 +10,8 @@ import SwiftUI
 struct FavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
-    // swiftlint:disable line_length
-    @State private var mockSavedLocations = [SavedLocation(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120), SavedLocation(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)]
-    // swiftlint:enable line_length
+    @State private var mockSavedLocations = [Location(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120),
+                                             Location(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)]
 
     var body: some View {
         VStack {

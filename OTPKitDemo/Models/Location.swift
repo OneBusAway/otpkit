@@ -1,5 +1,5 @@
 //
-//  SavedLocation.swift
+//  Location.swift
 //  OTPKitDemo
 //
 //  Created by Hilmy Veradin on 03/07/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SavedLocation: Identifiable, Codable, Equatable, Hashable {
+struct Location: Identifiable, Codable, Equatable, Hashable {
     let id: UUID
     let title: String
     let subTitle: String

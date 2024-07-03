@@ -14,8 +14,8 @@ struct OriginDestinationSheetView: View {
     @StateObject private var locationService = LocationService()
 
     @State private var mockSavedLocations = [
-        SavedLocation(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120),
-        SavedLocation(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)
+        Location(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120),
+        Location(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)
     ]
 
     @State private var search: String = ""
@@ -56,17 +56,40 @@ struct OriginDestinationSheetView: View {
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
-                HStack {
-                    // TODO: Add recent content logics
-                    Button(action: {
-                        isAddSavedLocationsSheetOpen.toggle()
-                    }, label: {
-                        Image(systemName: "plus")
-                            .padding()
-                            .background(Color.gray.opacity(0.5))
-                            .clipShape(Circle())
-                            .padding()
+                switch UserDefaultsServices.shared.getFavoriteLocationsData() {
+                case let .success(favoriteLocations):
+                    ForEach(favoriteLocations, content: { location in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(location.title)
+                                    .font(.headline)
+                                Text(location.subTitle)
+                            }
+                            Button(action: {
+                                isAddSavedLocationsSheetOpen.toggle()
+                            }, label: {
+                                Image(systemName: "plus")
+                                    .padding()
+                                    .background(Color.gray.opacity(0.5))
+                                    .clipShape(Circle())
+                                    .padding()
+                            })
+                        }
+
                     })
+                case .failure:
+                    HStack {
+//                        Text("There's no\nfavorite\nlocation")
+                        Button(action: {
+                            isAddSavedLocationsSheetOpen.toggle()
+                        }, label: {
+                            Image(systemName: "plus")
+                                .padding()
+                                .background(Color.gray.opacity(0.5))
+                                .clipShape(Circle())
+                                .padding()
+                        })
+                    }
                 }
             }
         }, header: {
@@ -92,34 +115,53 @@ struct OriginDestinationSheetView: View {
     }
 
     private func recentsSection() -> some View {
-        Section(content: {
-            // TODO: Add recent content logics
-        }, header: {
-            HStack {
-                Text("Recents")
-                    .textCase(.none)
-                Spacer()
-                Button(action: {
-                    isMoreRecentLocationSheetOpen.toggle()
-                }, label: {
-                    Text("More")
-                        .textCase(.none)
-                        .font(.subheadline)
+        switch UserDefaultsServices.shared.getRecentLocations() {
+        case let .success(recentLocations):
+            return AnyView(
+                Section(content: {
+                    ForEach(recentLocations, content: { location in
+                        VStack(alignment: .leading) {
+                            Text(location.title)
+                                .font(.headline)
+                            Text(location.subTitle)
+                        }
+                    })
+                }, header: {
+                    HStack {
+                        Text("Recents")
+                            .textCase(.none)
+                        Spacer()
+                        Button(action: {
+                            isMoreRecentLocationSheetOpen.toggle()
+                        }, label: {
+                            Text("More")
+                                .textCase(.none)
+                                .font(.subheadline)
+                        })
+                    }
                 })
-            }
-        })
-        .sheet(isPresented: $isMoreRecentLocationSheetOpen, content: {
-            RecentLocationsSheet()
-        })
+                .sheet(isPresented: $isMoreRecentLocationSheetOpen, content: {
+                    RecentLocationsSheet()
+                })
+            )
+        case .failure:
+            return AnyView(EmptyView())
+        }
     }
 
     private func searchResultsSection() -> some View {
         ForEach(locationService.completions) { location in
-            VStack(alignment: .leading) {
-                Text(location.title)
-                    .font(.headline)
-                Text(location.subTitle)
+            Button(action: {
+                UserDefaultsServices.shared.saveRecentLocations(data: location)
+                dismiss()
+            }) {
+                VStack(alignment: .leading) {
+                    Text(location.title)
+                        .font(.headline)
+                    Text(location.subTitle)
+                }
             }
+            .buttonStyle(PlainButtonStyle())
         }
     }
 
