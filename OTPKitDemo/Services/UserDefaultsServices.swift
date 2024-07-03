@@ -100,11 +100,9 @@ final class UserDefaultsServices {
 
         locations.insert(data, at: 0)
 
-        let slicedLocations = Array(locations.prefix(5))
-
         let encoder = JSONEncoder()
         do {
-            let encoded = try encoder.encode(slicedLocations)
+            let encoded = try encoder.encode(locations)
             userDefaults.set(encoded, forKey: recentLocationsKey)
             return .success(())
         } catch {

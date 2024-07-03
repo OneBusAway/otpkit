@@ -24,11 +24,21 @@ final class OriginDestinationSheetEnvironment: ObservableObject {
     @Published var selectedValue: String = ""
 
     @Published var favoriteLocations: [Location] = []
+    @Published var recentLocations: [Location] = []
 
     func refreshFavoriteLocations() {
         switch UserDefaultsServices.shared.getFavoriteLocationsData() {
         case let .success(locations):
             favoriteLocations = locations
+        case let .failure(error):
+            print("Failed to refresh favorite locations: \(error)")
+        }
+    }
+
+    func refreshRecentLocations() {
+        switch UserDefaultsServices.shared.getRecentLocations() {
+        case let .success(locations):
+            recentLocations = locations
         case let .failure(error):
             print("Failed to refresh favorite locations: \(error)")
         }

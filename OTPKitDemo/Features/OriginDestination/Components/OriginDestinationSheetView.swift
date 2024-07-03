@@ -110,15 +110,17 @@ struct OriginDestinationSheetView: View {
         })
         .sheet(isPresented: $isMoreSavedLocationSheetOpen, content: {
             FavoriteLocationsSheet()
+                .environmentObject(sheetEnvironment)
         })
     }
 
     private func recentsSection() -> some View {
-        switch UserDefaultsServices.shared.getRecentLocations() {
-        case let .success(recentLocations):
+        if sheetEnvironment.recentLocations.isEmpty {
+            return AnyView(EmptyView())
+        } else {
             return AnyView(
                 Section(content: {
-                    ForEach(recentLocations, content: { location in
+                    ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
                         VStack(alignment: .leading) {
                             Text(location.title)
                                 .font(.headline)
@@ -141,25 +143,29 @@ struct OriginDestinationSheetView: View {
                 })
                 .sheet(isPresented: $isMoreRecentLocationSheetOpen, content: {
                     RecentLocationsSheet()
+                        .environmentObject(sheetEnvironment)
                 })
             )
-        case .failure:
-            return AnyView(EmptyView())
         }
     }
 
     private func searchResultsSection() -> some View {
         ForEach(locationService.completions) { location in
             Button(action: {
-                UserDefaultsServices.shared.saveRecentLocations(data: location)
-                dismiss()
-            }) {
+                switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
+                case .success:
+                    dismiss()
+                case .failure:
+                    break
+                }
+
+            }, label: {
                 VStack(alignment: .leading) {
                     Text(location.title)
                         .font(.headline)
                     Text(location.subTitle)
                 }
-            }
+            })
             .buttonStyle(PlainButtonStyle())
         }
     }
@@ -188,6 +194,7 @@ struct OriginDestinationSheetView: View {
         }
         .onAppear {
             sheetEnvironment.refreshFavoriteLocations()
+            sheetEnvironment.refreshRecentLocations()
         }
     }
 }

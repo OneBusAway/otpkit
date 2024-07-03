@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct FavoriteLocationsSheet: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
 
-    @State private var mockSavedLocations = [Location(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120),
-                                             Location(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)]
+    @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
     var body: some View {
         VStack {
@@ -31,7 +30,7 @@ struct FavoriteLocationsSheet: View {
             .padding()
 
             List {
-                ForEach(mockSavedLocations) { location in
+                ForEach(sheetEnvironment.favoriteLocations) { location in
                     VStack(alignment: .leading) {
                         Text(location.title)
                             .font(.headline)
