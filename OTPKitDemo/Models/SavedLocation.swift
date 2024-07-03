@@ -7,10 +7,18 @@
 
 import Foundation
 
-struct SavedLocation: Identifiable {
-    let id = UUID()
+struct SavedLocation: Identifiable, Codable, Equatable, Hashable {
+    let id: UUID
     let title: String
     let subTitle: String
     let latitude: Double
     let longitude: Double
+
+    init(id: UUID = UUID(), title: String, subTitle: String, latitude: Double, longitude: Double) {
+        self.id = id
+        self.title = title
+        self.subTitle = subTitle
+        self.latitude = latitude
+        self.longitude = longitude
+    }
 }
