@@ -53,6 +53,7 @@ struct OriginDestinationSheetView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
+    // swiftlint:disable function_body_length
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
@@ -113,6 +114,8 @@ struct OriginDestinationSheetView: View {
                 .environmentObject(sheetEnvironment)
         })
     }
+
+    // swiftlint:enable function_body_length
 
     private func recentsSection() -> some View {
         if sheetEnvironment.recentLocations.isEmpty {
