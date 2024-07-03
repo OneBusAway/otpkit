@@ -56,40 +56,37 @@ struct OriginDestinationSheetView: View {
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
-                switch UserDefaultsServices.shared.getFavoriteLocationsData() {
-                case let .success(favoriteLocations):
-                    ForEach(favoriteLocations, content: { location in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(location.title)
-                                    .font(.headline)
-                                Text(location.subTitle)
-                            }
-                            Button(action: {
-                                isAddSavedLocationsSheetOpen.toggle()
-                            }, label: {
-                                Image(systemName: "plus")
-                                    .padding()
-                                    .background(Color.gray.opacity(0.5))
-                                    .clipShape(Circle())
-                                    .padding()
-                            })
-                        }
-
-                    })
-                case .failure:
-                    HStack {
-//                        Text("There's no\nfavorite\nlocation")
-                        Button(action: {
-                            isAddSavedLocationsSheetOpen.toggle()
-                        }, label: {
-                            Image(systemName: "plus")
-                                .padding()
+                HStack {
+                    ForEach(sheetEnvironment.favoriteLocations, content: { location in
+                        VStack(alignment: .center) {
+                            Image(systemName: "mappin")
+                                .frame(width: 48, height: 48)
                                 .background(Color.gray.opacity(0.5))
                                 .clipShape(Circle())
-                                .padding()
-                        })
-                    }
+
+                            Text(location.title)
+                                .frame(width: 64)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                        }
+                        .padding(.all, 4)
+
+                    })
+
+                    Button(action: {
+                        isAddSavedLocationsSheetOpen.toggle()
+                    }, label: {
+                        VStack {
+                            Image(systemName: "plus")
+                                .frame(width: 48, height: 48)
+                                .background(Color.gray.opacity(0.5))
+                                .clipShape(Circle())
+
+                            Text("Add")
+                                .foregroundStyle(Color.black)
+                        }
+                        .padding(.all, 4)
+                    })
                 }
             }
         }, header: {
@@ -107,7 +104,9 @@ struct OriginDestinationSheetView: View {
             }
         })
         .sheet(isPresented: $isAddSavedLocationsSheetOpen, content: {
-            AddFavoriteLocationsSheet().environmentObject(locationService)
+            AddFavoriteLocationsSheet()
+                .environmentObject(locationService)
+                .environmentObject(sheetEnvironment)
         })
         .sheet(isPresented: $isMoreSavedLocationSheetOpen, content: {
             FavoriteLocationsSheet()
@@ -186,6 +185,9 @@ struct OriginDestinationSheetView: View {
             }
 
             Spacer()
+        }
+        .onAppear {
+            sheetEnvironment.refreshFavoriteLocations()
         }
     }
 }

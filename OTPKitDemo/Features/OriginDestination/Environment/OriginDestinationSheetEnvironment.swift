@@ -22,4 +22,15 @@ enum OriginDestinationSheetState {
 final class OriginDestinationSheetEnvironment: ObservableObject {
     @Published var sheetState: OriginDestinationSheetState = .origin
     @Published var selectedValue: String = ""
+
+    @Published var favoriteLocations: [Location] = []
+
+    func refreshFavoriteLocations() {
+        switch UserDefaultsServices.shared.getFavoriteLocationsData() {
+        case let .success(locations):
+            favoriteLocations = locations
+        case let .failure(error):
+            print("Failed to refresh favorite locations: \(error)")
+        }
+    }
 }

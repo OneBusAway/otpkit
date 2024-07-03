@@ -11,8 +11,19 @@ struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
     @EnvironmentObject private var locationService: LocationService
+    @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
     @State private var search = ""
+
+    private var filteredCompletions: [Location] {
+        let favorites = sheetEnvironment.favoriteLocations
+        return locationService.completions.filter { completion in
+            !favorites.contains { favorite in
+                favorite.title == completion.title &&
+                    favorite.subTitle == completion.subTitle
+            }
+        }
+    }
 
     var body: some View {
         VStack {
@@ -43,12 +54,29 @@ struct AddFavoriteLocationsSheet: View {
             .padding(.horizontal, 16)
 
             List {
-                ForEach(locationService.completions) { location in
-                    VStack(alignment: .leading) {
-                        Text(location.title)
-                            .font(.headline)
-                        Text(location.subTitle)
-                    }
+                ForEach(filteredCompletions) { location in
+                    Button(action: {
+                        switch UserDefaultsServices.shared.saveFavoriteLocationData(data: location) {
+                        case .success:
+                            sheetEnvironment.refreshFavoriteLocations()
+                            dismiss()
+                        case let .failure(error):
+                            print(error)
+                        }
+                    }, label: {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(location.title)
+                                    .font(.headline)
+                                Text(location.subTitle)
+                            }.foregroundStyle(Color.black)
+
+                            Spacer()
+
+                            Image(systemName: "plus")
+                        }
+
+                    })
                 }
             }
             .onChange(of: search) { searchValue in

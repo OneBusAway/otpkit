@@ -31,8 +31,8 @@ final class UserDefaultsServices {
         switch getFavoriteLocationsData() {
         case let .success(existingLocations):
             locations = existingLocations
-        case let .failure(error):
-            return .failure(error)
+        case .failure:
+            locations = []
         }
 
         locations.append(data)
