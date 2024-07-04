@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Show all the lists of all recent locations
 struct RecentLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 

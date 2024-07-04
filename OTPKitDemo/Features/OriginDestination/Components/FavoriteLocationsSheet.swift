@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+/// Show all the lists of favorite locations
 struct FavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
+
+    @State private var isDetailSheetOpened = false
 
     var body: some View {
         VStack {
@@ -31,13 +34,22 @@ struct FavoriteLocationsSheet: View {
 
             List {
                 ForEach(sheetEnvironment.favoriteLocations) { location in
-                    VStack(alignment: .leading) {
-                        Text(location.title)
-                            .font(.headline)
-                        Text(location.subTitle)
-                    }
+                    Button(action: {
+                        sheetEnvironment.selectedDetailFavoriteLocation = location
+                        isDetailSheetOpened.toggle()
+                    }, label: {
+                        VStack(alignment: .leading) {
+                            Text(location.title)
+                                .font(.headline)
+                            Text(location.subTitle)
+                        }
+                    })
                 }
             }
+            .sheet(isPresented: $isDetailSheetOpened, content: {
+                FavoriteLocationDetailSheet()
+                    .environmentObject(sheetEnvironment)
+            })
         }
     }
 }

@@ -1,5 +1,15 @@
+//
+//  UserDefaultsServices.swift
+//  OTPKitDemo
+//
+//  Created by Hilmy Veradin on 25/06/24.
+//
+
 import Foundation
 
+
+/// Main database of OTPKit Demo
+/// Each CRUD features divided by `MARK` comment
 final class UserDefaultsServices {
     static let shared = UserDefaultsServices()
     private let userDefaults = UserDefaults.standard

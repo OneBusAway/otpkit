@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// This sheet responsible to add a new favorite location.
+/// Users can search and add their favorite locations
 struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 

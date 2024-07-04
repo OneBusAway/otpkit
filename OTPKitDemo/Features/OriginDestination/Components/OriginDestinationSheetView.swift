@@ -13,17 +13,13 @@ struct OriginDestinationSheetView: View {
 
     @StateObject private var locationService = LocationService()
 
-    @State private var mockSavedLocations = [
-        Location(title: "abc", subTitle: "Subtitle 1", latitude: 100, longitude: 120),
-        Location(title: "def", subTitle: "Subtitle 2", latitude: 10, longitude: 20)
-    ]
-
     @State private var search: String = ""
 
     // Sheet States
     @State private var isAddSavedLocationsSheetOpen = false
-    @State private var isMoreSavedLocationSheetOpen = false
-    @State private var isMoreRecentLocationSheetOpen = false
+    @State private var isFavoriteLocationSheetOpen = false
+    @State private var isRecentLocationSheetOpen = false
+    @State private var isFavoriteLocationDetailSheetOpen = false
 
     private func headerView() -> some View {
         HStack {
@@ -59,18 +55,24 @@ struct OriginDestinationSheetView: View {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
-                        VStack(alignment: .center) {
-                            Image(systemName: "mappin")
-                                .frame(width: 48, height: 48)
-                                .background(Color.gray.opacity(0.5))
-                                .clipShape(Circle())
+                        Button(action: {
+                            sheetEnvironment.selectedDetailFavoriteLocation = location
+                            isFavoriteLocationDetailSheetOpen.toggle()
+                        }, label: {
+                            VStack(alignment: .center) {
+                                Image(systemName: "mappin")
+                                    .frame(width: 48, height: 48)
+                                    .background(Color.gray.opacity(0.5))
+                                    .clipShape(Circle())
 
-                            Text(location.title)
-                                .frame(width: 64)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                        }
-                        .padding(.all, 4)
+                                Text(location.title)
+                                    .frame(width: 64)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                            }
+                            .padding(.all, 4)
+                            .foregroundStyle(Color.black)
+                        })
 
                     })
 
@@ -96,7 +98,7 @@ struct OriginDestinationSheetView: View {
                     .textCase(.none)
                 Spacer()
                 Button(action: {
-                    isMoreSavedLocationSheetOpen.toggle()
+                    isFavoriteLocationSheetOpen.toggle()
                 }, label: {
                     Text("More")
                         .textCase(.none)
@@ -109,8 +111,12 @@ struct OriginDestinationSheetView: View {
                 .environmentObject(locationService)
                 .environmentObject(sheetEnvironment)
         })
-        .sheet(isPresented: $isMoreSavedLocationSheetOpen, content: {
+        .sheet(isPresented: $isFavoriteLocationSheetOpen, content: {
             FavoriteLocationsSheet()
+                .environmentObject(sheetEnvironment)
+        })
+        .sheet(isPresented: $isFavoriteLocationDetailSheetOpen, content: {
+            FavoriteLocationDetailSheet()
                 .environmentObject(sheetEnvironment)
         })
     }
@@ -136,7 +142,7 @@ struct OriginDestinationSheetView: View {
                             .textCase(.none)
                         Spacer()
                         Button(action: {
-                            isMoreRecentLocationSheetOpen.toggle()
+                            isRecentLocationSheetOpen.toggle()
                         }, label: {
                             Text("More")
                                 .textCase(.none)
@@ -144,7 +150,7 @@ struct OriginDestinationSheetView: View {
                         })
                     }
                 })
-                .sheet(isPresented: $isMoreRecentLocationSheetOpen, content: {
+                .sheet(isPresented: $isRecentLocationSheetOpen, content: {
                     RecentLocationsSheet()
                         .environmentObject(sheetEnvironment)
                 })

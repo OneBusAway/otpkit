@@ -23,9 +23,14 @@ final class OriginDestinationSheetEnvironment: ObservableObject {
     @Published var sheetState: OriginDestinationSheetState = .origin
     @Published var selectedValue: String = ""
 
+    // This responsible for showing favorite locations and recent locations in sheets
     @Published var favoriteLocations: [Location] = []
     @Published var recentLocations: [Location] = []
 
+    /// Selected detail favorite locations that will be shown in `FavoriteLocationDetailSheet`
+    @Published var selectedDetailFavoriteLocation: Location?
+
+    /// Refresh favorite locations data from user defaults
     func refreshFavoriteLocations() {
         switch UserDefaultsServices.shared.getFavoriteLocationsData() {
         case let .success(locations):
@@ -35,6 +40,7 @@ final class OriginDestinationSheetEnvironment: ObservableObject {
         }
     }
 
+    /// Refresh recent locations data from user defaults
     func refreshRecentLocations() {
         switch UserDefaultsServices.shared.getRecentLocations() {
         case let .success(locations):
