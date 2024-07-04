@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// Main database of OTPKit Demo
 /// Each CRUD features divided by `MARK` comment
 final class UserDefaultsServices {
@@ -104,8 +103,8 @@ final class UserDefaultsServices {
         switch getFavoriteLocationsData() {
         case let .success(existingLocations):
             locations = existingLocations
-        case let .failure(error):
-            return .failure(error)
+        case .failure:
+            locations = []
         }
 
         locations.insert(data, at: 0)

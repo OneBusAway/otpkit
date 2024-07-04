@@ -43,6 +43,7 @@ struct FavoriteLocationsSheet: View {
                                 .font(.headline)
                             Text(location.subTitle)
                         }
+                        .foregroundStyle(Color.black)
                     })
                 }
             }
