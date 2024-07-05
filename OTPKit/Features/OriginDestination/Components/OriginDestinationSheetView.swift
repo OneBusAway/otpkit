@@ -21,6 +21,9 @@ public struct OriginDestinationSheetView: View {
     @State private var isRecentLocationSheetOpen = false
     @State private var isFavoriteLocationDetailSheetOpen = false
 
+    // Public initializer
+    public init() {}
+
     private func headerView() -> some View {
         HStack {
             Text("Change Stop")

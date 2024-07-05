@@ -5,7 +5,6 @@
 //  Created by Hilmy Veradin on 03/07/24.
 //
 
-import OTPKit
 import SwiftUI
 
 /// This sheet responsible to add a new favorite location.

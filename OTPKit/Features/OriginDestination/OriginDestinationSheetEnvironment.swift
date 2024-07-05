@@ -21,16 +21,16 @@ public enum OriginDestinationSheetState {
 /// - sheetState: responsible for managing shown sheet in `OriginDestinationView`
 /// - selectedValue: responsible for managing selected value when user taped the list in `OriginDestinationSheetView`
 public final class OriginDestinationSheetEnvironment: ObservableObject {
-    @Published var isSheetOpened = false
-    @Published var sheetState: OriginDestinationSheetState = .origin
-    @Published var selectedValue: String = ""
+    @Published public var isSheetOpened = false
+    @Published public var sheetState: OriginDestinationSheetState = .origin
+    @Published public var selectedValue: String = ""
 
     // This responsible for showing favorite locations and recent locations in sheets
-    @Published var favoriteLocations: [Location] = []
-    @Published var recentLocations: [Location] = []
+    @Published public var favoriteLocations: [Location] = []
+    @Published public var recentLocations: [Location] = []
 
     /// Selected detail favorite locations that will be shown in `FavoriteLocationDetailSheet`
-    @Published var selectedDetailFavoriteLocation: Location?
+    @Published public var selectedDetailFavoriteLocation: Location?
 
     // Public initializer
     public init() {}

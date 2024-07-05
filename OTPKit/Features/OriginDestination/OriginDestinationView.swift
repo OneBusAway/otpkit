@@ -14,6 +14,9 @@ public struct OriginDestinationView: View {
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
     @State private var isSheetOpened = false
 
+    // Public Initializer
+    public init() {}
+    
     public var body: some View {
         VStack {
             List {
