@@ -5,11 +5,12 @@
 //  Created by Hilmy Veradin on 03/07/24.
 //
 
+import OTPKit
 import SwiftUI
 
 /// This sheet responsible to add a new favorite location.
 /// Users can search and add their favorite locations
-struct AddFavoriteLocationsSheet: View {
+public struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
     @EnvironmentObject private var locationService: LocationService
@@ -27,7 +28,7 @@ struct AddFavoriteLocationsSheet: View {
         }
     }
 
-    var body: some View {
+    public var body: some View {
         VStack {
             HStack {
                 Text("Add favorite location")

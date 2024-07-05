@@ -10,7 +10,7 @@ import SwiftUI
 
 /// OriginDestinationView is the main view for setting up Origin/Destination in OTPKit.
 /// It consists a list of Origin and Destination along with the `MapKit`
-struct OriginDestinationView: View {
+public struct OriginDestinationView: View {
     @StateObject private var originDestinationEnvironment = OriginDestinationSheetEnvironment()
 
     @State private var isSheetOpened = false
@@ -21,7 +21,7 @@ struct OriginDestinationView: View {
 
     @State private var region = MKCoordinateRegion(center: mockCoordinate, span: mockSpan)
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
                 .edgesIgnoringSafeArea(.all)

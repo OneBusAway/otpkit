@@ -9,7 +9,7 @@ import SwiftUI
 
 /// This responsible for showing the details of favorite locations
 /// Users can see the details and delete the location sheet
-struct FavoriteLocationDetailSheet: View {
+public struct FavoriteLocationDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
@@ -33,7 +33,7 @@ struct FavoriteLocationDetailSheet: View {
         }
     }
 
-    var body: some View {
+    public var body: some View {
         VStack {
             headerView()
                 .padding(.vertical)

@@ -7,7 +7,7 @@ import SwiftUI
 ///     - sheetEnvironment responsible for manage sheet states across the view. See `OriginDestinationSheetEnvironment`
 ///     - locationService responsible for manage autocompletion of origin/destination search bar. See `LocationService`
 ///
-struct OriginDestinationSheetView: View {
+public struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
 
@@ -179,7 +179,7 @@ struct OriginDestinationSheetView: View {
         }
     }
 
-    var body: some View {
+    public var body: some View {
         VStack {
             headerView()
                 .padding()

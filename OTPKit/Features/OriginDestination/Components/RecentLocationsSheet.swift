@@ -8,12 +8,12 @@
 import SwiftUI
 
 /// Show all the lists of all recent locations
-struct RecentLocationsSheet: View {
+public struct RecentLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
-    var body: some View {
+    public var body: some View {
         VStack {
             HStack {
                 Text("Recents")

@@ -8,14 +8,14 @@
 import SwiftUI
 
 /// Show all the lists of favorite locations
-struct FavoriteLocationsSheet: View {
+public struct FavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
     @State private var isDetailSheetOpened = false
 
-    var body: some View {
+    public var body: some View {
         VStack {
             HStack {
                 Text("Favorites")

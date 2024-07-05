@@ -7,14 +7,11 @@
 
 import Foundation
 import MapKit
+import OTPKit
 
-/// LocationServiceSearchCompletions is the main data model for `LocationService`
-/// This will be utilized as list object
-
-/// LocationService is the main class that's responsible for maanging MKLocalSearchCompleter
-class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
+/// LocationService is the main class that's responsible for managing MKLocalSearchCompleter
+public final class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
     private let completer: MKLocalSearchCompleter
-    private var searchWorkItem: DispatchWorkItem?
 
     @Published var completions = [Location]()
 
@@ -27,21 +24,14 @@ class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     /// update method responsible for updating the queryFragement of `completer`
     /// - Parameter queryFragment: this manage the searched query for `completer`
 
-    func update(queryFragment: String) {
-        searchWorkItem?.cancel()
-
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.completer.resultTypes = .pointOfInterest
-            self?.completer.queryFragment = queryFragment
-        }
-
-        searchWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
+    public func update(queryFragment: String) {
+        completer.resultTypes = .query
+        completer.queryFragment = queryFragment
     }
 
     /// completerDidUpdateResults is method that finished the search functionality and update the `completer`.
     /// This is required function from `MKLocalSearchCompleterDelegate`
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+    public func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         completions.removeAll()
 
         for result in completer.results {
