@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// Location is the main model for defining favorite location, recent location, map points
 public struct Location: Identifiable, Codable, Equatable, Hashable {
     public var id: UUID

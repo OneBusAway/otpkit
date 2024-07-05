@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OTPKit
+import SwiftUI
 
 /// OriginDestinationSheetState responsible for managing states of the shown `OriginDestinationSheetView`
 /// - Enums:
@@ -21,6 +21,7 @@ public enum OriginDestinationSheetState {
 /// - sheetState: responsible for managing shown sheet in `OriginDestinationView`
 /// - selectedValue: responsible for managing selected value when user taped the list in `OriginDestinationSheetView`
 public final class OriginDestinationSheetEnvironment: ObservableObject {
+    @Published var isSheetOpened = false
     @Published var sheetState: OriginDestinationSheetState = .origin
     @Published var selectedValue: String = ""
 

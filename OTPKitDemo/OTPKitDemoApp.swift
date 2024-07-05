@@ -21,7 +21,7 @@ import SwiftUI
 struct OTPKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            OriginDestinationView()
+            MapView()
         }
     }
 }

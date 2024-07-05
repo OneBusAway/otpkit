@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OTPKit
 
 /// Main database of OTPKit Demo
 /// Each CRUD features divided by `MARK` comment
