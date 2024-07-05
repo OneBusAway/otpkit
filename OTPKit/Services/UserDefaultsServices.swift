@@ -10,7 +10,7 @@ import Foundation
 /// Main database of OTPKit Demo
 /// Each CRUD features divided by `MARK` comment
 public final class UserDefaultsServices {
-    static let shared = UserDefaultsServices()
+    public static let shared = UserDefaultsServices()
     private let userDefaults = UserDefaults.standard
     private let savedLocationsKey = "SavedLocations"
     private let recentLocationsKey = "RecentLocations"

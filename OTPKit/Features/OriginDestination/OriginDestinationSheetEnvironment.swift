@@ -32,6 +32,9 @@ public final class OriginDestinationSheetEnvironment: ObservableObject {
     /// Selected detail favorite locations that will be shown in `FavoriteLocationDetailSheet`
     @Published var selectedDetailFavoriteLocation: Location?
 
+    // Public initializer
+    public init() {}
+
     /// Refresh favorite locations data from user defaults
     func refreshFavoriteLocations() {
         switch UserDefaultsServices.shared.getFavoriteLocationsData() {
