@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 
+/// `UserLocationServices` responsible for asking permission, and manage current users location
 public final class UserLocationServices: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentLocation: Location?
 
@@ -15,15 +16,15 @@ public final class UserLocationServices: NSObject, ObservableObject, CLLocationM
 
     var locationManager: CLLocationManager = .init()
 
-    public init(currentLocation: Location? = nil) {
-        self.currentLocation = currentLocation
+    override private init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
     public func checkIfLocationServicesIsEnabled() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
-                self.locationManager.delegate = self
-                self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
                 self.checkLocationAuthorization()
             }
         }
@@ -53,5 +54,9 @@ public final class UserLocationServices: NSObject, ObservableObject, CLLocationM
                 longitude: location.coordinate.longitude
             )
         }
+    }
+
+    public func locationManagerDidChangeAuthorization(_: CLLocationManager) {
+        checkLocationAuthorization()
     }
 }
