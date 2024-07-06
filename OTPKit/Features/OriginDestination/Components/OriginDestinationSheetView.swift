@@ -15,11 +15,15 @@ public struct OriginDestinationSheetView: View {
 
     @State private var search: String = ""
 
+    private let userLocation = UserLocationServices.shared.currentLocation
+
     // Sheet States
     @State private var isAddSavedLocationsSheetOpen = false
     @State private var isFavoriteLocationSheetOpen = false
     @State private var isRecentLocationSheetOpen = false
     @State private var isFavoriteLocationDetailSheetOpen = false
+
+    @FocusState private var isSearchFocused: Bool
 
     // Public initializer
     public init() {}
@@ -45,6 +49,7 @@ public struct OriginDestinationSheetView: View {
             Image(systemName: "magnifyingglass")
             TextField("Search for a place", text: $search)
                 .autocorrectionDisabled()
+                .focused($isSearchFocused)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
@@ -125,7 +130,6 @@ public struct OriginDestinationSheetView: View {
     }
 
     // swiftlint:enable function_body_length
-
     private func recentsSection() -> some View {
         if sheetEnvironment.recentLocations.isEmpty {
             return AnyView(EmptyView())
@@ -162,23 +166,50 @@ public struct OriginDestinationSheetView: View {
     }
 
     private func searchResultsSection() -> some View {
-        ForEach(locationService.completions) { location in
-            Button(action: {
-                switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
-                case .success:
-                    dismiss()
-                case .failure:
-                    break
-                }
+        Group {
+            ForEach(locationService.completions) { location in
+                Button(action: {
+                    switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
+                    case .success:
+                        dismiss()
+                    case .failure:
+                        break
+                    }
 
-            }, label: {
-                VStack(alignment: .leading) {
-                    Text(location.title)
-                        .font(.headline)
-                    Text(location.subTitle)
-                }
-            })
-            .buttonStyle(PlainButtonStyle())
+                }, label: {
+                    VStack(alignment: .leading) {
+                        Text(location.title)
+                            .font(.headline)
+                        Text(location.subTitle)
+                    }
+                })
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+    }
+
+    private func currentUserSection() -> some View {
+        Group {
+            if let userLocation = userLocation {
+                Button(action: {
+                    switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
+                    case .success:
+                        dismiss()
+                    case .failure:
+                        break
+                    }
+
+                }, label: {
+                    VStack(alignment: .leading) {
+                        Text(userLocation.title)
+                            .font(.headline)
+                        Text(userLocation.subTitle)
+                    }
+                })
+                .buttonStyle(PlainButtonStyle())
+            } else {
+                EmptyView()
+            }
         }
     }
 
@@ -191,7 +222,9 @@ public struct OriginDestinationSheetView: View {
                 .padding(.horizontal, 16)
 
             List {
-                if search.isEmpty {
+                if search.isEmpty && isSearchFocused {
+                    currentUserSection()
+                } else if search.isEmpty {
                     favoritesSection()
                     recentsSection()
                 } else {
@@ -200,6 +233,9 @@ public struct OriginDestinationSheetView: View {
             }
             .onChange(of: search) { searchValue in
                 locationService.update(queryFragment: searchValue)
+            }
+            .onChange(of: isSearchFocused) { value in
+                print(value)
             }
 
             Spacer()
