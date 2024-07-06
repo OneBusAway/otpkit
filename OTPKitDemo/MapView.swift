@@ -12,6 +12,8 @@ import SwiftUI
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
 
+    @StateObject private var locationServices = UserLocationServices.shared
+
     static let mockCoordinate = CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275)
     static let mockSpan = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
 
@@ -28,6 +30,9 @@ public struct MapView: View {
 
             OriginDestinationView()
                 .environmentObject(sheetEnvironment)
+        }
+        .onAppear {
+            locationServices.checkIfLocationServicesIsEnabled()
         }
     }
 }
