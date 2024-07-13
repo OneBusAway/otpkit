@@ -18,6 +18,7 @@ targets:
       path: OTPKitDemo/Info.plist
       properties:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        UILaunchStoryboardName: LaunchScreen
     type: application
     platform: iOS
     settings:
