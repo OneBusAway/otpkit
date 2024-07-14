@@ -44,7 +44,7 @@ struct TripPlannerView: View {
                             fromPlace: "47.6097,-122.3331",
                             toPlace: "47.6154,-122.3208",
                             time: "8:00 AM",
-                            date: "07-05-2024",
+                            date: getFormattedTomorrowDate(),
                             mode: "TRANSIT,WALK",
                             arriveBy: false,
                             maxWalkDistance: 800,
@@ -54,6 +54,14 @@ struct TripPlannerView: View {
                 }
             }
         }
+    }
+
+    private func getFormattedTomorrowDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy"
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+
+        return dateFormatter.string(from: tomorrow)
     }
 }
 
