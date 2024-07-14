@@ -14,18 +14,31 @@ public final class LocationService: NSObject, ObservableObject, MKLocalSearchCom
 
     @Published var completions = [Location]()
 
-    init(completer: MKLocalSearchCompleter = MKLocalSearchCompleter()) {
+    init(completer: MKLocalSearchCompleter = MKLocalSearchCompleter(), debounceInterval: TimeInterval = 0.3) {
         self.completer = completer
+        self.debounceInterval = debounceInterval
         super.init()
         self.completer.delegate = self
     }
 
-    /// update method responsible for updating the queryFragement of `completer`
-    /// - Parameter queryFragment: this manage the searched query for `completer`
+    deinit {
+        debounceTimer?.invalidate()
+    }
 
+    private let debounceInterval: TimeInterval
+
+    private var debounceTimer: Timer?
+
+    /// Initiates a local search for `queryFragment`.
+    /// This will be debounced, as set by the `debounceInterval` on the initializer.
+    /// - Parameter queryFragment: The search term
     public func update(queryFragment: String) {
-        completer.resultTypes = .query
-        completer.queryFragment = queryFragment
+        debounceTimer?.invalidate()
+        debounceTimer = Timer.scheduledTimer(withTimeInterval: debounceInterval, repeats: false) { [weak self] _ in
+            guard let self else { return }
+            completer.resultTypes = .query
+            completer.queryFragment = queryFragment
+        }
     }
 
     /// completerDidUpdateResults is method that finished the search functionality and update the `completer`.
