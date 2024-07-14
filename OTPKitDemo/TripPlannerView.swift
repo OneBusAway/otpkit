@@ -17,14 +17,13 @@
 import SwiftUI
 
 struct TripPlannerView: View {
-    @EnvironmentObject var viewModel: TripPlannerViewModel
+    @StateObject private var viewModel = TripPlannerViewModel()
 
     var body: some View {
         NavigationView {
             VStack {
                 if viewModel.isLoading {
                     ProgressView()
-
                         .progressViewStyle(CircularProgressViewStyle())
                         .navigationTitle("Fetching Plan")
                 } else if let plan = viewModel.planResponse?.plan {
@@ -45,7 +44,7 @@ struct TripPlannerView: View {
                             fromPlace: "47.6097,-122.3331",
                             toPlace: "47.6154,-122.3208",
                             time: "8:00 AM",
-                            date: "05-10-2024",
+                            date: "07-05-2024",
                             mode: "TRANSIT,WALK",
                             arriveBy: false,
                             maxWalkDistance: 800,
@@ -62,6 +61,5 @@ struct TripPlannerView: View {
 struct TripPlannerView_Previews: PreviewProvider {
     static var previews: some View {
         TripPlannerView()
-            .environmentObject(TripPlannerViewModel())
     }
 }

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import OTPKit
 import SwiftUI
 
 @main
 struct OTPKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            OriginDestinationView()
+            MapView()
         }
     }
 }
