@@ -19,6 +19,7 @@ targets:
       properties:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         NSLocationWhenInUseUsageDescription: See where you are in relation to transit, and help you navigate more easily.
+        UILaunchScreen: LaunchScreen
     type: application
     platform: iOS
     settings:
