@@ -16,7 +16,7 @@ public struct OriginDestinationView: View {
 
     // Public Initializer
     public init() {}
-    
+
     public var body: some View {
         VStack {
             List {

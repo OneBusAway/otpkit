@@ -16,6 +16,9 @@ public struct AddFavoriteLocationsSheet: View {
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
 
     @State private var search = ""
+    private let userLocation = UserLocationServices.shared.currentLocation
+
+    @FocusState private var isSearchActive: Bool
 
     private var filteredCompletions: [Location] {
         let favorites = sheetEnvironment.favoriteLocations
@@ -48,6 +51,7 @@ public struct AddFavoriteLocationsSheet: View {
                 Image(systemName: "magnifyingglass")
                 TextField("Search for a place", text: $search)
                     .autocorrectionDisabled()
+                    .focused($isSearchActive)
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 12)
@@ -56,6 +60,31 @@ public struct AddFavoriteLocationsSheet: View {
             .padding(.horizontal, 16)
 
             List {
+                if search.isEmpty, let userLocation = userLocation {
+                    Button(action: {
+                        switch UserDefaultsServices.shared.saveFavoriteLocationData(data: userLocation) {
+                        case .success:
+                            sheetEnvironment.refreshFavoriteLocations()
+                            dismiss()
+                        case let .failure(error):
+                            print(error)
+                        }
+                    }, label: {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(userLocation.title)
+                                    .font(.headline)
+                                Text(userLocation.subTitle)
+                            }.foregroundStyle(Color.black)
+
+                            Spacer()
+
+                            Image(systemName: "plus")
+                        }
+
+                    })
+                }
+
                 ForEach(filteredCompletions) { location in
                     Button(action: {
                         switch UserDefaultsServices.shared.saveFavoriteLocationData(data: location) {
