@@ -110,7 +110,7 @@ public struct AddFavoriteLocationsSheet: View {
                     })
                 }
             }
-            .onChange(of: search) { searchValue in
+            .onChange(of: search) { _, searchValue in
                 locationService.update(queryFragment: searchValue)
             }
         }

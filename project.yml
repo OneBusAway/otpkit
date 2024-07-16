@@ -10,7 +10,7 @@ settings:
 
 options:
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.0"
 
 targets:
   OTPKitDemo:

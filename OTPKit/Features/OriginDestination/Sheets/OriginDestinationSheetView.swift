@@ -231,11 +231,8 @@ public struct OriginDestinationSheetView: View {
                     searchResultsSection()
                 }
             }
-            .onChange(of: search) { searchValue in
+            .onChange(of: search) { _, searchValue in
                 locationService.update(queryFragment: searchValue)
-            }
-            .onChange(of: isSearchFocused) { value in
-                print(value)
             }
 
             Spacer()
