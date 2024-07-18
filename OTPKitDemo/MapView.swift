@@ -12,27 +12,40 @@ import SwiftUI
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
 
-    @StateObject private var locationServices = UserLocationServices.shared
+    @StateObject private var userLocationService = UserLocationServices.shared
+    @StateObject private var mapExtensionService = MapExtensionServices.shared
 
-    static let mockCoordinate = CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275)
-    static let mockSpan = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-
-    @State private var region = MKCoordinateRegion(center: mockCoordinate, span: mockSpan)
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
 
     public var body: some View {
         ZStack {
-            Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
-                .edgesIgnoringSafeArea(.all)
+            MapReader { proxy in
+                Map(position: $position, interactionModes: .all) {
+                    mapExtensionService
+                        .generateMarkers()
+                }
+                .mapControls {
+                    MapUserLocationButton()
+                    MapPitchToggle()
+                }
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
                 }
+                .onTapGesture { tappedLocation in
+                    guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
+                    mapExtensionService.appendMarker(coordinate: coordinate)
+                }
+            }
 
-            OriginDestinationView()
-                .environmentObject(sheetEnvironment)
+            VStack {
+                Spacer()
+                OriginDestinationView()
+                    .environmentObject(sheetEnvironment)
+            }
         }
         .onAppear {
-            locationServices.checkIfLocationServicesIsEnabled()
+            userLocationService.checkIfLocationServicesIsEnabled()
         }
     }
 }

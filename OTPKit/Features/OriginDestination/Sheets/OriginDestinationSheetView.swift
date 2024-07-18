@@ -132,9 +132,9 @@ public struct OriginDestinationSheetView: View {
     // swiftlint:enable function_body_length
     private func recentsSection() -> some View {
         if sheetEnvironment.recentLocations.isEmpty {
-            return AnyView(EmptyView())
+            AnyView(EmptyView())
         } else {
-            return AnyView(
+            AnyView(
                 Section(content: {
                     ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
                         VStack(alignment: .leading) {
@@ -190,7 +190,7 @@ public struct OriginDestinationSheetView: View {
 
     private func currentUserSection() -> some View {
         Group {
-            if let userLocation = userLocation {
+            if let userLocation {
                 Button(action: {
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
@@ -222,7 +222,7 @@ public struct OriginDestinationSheetView: View {
                 .padding(.horizontal, 16)
 
             List {
-                if search.isEmpty && isSearchFocused {
+                if search.isEmpty, isSearchFocused {
                     currentUserSection()
                 } else if search.isEmpty {
                     favoritesSection()
@@ -231,11 +231,8 @@ public struct OriginDestinationSheetView: View {
                     searchResultsSection()
                 }
             }
-            .onChange(of: search) { searchValue in
+            .onChange(of: search) { _, searchValue in
                 locationService.update(queryFragment: searchValue)
-            }
-            .onChange(of: isSearchFocused) { value in
-                print(value)
             }
 
             Spacer()

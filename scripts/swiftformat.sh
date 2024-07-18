@@ -3,7 +3,7 @@ if [[ "$(uname -m)" == arm64 ]]; then
 fi
 
 if which swiftformat > /dev/null; then
-  swiftformat .
+  swiftformat . --swiftversion 5.9
 else
   echo "warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat"
 fi

@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-/// LocationService is the main class that's responsible for managing MKLocalSearchCompleter
+/// Manages everything location such as search completer, etc
 public final class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
     private let completer: MKLocalSearchCompleter
 
@@ -51,8 +51,8 @@ public final class LocationService: NSObject, ObservableObject, MKLocalSearchCom
             let search = MKLocalSearch(request: searchRequest)
 
             search.start { [weak self] response, error in
-                guard let self = self, let response = response else {
-                    if let error = error {
+                guard let self, let response else {
+                    if let error {
                         print("Error performing local search: \(error)")
                     }
                     return

@@ -55,8 +55,6 @@ public struct OriginDestinationView: View {
             .frame(height: 135)
             .scrollContentBackground(.hidden)
             .scrollDisabled(true)
-
-            Spacer()
         }
     }
 }

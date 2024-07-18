@@ -32,7 +32,7 @@ public class OTPTestCase: XCTestCase {
     }
 
     var userDefaultsSuiteName: String {
-        return String(describing: self)
+        String(describing: self)
     }
 
     // MARK: - Network and Data

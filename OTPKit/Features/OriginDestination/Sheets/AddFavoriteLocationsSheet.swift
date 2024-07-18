@@ -60,7 +60,7 @@ public struct AddFavoriteLocationsSheet: View {
             .padding(.horizontal, 16)
 
             List {
-                if search.isEmpty, let userLocation = userLocation {
+                if search.isEmpty, let userLocation {
                     Button(action: {
                         switch UserDefaultsServices.shared.saveFavoriteLocationData(data: userLocation) {
                         case .success:
@@ -110,7 +110,7 @@ public struct AddFavoriteLocationsSheet: View {
                     })
                 }
             }
-            .onChange(of: search) { searchValue in
+            .onChange(of: search) { _, searchValue in
                 locationService.update(queryFragment: searchValue)
             }
         }
