@@ -111,6 +111,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     }
 
     // MARK: - User Location Methods
+
     public func checkIfLocationServicesIsEnabled() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
