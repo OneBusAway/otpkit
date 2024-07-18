@@ -9,7 +9,6 @@ import Foundation
 import MapKit
 import SwiftUI
 
-
 /// Manage Map extension such as markers, etc
 public final class MapExtensionServices: ObservableObject {
     public static let shared = MapExtensionServices()

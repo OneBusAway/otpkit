@@ -60,7 +60,7 @@ public struct AddFavoriteLocationsSheet: View {
             .padding(.horizontal, 16)
 
             List {
-                if search.isEmpty, let userLocation = userLocation {
+                if search.isEmpty, let userLocation {
                     Button(action: {
                         switch UserDefaultsServices.shared.saveFavoriteLocationData(data: userLocation) {
                         case .success:

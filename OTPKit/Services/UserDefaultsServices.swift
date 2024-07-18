@@ -35,13 +35,11 @@ public final class UserDefaultsServices {
     }
 
     func saveFavoriteLocationData(data: Location) -> Result<Void, Error> {
-        var locations: [Location]
-
-        switch getFavoriteLocationsData() {
+        var locations: [Location] = switch getFavoriteLocationsData() {
         case let .success(existingLocations):
-            locations = existingLocations
+            existingLocations
         case .failure:
-            locations = []
+            []
         }
 
         locations.append(data)
@@ -98,13 +96,11 @@ public final class UserDefaultsServices {
     }
 
     func saveRecentLocations(data: Location) -> Result<Void, Error> {
-        var locations: [Location]
-
-        switch getFavoriteLocationsData() {
+        var locations: [Location] = switch getFavoriteLocationsData() {
         case let .success(existingLocations):
-            locations = existingLocations
+            existingLocations
         case .failure:
-            locations = []
+            []
         }
 
         locations.insert(data, at: 0)

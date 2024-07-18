@@ -28,7 +28,7 @@ struct MockDataResponse {
 
 class MockTask: URLSessionDataTask {
     override var progress: Progress {
-        return Progress()
+        Progress()
     }
 
     private var closure: (Data?, URLResponse?, Error?) -> Void
@@ -130,7 +130,7 @@ class MockDataLoader: NSObject, URLDataLoader {
     // MARK: - URL Response
 
     func buildURLResponse(URL: URL, statusCode: Int) -> HTTPURLResponse {
-        return HTTPURLResponse(
+        HTTPURLResponse(
             url: URL,
             statusCode: statusCode,
             httpVersion: "2",
