@@ -11,9 +11,7 @@ import SwiftUI
 
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
-
-    @StateObject private var userLocationService = UserLocationServices.shared
-    @StateObject private var mapExtensionService = MapExtensionServices.shared
+    @ObservedObject private var locationManagerService = LocationManagerService.shared
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
 
@@ -21,31 +19,39 @@ public struct MapView: View {
         ZStack {
             MapReader { proxy in
                 Map(position: $position, interactionModes: .all) {
-                    mapExtensionService
+                    locationManagerService
                         .generateMarkers()
                 }
                 .mapControls {
-                    MapUserLocationButton()
-                    MapPitchToggle()
+                    if !locationManagerService.isMapMarkingMode {
+                        MapUserLocationButton()
+                        MapPitchToggle()
+                    }
+                }
+                .onTapGesture { tappedLocation in
+                    if locationManagerService.isMapMarkingMode {
+                        guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
+                        locationManagerService.appendMarker(coordinate: coordinate)
+                    }
                 }
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
                 }
-                .onTapGesture { tappedLocation in
-                    guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
-                    mapExtensionService.appendMarker(coordinate: coordinate)
-                }
             }
+            if locationManagerService.isMapMarkingMode {
+                MapMarkingView()
 
-            VStack {
-                Spacer()
-                OriginDestinationView()
-                    .environmentObject(sheetEnvironment)
+            } else {
+                VStack {
+                    Spacer()
+                    OriginDestinationView()
+                        .environmentObject(sheetEnvironment)
+                }
             }
         }
         .onAppear {
-            userLocationService.checkIfLocationServicesIsEnabled()
+            locationManagerService.checkIfLocationServicesIsEnabled()
         }
     }
 }
