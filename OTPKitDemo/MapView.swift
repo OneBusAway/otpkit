@@ -9,48 +9,43 @@ import MapKit
 import OTPKit
 import SwiftUI
 
-struct MarkerItem: Identifiable {
-    var id: UUID = .init()
-    var title: String
-    var coordinate: CLLocationCoordinate2D
-}
-
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
 
-    @StateObject private var locationServices = UserLocationServices.shared
+    @StateObject private var userLocationService = UserLocationServices.shared
+    @StateObject private var mapExtensionService = MapExtensionServices.shared
 
-//    static let mockCoordinate = CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275)
-//    static let mockSpan = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-
-//    @State private var region = MKCoordinateRegion(center: mockCoordinate, span: mockSpan)
-
-    @State private var selectedMapPoint: [MarkerItem] = []
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
 
     public var body: some View {
         ZStack {
             MapReader { proxy in
-                Map(initialPosition: .automatic, interactionModes: .all) {
-                    ForEach(selectedMapPoint) { point in
-                        Marker(point.title, coordinate: point.coordinate)
-                    }
+                Map(position: $position, interactionModes: .all) {
+                    mapExtensionService
+                        .generateMarkers()
                 }
-                .edgesIgnoringSafeArea(.all)
+                .mapControls {
+                    MapUserLocationButton()
+                    MapPitchToggle()
+                }
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
                 }
                 .onTapGesture { tappedLocation in
                     guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
-                    let foobarItem = MarkerItem(title: "Foobar", coordinate: coordinate)
-                    selectedMapPoint.append(foobarItem)
+                    mapExtensionService.appendMarker(coordinate: coordinate)
                 }
             }
-            OriginDestinationView()
-                .environmentObject(sheetEnvironment)
+
+            VStack {
+                Spacer()
+                OriginDestinationView()
+                    .environmentObject(sheetEnvironment)
+            }
         }
         .onAppear {
-            locationServices.checkIfLocationServicesIsEnabled()
+            userLocationService.checkIfLocationServicesIsEnabled()
         }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-/// `UserLocationServices` responsible for asking permission, and manage current users location
+/// Manages permission, and current users location
 public final class UserLocationServices: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentLocation: Location?
 

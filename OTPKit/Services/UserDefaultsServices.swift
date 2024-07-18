@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Main database of OTPKit Demo
+/// Manages data persistance
 /// Each CRUD features divided by `MARK` comment
 public final class UserDefaultsServices {
     public static let shared = UserDefaultsServices()

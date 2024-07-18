@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-/// LocationService is the main class that's responsible for managing MKLocalSearchCompleter
+/// Manages everything location such as search completer, etc
 public final class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
     private let completer: MKLocalSearchCompleter
 
