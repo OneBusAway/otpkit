@@ -15,29 +15,34 @@ public struct MapMarkingView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 16) {
-                Button(action: {
+            Text("Tap on the map to add a pin.")
+                .padding(16)
+                .background(.regularMaterial)
+                .cornerRadius(16)
+
+            HStack(spacing: 16) {
+                Button {
                     locationManagerService.toggleMapMarkingMode(false)
                     locationManagerService.selectCoordinate()
-                }, label: {
-                    Text("Add Map Location")
-                })
-                .padding(.all)
-                .background(Color.gray)
-                .clipShape(.rect(cornerRadius: 12))
+                } label: {
+                    Text("Cancel")
+                        .padding(8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
 
-                Button(action: {
+                Button {
                     locationManagerService.toggleMapMarkingMode(false)
                     locationManagerService.selectCoordinate()
-                }, label: {
-                    Text("Cancel Map Location")
-                })
-
-                .padding(.all)
-                .background(Color.gray)
-                .clipShape(.rect(cornerRadius: 12))
+                } label: {
+                    Text("Add Pin")
+                        .padding(8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .padding(.bottom, 24)
+            .frame(maxWidth: .infinity)
+            .padding(16)
         }
     }
 }
