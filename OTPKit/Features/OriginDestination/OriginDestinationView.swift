@@ -12,6 +12,7 @@ import SwiftUI
 /// It consists a list of Origin and Destination along with the `MapKit`
 public struct OriginDestinationView: View {
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
+    @ObservedObject private var locationManagerService = LocationManagerService.shared
     @State private var isSheetOpened = false
 
     // Public Initializer
@@ -22,7 +23,7 @@ public struct OriginDestinationView: View {
             List {
                 Button(action: {
                     sheetEnvironment.isSheetOpened.toggle()
-                    sheetEnvironment.sheetState = .origin
+                    locationManagerService.originDestinationState = .origin
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "paperplane.fill")
@@ -38,7 +39,7 @@ public struct OriginDestinationView: View {
 
                 Button(action: {
                     sheetEnvironment.isSheetOpened.toggle()
-                    sheetEnvironment.sheetState = .destination
+                    locationManagerService.originDestinationState = .destination
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "mappin")
@@ -55,6 +56,7 @@ public struct OriginDestinationView: View {
             .frame(height: 135)
             .scrollContentBackground(.hidden)
             .scrollDisabled(true)
+            .padding(.bottom, 24)
         }
     }
 }

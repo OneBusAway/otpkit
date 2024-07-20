@@ -8,21 +8,11 @@
 import Foundation
 import SwiftUI
 
-/// OriginDestinationSheetState responsible for managing states of the shown `OriginDestinationSheetView`
-/// - Enums:
-///     - origin: This manage origin state of the trip planner
-///     - destination: This manage destination state of the trip planner
-public enum OriginDestinationSheetState {
-    case origin
-    case destination
-}
-
 /// OriginDestinationSheetEnvironment responsible for manage the environment of `OriginDestination` features
 /// - sheetState: responsible for managing shown sheet in `OriginDestinationView`
 /// - selectedValue: responsible for managing selected value when user taped the list in `OriginDestinationSheetView`
 public final class OriginDestinationSheetEnvironment: ObservableObject {
     @Published public var isSheetOpened = false
-    @Published public var sheetState: OriginDestinationSheetState = .origin
     @Published public var selectedValue: String = ""
 
     // This responsible for showing favorite locations and recent locations in sheets

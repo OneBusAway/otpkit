@@ -11,11 +11,9 @@ public struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
 
-    @StateObject private var locationService = LocationService()
+    @ObservedObject private var locationManagerService = LocationManagerService.shared
 
     @State private var search: String = ""
-
-    private let userLocation = UserLocationServices.shared.currentLocation
 
     // Sheet States
     @State private var isAddSavedLocationsSheetOpen = false
@@ -116,7 +114,6 @@ public struct OriginDestinationSheetView: View {
         })
         .sheet(isPresented: $isAddSavedLocationsSheetOpen, content: {
             AddFavoriteLocationsSheet()
-                .environmentObject(locationService)
                 .environmentObject(sheetEnvironment)
         })
         .sheet(isPresented: $isFavoriteLocationSheetOpen, content: {
@@ -167,7 +164,7 @@ public struct OriginDestinationSheetView: View {
 
     private func searchResultsSection() -> some View {
         Group {
-            ForEach(locationService.completions) { location in
+            ForEach(locationManagerService.completions) { location in
                 Button(action: {
                     switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
                     case .success:
@@ -190,7 +187,7 @@ public struct OriginDestinationSheetView: View {
 
     private func currentUserSection() -> some View {
         Group {
-            if let userLocation {
+            if let userLocation = locationManagerService.currentLocation {
                 Button(action: {
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
@@ -213,6 +210,19 @@ public struct OriginDestinationSheetView: View {
         }
     }
 
+    private func selectLocationBasedOnMap() -> some View {
+        Button(action: {
+            locationManagerService.toggleMapMarkingMode(true)
+            dismiss()
+        }, label: {
+            HStack {
+                Image(systemName: "mappin")
+                Text("Choose on Map")
+            }
+        })
+        .buttonStyle(PlainButtonStyle())
+    }
+
     public var body: some View {
         VStack {
             headerView()
@@ -225,6 +235,7 @@ public struct OriginDestinationSheetView: View {
                 if search.isEmpty, isSearchFocused {
                     currentUserSection()
                 } else if search.isEmpty {
+                    selectLocationBasedOnMap()
                     favoritesSection()
                     recentsSection()
                 } else {
@@ -232,7 +243,7 @@ public struct OriginDestinationSheetView: View {
                 }
             }
             .onChange(of: search) { _, searchValue in
-                locationService.update(queryFragment: searchValue)
+                locationManagerService.updateQuery(queryFragment: searchValue)
             }
 
             Spacer()
