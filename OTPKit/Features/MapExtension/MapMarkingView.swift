@@ -44,6 +44,7 @@ public struct MapMarkingView: View {
             .frame(maxWidth: .infinity)
             .padding(16)
         }
+        .padding(.bottom, 24)
     }
 }
 

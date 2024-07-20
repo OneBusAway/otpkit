@@ -217,7 +217,7 @@ public struct OriginDestinationSheetView: View {
         }, label: {
             HStack {
                 Image(systemName: "mappin")
-                Text("Select based on Map")
+                Text("Choose on Map")
             }
         })
         .buttonStyle(PlainButtonStyle())
@@ -233,13 +233,12 @@ public struct OriginDestinationSheetView: View {
 
             List {
                 if search.isEmpty, isSearchFocused {
-                    selectLocationBasedOnMap()
                     currentUserSection()
                 } else if search.isEmpty {
+                    selectLocationBasedOnMap()
                     favoritesSection()
                     recentsSection()
                 } else {
-                    selectLocationBasedOnMap()
                     searchResultsSection()
                 }
             }
