@@ -23,7 +23,7 @@ public struct MapMarkingView: View {
             HStack(spacing: 16) {
                 Button {
                     locationManagerService.toggleMapMarkingMode(false)
-                    locationManagerService.selectCoordinate()
+                    locationManagerService.selectAndRefreshCoordinate()
                 } label: {
                     Text("Cancel")
                         .padding(8)
@@ -33,7 +33,7 @@ public struct MapMarkingView: View {
 
                 Button {
                     locationManagerService.toggleMapMarkingMode(false)
-                    locationManagerService.selectCoordinate()
+                    locationManagerService.selectAndRefreshCoordinate()
                 } label: {
                     Text("Add Pin")
                         .padding(8)

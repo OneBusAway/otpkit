@@ -166,6 +166,8 @@ public struct OriginDestinationSheetView: View {
         Group {
             ForEach(locationManagerService.completions) { location in
                 Button(action: {
+                    locationManagerService.appendMarker(location: location)
+
                     switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
                     case .success:
                         dismiss()
@@ -189,6 +191,7 @@ public struct OriginDestinationSheetView: View {
         Group {
             if let userLocation = locationManagerService.currentLocation {
                 Button(action: {
+                    locationManagerService.appendMarker(location: userLocation)
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
                         dismiss()
@@ -198,9 +201,9 @@ public struct OriginDestinationSheetView: View {
 
                 }, label: {
                     VStack(alignment: .leading) {
-                        Text(userLocation.title)
+                        Text("My Location")
                             .font(.headline)
-                        Text(userLocation.subTitle)
+                        Text("Your current location")
                     }
                 })
                 .buttonStyle(PlainButtonStyle())
