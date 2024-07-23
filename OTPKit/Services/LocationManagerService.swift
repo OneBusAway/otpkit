@@ -23,6 +23,9 @@ public final class LocationManagerService: NSObject, ObservableObject {
     private let completer: MKLocalSearchCompleter
     private let debounceInterval: TimeInterval
     private var debounceTimer: Timer?
+    private var currentRegion: MKCoordinateRegion?
+    private var searchTask: Task<Void, Never>?
+
     @Published var completions = [Location]()
 
     // Map Extension
@@ -32,6 +35,10 @@ public final class LocationManagerService: NSObject, ObservableObject {
     ]
 
     @Published public var isMapMarkingMode = false
+    @Published public var currentCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+
+    @Published public var originName = "Origin"
+    @Published public var destinationName = "Destination"
 
     // User Location
     @Published var currentLocation: Location?
@@ -41,7 +48,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
     override private init() {
         completer = MKLocalSearchCompleter()
-        debounceInterval = 0.3
+        debounceInterval = 1
         super.init()
 
         completer.delegate = self
@@ -67,9 +74,15 @@ public final class LocationManagerService: NSObject, ObservableObject {
         }
     }
 
+    private func updateCompleterRegion() {
+        if let region = currentRegion {
+            completer.region = region
+        }
+    }
+
     // MARK: - Map Extension Methods
 
-    public func selectCoordinate() {
+    public func selectAndRefreshCoordinate() {
         switch originDestinationState {
         case .origin:
             guard let coordinate = selectedMapPoint["origin"]??.item.placemark.coordinate else { return }
@@ -80,14 +93,20 @@ public final class LocationManagerService: NSObject, ObservableObject {
         }
     }
 
-    public func appendMarker(coordinate: CLLocationCoordinate2D) {
+    public func appendMarker(location: Location) {
+        let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
+        mapItem.name = location.title
         let markerItem = MarkerItem(item: mapItem)
         switch originDestinationState {
         case .origin:
             selectedMapPoint["origin"] = markerItem
+            changeMapCamera(mapItem)
+            originName = mapItem.name ?? "Location unknown"
         case .destination:
             selectedMapPoint["destination"] = markerItem
+            changeMapCamera(mapItem)
+            destinationName = mapItem.name ?? "Location unknown"
         }
     }
 
@@ -108,6 +127,10 @@ public final class LocationManagerService: NSObject, ObservableObject {
             }
         }
         isMapMarkingMode = isMapMarking
+    }
+
+    private func changeMapCamera(_ item: MKMapItem) {
+        currentCameraPosition = MapCameraPosition.item(item)
     }
 
     // MARK: - User Location Methods
@@ -182,6 +205,13 @@ extension LocationManagerService: CLLocationManagerDelegate {
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude
             )
+
+            self.currentRegion = MKCoordinateRegion(
+                center: location.coordinate,
+                latitudinalMeters: 1000,
+                longitudinalMeters: 1000
+            )
+            self.updateCompleterRegion()
         }
     }
 

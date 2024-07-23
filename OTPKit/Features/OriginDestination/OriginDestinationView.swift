@@ -33,7 +33,7 @@ public struct OriginDestinationView: View {
                                     .fill(Color.green)
                                     .frame(width: 30, height: 30)
                             )
-                        Text("Origin UI")
+                        Text(locationManagerService.originName)
                     }
                 })
 
@@ -49,7 +49,7 @@ public struct OriginDestinationView: View {
                                     .fill(Color.green)
                                     .frame(width: 30, height: 30)
                             )
-                        Text("Destination UI")
+                        Text(locationManagerService.destinationName)
                     }
                 })
             }

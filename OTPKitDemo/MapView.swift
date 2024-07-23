@@ -18,7 +18,7 @@ public struct MapView: View {
     public var body: some View {
         ZStack {
             MapReader { proxy in
-                Map(position: $position, interactionModes: .all) {
+                Map(position: $locationManagerService.currentCameraPosition, interactionModes: .all) {
                     locationManagerService
                         .generateMarkers()
                 }
@@ -31,7 +31,16 @@ public struct MapView: View {
                 .onTapGesture { tappedLocation in
                     if locationManagerService.isMapMarkingMode {
                         guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
-                        locationManagerService.appendMarker(coordinate: coordinate)
+                        let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
+                        let locationTitle = mapItem.name ?? "Location unknown"
+                        let locationSubtitle = mapItem.placemark.title ?? "Location unknown"
+                        let location = Location(
+                            title: locationTitle,
+                            subTitle: locationSubtitle,
+                            latitude: coordinate.latitude,
+                            longitude: coordinate.longitude
+                        )
+                        locationManagerService.appendMarker(location: location)
                     }
                 }
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
