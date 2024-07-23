@@ -103,10 +103,12 @@ public final class LocationManagerService: NSObject, ObservableObject {
             selectedMapPoint["origin"] = markerItem
             changeMapCamera(mapItem)
             originName = mapItem.name ?? "Location unknown"
+            originCoordinate = coordinate
         case .destination:
             selectedMapPoint["destination"] = markerItem
             changeMapCamera(mapItem)
             destinationName = mapItem.name ?? "Location unknown"
+            destinationCoordinate = coordinate
         }
     }
 
@@ -117,15 +119,6 @@ public final class LocationManagerService: NSObject, ObservableObject {
     }
 
     public func toggleMapMarkingMode(_ isMapMarking: Bool) {
-        // If it's true, then reset the states. When entering the
-        if isMapMarking {
-            switch originDestinationState {
-            case .origin:
-                selectedMapPoint["origin"] = nil
-            case .destination:
-                selectedMapPoint["destination"] = nil
-            }
-        }
         isMapMarkingMode = isMapMarking
     }
 

@@ -191,6 +191,7 @@ public struct OriginDestinationSheetView: View {
         Group {
             if let userLocation = locationManagerService.currentLocation {
                 Button(action: {
+                    locationManagerService.appendMarker(location: userLocation)
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
                         dismiss()
