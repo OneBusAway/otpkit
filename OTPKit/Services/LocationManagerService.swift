@@ -14,10 +14,20 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
     // MARK: - Properties
 
+    // API Client
+    private let apiClient = RestAPI(
+        baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
+    )
+
+    // Trip Planner
+    @Published public var planResponse: OTPResponse?
+    @Published public var isFetchingResponse = false
+    @Published public var tripPlannerErrorMessage: String?
+
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
-    @Published public var originCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    @Published public var destinationCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    @Published public var originCoordinate: CLLocationCoordinate2D?
+    @Published public var destinationCoordinate: CLLocationCoordinate2D?
 
     // Location Search
     private let completer: MKLocalSearchCompleter
@@ -110,6 +120,8 @@ public final class LocationManagerService: NSObject, ObservableObject {
             destinationName = mapItem.name ?? "Location unknown"
             destinationCoordinate = coordinate
         }
+
+        checkAndFetchTripPlanner()
     }
 
     public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
@@ -124,6 +136,57 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
     private func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
+    }
+
+    // MARK: - Trip Planner Methods
+
+    private func checkAndFetchTripPlanner() {
+        guard originCoordinate != nil,
+              destinationCoordinate != nil
+        else {
+            return
+        }
+
+        let fromPlace = formatCoordinate(originCoordinate)
+        let toPlace = formatCoordinate(destinationCoordinate)
+
+        isFetchingResponse = true
+
+        Task {
+            do {
+                let response = try await apiClient.fetchPlan(
+                    fromPlace: fromPlace,
+                    toPlace: toPlace,
+                    time: getCurrentTimeFormatted(),
+                    date: getFormattedTodayDate(),
+                    mode: "TRANSIT,WALK",
+                    arriveBy: false,
+                    maxWalkDistance: 1000,
+                    wheelchair: false
+                )
+                DispatchQueue.main.async {
+                    self.planResponse = response
+                    self.isFetchingResponse = false
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.tripPlannerErrorMessage = "Failed to fetch data: \(error.localizedDescription)"
+                    self.isFetchingResponse = false
+                }
+            }
+        }
+    }
+
+    public func resetTripPlanner() {
+        planResponse = nil
+        selectedMapPoint = [
+            "origin": nil,
+            "destination": nil
+        ]
+        destinationCoordinate = nil
+        originCoordinate = nil
+        originName = "Origin"
+        destinationName = "Destination"
     }
 
     // MARK: - User Location Methods
@@ -210,5 +273,32 @@ extension LocationManagerService: CLLocationManagerDelegate {
 
     public func locationManagerDidChangeAuthorization(_: CLLocationManager) {
         checkLocationAuthorization()
+    }
+}
+
+// MARK: - Service Extension
+
+extension LocationManagerService {
+    func formatCoordinate(_ coordinate: CLLocationCoordinate2D?) -> String {
+        guard let coordinate else { return "" }
+        return String(format: "%.4f,%.4f", coordinate.latitude, coordinate.longitude)
+    }
+
+    func getFormattedTodayDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy"
+        let today = Date()
+
+        return dateFormatter.string(from: today)
+    }
+
+    func getCurrentTimeFormatted() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        let currentDate = Date()
+
+        return dateFormatter.string(from: currentDate)
     }
 }
