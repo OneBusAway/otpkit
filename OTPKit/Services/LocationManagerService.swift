@@ -23,6 +23,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     @Published public var planResponse: OTPResponse?
     @Published public var isFetchingResponse = false
     @Published public var tripPlannerErrorMessage: String?
+    @Published public var selectedIternary: Itinerary?
 
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
@@ -124,18 +125,40 @@ public final class LocationManagerService: NSObject, ObservableObject {
         checkAndFetchTripPlanner()
     }
 
-    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
-        ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
-            Marker(item: markerItem.item)
-        }
-    }
-
     public func toggleMapMarkingMode(_ isMapMarking: Bool) {
         isMapMarkingMode = isMapMarking
     }
 
     private func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
+    }
+
+    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
+        ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
+            Marker(item: markerItem.item)
+        }
+    }
+
+    public func generateMapPolyline() -> MapPolyline? {
+        guard let itinerary = selectedIternary else { return nil }
+
+        // Experiment on using steps compactmap
+        let coordinates = itinerary.legs.flatMap { leg in
+            leg.steps?.compactMap { step in
+                CLLocationCoordinate2D(latitude: step.lat, longitude: step.lon)
+            } ?? []
+        }
+
+//        let coordinates = itinerary.legs.flatMap { leg in
+//            [CLLocationCoordinate2D(latitude: leg.from.lat, longitude: leg.from.lon),
+//             CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)]
+//        }
+
+        print("---", coordinates, "---")
+
+        guard !coordinates.isEmpty else { return nil }
+
+        return MapPolyline(coordinates: coordinates)
     }
 
     // MARK: - Trip Planner Methods
@@ -187,6 +210,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
         originCoordinate = nil
         originName = "Origin"
         destinationName = "Destination"
+        selectedIternary = nil
     }
 
     // MARK: - User Location Methods

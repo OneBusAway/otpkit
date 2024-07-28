@@ -28,6 +28,9 @@ public struct MapView: View {
                 Map(position: $locationManagerService.currentCameraPosition, interactionModes: .all) {
                     locationManagerService
                         .generateMarkers()
+                    locationManagerService
+                        .generateMapPolyline()
+                        .stroke(.blue, lineWidth: 5)
                 }
                 .mapControls {
                     if !locationManagerService.isMapMarkingMode {
@@ -55,11 +58,12 @@ public struct MapView: View {
                         .environmentObject(sheetEnvironment)
                 }
                 .sheet(isPresented: isPlanResponsePresented, onDismiss: {
-                    locationManagerService.resetTripPlanner()
+//                    locationManagerService.resetTripPlanner()
+//                    locationManagerService.planResponse = nil
                 }, content: {
                     TripPlannerView()
-                        .presentationDetents([.medium, .large, .height(50)])
-                        .interactiveDismissDisabled()
+                        .presentationDetents([.medium, .large])
+//                        .interactiveDismissDisabled()
                 })
             }
             if locationManagerService.isMapMarkingMode {
