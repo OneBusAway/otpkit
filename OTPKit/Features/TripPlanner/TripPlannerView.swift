@@ -2,30 +2,41 @@
 //  TripPlannerView.swift
 //  OTPKit
 //
-//  Created by Hilmy Veradin on 25/07/24.
+//  Created by Hilmy Veradin on 30/07/24.
 //
 
 import SwiftUI
 
 public struct TripPlannerView: View {
     @ObservedObject private var locationManagerService = LocationManagerService.shared
-    @Environment(\.dismiss) var dismiss
 
     public init() {}
-    public var body: some View {
-        if let itineraries = locationManagerService.planResponse?.plan?.itineraries {
-            List(itineraries, id: \.self) { itinerary in
-                Button(action: {
-                    locationManagerService.selectedIternary = itinerary
 
-                    locationManagerService.planResponse = nil
-                    dismiss()
-                }, label: {
-                    Text("Total Duration: \(itinerary.duration)")
-                })
-            }
-        } else {
-            Text("Can't find location")
+    public var body: some View {
+        VStack {
+            Button(action: {
+                locationManagerService.resetTripPlanner()
+            }, label: {
+                Text("Start")
+            })
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.gray)
+            .foregroundStyle(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 16)
+
+            Button(action: {
+                locationManagerService.resetTripPlanner()
+            }, label: {
+                Text("Cancel")
+            })
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.gray)
+            .foregroundStyle(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 16)
         }
     }
 }

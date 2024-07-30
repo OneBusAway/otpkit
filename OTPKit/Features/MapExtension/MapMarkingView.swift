@@ -24,6 +24,7 @@ public struct MapMarkingView: View {
                 Button {
                     locationManagerService.toggleMapMarkingMode(false)
                     locationManagerService.selectAndRefreshCoordinate()
+                    locationManagerService.removeOriginDestinationData()
                 } label: {
                     Text("Cancel")
                         .padding(8)
@@ -33,6 +34,7 @@ public struct MapMarkingView: View {
 
                 Button {
                     locationManagerService.toggleMapMarkingMode(false)
+                    locationManagerService.addOriginDestinationData()
                     locationManagerService.selectAndRefreshCoordinate()
                 } label: {
                     Text("Add Pin")

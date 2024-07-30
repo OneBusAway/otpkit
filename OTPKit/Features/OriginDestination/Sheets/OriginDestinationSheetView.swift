@@ -167,7 +167,7 @@ public struct OriginDestinationSheetView: View {
             ForEach(locationManagerService.completions) { location in
                 Button(action: {
                     locationManagerService.appendMarker(location: location)
-
+                    locationManagerService.addOriginDestinationData()
                     switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
                     case .success:
                         dismiss()
@@ -192,6 +192,7 @@ public struct OriginDestinationSheetView: View {
             if let userLocation = locationManagerService.currentLocation {
                 Button(action: {
                     locationManagerService.appendMarker(location: userLocation)
+                    locationManagerService.addOriginDestinationData()
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
                         dismiss()

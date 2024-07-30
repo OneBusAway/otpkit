@@ -113,16 +113,36 @@ public final class LocationManagerService: NSObject, ObservableObject {
         case .origin:
             selectedMapPoint["origin"] = markerItem
             changeMapCamera(mapItem)
-            originName = mapItem.name ?? "Location unknown"
-            originCoordinate = coordinate
         case .destination:
             selectedMapPoint["destination"] = markerItem
             changeMapCamera(mapItem)
-            destinationName = mapItem.name ?? "Location unknown"
-            destinationCoordinate = coordinate
+        }
+    }
+
+    public func addOriginDestinationData() {
+        switch originDestinationState {
+        case .origin:
+            originName = selectedMapPoint["origin"]??.item.name ?? "Location unknown"
+            originCoordinate = selectedMapPoint["origin"]??.item.placemark.coordinate
+        case .destination:
+            destinationName = selectedMapPoint["destination"]??.item.name ?? "Location unknown"
+            destinationCoordinate = selectedMapPoint["destination"]??.item.placemark.coordinate
         }
 
         checkAndFetchTripPlanner()
+    }
+
+    public func removeOriginDestinationData() {
+        switch originDestinationState {
+        case .origin:
+            originName = "Origin"
+            originCoordinate = nil
+            selectedMapPoint["origin"] = nil
+        case .destination:
+            destinationName = "Destination"
+            destinationCoordinate = nil
+            selectedMapPoint["destination"] = nil
+        }
     }
 
     public func toggleMapMarkingMode(_ isMapMarking: Bool) {
@@ -142,21 +162,16 @@ public final class LocationManagerService: NSObject, ObservableObject {
     public func generateMapPolyline() -> MapPolyline? {
         guard let itinerary = selectedIternary else { return nil }
 
-        // Experiment on using steps compactmap
+        // Use steps to calculate the Location Coordinate
         let coordinates = itinerary.legs.flatMap { leg in
             leg.steps?.compactMap { step in
                 CLLocationCoordinate2D(latitude: step.lat, longitude: step.lon)
             } ?? []
         }
 
-//        let coordinates = itinerary.legs.flatMap { leg in
-//            [CLLocationCoordinate2D(latitude: leg.from.lat, longitude: leg.from.lon),
-//             CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)]
-//        }
+        let coodinateExists = !coordinates.isEmpty
 
-        print("---", coordinates, "---")
-
-        guard !coordinates.isEmpty else { return nil }
+        guard coodinateExists else { return nil }
 
         return MapPolyline(coordinates: coordinates)
     }

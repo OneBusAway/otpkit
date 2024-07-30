@@ -57,17 +57,23 @@ public struct MapView: View {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
                 }
-                .sheet(isPresented: isPlanResponsePresented, onDismiss: {
-//                    locationManagerService.resetTripPlanner()
-//                    locationManagerService.planResponse = nil
-                }, content: {
-                    TripPlannerView()
+                .sheet(isPresented: isPlanResponsePresented, content: {
+                    TripPlannerSheetView()
                         .presentationDetents([.medium, .large])
-//                        .interactiveDismissDisabled()
                 })
             }
+
+            if locationManagerService.isFetchingResponse {
+                ProgressView()
+            }
+
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
+            } else if locationManagerService.selectedIternary != nil {
+                VStack {
+                    Spacer()
+                    TripPlannerView()
+                }
             } else {
                 VStack {
                     Spacer()
