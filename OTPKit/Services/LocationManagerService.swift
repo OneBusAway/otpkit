@@ -225,7 +225,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
         originCoordinate = nil
         originName = "Origin"
         destinationName = "Destination"
-        selectedIternary = nil
+        selectedItinerary = nil
     }
 
     // MARK: - User Location Methods

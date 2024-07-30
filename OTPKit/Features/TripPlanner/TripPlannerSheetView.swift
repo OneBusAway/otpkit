@@ -40,7 +40,7 @@ public struct TripPlannerSheetView: View {
                 List(itineraries, id: \.self) { itinerary in
                     let distance = itinerary.legs.map(\.distance).reduce(0, +)
                     Button(action: {
-                        locationManagerService.selectedIternary = itinerary
+                        locationManagerService.selectedItinerary = itinerary
                         locationManagerService.planResponse = nil
                         dismiss()
                     }, label: {

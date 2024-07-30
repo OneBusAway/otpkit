@@ -69,7 +69,7 @@ public struct MapView: View {
 
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-            } else if locationManagerService.selectedIternary != nil {
+            } else if locationManagerService.selectedItinerary != nil {
                 VStack {
                     Spacer()
                     TripPlannerView()
