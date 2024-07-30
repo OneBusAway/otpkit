@@ -23,7 +23,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     @Published public var planResponse: OTPResponse?
     @Published public var isFetchingResponse = false
     @Published public var tripPlannerErrorMessage: String?
-    @Published public var selectedIternary: Itinerary?
+    @Published public var selectedItinerary: Itinerary?
 
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
@@ -160,7 +160,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     }
 
     public func generateMapPolyline() -> MapPolyline? {
-        guard let itinerary = selectedIternary else { return nil }
+        guard let itinerary = selectedItinerary else { return nil }
 
         // Use steps to calculate the Location Coordinate
         let coordinates = itinerary.legs.flatMap { leg in
