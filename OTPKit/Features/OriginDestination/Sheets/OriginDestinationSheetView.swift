@@ -55,7 +55,6 @@ public struct OriginDestinationSheetView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    // swiftlint:disable function_body_length
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
@@ -91,7 +90,6 @@ public struct OriginDestinationSheetView: View {
         })
     }
 
-    // swiftlint:enable function_body_length
     private func recentsSection() -> some View {
         guard sheetEnvironment.recentLocations.count > 0 else {
             return AnyView(EmptyView())
@@ -100,10 +98,17 @@ public struct OriginDestinationSheetView: View {
         return AnyView(
             Section(content: {
                 ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
-                    VStack(alignment: .leading) {
-                        Text(location.title)
-                            .font(.headline)
-                        Text(location.subTitle)
+                    Button {
+                        locationManagerService.appendMarker(location: location)
+                        locationManagerService.addOriginDestinationData()
+                        dismiss()
+                    } label: {
+                        VStack(alignment: .leading) {
+                            Text(location.title)
+                                .font(.headline)
+                            Text(location.subTitle)
+                        }
+                        .foregroundColor(.primary)
                     }
                 })
             }, header: {
