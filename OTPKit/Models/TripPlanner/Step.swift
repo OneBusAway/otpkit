@@ -29,4 +29,10 @@ public struct Step: Codable, Hashable {
 
     /// Optional elevation change during this step, in meters.
     public let elevationChange: Double?
+
+    /// Longitude of the place.
+    public let lon: Double
+
+    /// Latitude of the place.
+    public let lat: Double
 }

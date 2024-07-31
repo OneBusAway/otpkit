@@ -15,12 +15,22 @@ public struct MapView: View {
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
 
+    private var isPlanResponsePresented: Binding<Bool> {
+        Binding(
+            get: { locationManagerService.planResponse != nil },
+            set: { _ in }
+        )
+    }
+
     public var body: some View {
         ZStack {
             MapReader { proxy in
                 Map(position: $locationManagerService.currentCameraPosition, interactionModes: .all) {
                     locationManagerService
                         .generateMarkers()
+                    locationManagerService
+                        .generateMapPolyline()
+                        .stroke(.blue, lineWidth: 5)
                 }
                 .mapControls {
                     if !locationManagerService.isMapMarkingMode {
@@ -47,10 +57,23 @@ public struct MapView: View {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
                 }
+                .sheet(isPresented: isPlanResponsePresented, content: {
+                    TripPlannerSheetView()
+                        .presentationDetents([.medium, .large])
+                })
             }
+
+            if locationManagerService.isFetchingResponse {
+                ProgressView()
+            }
+
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-
+            } else if locationManagerService.selectedItinerary != nil {
+                VStack {
+                    Spacer()
+                    TripPlannerView()
+                }
             } else {
                 VStack {
                     Spacer()

@@ -14,10 +14,21 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
     // MARK: - Properties
 
+    // API Client
+    private let apiClient = RestAPI(
+        baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
+    )
+
+    // Trip Planner
+    @Published public var planResponse: OTPResponse?
+    @Published public var isFetchingResponse = false
+    @Published public var tripPlannerErrorMessage: String?
+    @Published public var selectedItinerary: Itinerary?
+
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
-    @Published public var originCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    @Published public var destinationCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    @Published public var originCoordinate: CLLocationCoordinate2D?
+    @Published public var destinationCoordinate: CLLocationCoordinate2D?
 
     // Location Search
     private let completer: MKLocalSearchCompleter
@@ -102,19 +113,35 @@ public final class LocationManagerService: NSObject, ObservableObject {
         case .origin:
             selectedMapPoint["origin"] = markerItem
             changeMapCamera(mapItem)
-            originName = mapItem.name ?? "Location unknown"
-            originCoordinate = coordinate
         case .destination:
             selectedMapPoint["destination"] = markerItem
             changeMapCamera(mapItem)
-            destinationName = mapItem.name ?? "Location unknown"
-            destinationCoordinate = coordinate
         }
     }
 
-    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
-        ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
-            Marker(item: markerItem.item)
+    public func addOriginDestinationData() {
+        switch originDestinationState {
+        case .origin:
+            originName = selectedMapPoint["origin"]??.item.name ?? "Location unknown"
+            originCoordinate = selectedMapPoint["origin"]??.item.placemark.coordinate
+        case .destination:
+            destinationName = selectedMapPoint["destination"]??.item.name ?? "Location unknown"
+            destinationCoordinate = selectedMapPoint["destination"]??.item.placemark.coordinate
+        }
+
+        checkAndFetchTripPlanner()
+    }
+
+    public func removeOriginDestinationData() {
+        switch originDestinationState {
+        case .origin:
+            originName = "Origin"
+            originCoordinate = nil
+            selectedMapPoint["origin"] = nil
+        case .destination:
+            destinationName = "Destination"
+            destinationCoordinate = nil
+            selectedMapPoint["destination"] = nil
         }
     }
 
@@ -124,6 +151,81 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
     private func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
+    }
+
+    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
+        ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
+            Marker(item: markerItem.item)
+        }
+    }
+
+    public func generateMapPolyline() -> MapPolyline? {
+        guard let itinerary = selectedItinerary else { return nil }
+
+        // Use steps to calculate the Location Coordinate
+        let coordinates = itinerary.legs.flatMap { leg in
+            leg.steps?.compactMap { step in
+                CLLocationCoordinate2D(latitude: step.lat, longitude: step.lon)
+            } ?? []
+        }
+
+        let coodinateExists = !coordinates.isEmpty
+
+        guard coodinateExists else { return nil }
+
+        return MapPolyline(coordinates: coordinates)
+    }
+
+    // MARK: - Trip Planner Methods
+
+    private func checkAndFetchTripPlanner() {
+        guard originCoordinate != nil,
+              destinationCoordinate != nil
+        else {
+            return
+        }
+
+        let fromPlace = formatCoordinate(originCoordinate)
+        let toPlace = formatCoordinate(destinationCoordinate)
+
+        isFetchingResponse = true
+
+        Task {
+            do {
+                let response = try await apiClient.fetchPlan(
+                    fromPlace: fromPlace,
+                    toPlace: toPlace,
+                    time: getCurrentTimeFormatted(),
+                    date: getFormattedTodayDate(),
+                    mode: "TRANSIT,WALK",
+                    arriveBy: false,
+                    maxWalkDistance: 1000,
+                    wheelchair: false
+                )
+                DispatchQueue.main.async {
+                    self.planResponse = response
+                    self.isFetchingResponse = false
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.tripPlannerErrorMessage = "Failed to fetch data: \(error.localizedDescription)"
+                    self.isFetchingResponse = false
+                }
+            }
+        }
+    }
+
+    public func resetTripPlanner() {
+        planResponse = nil
+        selectedMapPoint = [
+            "origin": nil,
+            "destination": nil
+        ]
+        destinationCoordinate = nil
+        originCoordinate = nil
+        originName = "Origin"
+        destinationName = "Destination"
+        selectedItinerary = nil
     }
 
     // MARK: - User Location Methods
@@ -210,5 +312,32 @@ extension LocationManagerService: CLLocationManagerDelegate {
 
     public func locationManagerDidChangeAuthorization(_: CLLocationManager) {
         checkLocationAuthorization()
+    }
+}
+
+// MARK: - Service Extension
+
+extension LocationManagerService {
+    func formatCoordinate(_ coordinate: CLLocationCoordinate2D?) -> String {
+        guard let coordinate else { return "" }
+        return String(format: "%.4f,%.4f", coordinate.latitude, coordinate.longitude)
+    }
+
+    func getFormattedTodayDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy"
+        let today = Date()
+
+        return dateFormatter.string(from: today)
+    }
+
+    func getCurrentTimeFormatted() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        let currentDate = Date()
+
+        return dateFormatter.string(from: currentDate)
     }
 }
