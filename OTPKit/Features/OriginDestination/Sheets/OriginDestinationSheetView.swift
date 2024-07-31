@@ -261,4 +261,5 @@ public struct OriginDestinationSheetView: View {
 
 #Preview {
     OriginDestinationSheetView()
+        .environmentObject(OriginDestinationSheetEnvironment())
 }
