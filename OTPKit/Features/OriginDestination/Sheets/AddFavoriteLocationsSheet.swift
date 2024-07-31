@@ -29,23 +29,6 @@ public struct AddFavoriteLocationsSheet: View {
         }
     }
 
-    private func headerView() -> some View {
-        HStack {
-            Text("Add favorite location")
-                .font(.title2)
-                .fontWeight(.bold)
-            Spacer()
-            Button(action: {
-                dismiss()
-            }, label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.gray)
-            })
-        }
-        .padding()
-    }
-
     private func searchView() -> some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -121,7 +104,10 @@ public struct AddFavoriteLocationsSheet: View {
 
     public var body: some View {
         VStack {
-            headerView()
+            PageHeaderView(text: "Add Favorite") {
+                dismiss()
+            }
+            .padding()
             searchView()
             List {
                 currentUserSection()
