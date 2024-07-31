@@ -128,38 +128,38 @@ public struct OriginDestinationSheetView: View {
 
     // swiftlint:enable function_body_length
     private func recentsSection() -> some View {
-        if sheetEnvironment.recentLocations.isEmpty {
-            AnyView(EmptyView())
-        } else {
-            AnyView(
-                Section(content: {
-                    ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
-                        VStack(alignment: .leading) {
-                            Text(location.title)
-                                .font(.headline)
-                            Text(location.subTitle)
-                        }
-                    })
-                }, header: {
-                    HStack {
-                        Text("Recents")
-                            .textCase(.none)
-                        Spacer()
-                        Button(action: {
-                            isRecentLocationSheetOpen.toggle()
-                        }, label: {
-                            Text("More")
-                                .textCase(.none)
-                                .font(.subheadline)
-                        })
+        guard sheetEnvironment.recentLocations.count > 0 else {
+            return AnyView(EmptyView())
+        }
+
+        return AnyView(
+            Section(content: {
+                ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
+                    VStack(alignment: .leading) {
+                        Text(location.title)
+                            .font(.headline)
+                        Text(location.subTitle)
                     }
                 })
-                .sheet(isPresented: $isRecentLocationSheetOpen, content: {
-                    RecentLocationsSheet()
-                        .environmentObject(sheetEnvironment)
-                })
-            )
-        }
+            }, header: {
+                HStack {
+                    Text("Recents")
+                        .textCase(.none)
+                    Spacer()
+                    Button(action: {
+                        isRecentLocationSheetOpen.toggle()
+                    }, label: {
+                        Text("More")
+                            .textCase(.none)
+                            .font(.subheadline)
+                    })
+                }
+            })
+            .sheet(isPresented: $isRecentLocationSheetOpen, content: {
+                RecentLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            })
+        )
     }
 
     private func searchResultsSection() -> some View {
