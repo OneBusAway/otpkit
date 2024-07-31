@@ -99,17 +99,8 @@ public struct OriginDestinationSheetView: View {
                 }
             }
         }, header: {
-            HStack {
-                Text("Favorites")
-                    .textCase(.none)
-                Spacer()
-                Button(action: {
-                    isFavoriteLocationSheetOpen.toggle()
-                }, label: {
-                    Text("More")
-                        .textCase(.none)
-                        .font(.subheadline)
-                })
+            SectionHeaderView(text: "Favorites") {
+                isFavoriteLocationSheetOpen.toggle()
             }
         })
         .sheet(isPresented: $isAddSavedLocationsSheetOpen, content: {
@@ -142,17 +133,8 @@ public struct OriginDestinationSheetView: View {
                     }
                 })
             }, header: {
-                HStack {
-                    Text("Recents")
-                        .textCase(.none)
-                    Spacer()
-                    Button(action: {
-                        isRecentLocationSheetOpen.toggle()
-                    }, label: {
-                        Text("More")
-                            .textCase(.none)
-                            .font(.subheadline)
-                    })
+                SectionHeaderView(text: "Recents") {
+                    isRecentLocationSheetOpen.toggle()
                 }
             })
             .sheet(isPresented: $isRecentLocationSheetOpen, content: {
