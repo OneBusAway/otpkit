@@ -61,41 +61,15 @@ public struct OriginDestinationSheetView: View {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
-                        Button(action: {
+                        FavoriteView(title: location.title, imageName: "mappin") {
                             sheetEnvironment.selectedDetailFavoriteLocation = location
                             isFavoriteLocationDetailSheetOpen.toggle()
-                        }, label: {
-                            VStack(alignment: .center) {
-                                Image(systemName: "mappin")
-                                    .frame(width: 48, height: 48)
-                                    .background(Color.gray.opacity(0.5))
-                                    .clipShape(Circle())
-
-                                Text(location.title)
-                                    .frame(width: 64)
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                            }
-                            .padding(.all, 4)
-                            .foregroundStyle(Color.black)
-                        })
-
-                    })
-
-                    Button(action: {
-                        isAddSavedLocationsSheetOpen.toggle()
-                    }, label: {
-                        VStack {
-                            Image(systemName: "plus")
-                                .frame(width: 48, height: 48)
-                                .background(Color.gray.opacity(0.5))
-                                .clipShape(Circle())
-
-                            Text("Add")
-                                .foregroundStyle(Color.black)
                         }
-                        .padding(.all, 4)
                     })
+
+                    FavoriteView(title: "Add", imageName: "plus") {
+                        isAddSavedLocationsSheetOpen.toggle()
+                    }
                 }
             }
         }, header: {
