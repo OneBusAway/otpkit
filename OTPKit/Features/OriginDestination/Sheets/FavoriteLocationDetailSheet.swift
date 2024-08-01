@@ -16,27 +16,13 @@ public struct FavoriteLocationDetailSheet: View {
     @State private var isShowErrorAlert = false
     @State private var errorMessage = ""
 
-    private func headerView() -> some View {
-        HStack {
-            Text("Favorite location detail")
-                .font(.title2)
-                .fontWeight(.bold)
-            Spacer()
-            Button(action: {
-                sheetEnvironment.selectedDetailFavoriteLocation = nil
-                dismiss()
-            }, label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.gray)
-            })
-        }
-    }
-
     public var body: some View {
         VStack {
-            headerView()
-                .padding(.vertical)
+            PageHeaderView(text: "Favorite Location Detail") {
+                sheetEnvironment.selectedDetailFavoriteLocation = nil
+                dismiss()
+            }
+            .padding(.vertical)
 
             Text("\(sheetEnvironment.selectedDetailFavoriteLocation?.title ?? "")")
                 .font(.headline)

@@ -17,18 +17,8 @@ public struct FavoriteLocationsSheet: View {
 
     public var body: some View {
         VStack {
-            HStack {
-                Text("Favorites")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Spacer()
-                Button(action: {
-                    dismiss()
-                }, label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                })
+            PageHeaderView(text: "Favorites") {
+                dismiss()
             }
             .padding()
 

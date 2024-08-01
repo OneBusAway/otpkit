@@ -15,18 +15,8 @@ public struct RecentLocationsSheet: View {
 
     public var body: some View {
         VStack {
-            HStack {
-                Text("Recents")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Spacer()
-                Button(action: {
-                    dismiss()
-                }, label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                })
+            PageHeaderView(text: "Recents") {
+                dismiss()
             }
             .padding()
 

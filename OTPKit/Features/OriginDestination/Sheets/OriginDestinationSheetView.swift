@@ -26,22 +26,6 @@ public struct OriginDestinationSheetView: View {
     // Public initializer
     public init() {}
 
-    private func headerView() -> some View {
-        HStack {
-            Text("Change Stop")
-                .font(.title2)
-                .fontWeight(.bold)
-            Spacer()
-            Button(action: {
-                dismiss()
-            }, label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.gray)
-            })
-        }
-    }
-
     private func searchView() -> some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -55,61 +39,25 @@ public struct OriginDestinationSheetView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    // swiftlint:disable function_body_length
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
-                        Button(action: {
+                        FavoriteView(title: location.title, imageName: "mappin") {
                             sheetEnvironment.selectedDetailFavoriteLocation = location
                             isFavoriteLocationDetailSheetOpen.toggle()
-                        }, label: {
-                            VStack(alignment: .center) {
-                                Image(systemName: "mappin")
-                                    .frame(width: 48, height: 48)
-                                    .background(Color.gray.opacity(0.5))
-                                    .clipShape(Circle())
-
-                                Text(location.title)
-                                    .frame(width: 64)
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                            }
-                            .padding(.all, 4)
-                            .foregroundStyle(Color.black)
-                        })
-
-                    })
-
-                    Button(action: {
-                        isAddSavedLocationsSheetOpen.toggle()
-                    }, label: {
-                        VStack {
-                            Image(systemName: "plus")
-                                .frame(width: 48, height: 48)
-                                .background(Color.gray.opacity(0.5))
-                                .clipShape(Circle())
-
-                            Text("Add")
-                                .foregroundStyle(Color.black)
                         }
-                        .padding(.all, 4)
                     })
+
+                    FavoriteView(title: "Add", imageName: "plus") {
+                        isAddSavedLocationsSheetOpen.toggle()
+                    }
                 }
             }
         }, header: {
-            HStack {
-                Text("Favorites")
-                    .textCase(.none)
-                Spacer()
-                Button(action: {
-                    isFavoriteLocationSheetOpen.toggle()
-                }, label: {
-                    Text("More")
-                        .textCase(.none)
-                        .font(.subheadline)
-                })
+            SectionHeaderView(text: "Favorites") {
+                isFavoriteLocationSheetOpen.toggle()
             }
         })
         .sheet(isPresented: $isAddSavedLocationsSheetOpen, content: {
@@ -126,40 +74,37 @@ public struct OriginDestinationSheetView: View {
         })
     }
 
-    // swiftlint:enable function_body_length
     private func recentsSection() -> some View {
-        if sheetEnvironment.recentLocations.isEmpty {
-            AnyView(EmptyView())
-        } else {
-            AnyView(
-                Section(content: {
-                    ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
+        guard sheetEnvironment.recentLocations.count > 0 else {
+            return AnyView(EmptyView())
+        }
+
+        return AnyView(
+            Section(content: {
+                ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
+                    Button {
+                        locationManagerService.appendMarker(location: location)
+                        locationManagerService.addOriginDestinationData()
+                        dismiss()
+                    } label: {
                         VStack(alignment: .leading) {
                             Text(location.title)
                                 .font(.headline)
                             Text(location.subTitle)
                         }
-                    })
-                }, header: {
-                    HStack {
-                        Text("Recents")
-                            .textCase(.none)
-                        Spacer()
-                        Button(action: {
-                            isRecentLocationSheetOpen.toggle()
-                        }, label: {
-                            Text("More")
-                                .textCase(.none)
-                                .font(.subheadline)
-                        })
+                        .foregroundColor(.primary)
                     }
                 })
-                .sheet(isPresented: $isRecentLocationSheetOpen, content: {
-                    RecentLocationsSheet()
-                        .environmentObject(sheetEnvironment)
-                })
-            )
-        }
+            }, header: {
+                SectionHeaderView(text: "Recents") {
+                    isRecentLocationSheetOpen.toggle()
+                }
+            })
+            .sheet(isPresented: $isRecentLocationSheetOpen, content: {
+                RecentLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            })
+        )
     }
 
     private func searchResultsSection() -> some View {
@@ -229,8 +174,10 @@ public struct OriginDestinationSheetView: View {
 
     public var body: some View {
         VStack {
-            headerView()
-                .padding()
+            PageHeaderView(text: "Change Stop") {
+                dismiss()
+            }
+            .padding()
 
             searchView()
                 .padding(.horizontal, 16)
@@ -261,4 +208,5 @@ public struct OriginDestinationSheetView: View {
 
 #Preview {
     OriginDestinationSheetView()
+        .environmentObject(OriginDestinationSheetEnvironment())
 }
