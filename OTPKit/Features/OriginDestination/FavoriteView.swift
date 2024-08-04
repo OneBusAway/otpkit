@@ -18,6 +18,7 @@ struct FavoriteView: View {
         self.imageName = imageName
         self.action = action
     }
+
     var body: some View {
         Button(action: {
             action?()
@@ -35,7 +36,7 @@ struct FavoriteView: View {
                     .truncationMode(.tail)
             }
             .padding(.all, 4)
-            .foregroundStyle(.black)
+            .foregroundStyle(.foreground)
         })
     }
 }

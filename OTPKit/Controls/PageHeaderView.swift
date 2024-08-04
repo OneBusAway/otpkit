@@ -9,7 +9,6 @@ import SwiftUI
 
 /// Appears at the top of UI pages with a title and close button.
 struct PageHeaderView: View {
-
     private let text: String
     private let action: VoidBlock?
 

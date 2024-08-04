@@ -27,7 +27,6 @@ public struct OriginDestinationView: View {
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "paperplane.fill")
-                            .foregroundColor(.white)
                             .background(
                                 Circle()
                                     .fill(Color.green)
@@ -36,6 +35,7 @@ public struct OriginDestinationView: View {
                         Text(locationManagerService.originName)
                     }
                 })
+                .foregroundStyle(.foreground)
 
                 Button(action: {
                     sheetEnvironment.isSheetOpened.toggle()
@@ -43,7 +43,6 @@ public struct OriginDestinationView: View {
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "mappin")
-                            .foregroundColor(.white)
                             .background(
                                 Circle()
                                     .fill(Color.green)
@@ -52,6 +51,7 @@ public struct OriginDestinationView: View {
                         Text(locationManagerService.destinationName)
                     }
                 })
+                .foregroundStyle(.foreground)
             }
             .frame(height: 135)
             .scrollContentBackground(.hidden)

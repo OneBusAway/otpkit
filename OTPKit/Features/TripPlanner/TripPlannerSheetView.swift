@@ -15,41 +15,130 @@ public struct TripPlannerSheetView: View {
 
     private func formatTimeDuration(_ duration: Int) -> String {
         if duration < 60 {
-            return "Total duration: \(duration) second\(duration > 1 ? "s" : "")"
+            return "\(duration) second\(duration > 1 ? "s" : "")"
         } else if duration < 3600 {
             let minutes = Double(duration) / 60
-            return String(format: "Total duration: %.1f minutes", minutes)
+            return String(format: "%.1f min", minutes)
         } else {
             let hours = Double(duration) / 3600
-            return String(format: "Total duration: %.1f hours", hours)
+            return String(format: "%.1f hours", hours)
         }
     }
 
     private func formatDistance(_ distance: Int) -> String {
         if distance < 1000 {
-            return "Total distance: \(distance) meters"
+            return "\(distance) meters"
         } else {
             let miles = Double(distance) / 1609.34
-            return String(format: "Total distance: %.1f miles", miles)
+            return String(format: "%.1f miles", miles)
         }
+    }
+
+    private func formatBusSchedule(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+
+        let formattedTime = dateFormatter.string(from: date)
+
+        return "Bus scheduled at \(formattedTime)"
     }
 
     public var body: some View {
         VStack {
             if let itineraries = locationManagerService.planResponse?.plan?.itineraries {
                 List(itineraries, id: \.self) { itinerary in
-                    let distance = itinerary.legs.map(\.distance).reduce(0, +)
                     Button(action: {
                         locationManagerService.selectedItinerary = itinerary
                         locationManagerService.planResponse = nil
                         dismiss()
                     }, label: {
-                        VStack(alignment: .leading) {
-                            Text(formatTimeDuration(itinerary.duration))
-                            Text(formatDistance(Int(distance)))
+                        HStack(spacing: 20) {
+                            VStack(alignment: .leading) {
+                                Text(formatTimeDuration(itinerary.duration))
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.foreground)
+                                Text(formatBusSchedule(itinerary.startTime))
+                                    .foregroundStyle(.gray)
+
+                                FlowLayout {
+                                    ForEach(Array(zip(itinerary.legs.indices, itinerary.legs)), id: \.1) { index, leg in
+                                        switch leg.mode {
+                                        case "TRAM":
+                                            VStack {
+                                                HStack(spacing: 4) {
+                                                    Text(leg.route ?? "")
+                                                        .padding(.horizontal, 8)
+                                                        .padding(.vertical, 4)
+                                                        .background(Color.blue)
+                                                        .foregroundStyle(.foreground)
+                                                        .font(.caption)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 4))
+
+                                                    Image(systemName: "tram")
+                                                        .foregroundStyle(.foreground)
+                                                }
+                                            }.frame(height: 40)
+
+                                        case "BUS":
+                                            HStack(spacing: 4) {
+                                                Text(leg.route ?? "")
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 4)
+                                                    .background(Color.green)
+                                                    .foregroundStyle(.foreground)
+                                                    .font(.caption)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 4))
+
+                                                Image(systemName: "bus")
+                                                    .foregroundStyle(.foreground)
+                                            }.frame(height: 40)
+
+                                        case "WALK":
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "figure.walk")
+                                                Text(formatTimeDuration(leg.duration))
+                                            }
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .background(Color.gray.opacity(0.2))
+                                            .foregroundStyle(.gray)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            .frame(height: 40)
+
+                                        default:
+                                            Text("")
+                                        }
+
+                                        if index < itinerary.legs.count - 1 {
+                                            VStack {
+                                                Image(systemName: "chevron.right.circle.fill")
+                                                    .frame(width: 8, height: 16)
+                                            }.frame(height: 40)
+                                        }
+                                    }
+                                }
+                            }
+
+                            Button(action: {
+                                locationManagerService.selectedItinerary = itinerary
+                                locationManagerService.planResponse = nil
+                                dismiss()
+                            }, label: {
+                                Text("Go")
+                                    .padding(30)
+                                    .background(Color.green)
+                                    .foregroundStyle(.foreground)
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                            })
                         }
 
                     })
+                    .foregroundStyle(.foreground)
                 }
             } else {
                 Text("Can't find trip planner. Please try another pin point")
@@ -63,7 +152,7 @@ public struct TripPlannerSheetView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.gray)
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(.foreground)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal, 16)
             })
