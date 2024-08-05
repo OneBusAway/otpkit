@@ -45,6 +45,82 @@ public struct TripPlannerSheetView: View {
         return "Bus scheduled at \(formattedTime)"
     }
 
+    private func generateTramView(leg: Leg) -> some View {
+        HStack(spacing: 4) {
+            Text(leg.route ?? "")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.blue)
+                .foregroundStyle(.foreground)
+                .font(.caption)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+
+            Image(systemName: "tram")
+                .foregroundStyle(.foreground)
+        }.frame(height: 40)
+    }
+
+    private func generateBusView(leg: Leg) -> some View {
+        HStack(spacing: 4) {
+            Text(leg.route ?? "")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.green)
+                .foregroundStyle(.foreground)
+                .font(.caption)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+
+            Image(systemName: "bus")
+                .foregroundStyle(.foreground)
+        }
+        .frame(height: 40)
+    }
+
+    private func generateWalkView(leg: Leg) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "figure.walk")
+            Text(formatTimeDuration(leg.duration))
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.gray.opacity(0.2))
+        .foregroundStyle(.gray)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(height: 40)
+    }
+
+    private func generateDefaultView(leg: Leg) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "questionmark.circle")
+                .foregroundStyle(.foreground)
+            Text(formatTimeDuration(leg.duration))
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.gray.opacity(0.2))
+        .foregroundStyle(.gray)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(height: 40)
+    }
+
+    private func generateLegView(leg: Leg) -> some View {
+        Group {
+            switch leg.mode {
+            case "TRAM":
+                generateTramView(leg: leg)
+
+            case "BUS":
+                generateBusView(leg: leg)
+
+            case "WALK":
+                generateWalkView(leg: leg)
+
+            default:
+                generateDefaultView(leg: leg)
+            }
+        }
+    }
+
     public var body: some View {
         VStack {
             if let itineraries = locationManagerService.planResponse?.plan?.itineraries {
@@ -65,52 +141,8 @@ public struct TripPlannerSheetView: View {
 
                                 FlowLayout {
                                     ForEach(Array(zip(itinerary.legs.indices, itinerary.legs)), id: \.1) { index, leg in
-                                        switch leg.mode {
-                                        case "TRAM":
-                                            VStack {
-                                                HStack(spacing: 4) {
-                                                    Text(leg.route ?? "")
-                                                        .padding(.horizontal, 8)
-                                                        .padding(.vertical, 4)
-                                                        .background(Color.blue)
-                                                        .foregroundStyle(.foreground)
-                                                        .font(.caption)
-                                                        .clipShape(RoundedRectangle(cornerRadius: 4))
 
-                                                    Image(systemName: "tram")
-                                                        .foregroundStyle(.foreground)
-                                                }
-                                            }.frame(height: 40)
-
-                                        case "BUS":
-                                            HStack(spacing: 4) {
-                                                Text(leg.route ?? "")
-                                                    .padding(.horizontal, 8)
-                                                    .padding(.vertical, 4)
-                                                    .background(Color.green)
-                                                    .foregroundStyle(.foreground)
-                                                    .font(.caption)
-                                                    .clipShape(RoundedRectangle(cornerRadius: 4))
-
-                                                Image(systemName: "bus")
-                                                    .foregroundStyle(.foreground)
-                                            }.frame(height: 40)
-
-                                        case "WALK":
-                                            HStack(spacing: 4) {
-                                                Image(systemName: "figure.walk")
-                                                Text(formatTimeDuration(leg.duration))
-                                            }
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(Color.gray.opacity(0.2))
-                                            .foregroundStyle(.gray)
-                                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                                            .frame(height: 40)
-
-                                        default:
-                                            Text("")
-                                        }
+                                        generateLegView(leg: leg)
 
                                         if index < itinerary.legs.count - 1 {
                                             VStack {
