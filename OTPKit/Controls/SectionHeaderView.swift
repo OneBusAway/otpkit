@@ -10,7 +10,6 @@ import SwiftUI
 /// The view that appears above a section on the `OriginDestinationSheetView`.
 /// For instance, the header for the Recents and Favorites sections.
 struct SectionHeaderView: View {
-
     private let text: String
     private let action: VoidBlock?
 

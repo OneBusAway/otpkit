@@ -22,7 +22,7 @@ public struct TripPlannerView: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.gray)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(.foreground)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
 
@@ -34,7 +34,7 @@ public struct TripPlannerView: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.gray)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(.foreground)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
         }

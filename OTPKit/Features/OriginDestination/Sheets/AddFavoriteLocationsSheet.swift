@@ -60,7 +60,7 @@ public struct AddFavoriteLocationsSheet: View {
                             Text(userLocation.title)
                                 .font(.headline)
                             Text(userLocation.subTitle)
-                        }.foregroundStyle(Color.black)
+                        }.foregroundStyle(.foreground)
 
                         Spacer()
 
@@ -91,7 +91,7 @@ public struct AddFavoriteLocationsSheet: View {
                         Text(location.title)
                             .font(.headline)
                         Text(location.subTitle)
-                    }.foregroundStyle(Color.black)
+                    }.foregroundStyle(.foreground)
 
                     Spacer()
 
