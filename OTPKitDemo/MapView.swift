@@ -82,7 +82,9 @@ public struct MapView: View {
 
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-            } else if locationManagerService.selectedItinerary != nil, locationManagerService.isStepsViewPresented == false {
+
+            } else if locationManagerService.selectedItinerary != nil,
+                      locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()

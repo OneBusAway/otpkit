@@ -20,17 +20,25 @@ struct DirectionLegVechicleView: View {
                 .font(.caption)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
                 .frame(width: 40)
+                .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Board to \(leg.agencyName ?? "")")
                     .font(.title3)
+                    .fontWeight(.bold)
                     .fixedSize(horizontal: false, vertical: true)
                 Text("\(leg.headsign ?? "")")
+                    .foregroundStyle(.gray)
                     .fixedSize(horizontal: false, vertical: true)
-                Text("Scheduled at \(Formatters.formatBusSchedule(leg.startTime))")
+                Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                     .fixedSize(horizontal: false, vertical: true)
+
+                Rectangle()
+                    .fill(.foreground)
+                    .frame(height: 1)
+                    .padding(.top, 16)
             }
-        }.frame(height: 40)
+        }
     }
 
     private var backgroundColor: Color {

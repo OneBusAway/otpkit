@@ -10,6 +10,8 @@ import SwiftUI
 public struct DirectionSheetView: View {
     @ObservedObject private var locationManagerService = LocationManagerService.shared
 
+    @Environment(\.dismiss) var dismiss
+
     public init() {}
 
     private func generateLegView(leg: Leg) -> some View {
@@ -26,14 +28,30 @@ public struct DirectionSheetView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            if let itinerary = locationManagerService.selectedItinerary {
-                DireactionLegOriginDestinationView(title: "Origin", description: "Unknown Location")
-                ForEach(itinerary.legs, id: \.self) { leg in
-                    generateLegView(leg: leg)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                PageHeaderView(text: "\(locationManagerService.destinationName)") {
+                    locationManagerService.resetTripPlanner()
+                    dismiss()
                 }
-                DireactionLegOriginDestinationView(title: "Destination", description: "Unknown Location")
+
+                if let itinerary = locationManagerService.selectedItinerary {
+                    DireactionLegOriginDestinationView(
+                        title: "Origin",
+                        description: locationManagerService.originName
+                    )
+                    ForEach(itinerary.legs, id: \.self) { leg in
+                        generateLegView(leg: leg)
+                    }
+                    DireactionLegOriginDestinationView(
+                        title: "Destination",
+                        description: locationManagerService.destinationName
+                    )
+                }
+                Spacer()
             }
+            .padding(.horizontal, 12)
+            .padding(.top, 16)
         }
     }
 }

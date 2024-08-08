@@ -13,17 +13,24 @@ struct DireactionLegOriginDestinationView: View {
 
     var body: some View {
         HStack(spacing: 24) {
-            Group {
-                Image(systemName: "mappin")
-                    .padding()
-                    .background(Color.red.opacity(0.8))
-                    .clipShape(Circle())
-            }.frame(width: 40)
+            Image(systemName: "mappin")
+                .font(.system(size: 24))
+                .padding(8)
+                .background(Color.red.opacity(0.8))
+                .clipShape(Circle())
+                .frame(width: 40)
+                .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.title3)
+                    .fontWeight(.bold)
                 Text(description)
+                    .foregroundStyle(.gray)
+                Rectangle()
+                    .fill(.foreground)
+                    .frame(height: 1)
+                    .padding(.top, 16)
             }
         }
     }
