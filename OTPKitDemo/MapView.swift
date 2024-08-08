@@ -71,7 +71,7 @@ public struct MapView: View {
                 .sheet(isPresented: isStepsViewPresented, onDismiss: {
                     locationManagerService.resetTripPlanner()
                 }, content: {
-                    StepsSheetView()
+                    DirectionSheetView()
                         .presentationDetents([.medium, .large])
                 })
             }

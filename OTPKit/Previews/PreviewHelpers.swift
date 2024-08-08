@@ -23,7 +23,8 @@ class PreviewHelpers {
             realTime: true,
             streetNames: nil,
             pathway: nil,
-            steps: nil
+            steps: nil,
+            headsign: nil
         )
     }
 }
