@@ -17,7 +17,14 @@ public struct MapView: View {
 
     private var isPlanResponsePresented: Binding<Bool> {
         Binding(
-            get: { locationManagerService.planResponse != nil },
+            get: { locationManagerService.planResponse != nil && locationManagerService.isStepsViewPresented == false },
+            set: { _ in }
+        )
+    }
+
+    private var isStepsViewPresented: Binding<Bool> {
+        Binding(
+            get: { locationManagerService.isStepsViewPresented },
             set: { _ in }
         )
     }
@@ -61,6 +68,12 @@ public struct MapView: View {
                     TripPlannerSheetView()
                         .presentationDetents([.medium, .large])
                 })
+                .sheet(isPresented: isStepsViewPresented, onDismiss: {
+                    locationManagerService.resetTripPlanner()
+                }, content: {
+                    StepsSheetView()
+                        .presentationDetents([.medium, .large])
+                })
             }
 
             if locationManagerService.isFetchingResponse {
@@ -69,7 +82,7 @@ public struct MapView: View {
 
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-            } else if locationManagerService.selectedItinerary != nil {
+            } else if locationManagerService.selectedItinerary != nil, locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()

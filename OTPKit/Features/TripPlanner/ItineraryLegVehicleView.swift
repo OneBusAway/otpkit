@@ -28,24 +28,23 @@ struct ItineraryLegVehicleView: View {
 
     private var imageName: String {
         if leg.mode == "TRAM" {
-            return "tram"
+            "tram"
         } else if leg.mode == "BUS" {
-            return "bus"
+            "bus"
         } else {
-            return ""
+            ""
         }
     }
 
     private var backgroundColor: Color {
         if leg.mode == "TRAM" {
-            return Color.blue
+            Color.blue
         } else if leg.mode == "BUS" {
-            return Color.green
+            Color.green
         } else {
-            return Color.pink
+            Color.pink
         }
     }
-
 }
 
 #Preview {
