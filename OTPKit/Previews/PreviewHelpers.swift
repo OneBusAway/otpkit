@@ -9,7 +9,7 @@ import SwiftUI
 
 class PreviewHelpers {
     static func buildLeg() -> Leg {
-        return Leg(
+        Leg(
             startTime: Date(),
             endTime: Date(),
             mode: "TRAM",
@@ -23,7 +23,8 @@ class PreviewHelpers {
             realTime: true,
             streetNames: nil,
             pathway: nil,
-            steps: nil
+            steps: nil,
+            headsign: nil
         )
     }
 }

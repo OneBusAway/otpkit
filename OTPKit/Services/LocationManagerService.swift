@@ -24,6 +24,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     @Published public var isFetchingResponse = false
     @Published public var tripPlannerErrorMessage: String?
     @Published public var selectedItinerary: Itinerary?
+    @Published public var isStepsViewPresented = false
 
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
@@ -226,6 +227,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
         originName = "Origin"
         destinationName = "Destination"
         selectedItinerary = nil
+        isStepsViewPresented = false
     }
 
     // MARK: - User Location Methods

@@ -47,7 +47,7 @@ public struct Leg: Codable, Hashable {
     /// Optional flag indicating whether this leg involves transit.
     public let transitLeg: Bool?
 
-    /// Duration of the leg in minutes.
+    /// Duration of the leg in seconds.
     public let duration: Int
 
     /// Optional flag indicating if the leg details are based on real-time data.
@@ -61,6 +61,9 @@ public struct Leg: Codable, Hashable {
 
     /// Optional detailed steps for navigating this leg.
     public let steps: [Step]?
+
+    /// Optional head sign of the transit legs, bus and trams
+    public let headsign: String?
 }
 
 // swiftlint:enable identifier_name
