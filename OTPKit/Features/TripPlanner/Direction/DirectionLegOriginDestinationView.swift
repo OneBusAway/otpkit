@@ -1,5 +1,5 @@
 //
-//  DireactionLegOriginDestinationView.swift
+//  DirectionLegOriginDestinationView.swift
 //  OTPKit
 //
 //  Created by Hilmy Veradin on 08/08/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DireactionLegOriginDestinationView: View {
+struct DirectionLegOriginDestinationView: View {
     let title: String
     let description: String
 
@@ -37,5 +37,5 @@ struct DireactionLegOriginDestinationView: View {
 }
 
 #Preview {
-    DireactionLegOriginDestinationView(title: "Origin", description: "Unknown Location")
+    DirectionLegOriginDestinationView(title: "Origin", description: "Unknown Location")
 }

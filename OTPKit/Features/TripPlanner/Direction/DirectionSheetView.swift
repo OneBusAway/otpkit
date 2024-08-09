@@ -36,14 +36,14 @@ public struct DirectionSheetView: View {
                 }
 
                 if let itinerary = locationManagerService.selectedItinerary {
-                    DireactionLegOriginDestinationView(
+                    DirectionLegOriginDestinationView(
                         title: "Origin",
                         description: locationManagerService.originName
                     )
                     ForEach(itinerary.legs, id: \.self) { leg in
                         generateLegView(leg: leg)
                     }
-                    DireactionLegOriginDestinationView(
+                    DirectionLegOriginDestinationView(
                         title: "Destination",
                         description: locationManagerService.destinationName
                     )
