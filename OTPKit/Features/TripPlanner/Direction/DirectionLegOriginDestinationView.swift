@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct DirectionLegOriginDestinationView: View {
-    let title: String
-    let description: String
+    private let title: String
+    private let description: String
+
+    init(title: String, description: String) {
+        self.title = title
+        self.description = description
+    }
 
     var body: some View {
         HStack(spacing: 24) {

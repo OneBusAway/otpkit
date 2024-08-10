@@ -14,6 +14,7 @@ public struct MapView: View {
     @ObservedObject private var locationManagerService = LocationManagerService.shared
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
     private var isPlanResponsePresented: Binding<Bool> {
         Binding(
@@ -71,8 +72,12 @@ public struct MapView: View {
                 .sheet(isPresented: isStepsViewPresented, onDismiss: {
                     locationManagerService.resetTripPlanner()
                 }, content: {
-                    DirectionSheetView()
-                        .presentationDetents([.medium, .large])
+                    DirectionSheetView(sheetDetent: $directionSheetDetent)
+                        .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
+                        .interactiveDismissDisabled()
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .fraction(0.2))
+                        )
                 })
             }
 

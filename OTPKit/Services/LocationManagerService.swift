@@ -150,11 +150,11 @@ public final class LocationManagerService: NSObject, ObservableObject {
         isMapMarkingMode = isMapMarking
     }
 
-    private func changeMapCamera(_ item: MKMapItem) {
+    public func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
     }
 
-    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
+    public func generateMarkers() -> some MapContent {
         ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
             Marker(item: markerItem.item)
         }
