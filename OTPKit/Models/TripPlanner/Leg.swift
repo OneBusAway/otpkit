@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import CoreLocation
 
 // swiftlint:disable identifier_name
 
@@ -40,6 +41,14 @@ public struct Leg: Codable, Hashable {
 
     /// Ending point of the leg.
     public let to: Place
+
+    /// A container for the polyline of this leg.
+    public let legGeometry: LegGeometry
+
+    /// Returns an array of `CLLocationCoordinate2D`s representing the geometry of this `Leg`.
+    public func decodePolyline() -> [CLLocationCoordinate2D]? {
+        OTPKit.decodePolyline(legGeometry.points)
+    }
 
     /// Distance covered in this leg, in meters.
     public let distance: Double

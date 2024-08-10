@@ -17,6 +17,7 @@ class PreviewHelpers {
             agencyName: nil,
             from: Place(name: "foo", lon: 47, lat: -122, vertexType: ""),
             to: Place(name: "foo", lon: 47, lat: -122, vertexType: ""),
+            legGeometry: LegGeometry(points: "AA@@", length: 4),
             distance: 100,
             transitLeg: false,
             duration: 10,
