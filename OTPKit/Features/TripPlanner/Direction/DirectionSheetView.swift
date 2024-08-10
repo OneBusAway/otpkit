@@ -22,7 +22,7 @@ public struct DirectionSheetView: View {
         Group {
             switch leg.mode {
             case "BUS", "TRAM":
-                DirectionLegVechicleView(leg: leg)
+                DirectionLegVehicleView(leg: leg)
             case "WALK":
                 DirectionLegWalkView(leg: leg)
             default:

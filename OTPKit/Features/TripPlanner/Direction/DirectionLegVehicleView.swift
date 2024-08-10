@@ -1,5 +1,5 @@
 //
-//  DirectionLegVechicleView.swift
+//  DirectionLegVehicleView.swift
 //  OTPKit
 //
 //  Created by Hilmy Veradin on 08/08/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DirectionLegVechicleView: View {
+struct DirectionLegVehicleView: View {
     let leg: Leg
 
     var body: some View {
@@ -61,5 +61,5 @@ struct DirectionLegVechicleView: View {
 }
 
 #Preview {
-    DirectionLegVechicleView(leg: PreviewHelpers.buildLeg())
+    DirectionLegVehicleView(leg: PreviewHelpers.buildLeg())
 }
