@@ -16,10 +16,17 @@ public struct OriginDestinationSheetView: View {
     @State private var search: String = ""
 
     // Sheet States
-    @State private var isAddSavedLocationsSheetOpen = false
-    @State private var isFavoriteLocationSheetOpen = false
-    @State private var isRecentLocationSheetOpen = false
-    @State private var isFavoriteLocationDetailSheetOpen = false
+    private enum Modals: Identifiable {
+        case addFavoriteSheet
+        case moreFavoritesSheet
+        case favoriteDetailsSheet
+        case moreRecentsSheet
+
+        var id: Self { self }
+    }
+
+    @StateObject private var presentationManager = PresentationManager<Modals>()
+
     @State private var isShowFavoriteConfirmationDialog = false
 
     // Alert States
@@ -32,23 +39,10 @@ public struct OriginDestinationSheetView: View {
     // Public initializer
     public init() {}
 
-    private func searchView() -> some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-            TextField("Search for a place", text: $search)
-                .autocorrectionDisabled()
-                .focused($isSearchFocused)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.2))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
     private func favoriteSectionConfirmationDialog() -> some View {
         Group {
             Button(action: {
-                isFavoriteLocationDetailSheetOpen.toggle()
+                presentationManager.present(.favoriteDetailsSheet)
             }, label: {
                 Text("Show Details")
             })
@@ -88,29 +82,14 @@ public struct OriginDestinationSheetView: View {
                     })
 
                     FavoriteView(title: "Add", imageName: "plus", tapAction: {
-                        isAddSavedLocationsSheetOpen.toggle()
+                        presentationManager.present(.addFavoriteSheet)
                     })
                 }
             }
         }, header: {
             SectionHeaderView(text: "Favorites") {
-                isFavoriteLocationSheetOpen.toggle()
+                presentationManager.present(.moreFavoritesSheet)
             }
-        })
-        .sheet(isPresented: $isAddSavedLocationsSheetOpen, content: {
-            AddFavoriteLocationsSheet()
-                .environmentObject(sheetEnvironment)
-        })
-        .sheet(isPresented: $isFavoriteLocationSheetOpen, content: {
-            FavoriteLocationsSheet()
-                .environmentObject(sheetEnvironment)
-        })
-        .sheet(isPresented: $isFavoriteLocationDetailSheetOpen, content: {
-            FavoriteLocationDetailSheet()
-                .environmentObject(sheetEnvironment)
-        })
-        .confirmationDialog("", isPresented: $isShowFavoriteConfirmationDialog, actions: {
-            favoriteSectionConfirmationDialog()
         })
     }
 
@@ -137,12 +116,8 @@ public struct OriginDestinationSheetView: View {
                 })
             }, header: {
                 SectionHeaderView(text: "Recents") {
-                    isRecentLocationSheetOpen.toggle()
+                    presentationManager.present(.moreRecentsSheet)
                 }
-            })
-            .sheet(isPresented: $isRecentLocationSheetOpen, content: {
-                RecentLocationsSheet()
-                    .environmentObject(sheetEnvironment)
             })
         )
     }
@@ -219,7 +194,7 @@ public struct OriginDestinationSheetView: View {
             }
             .padding()
 
-            searchView()
+            SearchView(placeholder: "Search for a place", searchText: $search, isSearchFocused: _isSearchFocused)
                 .padding(.horizontal, 16)
 
             List {
@@ -239,15 +214,34 @@ public struct OriginDestinationSheetView: View {
 
             Spacer()
         }
-        .alert(isPresented: $isShowErrorAlert) {
-            Alert(title: Text(errorTitle),
-                  message: Text(errorMessage),
-                  dismissButton: .cancel(Text("Ok")))
-        }
         .onAppear {
             sheetEnvironment.refreshFavoriteLocations()
             sheetEnvironment.refreshRecentLocations()
         }
+        .sheet(item: $presentationManager.activePresentation) { presentation in
+            switch presentation {
+            case .addFavoriteSheet:
+                AddFavoriteLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            case .moreFavoritesSheet:
+                MoreFavoriteLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            case .favoriteDetailsSheet:
+                FavoriteLocationDetailSheet()
+                    .environmentObject(sheetEnvironment)
+            case .moreRecentsSheet:
+                MoreRecentLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            }
+        }
+        .alert(isPresented: $isShowErrorAlert) {
+            Alert(title: Text(errorTitle),
+                  message: Text(errorMessage),
+                  dismissButton: .cancel(Text("OK")))
+        }
+        .confirmationDialog("", isPresented: $isShowFavoriteConfirmationDialog, actions: {
+            favoriteSectionConfirmationDialog()
+        })
     }
 }
 

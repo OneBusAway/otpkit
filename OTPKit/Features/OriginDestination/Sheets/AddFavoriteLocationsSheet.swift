@@ -29,20 +29,6 @@ public struct AddFavoriteLocationsSheet: View {
         }
     }
 
-    private func searchView() -> some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-            TextField("Search for a place", text: $search)
-                .autocorrectionDisabled()
-                .focused($isSearchFocused)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.2))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 16)
-    }
-
     private func currentUserSection() -> some View {
         if search.isEmpty, let userLocation = locationManagerService.currentLocation {
             AnyView(
@@ -108,7 +94,8 @@ public struct AddFavoriteLocationsSheet: View {
                 dismiss()
             }
             .padding()
-            searchView()
+            SearchView(placeholder: "Search for a place", searchText: $search, isSearchFocused: _isSearchFocused)
+                .padding(.horizontal, 16)
             List {
                 currentUserSection()
                 searchedResultsSection()
