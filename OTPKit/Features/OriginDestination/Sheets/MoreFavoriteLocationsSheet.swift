@@ -10,9 +10,8 @@ import SwiftUI
 /// Show all the lists of favorite locations
 public struct MoreFavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
-
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @ObservedObject private var locationManagerService = TripPlannerService.shared
+    @EnvironmentObject private var locationManagerService: TripPlannerService
 
     @State private var isDetailSheetOpened = false
 
@@ -45,4 +44,5 @@ public struct MoreFavoriteLocationsSheet: View {
 
 #Preview {
     MoreFavoriteLocationsSheet()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

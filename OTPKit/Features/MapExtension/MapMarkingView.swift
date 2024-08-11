@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct MapMarkingView: View {
-    @ObservedObject private var locationManagerService = TripPlannerService.shared
+    @EnvironmentObject private var locationManagerService: TripPlannerService
 
     public init() {}
     public var body: some View {
@@ -52,4 +52,5 @@ public struct MapMarkingView: View {
 
 #Preview {
     MapMarkingView()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

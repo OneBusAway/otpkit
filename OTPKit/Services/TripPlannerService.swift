@@ -10,11 +10,6 @@ import MapKit
 import SwiftUI
 
 public final class TripPlannerService: NSObject, ObservableObject {
-    public static let shared = TripPlannerService(
-        apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
-        locationManager: CLLocationManager(),
-        searchCompleter: MKLocalSearchCompleter()
-    )
 
     // MARK: - Properties
 
@@ -59,7 +54,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // MARK: - Initialization
 
-    init(apiClient: RestAPI, locationManager: CLLocationManager, searchCompleter: MKLocalSearchCompleter) {
+    public init(apiClient: RestAPI, locationManager: CLLocationManager, searchCompleter: MKLocalSearchCompleter) {
         self.apiClient = apiClient
         self.locationManager = locationManager
         self.searchCompleter = searchCompleter

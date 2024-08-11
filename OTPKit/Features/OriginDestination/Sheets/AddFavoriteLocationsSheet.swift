@@ -12,8 +12,7 @@ import SwiftUI
 public struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-
-    @ObservedObject private var locationManagerService = TripPlannerService.shared
+    @EnvironmentObject private var locationManagerService: TripPlannerService
 
     @State private var search = ""
 
@@ -109,4 +108,5 @@ public struct AddFavoriteLocationsSheet: View {
 
 #Preview {
     AddFavoriteLocationsSheet()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

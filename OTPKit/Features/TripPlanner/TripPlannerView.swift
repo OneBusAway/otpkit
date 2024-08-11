@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct TripPlannerView: View {
-    @ObservedObject private var locationManagerService = TripPlannerService.shared
+    @EnvironmentObject private var locationManagerService: TripPlannerService
 
     public init() {}
 
@@ -43,4 +43,5 @@ public struct TripPlannerView: View {
 
 #Preview {
     TripPlannerView()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

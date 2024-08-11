@@ -11,7 +11,7 @@ import SwiftUI
 
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
-    @ObservedObject private var locationManagerService = TripPlannerService.shared
+    @EnvironmentObject private var locationManagerService: TripPlannerService
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
@@ -64,11 +64,13 @@ public struct MapView: View {
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
+                        .environmentObject(locationManagerService)
                 }
                 .sheet(isPresented: isPlanResponsePresented, content: {
                     TripPlannerSheetView()
                         .presentationDetents([.medium, .large])
                         .interactiveDismissDisabled()
+                        .environmentObject(locationManagerService)
                 })
                 .sheet(isPresented: isStepsViewPresented, onDismiss: {
                     locationManagerService.resetTripPlanner()
@@ -79,6 +81,7 @@ public struct MapView: View {
                         .presentationBackgroundInteraction(
                             .enabled(upThrough: .fraction(0.2))
                         )
+                        .environmentObject(locationManagerService)
                 })
             }
 
@@ -86,17 +89,20 @@ public struct MapView: View {
                 ProgressView()
             } else if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
+                    .environmentObject(locationManagerService)
             } else if locationManagerService.selectedItinerary != nil,
                       locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()
+                        .environmentObject(locationManagerService)
                 }
             } else if locationManagerService.planResponse == nil, locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     OriginDestinationView()
                         .environmentObject(sheetEnvironment)
+                        .environmentObject(locationManagerService)
                 }
             }
         }
@@ -107,5 +113,12 @@ public struct MapView: View {
 }
 
 #Preview {
-    MapView()
+    let planner = TripPlannerService(
+        apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
+        locationManager: CLLocationManager(),
+        searchCompleter: MKLocalSearchCompleter()
+    )
+
+    return MapView()
+        .environmentObject(planner)
 }
