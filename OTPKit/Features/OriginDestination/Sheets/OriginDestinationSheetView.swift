@@ -44,15 +44,19 @@ public struct OriginDestinationSheetView: View {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
-                        FavoriteView(title: location.title, imageName: "mappin") {
+                        FavoriteView(title: location.title, imageName: "mappin", tapAction: {
+                            locationManagerService.appendMarker(location: location)
+                            locationManagerService.addOriginDestinationData()
+                            dismiss()
+                        }, longTapAction: {
                             sheetEnvironment.selectedDetailFavoriteLocation = location
                             isFavoriteLocationDetailSheetOpen.toggle()
-                        }
+                        })
                     })
 
-                    FavoriteView(title: "Add", imageName: "plus") {
+                    FavoriteView(title: "Add", imageName: "plus", tapAction: {
                         isAddSavedLocationsSheetOpen.toggle()
-                    }
+                    })
                 }
             }
         }, header: {

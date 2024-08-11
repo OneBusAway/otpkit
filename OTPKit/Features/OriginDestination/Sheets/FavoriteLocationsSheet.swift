@@ -12,6 +12,7 @@ public struct FavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
+    @ObservedObject private var locationManagerService = LocationManagerService.shared
 
     @State private var isDetailSheetOpened = false
 
@@ -24,10 +25,7 @@ public struct FavoriteLocationsSheet: View {
 
             List {
                 ForEach(sheetEnvironment.favoriteLocations) { location in
-                    Button(action: {
-                        sheetEnvironment.selectedDetailFavoriteLocation = location
-                        isDetailSheetOpened.toggle()
-                    }, label: {
+                    Button(action: {}, label: {
                         VStack(alignment: .leading) {
                             Text(location.title)
                                 .font(.headline)
