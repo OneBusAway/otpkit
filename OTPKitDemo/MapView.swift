@@ -14,10 +14,18 @@ public struct MapView: View {
     @ObservedObject private var locationManagerService = LocationManagerService.shared
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
     private var isPlanResponsePresented: Binding<Bool> {
         Binding(
-            get: { locationManagerService.planResponse != nil },
+            get: { locationManagerService.planResponse != nil && locationManagerService.isStepsViewPresented == false },
+            set: { _ in }
+        )
+    }
+
+    private var isStepsViewPresented: Binding<Bool> {
+        Binding(
+            get: { locationManagerService.isStepsViewPresented },
             set: { _ in }
         )
     }
@@ -61,6 +69,16 @@ public struct MapView: View {
                     TripPlannerSheetView()
                         .presentationDetents([.medium, .large])
                 })
+                .sheet(isPresented: isStepsViewPresented, onDismiss: {
+                    locationManagerService.resetTripPlanner()
+                }, content: {
+                    DirectionSheetView(sheetDetent: $directionSheetDetent)
+                        .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
+                        .interactiveDismissDisabled()
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .fraction(0.2))
+                        )
+                })
             }
 
             if locationManagerService.isFetchingResponse {
@@ -69,7 +87,9 @@ public struct MapView: View {
 
             if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-            } else if locationManagerService.selectedItinerary != nil {
+
+            } else if locationManagerService.selectedItinerary != nil,
+                      locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()

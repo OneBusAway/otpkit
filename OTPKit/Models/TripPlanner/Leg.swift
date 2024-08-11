@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import CoreLocation
 import Foundation
 
 // swiftlint:disable identifier_name
@@ -41,13 +42,21 @@ public struct Leg: Codable, Hashable {
     /// Ending point of the leg.
     public let to: Place
 
+    /// A container for the polyline of this leg.
+    public let legGeometry: LegGeometry
+
+    /// Returns an array of `CLLocationCoordinate2D`s representing the geometry of this `Leg`.
+    public func decodePolyline() -> [CLLocationCoordinate2D]? {
+        OTPKit.decodePolyline(legGeometry.points)
+    }
+
     /// Distance covered in this leg, in meters.
     public let distance: Double
 
     /// Optional flag indicating whether this leg involves transit.
     public let transitLeg: Bool?
 
-    /// Duration of the leg in minutes.
+    /// Duration of the leg in seconds.
     public let duration: Int
 
     /// Optional flag indicating if the leg details are based on real-time data.
@@ -61,6 +70,9 @@ public struct Leg: Codable, Hashable {
 
     /// Optional detailed steps for navigating this leg.
     public let steps: [Step]?
+
+    /// Optional head sign of the transit legs, bus and trams
+    public let headsign: String?
 }
 
 // swiftlint:enable identifier_name

@@ -13,8 +13,8 @@ class Formatters {
         if duration < 60 {
             return "\(duration) second\(duration > 1 ? "s" : "")"
         } else if duration < 3600 {
-            let minutes = Double(duration) / 60
-            return String(format: "%.1f min", minutes)
+            let minutes = duration / 60
+            return String(format: "%d min", minutes)
         } else {
             let hours = Double(duration) / 3600
             return String(format: "%.1f hours", hours)
@@ -30,14 +30,12 @@ class Formatters {
         }
     }
 
-    static func formatBusSchedule(_ date: Date) -> String {
+    static func formatDateToTime(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
 
-        let formattedTime = dateFormatter.string(from: date)
-
-        return "Bus scheduled at \(formattedTime)"
+        return dateFormatter.string(from: date)
     }
 }

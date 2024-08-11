@@ -24,6 +24,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
     @Published public var isFetchingResponse = false
     @Published public var tripPlannerErrorMessage: String?
     @Published public var selectedItinerary: Itinerary?
+    @Published public var isStepsViewPresented = false
 
     // Origin Destination
     @Published public var originDestinationState: OriginDestinationState = .origin
@@ -149,11 +150,11 @@ public final class LocationManagerService: NSObject, ObservableObject {
         isMapMarkingMode = isMapMarking
     }
 
-    private func changeMapCamera(_ item: MKMapItem) {
+    public func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
     }
 
-    public func generateMarkers() -> ForEach<[MarkerItem], MarkerItem.ID, Marker<Text>> {
+    public func generateMarkers() -> some MapContent {
         ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
             Marker(item: markerItem.item)
         }
@@ -164,8 +165,8 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
         // Use steps to calculate the Location Coordinate
         let coordinates = itinerary.legs.flatMap { leg in
-            leg.steps?.compactMap { step in
-                CLLocationCoordinate2D(latitude: step.lat, longitude: step.lon)
+            leg.decodePolyline()?.compactMap { coordinate in
+                coordinate
             } ?? []
         }
 
@@ -226,6 +227,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
         originName = "Origin"
         destinationName = "Destination"
         selectedItinerary = nil
+        isStepsViewPresented = false
     }
 
     // MARK: - User Location Methods

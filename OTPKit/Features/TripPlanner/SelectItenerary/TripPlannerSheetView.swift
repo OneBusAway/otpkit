@@ -41,7 +41,7 @@ public struct TripPlannerSheetView: View {
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundStyle(.foreground)
-                                Text(Formatters.formatBusSchedule(itinerary.startTime))
+                                Text("Bus scheduled at \(Formatters.formatDateToTime(itinerary.startTime))")
                                     .foregroundStyle(.gray)
 
                                 FlowLayout {

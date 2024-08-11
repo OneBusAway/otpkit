@@ -15,7 +15,7 @@ public struct TripPlannerView: View {
     public var body: some View {
         VStack {
             Button(action: {
-                locationManagerService.resetTripPlanner()
+                locationManagerService.isStepsViewPresented = true
             }, label: {
                 Text("Start")
             })
