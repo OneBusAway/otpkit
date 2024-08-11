@@ -20,6 +20,12 @@ public struct OriginDestinationSheetView: View {
     @State private var isFavoriteLocationSheetOpen = false
     @State private var isRecentLocationSheetOpen = false
     @State private var isFavoriteLocationDetailSheetOpen = false
+    @State private var isShowFavoriteConfirmationDialog = false
+
+    // Alert States
+    @State private var isShowErrorAlert = false
+    @State private var errorTitle = ""
+    @State private var errorMessage = ""
 
     @FocusState private var isSearchFocused: Bool
 
@@ -39,20 +45,51 @@ public struct OriginDestinationSheetView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
+    private func favoriteSectionConfirmationDialog() -> some View {
+        Group {
+            Button(action: {
+                isFavoriteLocationDetailSheetOpen.toggle()
+            }, label: {
+                Text("Show Details")
+            })
+
+            Button(role: .destructive, action: {
+                guard let uid = sheetEnvironment.selectedDetailFavoriteLocation?.id else {
+                    return
+                }
+                switch UserDefaultsServices.shared.deleteFavoriteLocationData(with: uid) {
+                case .success:
+                    sheetEnvironment.selectedDetailFavoriteLocation = nil
+                    sheetEnvironment.refreshFavoriteLocations()
+                case let .failure(failure):
+                    errorTitle = "Failed to Delete Favorite Location"
+                    errorMessage = failure.localizedDescription
+                    isShowErrorAlert.toggle()
+                }
+            }, label: {
+                Text("Delete")
+            })
+        }
+    }
+
     private func favoritesSection() -> some View {
         Section(content: {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
-                        FavoriteView(title: location.title, imageName: "mappin") {
+                        FavoriteView(title: location.title, imageName: "mappin", tapAction: {
+                            locationManagerService.appendMarker(location: location)
+                            locationManagerService.addOriginDestinationData()
+                            dismiss()
+                        }, longTapAction: {
+                            isShowFavoriteConfirmationDialog = true
                             sheetEnvironment.selectedDetailFavoriteLocation = location
-                            isFavoriteLocationDetailSheetOpen.toggle()
-                        }
+                        })
                     })
 
-                    FavoriteView(title: "Add", imageName: "plus") {
+                    FavoriteView(title: "Add", imageName: "plus", tapAction: {
                         isAddSavedLocationsSheetOpen.toggle()
-                    }
+                    })
                 }
             }
         }, header: {
@@ -71,6 +108,9 @@ public struct OriginDestinationSheetView: View {
         .sheet(isPresented: $isFavoriteLocationDetailSheetOpen, content: {
             FavoriteLocationDetailSheet()
                 .environmentObject(sheetEnvironment)
+        })
+        .confirmationDialog("", isPresented: $isShowFavoriteConfirmationDialog, actions: {
+            favoriteSectionConfirmationDialog()
         })
     }
 
@@ -198,6 +238,11 @@ public struct OriginDestinationSheetView: View {
             }
 
             Spacer()
+        }
+        .alert(isPresented: $isShowErrorAlert) {
+            Alert(title: Text(errorTitle),
+                  message: Text(errorMessage),
+                  dismissButton: .cancel(Text("Ok")))
         }
         .onAppear {
             sheetEnvironment.refreshFavoriteLocations()

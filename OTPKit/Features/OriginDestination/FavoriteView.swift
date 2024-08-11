@@ -11,18 +11,18 @@ import SwiftUI
 struct FavoriteView: View {
     private let title: String
     private let imageName: String
-    private let action: VoidBlock?
+    private let tapAction: VoidBlock?
+    private let longTapAction: VoidBlock?
 
-    init(title: String, imageName: String, action: VoidBlock? = nil) {
+    init(title: String, imageName: String, tapAction: VoidBlock? = nil, longTapAction: VoidBlock? = nil) {
         self.title = title
         self.imageName = imageName
-        self.action = action
+        self.tapAction = tapAction
+        self.longTapAction = longTapAction
     }
 
     var body: some View {
-        Button(action: {
-            action?()
-        }, label: {
+        Button(action: {}, label: {
             VStack(alignment: .center) {
                 Image(systemName: imageName)
                     .frame(width: 48, height: 48)
@@ -37,6 +37,12 @@ struct FavoriteView: View {
             }
             .padding(.all, 4)
             .foregroundStyle(.foreground)
+        })
+        .simultaneousGesture(LongPressGesture().onEnded { _ in
+            longTapAction?()
+        })
+        .simultaneousGesture(TapGesture().onEnded {
+            tapAction?()
         })
     }
 }
