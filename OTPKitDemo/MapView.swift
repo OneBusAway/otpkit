@@ -83,18 +83,15 @@ public struct MapView: View {
 
             if locationManagerService.isFetchingResponse {
                 ProgressView()
-            }
-
-            if locationManagerService.isMapMarkingMode {
+            } else if locationManagerService.isMapMarkingMode {
                 MapMarkingView()
-
             } else if locationManagerService.selectedItinerary != nil,
                       locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()
                 }
-            } else {
+            } else if locationManagerService.planResponse == nil, locationManagerService.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     OriginDestinationView()

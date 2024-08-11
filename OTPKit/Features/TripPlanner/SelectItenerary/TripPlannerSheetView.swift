@@ -62,13 +62,13 @@ public struct TripPlannerSheetView: View {
                             Button(action: {
                                 locationManagerService.selectedItinerary = itinerary
                                 locationManagerService.planResponse = nil
+                                locationManagerService.adjustOriginDestinationCamera()
                                 dismiss()
                             }, label: {
-                                Text("Go")
+                                Text("Preview")
                                     .padding(30)
                                     .background(Color.green)
                                     .foregroundStyle(.foreground)
-                                    .font(.title)
                                     .fontWeight(.bold)
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
                             })
