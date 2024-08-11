@@ -9,7 +9,6 @@ import Foundation
 
 /// A container for the polyline of a `Leg`.
 public struct LegGeometry: Codable, Hashable {
-
     /// The raw polyline; encoded with the Google Polyline Algorithm Format.
     public let points: String
 

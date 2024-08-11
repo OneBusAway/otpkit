@@ -165,8 +165,8 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
         // Use steps to calculate the Location Coordinate
         let coordinates = itinerary.legs.flatMap { leg in
-            leg.steps?.compactMap { step in
-                CLLocationCoordinate2D(latitude: step.lat, longitude: step.lon)
+            leg.decodePolyline()?.compactMap { coordinate in
+                coordinate
             } ?? []
         }
 

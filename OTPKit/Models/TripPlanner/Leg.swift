@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import Foundation
 import CoreLocation
+import Foundation
 
 // swiftlint:disable identifier_name
 

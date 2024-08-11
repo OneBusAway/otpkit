@@ -33,13 +33,13 @@ struct DirectionLegVehicleView: View {
                 Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                     .fixedSize(horizontal: false, vertical: true)
 
-                if let polyline = leg.decodePolyline() {
-                    let coordinatesString = polyline.map { point in
-                        String(format: "%.6f, %.6f", point.latitude, point.longitude)
-                    }.joined(separator: "\n")
-
-                    Text(coordinatesString)
-                }
+//                if let polyline = leg.decodePolyline() {
+//                    let coordinatesString = polyline.map { point in
+//                        String(format: "%.6f, %.6f", point.latitude, point.longitude)
+//                    }.joined(separator: "\n")
+//
+//                    Text(coordinatesString)
+//                }
 
                 Rectangle()
                     .fill(.foreground)
