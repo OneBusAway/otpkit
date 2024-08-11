@@ -177,6 +177,24 @@ public final class LocationManagerService: NSObject, ObservableObject {
         return MapPolyline(coordinates: coordinates)
     }
 
+    public func adjustOriginDestinationCamera() {
+        guard let originCoordinate, let destinationCoordinate else { return }
+        // Create a rectangle that encompasses both coordinates
+        let minLat = min(originCoordinate.latitude, destinationCoordinate.latitude)
+        let maxLat = max(originCoordinate.latitude, destinationCoordinate.latitude)
+        let minLon = min(originCoordinate.longitude, destinationCoordinate.longitude)
+        let maxLon = max(originCoordinate.longitude, destinationCoordinate.longitude)
+
+        let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2,
+                                            longitude: (minLon + maxLon) / 2)
+        let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * 1.5,
+                                    longitudeDelta: (maxLon - minLon) * 1.5)
+
+        let region = MKCoordinateRegion(center: center, span: span)
+
+        currentCameraPosition = .region(region)
+    }
+
     // MARK: - Trip Planner Methods
 
     private func checkAndFetchTripPlanner() {
