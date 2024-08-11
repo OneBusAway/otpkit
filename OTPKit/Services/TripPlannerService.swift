@@ -1,5 +1,5 @@
 //
-//  LocationManagerService.swift
+//  TripPlannerService.swift
 //  OTPKit
 //
 //  Created by Hilmy Veradin on 18/07/24.
@@ -9,8 +9,8 @@ import Foundation
 import MapKit
 import SwiftUI
 
-public final class LocationManagerService: NSObject, ObservableObject {
-    public static let shared = LocationManagerService()
+public final class TripPlannerService: NSObject, ObservableObject {
+    public static let shared = TripPlannerService()
 
     // MARK: - Properties
 
@@ -275,7 +275,7 @@ public final class LocationManagerService: NSObject, ObservableObject {
 
 // MARK: - MKLocalSearchCompleterDelegate
 
-extension LocationManagerService: MKLocalSearchCompleterDelegate {
+extension TripPlannerService: MKLocalSearchCompleterDelegate {
     public func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         completions.removeAll()
 
@@ -310,7 +310,7 @@ extension LocationManagerService: MKLocalSearchCompleterDelegate {
 
 // MARK: - CLLocationManagerDelegate
 
-extension LocationManagerService: CLLocationManagerDelegate {
+extension TripPlannerService: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         DispatchQueue.main.async {
@@ -337,7 +337,7 @@ extension LocationManagerService: CLLocationManagerDelegate {
 
 // MARK: - Service Extension
 
-extension LocationManagerService {
+extension TripPlannerService {
     func formatCoordinate(_ coordinate: CLLocationCoordinate2D?) -> String {
         guard let coordinate else { return "" }
         return String(format: "%.4f,%.4f", coordinate.latitude, coordinate.longitude)

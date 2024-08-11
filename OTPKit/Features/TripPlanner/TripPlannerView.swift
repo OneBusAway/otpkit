@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct TripPlannerView: View {
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
 
     public init() {}
 

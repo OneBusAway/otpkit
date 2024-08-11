@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct MapMarkingView: View {
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
 
     public init() {}
     public var body: some View {

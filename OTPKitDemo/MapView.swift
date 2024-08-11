@@ -11,7 +11,7 @@ import SwiftUI
 
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)

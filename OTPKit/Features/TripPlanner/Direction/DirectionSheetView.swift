@@ -2,7 +2,7 @@ import MapKit
 import SwiftUI
 
 public struct DirectionSheetView: View {
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
     @Environment(\.dismiss) private var dismiss
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?

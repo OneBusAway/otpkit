@@ -12,7 +12,7 @@ public struct MoreFavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
 
     @State private var isDetailSheetOpened = false
 

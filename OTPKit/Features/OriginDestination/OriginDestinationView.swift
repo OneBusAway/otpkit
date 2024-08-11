@@ -12,7 +12,7 @@ import SwiftUI
 /// It consists a list of Origin and Destination along with the `MapKit`
 public struct OriginDestinationView: View {
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
     @State private var isSheetOpened = false
 
     // Public Initializer

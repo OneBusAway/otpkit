@@ -11,7 +11,7 @@ public struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
 
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @ObservedObject private var locationManagerService = TripPlannerService.shared
 
     @State private var search: String = ""
 
