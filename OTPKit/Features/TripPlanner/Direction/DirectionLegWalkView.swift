@@ -16,7 +16,6 @@ struct DirectionLegWalkView: View {
                 .font(.system(size: 24))
                 .padding()
                 .frame(width: 40)
-                .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Walk to \(leg.to.name)")
@@ -30,11 +29,6 @@ struct DirectionLegWalkView: View {
                 )
                 .foregroundStyle(.gray)
                 .fixedSize(horizontal: false, vertical: true)
-
-                Rectangle()
-                    .fill(.foreground)
-                    .frame(height: 1)
-                    .padding(.top, 16)
             }
         }
     }

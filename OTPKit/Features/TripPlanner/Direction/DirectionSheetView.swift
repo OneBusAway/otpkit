@@ -1,18 +1,11 @@
-//
-//  DirectionSheetView.swift
-//  OTPKit
-//
-//  Created by Hilmy Veradin on 08/08/24.
-//
-
 import MapKit
 import SwiftUI
 
 public struct DirectionSheetView: View {
     @ObservedObject private var locationManagerService = LocationManagerService.shared
     @Environment(\.dismiss) private var dismiss
-    @State private var scrollToItem: String?
     @Binding var sheetDetent: PresentationDetent
+    @State private var scrollToItem: String?
 
     public init(sheetDetent: Binding<PresentationDetent>) {
         _sheetDetent = sheetDetent
@@ -41,32 +34,35 @@ public struct DirectionSheetView: View {
 
     public var body: some View {
         ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+            List {
+                Section {
                     PageHeaderView(text: "\(locationManagerService.destinationName)") {
                         locationManagerService.resetTripPlanner()
                         dismiss()
                     }
                     .frame(height: 50)
-
-                    if let itinerary = locationManagerService.selectedItinerary {
-                        Group {
-                            createOriginView(itinerary: itinerary)
-                            createLegsView(itinerary: itinerary)
-                            createDestinationView(itinerary: itinerary)
-                        }
-                    }
-                    Spacer()
+                    .listRowInsets(EdgeInsets())
                 }
-                .padding(.horizontal, 12)
-                .padding(.top, 16)
+
+                if let itinerary = locationManagerService.selectedItinerary {
+                    Section {
+                        createOriginView(itinerary: itinerary)
+                        createLegsView(itinerary: itinerary)
+                        createDestinationView(itinerary: itinerary)
+                    }
+                }
             }
+            .padding(.horizontal, 12)
+            .padding(.top, 16)
+            .listStyle(PlainListStyle())
             .onChange(of: scrollToItem) {
                 if let itemId = scrollToItem {
                     withAnimation {
                         proxy.scrollTo(itemId, anchor: .top)
                     }
-                    scrollToItem = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        scrollToItem = nil
+                    }
                 }
             }
         }

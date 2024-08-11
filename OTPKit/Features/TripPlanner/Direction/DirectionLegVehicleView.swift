@@ -20,7 +20,6 @@ struct DirectionLegVehicleView: View {
                 .font(.caption)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
                 .frame(width: 40)
-                .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Board to \(leg.agencyName ?? "")")
@@ -32,19 +31,6 @@ struct DirectionLegVehicleView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                     .fixedSize(horizontal: false, vertical: true)
-
-//                if let polyline = leg.decodePolyline() {
-//                    let coordinatesString = polyline.map { point in
-//                        String(format: "%.6f, %.6f", point.latitude, point.longitude)
-//                    }.joined(separator: "\n")
-//
-//                    Text(coordinatesString)
-//                }
-
-                Rectangle()
-                    .fill(.foreground)
-                    .frame(height: 1)
-                    .padding(.top, 16)
             }
         }
     }

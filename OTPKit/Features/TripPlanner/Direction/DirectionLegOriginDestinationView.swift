@@ -32,10 +32,6 @@ struct DirectionLegOriginDestinationView: View {
                     .fontWeight(.bold)
                 Text(description)
                     .foregroundStyle(.gray)
-                Rectangle()
-                    .fill(.foreground)
-                    .frame(height: 1)
-                    .padding(.top, 16)
             }
         }
     }

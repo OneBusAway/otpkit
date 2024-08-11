@@ -15,7 +15,6 @@ struct DirectionLegUnknownView: View {
             .font(.system(size: 24))
             .padding()
             .frame(width: 40)
-            .padding(.bottom, 16)
 
         VStack(alignment: .leading, spacing: 4) {
             Text("To \(leg.to.name)")
@@ -29,11 +28,6 @@ struct DirectionLegUnknownView: View {
             )
             .foregroundStyle(.gray)
             .fixedSize(horizontal: false, vertical: true)
-
-            Rectangle()
-                .fill(.foreground)
-                .frame(height: 1)
-                .padding(.top, 16)
         }
     }
 }
