@@ -39,19 +39,6 @@ public struct OriginDestinationSheetView: View {
     // Public initializer
     public init() {}
 
-    private func searchView() -> some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-            TextField("Search for a place", text: $search)
-                .autocorrectionDisabled()
-                .focused($isSearchFocused)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.2))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
     private func favoriteSectionConfirmationDialog() -> some View {
         Group {
             Button(action: {
@@ -226,7 +213,7 @@ public struct OriginDestinationSheetView: View {
             }
             .padding()
 
-            searchView()
+            SearchView(placeholder: "Search for a place", searchText: $search, isSearchFocused: _isSearchFocused)
                 .padding(.horizontal, 16)
 
             List {
