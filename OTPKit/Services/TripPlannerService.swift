@@ -10,14 +10,15 @@ import MapKit
 import SwiftUI
 
 public final class TripPlannerService: NSObject, ObservableObject {
-    public static let shared = TripPlannerService()
+    public static let shared = TripPlannerService(
+        apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
+        locationManager: CLLocationManager(),
+        searchCompleter: MKLocalSearchCompleter()
+    )
 
     // MARK: - Properties
 
-    // API Client
-    private let apiClient = RestAPI(
-        baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
-    )
+    private let apiClient: RestAPI
 
     // Trip Planner
     @Published public var planResponse: OTPResponse?
@@ -32,7 +33,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
     @Published public var destinationCoordinate: CLLocationCoordinate2D?
 
     // Location Search
-    private let completer: MKLocalSearchCompleter
+    private let searchCompleter: MKLocalSearchCompleter
     private let debounceInterval: TimeInterval
     private var debounceTimer: Timer?
     private var currentRegion: MKCoordinateRegion?
@@ -54,22 +55,25 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // User Location
     @Published var currentLocation: Location?
-    var locationManager: CLLocationManager = .init()
+    private let locationManager: CLLocationManager
 
     // MARK: - Initialization
 
-    override private init() {
-        completer = MKLocalSearchCompleter()
+    init(apiClient: RestAPI, locationManager: CLLocationManager, searchCompleter: MKLocalSearchCompleter) {
+        self.apiClient = apiClient
+        self.locationManager = locationManager
+        self.searchCompleter = searchCompleter
         debounceInterval = 1
         super.init()
 
-        completer.delegate = self
+        searchCompleter.delegate = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
     deinit {
         debounceTimer?.invalidate()
+        searchCompleter.cancel()
     }
 
     // MARK: - Location Search Methods
@@ -81,14 +85,14 @@ public final class TripPlannerService: NSObject, ObservableObject {
         debounceTimer?.invalidate()
         debounceTimer = Timer.scheduledTimer(withTimeInterval: debounceInterval, repeats: false) { [weak self] _ in
             guard let self else { return }
-            completer.resultTypes = .query
-            completer.queryFragment = queryFragment
+            searchCompleter.resultTypes = .query
+            searchCompleter.queryFragment = queryFragment
         }
     }
 
     private func updateCompleterRegion() {
         if let region = currentRegion {
-            completer.region = region
+            searchCompleter.region = region
         }
     }
 
