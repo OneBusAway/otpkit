@@ -91,25 +91,6 @@ public struct OriginDestinationSheetView: View {
                 presentationManager.present(.moreFavoritesSheet)
             }
         })
-        .sheet(item: $presentationManager.activePresentation) { presentation in
-            switch presentation {
-            case .addFavoriteSheet:
-                AddFavoriteLocationsSheet()
-                    .environmentObject(sheetEnvironment)
-            case .moreFavoritesSheet:
-                MoreFavoriteLocationsSheet()
-                    .environmentObject(sheetEnvironment)
-            case .favoriteDetailsSheet:
-                FavoriteLocationDetailSheet()
-                    .environmentObject(sheetEnvironment)
-            case .moreRecentsSheet:
-                MoreRecentLocationsSheet()
-                    .environmentObject(sheetEnvironment)
-            }
-        }
-        .confirmationDialog("", isPresented: $isShowFavoriteConfirmationDialog, actions: {
-            favoriteSectionConfirmationDialog()
-        })
     }
 
     private func recentsSection() -> some View {
@@ -233,15 +214,34 @@ public struct OriginDestinationSheetView: View {
 
             Spacer()
         }
-        .alert(isPresented: $isShowErrorAlert) {
-            Alert(title: Text(errorTitle),
-                  message: Text(errorMessage),
-                  dismissButton: .cancel(Text("Ok")))
-        }
         .onAppear {
             sheetEnvironment.refreshFavoriteLocations()
             sheetEnvironment.refreshRecentLocations()
         }
+        .sheet(item: $presentationManager.activePresentation) { presentation in
+            switch presentation {
+            case .addFavoriteSheet:
+                AddFavoriteLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            case .moreFavoritesSheet:
+                MoreFavoriteLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            case .favoriteDetailsSheet:
+                FavoriteLocationDetailSheet()
+                    .environmentObject(sheetEnvironment)
+            case .moreRecentsSheet:
+                MoreRecentLocationsSheet()
+                    .environmentObject(sheetEnvironment)
+            }
+        }
+        .alert(isPresented: $isShowErrorAlert) {
+            Alert(title: Text(errorTitle),
+                  message: Text(errorMessage),
+                  dismissButton: .cancel(Text("OK")))
+        }
+        .confirmationDialog("", isPresented: $isShowFavoriteConfirmationDialog, actions: {
+            favoriteSectionConfirmationDialog()
+        })
     }
 }
 
