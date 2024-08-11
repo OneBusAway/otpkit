@@ -11,21 +11,21 @@ import SwiftUI
 
 public struct MapView: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
     private var isPlanResponsePresented: Binding<Bool> {
         Binding(
-            get: { locationManagerService.planResponse != nil && locationManagerService.isStepsViewPresented == false },
+            get: { tripPlanner.planResponse != nil && tripPlanner.isStepsViewPresented == false },
             set: { _ in }
         )
     }
 
     private var isStepsViewPresented: Binding<Bool> {
         Binding(
-            get: { locationManagerService.isStepsViewPresented },
+            get: { tripPlanner.isStepsViewPresented },
             set: { _ in }
         )
     }
@@ -33,21 +33,21 @@ public struct MapView: View {
     public var body: some View {
         ZStack {
             MapReader { proxy in
-                Map(position: $locationManagerService.currentCameraPosition, interactionModes: .all) {
-                    locationManagerService
+                Map(position: $tripPlanner.currentCameraPosition, interactionModes: .all) {
+                    tripPlanner
                         .generateMarkers()
-                    locationManagerService
+                    tripPlanner
                         .generateMapPolyline()
                         .stroke(.blue, lineWidth: 5)
                 }
                 .mapControls {
-                    if !locationManagerService.isMapMarkingMode {
+                    if !tripPlanner.isMapMarkingMode {
                         MapUserLocationButton()
                         MapPitchToggle()
                     }
                 }
                 .onTapGesture { tappedLocation in
-                    if locationManagerService.isMapMarkingMode {
+                    if tripPlanner.isMapMarkingMode {
                         guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
                         let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
                         let locationTitle = mapItem.name ?? "Location unknown"
@@ -58,20 +58,22 @@ public struct MapView: View {
                             latitude: coordinate.latitude,
                             longitude: coordinate.longitude
                         )
-                        locationManagerService.appendMarker(location: location)
+                        tripPlanner.appendMarker(location: location)
                     }
                 }
                 .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                     OriginDestinationSheetView()
                         .environmentObject(sheetEnvironment)
+                        .environmentObject(tripPlanner)
                 }
                 .sheet(isPresented: isPlanResponsePresented, content: {
                     TripPlannerSheetView()
                         .presentationDetents([.medium, .large])
                         .interactiveDismissDisabled()
+                        .environmentObject(tripPlanner)
                 })
                 .sheet(isPresented: isStepsViewPresented, onDismiss: {
-                    locationManagerService.resetTripPlanner()
+                    tripPlanner.resetTripPlanner()
                 }, content: {
                     DirectionSheetView(sheetDetent: $directionSheetDetent)
                         .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
@@ -79,33 +81,44 @@ public struct MapView: View {
                         .presentationBackgroundInteraction(
                             .enabled(upThrough: .fraction(0.2))
                         )
+                        .environmentObject(tripPlanner)
                 })
             }
 
-            if locationManagerService.isFetchingResponse {
+            if tripPlanner.isFetchingResponse {
                 ProgressView()
-            } else if locationManagerService.isMapMarkingMode {
+            } else if tripPlanner.isMapMarkingMode {
                 MapMarkingView()
-            } else if locationManagerService.selectedItinerary != nil,
-                      locationManagerService.isStepsViewPresented == false {
+                    .environmentObject(tripPlanner)
+            } else if tripPlanner.selectedItinerary != nil,
+                      tripPlanner.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     TripPlannerView()
+                        .environmentObject(tripPlanner)
                 }
-            } else if locationManagerService.planResponse == nil, locationManagerService.isStepsViewPresented == false {
+            } else if tripPlanner.planResponse == nil, tripPlanner.isStepsViewPresented == false {
                 VStack {
                     Spacer()
                     OriginDestinationView()
                         .environmentObject(sheetEnvironment)
+                        .environmentObject(tripPlanner)
                 }
             }
         }
         .onAppear {
-            locationManagerService.checkIfLocationServicesIsEnabled()
+            tripPlanner.checkIfLocationServicesIsEnabled()
         }
     }
 }
 
 #Preview {
-    MapView()
+    let planner = TripPlannerService(
+        apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
+        locationManager: CLLocationManager(),
+        searchCompleter: MKLocalSearchCompleter()
+    )
+
+    return MapView()
+        .environmentObject(planner)
 }

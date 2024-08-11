@@ -2,7 +2,7 @@ import MapKit
 import SwiftUI
 
 public struct DirectionSheetView: View {
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @EnvironmentObject private var tripPlanner: TripPlannerService
     @Environment(\.dismiss) private var dismiss
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
@@ -27,7 +27,7 @@ public struct DirectionSheetView: View {
     private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {
         let placemark = MKPlacemark(coordinate: coordinate)
         let item = MKMapItem(placemark: placemark)
-        locationManagerService.changeMapCamera(item)
+        tripPlanner.changeMapCamera(item)
         scrollToItem = itemId
         sheetDetent = .fraction(0.2)
     }
@@ -36,15 +36,15 @@ public struct DirectionSheetView: View {
         ScrollViewReader { proxy in
             List {
                 Section {
-                    PageHeaderView(text: "\(locationManagerService.destinationName)") {
-                        locationManagerService.resetTripPlanner()
+                    PageHeaderView(text: "\(tripPlanner.destinationName)") {
+                        tripPlanner.resetTripPlanner()
                         dismiss()
                     }
                     .frame(height: 50)
                     .listRowInsets(EdgeInsets())
                 }
 
-                if let itinerary = locationManagerService.selectedItinerary {
+                if let itinerary = tripPlanner.selectedItinerary {
                     Section {
                         createOriginView(itinerary: itinerary)
                         createLegsView(itinerary: itinerary)
@@ -71,11 +71,11 @@ public struct DirectionSheetView: View {
     private func createOriginView(itinerary _: Itinerary) -> some View {
         DirectionLegOriginDestinationView(
             title: "Origin",
-            description: locationManagerService.originName
+            description: tripPlanner.originName
         )
         .id("item-0")
         .onTapGesture {
-            if let originCoordinate = locationManagerService.originCoordinate {
+            if let originCoordinate = tripPlanner.originCoordinate {
                 handleTap(coordinate: originCoordinate, itemId: "item-0")
             }
         }
@@ -95,11 +95,11 @@ public struct DirectionSheetView: View {
     private func createDestinationView(itinerary: Itinerary) -> some View {
         DirectionLegOriginDestinationView(
             title: "Destination",
-            description: locationManagerService.destinationName
+            description: tripPlanner.destinationName
         )
         .id("item-\(itinerary.legs.count + 1)")
         .onTapGesture {
-            if let destinationCoordinate = locationManagerService.destinationCoordinate {
+            if let destinationCoordinate = tripPlanner.destinationCoordinate {
                 handleTap(coordinate: destinationCoordinate, itemId: "item-\(itinerary.legs.count + 1)")
             }
         }
@@ -108,4 +108,5 @@ public struct DirectionSheetView: View {
 
 #Preview {
     DirectionSheetView(sheetDetent: .constant(.fraction(0.2)))
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

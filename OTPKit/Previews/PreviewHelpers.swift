@@ -6,8 +6,18 @@
 //
 
 import SwiftUI
+import CoreLocation
+import MapKit
 
 class PreviewHelpers {
+    static func buildTripPlannerService() -> TripPlannerService {
+        TripPlannerService(
+            apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
+            locationManager: CLLocationManager(),
+            searchCompleter: MKLocalSearchCompleter()
+        )
+    }
+
     static func buildLeg() -> Leg {
         Leg(
             startTime: Date(),

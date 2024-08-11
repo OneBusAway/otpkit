@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct MapMarkingView: View {
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     public init() {}
     public var body: some View {
@@ -22,9 +22,9 @@ public struct MapMarkingView: View {
 
             HStack(spacing: 16) {
                 Button {
-                    locationManagerService.toggleMapMarkingMode(false)
-                    locationManagerService.selectAndRefreshCoordinate()
-                    locationManagerService.removeOriginDestinationData()
+                    tripPlanner.toggleMapMarkingMode(false)
+                    tripPlanner.selectAndRefreshCoordinate()
+                    tripPlanner.removeOriginDestinationData()
                 } label: {
                     Text("Cancel")
                         .padding(8)
@@ -33,9 +33,9 @@ public struct MapMarkingView: View {
                 .buttonStyle(.bordered)
 
                 Button {
-                    locationManagerService.toggleMapMarkingMode(false)
-                    locationManagerService.addOriginDestinationData()
-                    locationManagerService.selectAndRefreshCoordinate()
+                    tripPlanner.toggleMapMarkingMode(false)
+                    tripPlanner.addOriginDestinationData()
+                    tripPlanner.selectAndRefreshCoordinate()
                 } label: {
                     Text("Add Pin")
                         .padding(8)
@@ -52,4 +52,5 @@ public struct MapMarkingView: View {
 
 #Preview {
     MapMarkingView()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

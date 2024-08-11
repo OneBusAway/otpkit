@@ -10,8 +10,7 @@ import SwiftUI
 public struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
-
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     @State private var search: String = ""
 
@@ -72,8 +71,8 @@ public struct OriginDestinationSheetView: View {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
                         FavoriteView(title: location.title, imageName: "mappin", tapAction: {
-                            locationManagerService.appendMarker(location: location)
-                            locationManagerService.addOriginDestinationData()
+                            tripPlanner.appendMarker(location: location)
+                            tripPlanner.addOriginDestinationData()
                             dismiss()
                         }, longTapAction: {
                             isShowFavoriteConfirmationDialog = true
@@ -102,8 +101,8 @@ public struct OriginDestinationSheetView: View {
             Section(content: {
                 ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
                     Button {
-                        locationManagerService.appendMarker(location: location)
-                        locationManagerService.addOriginDestinationData()
+                        tripPlanner.appendMarker(location: location)
+                        tripPlanner.addOriginDestinationData()
                         dismiss()
                     } label: {
                         VStack(alignment: .leading) {
@@ -124,10 +123,10 @@ public struct OriginDestinationSheetView: View {
 
     private func searchResultsSection() -> some View {
         Group {
-            ForEach(locationManagerService.completions) { location in
+            ForEach(tripPlanner.completions) { location in
                 Button(action: {
-                    locationManagerService.appendMarker(location: location)
-                    locationManagerService.addOriginDestinationData()
+                    tripPlanner.appendMarker(location: location)
+                    tripPlanner.addOriginDestinationData()
                     switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
                     case .success:
                         dismiss()
@@ -149,10 +148,10 @@ public struct OriginDestinationSheetView: View {
 
     private func currentUserSection() -> some View {
         Group {
-            if let userLocation = locationManagerService.currentLocation {
+            if let userLocation = tripPlanner.currentLocation {
                 Button(action: {
-                    locationManagerService.appendMarker(location: userLocation)
-                    locationManagerService.addOriginDestinationData()
+                    tripPlanner.appendMarker(location: userLocation)
+                    tripPlanner.addOriginDestinationData()
                     switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
                     case .success:
                         dismiss()
@@ -176,7 +175,7 @@ public struct OriginDestinationSheetView: View {
 
     private func selectLocationBasedOnMap() -> some View {
         Button(action: {
-            locationManagerService.toggleMapMarkingMode(true)
+            tripPlanner.toggleMapMarkingMode(true)
             dismiss()
         }, label: {
             HStack {
@@ -209,7 +208,7 @@ public struct OriginDestinationSheetView: View {
                 }
             }
             .onChange(of: search) { _, searchValue in
-                locationManagerService.updateQuery(queryFragment: searchValue)
+                tripPlanner.updateQuery(queryFragment: searchValue)
             }
 
             Spacer()
@@ -223,9 +222,11 @@ public struct OriginDestinationSheetView: View {
             case .addFavoriteSheet:
                 AddFavoriteLocationsSheet()
                     .environmentObject(sheetEnvironment)
+                    .environmentObject(tripPlanner)
             case .moreFavoritesSheet:
                 MoreFavoriteLocationsSheet()
                     .environmentObject(sheetEnvironment)
+                    .environmentObject(tripPlanner)
             case .favoriteDetailsSheet:
                 FavoriteLocationDetailSheet()
                     .environmentObject(sheetEnvironment)
@@ -248,4 +249,5 @@ public struct OriginDestinationSheetView: View {
 #Preview {
     OriginDestinationSheetView()
         .environmentObject(OriginDestinationSheetEnvironment())
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

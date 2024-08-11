@@ -12,7 +12,7 @@ import SwiftUI
 /// It consists a list of Origin and Destination along with the `MapKit`
 public struct OriginDestinationView: View {
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @ObservedObject private var locationManagerService = LocationManagerService.shared
+    @EnvironmentObject private var tripPlanner: TripPlannerService
     @State private var isSheetOpened = false
 
     // Public Initializer
@@ -23,7 +23,7 @@ public struct OriginDestinationView: View {
             List {
                 Button(action: {
                     sheetEnvironment.isSheetOpened.toggle()
-                    locationManagerService.originDestinationState = .origin
+                    tripPlanner.originDestinationState = .origin
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "paperplane.fill")
@@ -32,14 +32,14 @@ public struct OriginDestinationView: View {
                                     .fill(Color.green)
                                     .frame(width: 30, height: 30)
                             )
-                        Text(locationManagerService.originName)
+                        Text(tripPlanner.originName)
                     }
                 })
                 .foregroundStyle(.foreground)
 
                 Button(action: {
                     sheetEnvironment.isSheetOpened.toggle()
-                    locationManagerService.originDestinationState = .destination
+                    tripPlanner.originDestinationState = .destination
                 }, label: {
                     HStack(spacing: 16) {
                         Image(systemName: "mappin")
@@ -48,7 +48,7 @@ public struct OriginDestinationView: View {
                                     .fill(Color.green)
                                     .frame(width: 30, height: 30)
                             )
-                        Text(locationManagerService.destinationName)
+                        Text(tripPlanner.destinationName)
                     }
                 })
                 .foregroundStyle(.foreground)
@@ -63,4 +63,5 @@ public struct OriginDestinationView: View {
 
 #Preview {
     OriginDestinationView()
+        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }
