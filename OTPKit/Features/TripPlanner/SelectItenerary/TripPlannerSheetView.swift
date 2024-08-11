@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct TripPlannerSheetView: View {
-    @EnvironmentObject private var locationManagerService: TripPlannerService
+    @EnvironmentObject private var tripPlanner: TripPlannerService
     @Environment(\.dismiss) var dismiss
 
     public init() {}
@@ -28,11 +28,11 @@ public struct TripPlannerSheetView: View {
 
     public var body: some View {
         VStack {
-            if let itineraries = locationManagerService.planResponse?.plan?.itineraries {
+            if let itineraries = tripPlanner.planResponse?.plan?.itineraries {
                 List(itineraries, id: \.self) { itinerary in
                     Button(action: {
-                        locationManagerService.selectedItinerary = itinerary
-                        locationManagerService.planResponse = nil
+                        tripPlanner.selectedItinerary = itinerary
+                        tripPlanner.planResponse = nil
                         dismiss()
                     }, label: {
                         HStack(spacing: 20) {
@@ -60,9 +60,9 @@ public struct TripPlannerSheetView: View {
                             }
 
                             Button(action: {
-                                locationManagerService.selectedItinerary = itinerary
-                                locationManagerService.planResponse = nil
-                                locationManagerService.adjustOriginDestinationCamera()
+                                tripPlanner.selectedItinerary = itinerary
+                                tripPlanner.planResponse = nil
+                                tripPlanner.adjustOriginDestinationCamera()
                                 dismiss()
                             }, label: {
                                 Text("Preview")
@@ -82,7 +82,7 @@ public struct TripPlannerSheetView: View {
             }
 
             Button(action: {
-                locationManagerService.resetTripPlanner()
+                tripPlanner.resetTripPlanner()
                 dismiss()
             }, label: {
                 Text("Cancel")

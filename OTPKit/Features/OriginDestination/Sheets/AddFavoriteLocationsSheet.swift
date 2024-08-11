@@ -12,7 +12,7 @@ import SwiftUI
 public struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @EnvironmentObject private var locationManagerService: TripPlannerService
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     @State private var search = ""
 
@@ -20,7 +20,7 @@ public struct AddFavoriteLocationsSheet: View {
 
     private var filteredCompletions: [Location] {
         let favorites = sheetEnvironment.favoriteLocations
-        return locationManagerService.completions.filter { completion in
+        return tripPlanner.completions.filter { completion in
             !favorites.contains { favorite in
                 favorite.title == completion.title &&
                     favorite.subTitle == completion.subTitle
@@ -29,7 +29,7 @@ public struct AddFavoriteLocationsSheet: View {
     }
 
     private func currentUserSection() -> some View {
-        if search.isEmpty, let userLocation = locationManagerService.currentLocation {
+        if search.isEmpty, let userLocation = tripPlanner.currentLocation {
             AnyView(
                 Button(action: {
                     switch UserDefaultsServices.shared.saveFavoriteLocationData(data: userLocation) {
@@ -100,7 +100,7 @@ public struct AddFavoriteLocationsSheet: View {
                 searchedResultsSection()
             }
             .onChange(of: search) { _, searchValue in
-                locationManagerService.updateQuery(queryFragment: searchValue)
+                tripPlanner.updateQuery(queryFragment: searchValue)
             }
         }
     }

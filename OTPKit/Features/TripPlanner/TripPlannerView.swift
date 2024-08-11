@@ -8,14 +8,14 @@
 import SwiftUI
 
 public struct TripPlannerView: View {
-    @EnvironmentObject private var locationManagerService: TripPlannerService
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     public init() {}
 
     public var body: some View {
         VStack {
             Button(action: {
-                locationManagerService.isStepsViewPresented = true
+                tripPlanner.isStepsViewPresented = true
             }, label: {
                 Text("Start")
             })
@@ -27,7 +27,7 @@ public struct TripPlannerView: View {
             .padding(.horizontal, 16)
 
             Button(action: {
-                locationManagerService.resetTripPlanner()
+                tripPlanner.resetTripPlanner()
             }, label: {
                 Text("Cancel")
             })

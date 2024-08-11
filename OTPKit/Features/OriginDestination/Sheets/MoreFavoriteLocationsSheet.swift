@@ -11,7 +11,7 @@ import SwiftUI
 public struct MoreFavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @EnvironmentObject private var locationManagerService: TripPlannerService
+    @EnvironmentObject private var tripPlanner: TripPlannerService
 
     @State private var isDetailSheetOpened = false
 
