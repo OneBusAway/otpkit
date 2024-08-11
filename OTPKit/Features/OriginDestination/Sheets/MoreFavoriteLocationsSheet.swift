@@ -1,5 +1,5 @@
 //
-//  FavoriteLocationsSheet.swift
+//  MoreFavoriteLocationsSheet.swift
 //  OTPKitDemo
 //
 //  Created by Hilmy Veradin on 03/07/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Show all the lists of favorite locations
-public struct FavoriteLocationsSheet: View {
+public struct MoreFavoriteLocationsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
@@ -44,5 +44,5 @@ public struct FavoriteLocationsSheet: View {
 }
 
 #Preview {
-    FavoriteLocationsSheet()
+    MoreFavoriteLocationsSheet()
 }
