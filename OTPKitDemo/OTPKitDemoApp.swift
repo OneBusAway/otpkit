@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import OTPKit
-import SwiftUI
 import CoreLocation
 import MapKit
+import OTPKit
+import SwiftUI
 
 @main
 struct OTPKitDemoApp: App {

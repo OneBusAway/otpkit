@@ -9,8 +9,8 @@ import Foundation
 import MapKit
 import SwiftUI
 
+/// Services to manage all functions related to trip planning
 public final class TripPlannerService: NSObject, ObservableObject {
-
     // MARK: - Properties
 
     private let apiClient: RestAPI
