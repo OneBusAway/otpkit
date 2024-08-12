@@ -5,9 +5,9 @@
 //  Created by Aaron Brethorst on 8/5/24.
 //
 
-import SwiftUI
 import CoreLocation
 import MapKit
+import SwiftUI
 
 class PreviewHelpers {
     static func buildTripPlannerService() -> TripPlannerService {
