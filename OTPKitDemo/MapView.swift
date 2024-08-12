@@ -90,11 +90,10 @@ public struct MapView: View {
             } else if tripPlanner.isMapMarkingMode {
                 MapMarkingView()
                     .environmentObject(tripPlanner)
-            } else if tripPlanner.selectedItinerary != nil,
-                      tripPlanner.isStepsViewPresented == false {
+            } else if let selectedItinerary = tripPlanner.selectedItinerary, !tripPlanner.isStepsViewPresented {
                 VStack {
                     Spacer()
-                    TripPlannerView()
+                    TripPlannerView(text: selectedItinerary.summary)
                         .environmentObject(tripPlanner)
                 }
             } else if tripPlanner.planResponse == nil, tripPlanner.isStepsViewPresented == false {
