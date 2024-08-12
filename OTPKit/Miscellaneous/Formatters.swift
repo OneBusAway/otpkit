@@ -12,13 +12,22 @@ class Formatters {
     static func formatTimeDuration(_ duration: Int) -> String {
         if duration < 60 {
             return "\(duration) second\(duration > 1 ? "s" : "")"
-        } else if duration < 3600 {
-            let minutes = duration / 60
-            return String(format: "%d min", minutes)
-        } else {
-            let hours = Double(duration) / 3600
-            return String(format: "%.1f hours", hours)
         }
+
+        let (hours, minutes) = hoursAndMinutesFrom(seconds: duration)
+
+        if hours == 0 {
+            return String(format: "%d min", minutes)
+        }
+
+        return String(format: "%d hr %d min", hours, minutes)
+    }
+
+    static func hoursAndMinutesFrom(seconds: Int) -> (hours: Int, minutes: Int) {
+        let hours = seconds / 3600
+        let remainingSeconds = seconds % 3600
+        let minutes = remainingSeconds / 60
+        return (hours, minutes)
     }
 
     static func formatDistance(_ distance: Int) -> String {
@@ -30,12 +39,11 @@ class Formatters {
         }
     }
 
-    static func formatDateToTime(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-
-        return dateFormatter.string(from: date)
+    static func formatDateToTime(_ date: Date, locale: Locale = .current) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 }

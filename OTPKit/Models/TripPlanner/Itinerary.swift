@@ -53,4 +53,12 @@ public struct Itinerary: Codable, Hashable {
 
     /// Array of `Leg` objects representing individual segments of the itinerary.
     public let legs: [Leg]
+
+    public var summary: String {
+        // TODO: localize this!
+        let time = Formatters.formatDateToTime(startTime)
+        let formattedDuration = Formatters.formatTimeDuration(duration)
+        // return something like "43 minutes, departs at X:YY PM"
+        return "Departs at \(time); duration: \(formattedDuration)"
+    }
 }
