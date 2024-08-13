@@ -3,15 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		014316DF2C6B6F2C00B33240 /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 014316DE2C6B6F2C00B33240 /* OTPKit */; };
 		01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */; };
 		01AA80562C6B6A7500D4038A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80552C6B6A7500D4038A /* MapView.swift */; };
 		01AA80582C6B6A7600D4038A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AA80572C6B6A7600D4038A /* Assets.xcassets */; };
 		01AA805B2C6B6A7600D4038A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AA805A2C6B6A7600D4038A /* Preview Assets.xcassets */; };
-		01CF11752C6B6AB0005B6B47 /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 01CF11742C6B6AB0005B6B47 /* OTPKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01CF11752C6B6AB0005B6B47 /* OTPKit in Frameworks */,
+				014316DF2C6B6F2C00B33240 /* OTPKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 			);
 			name = OTPKitDemo;
 			packageProductDependencies = (
-				01CF11742C6B6AB0005B6B47 /* OTPKit */,
+				014316DE2C6B6F2C00B33240 /* OTPKit */,
 			);
 			productName = OTPKitDemo;
 			productReference = 01AA80502C6B6A7500D4038A /* OTPKitDemo.app */;
@@ -117,7 +117,7 @@
 			);
 			mainGroup = 01AA80472C6B6A7500D4038A;
 			packageReferences = (
-				01CF11732C6B6AB0005B6B47 /* XCRemoteSwiftPackageReference "otpkit-test" */,
+				014316DD2C6B6F2C00B33240 /* XCLocalSwiftPackageReference "../.." */,
 			);
 			productRefGroup = 01AA80512C6B6A7500D4038A /* Products */;
 			projectDirPath = "";
@@ -351,21 +351,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		01CF11732C6B6AB0005B6B47 /* XCRemoteSwiftPackageReference "otpkit-test" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hilmyveradin/otpkit-test";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		014316DD2C6B6F2C00B33240 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		01CF11742C6B6AB0005B6B47 /* OTPKit */ = {
+		014316DE2C6B6F2C00B33240 /* OTPKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 01CF11732C6B6AB0005B6B47 /* XCRemoteSwiftPackageReference "otpkit-test" */;
 			productName = OTPKit;
 		};
 /* End XCSwiftPackageProductDependency section */
