@@ -89,8 +89,4 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-OTPKit.xcodeproj
-OTPKitDemo/Info.plist
-OTPKit/Info.plist
-OTPKitTests/Info.plist
 *.xcresult
