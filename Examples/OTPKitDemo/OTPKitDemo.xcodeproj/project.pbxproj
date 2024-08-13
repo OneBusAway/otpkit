@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		014316E02C6B713D00B33240 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		01AA80502C6B6A7500D4038A /* OTPKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPKitDemoApp.swift; sourceTree = "<group>"; };
 		01AA80552C6B6A7500D4038A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		01AA80522C6B6A7500D4038A /* OTPKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				014316E02C6B713D00B33240 /* Info.plist */,
 				01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */,
 				01AA80552C6B6A7500D4038A /* MapView.swift */,
 				01AA80572C6B6A7600D4038A /* Assets.xcassets */,
@@ -282,6 +284,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"OTPKitDemo/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OTPKitDemo/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "See where you are in relation to transit, and help you navigate more easily.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -310,6 +314,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"OTPKitDemo/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OTPKitDemo/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "See where you are in relation to transit, and help you navigate more easily.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
