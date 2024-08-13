@@ -8,7 +8,6 @@
 import MapKit
 import SwiftUI
 
-
 /// Main Extension View that take Map as it's content
 /// This simplify all the process of making the Trip Planner UI
 public struct TripPlannerExtensionView<MapContent: View>: View {

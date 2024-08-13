@@ -20,7 +20,7 @@ import Foundation
 
 /// An actor representing a REST API client for making network requests
 public actor RestAPI {
-    
+
     /// Initializes a new instance of RestAPI
     ///
     /// - Parameters:
@@ -36,7 +36,7 @@ public actor RestAPI {
 
     /// The base URL for the API
     public let baseURL: URL
-    
+
     /// The data loader used for network requests
     public nonisolated let dataLoader: URLDataLoader
 

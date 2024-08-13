@@ -365,7 +365,7 @@ extension TripPlannerService: CLLocationManagerDelegate {
 // MARK: - Service Extension
 
 extension TripPlannerService {
-    
+
     /// Formats a coordinate into a string representation
     ///
     /// - Parameter coordinate: The coordinate to format
