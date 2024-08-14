@@ -18,7 +18,14 @@ import Foundation
 
 // swiftlint:disable function_parameter_count
 
+/// An actor representing a REST API client for making network requests
 public actor RestAPI {
+
+    /// Initializes a new instance of RestAPI
+    ///
+    /// - Parameters:
+    ///   - baseURL: The base URL for the API
+    ///   - dataLoader: The data loader to use for network requests (defaults to URLSession.shared)
     public init(
         baseURL: URL,
         dataLoader: URLDataLoader = URLSession.shared
@@ -27,9 +34,26 @@ public actor RestAPI {
         self.dataLoader = dataLoader
     }
 
+    /// The base URL for the API
     public let baseURL: URL
+
+    /// The data loader used for network requests
     public nonisolated let dataLoader: URLDataLoader
 
+    /// Fetches a trip plan from the API
+    ///
+    /// - Parameters:
+    ///   - fromPlace: The starting location of the trip
+    ///   - toPlace: The destination of the trip
+    ///   - time: The time of the trip
+    ///   - date: The date of the trip
+    ///   - mode: The transportation mode(s) for the trip
+    ///   - arriveBy: Whether the trip should arrive by the specified time
+    ///   - maxWalkDistance: The maximum walking distance in meters
+    ///   - wheelchair: Whether the trip should be wheelchair accessible
+    ///
+    /// - Returns: An OTPResponse object containing the trip plan
+    /// - Throws: An error if the network request fails or the response is invalid
     public func fetchPlan(
         fromPlace: String,
         toPlace: String,
@@ -71,6 +95,10 @@ public actor RestAPI {
         return decodedResponse
     }
 
+    /// Builds a URL for the given endpoint
+    ///
+    /// - Parameter endpoint: The API endpoint
+    /// - Returns: A URL combining the base URL and the endpoint
     private func buildURL(endpoint: String) -> URL {
         baseURL.appending(path: endpoint)
     }

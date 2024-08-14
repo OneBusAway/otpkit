@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// View for Map Marking Mode
+/// User able to add Marking directly from the map
 public struct MapMarkingView: View {
     @EnvironmentObject private var tripPlanner: TripPlannerService
 

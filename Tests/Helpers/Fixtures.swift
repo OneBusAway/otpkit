@@ -19,7 +19,7 @@ import Foundation
 
 class Fixtures {
     private class var testBundle: Bundle {
-        Bundle(for: self)
+        Bundle.module
     }
 
     /// Converts the specified dictionary to a model object of type `T`.

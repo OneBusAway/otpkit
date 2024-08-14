@@ -54,6 +54,12 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // MARK: - Initialization
 
+    /// Initializes a new instance of TripPlannerService
+    ///
+    /// - Parameters:
+    ///   - apiClient: The REST API client for making network requests
+    ///   - locationManager: The location manager for handling user location
+    ///   - searchCompleter: The search completer for location search functionality
     public init(apiClient: RestAPI, locationManager: CLLocationManager, searchCompleter: MKLocalSearchCompleter) {
         self.apiClient = apiClient
         self.locationManager = locationManager
@@ -93,6 +99,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // MARK: - Map Extension Methods
 
+    /// Selects and refreshes the coordinate based on the current origin/destination state
     public func selectAndRefreshCoordinate() {
         switch originDestinationState {
         case .origin:
@@ -104,6 +111,9 @@ public final class TripPlannerService: NSObject, ObservableObject {
         }
     }
 
+    /// Appends a marker for the given location
+    ///
+    /// - Parameter location: The location to add a marker for
     public func appendMarker(location: Location) {
         let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
@@ -119,6 +129,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
         }
     }
 
+    /// Adds origin or destination data based on the current state
     public func addOriginDestinationData() {
         switch originDestinationState {
         case .origin:
@@ -132,6 +143,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
         checkAndFetchTripPlanner()
     }
 
+    /// Removes origin or destination data based on the current state
     public func removeOriginDestinationData() {
         switch originDestinationState {
         case .origin:
@@ -145,20 +157,32 @@ public final class TripPlannerService: NSObject, ObservableObject {
         }
     }
 
+    /// Toggles the map marking mode
+    ///
+    /// - Parameter isMapMarking: Boolean indicating whether map marking is enabled
     public func toggleMapMarkingMode(_ isMapMarking: Bool) {
         isMapMarkingMode = isMapMarking
     }
 
+    /// Changes the map camera to focus on the given map item
+    ///
+    /// - Parameter item: The map item to focus on
     public func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
     }
 
+    /// Generates markers for the map based on selected points
+    ///
+    /// - Returns: MapContent containing the markers
     public func generateMarkers() -> some MapContent {
         ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
             Marker(item: markerItem.item)
         }
     }
 
+    /// Generates a map polyline based on the selected itinerary
+    ///
+    /// - Returns: MapPolyline object or nil if no valid itinerary is selected
     public func generateMapPolyline() -> MapPolyline? {
         guard let itinerary = selectedItinerary else { return nil }
 
@@ -176,6 +200,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
         return MapPolyline(coordinates: coordinates)
     }
 
+    /// Adjusts the camera to show both origin and destination
     public func adjustOriginDestinationCamera() {
         guard let originCoordinate, let destinationCoordinate else { return }
         // Create a rectangle that encompasses both coordinates
@@ -196,6 +221,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // MARK: - Trip Planner Methods
 
+    /// Automatically fetch the Trip Planner if there's origin coordinate and destination coordinate
     private func checkAndFetchTripPlanner() {
         guard originCoordinate != nil,
               destinationCoordinate != nil
@@ -233,6 +259,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
         }
     }
 
+    /// Resets all trip planner related data
     public func resetTripPlanner() {
         planResponse = nil
         selectedMapPoint = [
@@ -249,6 +276,7 @@ public final class TripPlannerService: NSObject, ObservableObject {
 
     // MARK: - User Location Methods
 
+    /// Checks if location services are enabled and requests authorization if necessary
     public func checkIfLocationServicesIsEnabled() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
@@ -337,11 +365,19 @@ extension TripPlannerService: CLLocationManagerDelegate {
 // MARK: - Service Extension
 
 extension TripPlannerService {
+
+    /// Formats a coordinate into a string representation
+    ///
+    /// - Parameter coordinate: The coordinate to format
+    /// - Returns: A string representation of the coordinate
     func formatCoordinate(_ coordinate: CLLocationCoordinate2D?) -> String {
         guard let coordinate else { return "" }
         return String(format: "%.4f,%.4f", coordinate.latitude, coordinate.longitude)
     }
 
+    /// Gets the current date formatted as a string
+    ///
+    /// - Returns: The formatted date string
     func getFormattedTodayDate() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-yyyy"
@@ -350,6 +386,9 @@ extension TripPlannerService {
         return dateFormatter.string(from: today)
     }
 
+    /// Gets the current time formatted as a string
+    ///
+    /// - Returns: The formatted time string
     func getCurrentTimeFormatted() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
