@@ -22,6 +22,13 @@ let package = Package(
             name: "OTPKit"),
         .testTarget(
             name: "OTPKitTests",
-            dependencies: ["OTPKit"])
+            dependencies: ["OTPKit"],
+            path: "Tests",
+            resources: [
+                // Copy Tests/ExampleTests/Resources directories as-is.
+                // Use to retain directory structure.
+                // Will be at top level in bundle.
+                .process("Resources"),
+              ]),
     ]
 )

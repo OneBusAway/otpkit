@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0111FD712C6CFBE400B4472E /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0111FD702C6CFBE400B4472E /* OTPKit */; };
 		014316DF2C6B6F2C00B33240 /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 014316DE2C6B6F2C00B33240 /* OTPKit */; };
 		01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */; };
 		01AA80562C6B6A7500D4038A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80552C6B6A7500D4038A /* MapView.swift */; };
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				014316DF2C6B6F2C00B33240 /* OTPKit in Frameworks */,
+				0111FD712C6CFBE400B4472E /* OTPKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +91,7 @@
 			name = OTPKitDemo;
 			packageProductDependencies = (
 				014316DE2C6B6F2C00B33240 /* OTPKit */,
+				0111FD702C6CFBE400B4472E /* OTPKit */,
 			);
 			productName = OTPKitDemo;
 			productReference = 01AA80502C6B6A7500D4038A /* OTPKitDemo.app */;
@@ -365,6 +368,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0111FD702C6CFBE400B4472E /* OTPKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OTPKit;
+		};
 		014316DE2C6B6F2C00B33240 /* OTPKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OTPKit;
