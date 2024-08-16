@@ -22,7 +22,7 @@ public final class OriginDestinationSheetEnvironment {
 
     /// Selected detail favorite locations that will be shown in `FavoriteLocationDetailSheet`
     public var selectedDetailFavoriteLocation: Location?
-    
+
     public var isSheetOpenedBinding: Binding<Bool> {
         Binding(
             get: { self.isSheetOpened },

@@ -12,7 +12,7 @@ import SwiftUI
 public struct FavoriteLocationDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
-    
+
     @State private var isShowErrorAlert = false
     @State private var errorMessage = ""
 

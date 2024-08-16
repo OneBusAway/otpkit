@@ -12,7 +12,7 @@ public struct MoreRecentLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
     @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
-    
+
     public var body: some View {
         VStack {
             PageHeaderView(text: "Recents") {

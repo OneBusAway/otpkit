@@ -11,7 +11,7 @@ import SwiftUI
 /// Users can search and add their favorite locations
 public struct AddFavoriteLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment 
+    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
     @Environment(TripPlannerService.self) private var tripPlanner
 
     @State private var search = ""

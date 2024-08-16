@@ -68,7 +68,7 @@ public final class TripPlannerService: NSObject {
             set: { _ in }
         )
     }
-    
+
     public var currentCameraPositionBinding: Binding<MapCameraPosition> {
         Binding(
             get: { self.currentCameraPosition },
