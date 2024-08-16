@@ -40,12 +40,12 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
             }
             .sheet(isPresented: tripPlanner.isStepsViewPresentedBinding, onDismiss: {
                 tripPlanner.resetTripPlanner()
-            }) {
+            }, content: {
                 DirectionSheetView(sheetDetent: $directionSheetDetent)
                     .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
-            }
+            })
 
             overlayContent
         }
