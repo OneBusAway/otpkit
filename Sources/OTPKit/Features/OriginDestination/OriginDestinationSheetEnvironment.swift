@@ -10,17 +10,25 @@ import SwiftUI
 
 /// OriginDestinationSheetEnvironment responsible for manage the environment of `OriginDestination` features
 /// - sheetState: responsible for managing shown sheet in `OriginDestinationView`
-/// - selectedValue: responsible for managing selected value when user taped the list in `OriginDestinationSheetView`
-public final class OriginDestinationSheetEnvironment: ObservableObject {
-    @Published public var isSheetOpened = false
-    @Published public var selectedValue: String = ""
+/// - selectedValue: responsible for managing selected value when user taped the list in `OriginDestinationSheetView
+@Observable
+public final class OriginDestinationSheetEnvironment {
+    public var isSheetOpened = false
+    public var selectedValue: String = ""
 
     // This responsible for showing favorite locations and recent locations in sheets
-    @Published public var favoriteLocations: [Location] = []
-    @Published public var recentLocations: [Location] = []
+    public var favoriteLocations: [Location] = []
+    public var recentLocations: [Location] = []
 
     /// Selected detail favorite locations that will be shown in `FavoriteLocationDetailSheet`
-    @Published public var selectedDetailFavoriteLocation: Location?
+    public var selectedDetailFavoriteLocation: Location?
+    
+    public var isSheetOpenedBinding: Binding<Bool> {
+        Binding(
+            get: { self.isSheetOpened },
+            set: { newValue in self.isSheetOpened = newValue }
+        )
+    }
 
     // Public initializer
     public init() {}

@@ -11,7 +11,7 @@ import SwiftUI
 /// Main Extension View that take Map as it's content
 /// This simplify all the process of making the Trip Planner UI
 public struct TripPlannerExtensionView<MapContent: View>: View {
-    @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
+    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
     @Environment(TripPlannerService.self) private var tripPlanner
 
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
@@ -30,9 +30,8 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
                         handleMapTap(proxy: proxy, tappedLocation: tappedLocation)
                     }
             }
-            .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
+            .sheet(isPresented: sheetEnvironment.isSheetOpenedBinding) {
                 OriginDestinationSheetView()
-                    .environmentObject(sheetEnvironment)
             }
             .sheet(isPresented: tripPlanner.isPlanResponsePresentedBinding) {
                 TripPlannerSheetView()
@@ -71,7 +70,6 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
             VStack {
                 Spacer()
                 OriginDestinationView()
-                    .environmentObject(sheetEnvironment)
             }
         }
     }

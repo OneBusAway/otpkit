@@ -11,8 +11,8 @@ import SwiftUI
 public struct MoreRecentLocationsSheet: View {
     @Environment(\.dismiss) var dismiss
 
-    @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-
+    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
+    
     public var body: some View {
         VStack {
             PageHeaderView(text: "Recents") {
