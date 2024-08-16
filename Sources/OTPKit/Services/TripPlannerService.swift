@@ -11,7 +11,8 @@ import SwiftUI
 
 // swiftlint:disable file_length
 /// Services to manage all functions related to trip planning
-@Observable public class TripPlannerService: NSObject {
+@Observable
+public final class TripPlannerService: NSObject {
     // MARK: - Properties
 
     private let apiClient: RestAPI
