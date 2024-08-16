@@ -12,7 +12,7 @@ import SwiftUI
 /// This simplify all the process of making the Trip Planner UI
 public struct TripPlannerExtensionView<MapContent: View>: View {
     @StateObject private var sheetEnvironment = OriginDestinationSheetEnvironment()
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
 
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
@@ -20,20 +20,6 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
 
     public init(@ViewBuilder mapContent: @escaping () -> MapContent) {
         self.mapContent = mapContent
-    }
-
-    private var isPlanResponsePresented: Binding<Bool> {
-        Binding(
-            get: { tripPlanner.planResponse != nil && tripPlanner.isStepsViewPresented == false },
-            set: { _ in }
-        )
-    }
-
-    private var isStepsViewPresented: Binding<Bool> {
-        Binding(
-            get: { tripPlanner.isStepsViewPresented },
-            set: { _ in }
-        )
     }
 
     public var body: some View {
@@ -47,22 +33,19 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
             .sheet(isPresented: $sheetEnvironment.isSheetOpened) {
                 OriginDestinationSheetView()
                     .environmentObject(sheetEnvironment)
-                    .environmentObject(tripPlanner)
             }
-            .sheet(isPresented: isPlanResponsePresented) {
+            .sheet(isPresented: tripPlanner.isPlanResponsePresentedBinding) {
                 TripPlannerSheetView()
                     .presentationDetents([.medium, .large])
                     .interactiveDismissDisabled()
-                    .environmentObject(tripPlanner)
             }
-            .sheet(isPresented: isStepsViewPresented, onDismiss: {
+            .sheet(isPresented: tripPlanner.isStepsViewPresentedBinding, onDismiss: {
                 tripPlanner.resetTripPlanner()
             }) {
                 DirectionSheetView(sheetDetent: $directionSheetDetent)
                     .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
-                    .environmentObject(tripPlanner)
             }
 
             overlayContent
@@ -78,19 +61,17 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
             ProgressView()
         } else if tripPlanner.isMapMarkingMode {
             MapMarkingView()
-                .environmentObject(tripPlanner)
+
         } else if let selectedItinerary = tripPlanner.selectedItinerary, !tripPlanner.isStepsViewPresented {
             VStack {
                 Spacer()
                 TripPlannerView(text: selectedItinerary.summary)
-                    .environmentObject(tripPlanner)
             }
         } else if tripPlanner.planResponse == nil, tripPlanner.isStepsViewPresented == false {
             VStack {
                 Spacer()
                 OriginDestinationView()
                     .environmentObject(sheetEnvironment)
-                    .environmentObject(tripPlanner)
             }
         }
     }

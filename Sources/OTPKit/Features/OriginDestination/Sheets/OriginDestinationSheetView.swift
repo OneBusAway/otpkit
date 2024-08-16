@@ -10,7 +10,7 @@ import SwiftUI
 public struct OriginDestinationSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var sheetEnvironment: OriginDestinationSheetEnvironment
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
 
     @State private var search: String = ""
 
@@ -222,14 +222,15 @@ public struct OriginDestinationSheetView: View {
             case .addFavoriteSheet:
                 AddFavoriteLocationsSheet()
                     .environmentObject(sheetEnvironment)
-                    .environmentObject(tripPlanner)
+
             case .moreFavoritesSheet:
                 MoreFavoriteLocationsSheet()
                     .environmentObject(sheetEnvironment)
-                    .environmentObject(tripPlanner)
+
             case .favoriteDetailsSheet:
                 FavoriteLocationDetailSheet()
                     .environmentObject(sheetEnvironment)
+
             case .moreRecentsSheet:
                 MoreRecentLocationsSheet()
                     .environmentObject(sheetEnvironment)
@@ -249,5 +250,4 @@ public struct OriginDestinationSheetView: View {
 #Preview {
     OriginDestinationSheetView()
         .environmentObject(OriginDestinationSheetEnvironment())
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

@@ -30,7 +30,7 @@ struct OTPKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
             MapView()
-                .environmentObject(tripPlannerService)
+                .environment(tripPlannerService)
         }
     }
 }

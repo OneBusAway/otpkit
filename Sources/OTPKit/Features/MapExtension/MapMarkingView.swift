@@ -10,7 +10,7 @@ import SwiftUI
 /// View for Map Marking Mode
 /// User able to add Marking directly from the map
 public struct MapMarkingView: View {
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
 
     public init() {}
     public var body: some View {
@@ -54,5 +54,4 @@ public struct MapMarkingView: View {
 
 #Preview {
     MapMarkingView()
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

@@ -20,7 +20,6 @@ import Foundation
 
 /// An actor representing a REST API client for making network requests
 public actor RestAPI {
-
     /// Initializes a new instance of RestAPI
     ///
     /// - Parameters:

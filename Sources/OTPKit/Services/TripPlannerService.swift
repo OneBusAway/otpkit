@@ -9,23 +9,24 @@ import Foundation
 import MapKit
 import SwiftUI
 
+// swiftlint:disable file_length
 /// Services to manage all functions related to trip planning
-public final class TripPlannerService: NSObject, ObservableObject {
+@Observable public class TripPlannerService: NSObject {
     // MARK: - Properties
 
     private let apiClient: RestAPI
 
     // Trip Planner
-    @Published public var planResponse: OTPResponse?
-    @Published public var isFetchingResponse = false
-    @Published public var tripPlannerErrorMessage: String?
-    @Published public var selectedItinerary: Itinerary?
-    @Published public var isStepsViewPresented = false
+    public var planResponse: OTPResponse?
+    public var isFetchingResponse = false
+    public var tripPlannerErrorMessage: String?
+    public var selectedItinerary: Itinerary?
+    public var isStepsViewPresented = false
 
     // Origin Destination
-    @Published public var originDestinationState: OriginDestinationState = .origin
-    @Published public var originCoordinate: CLLocationCoordinate2D?
-    @Published public var destinationCoordinate: CLLocationCoordinate2D?
+    public var originDestinationState: OriginDestinationState = .origin
+    public var originCoordinate: CLLocationCoordinate2D?
+    public var destinationCoordinate: CLLocationCoordinate2D?
 
     // Location Search
     private let searchCompleter: MKLocalSearchCompleter
@@ -34,23 +35,45 @@ public final class TripPlannerService: NSObject, ObservableObject {
     private var currentRegion: MKCoordinateRegion?
     private var searchTask: Task<Void, Never>?
 
-    @Published var completions = [Location]()
+    var completions = [Location]()
 
     // Map Extension
-    @Published public var selectedMapPoint: [String: MarkerItem?] = [
+    public var selectedMapPoint: [String: MarkerItem?] = [
         "origin": nil,
         "destination": nil
     ]
 
-    @Published public var isMapMarkingMode = false
-    @Published public var currentCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    public var isMapMarkingMode = false
+    public var currentCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
 
-    @Published public var originName = "Origin"
-    @Published public var destinationName = "Destination"
+    public var originName = "Origin"
+    public var destinationName = "Destination"
 
     // User Location
-    @Published var currentLocation: Location?
+    var currentLocation: Location?
     private let locationManager: CLLocationManager
+
+    // View Bindings
+    public var isStepsViewPresentedBinding: Binding<Bool> {
+        Binding(
+            get: { self.isStepsViewPresented },
+            set: { _ in }
+        )
+    }
+
+    public var isPlanResponsePresentedBinding: Binding<Bool> {
+        Binding(
+            get: { self.planResponse != nil && self.isStepsViewPresented == false },
+            set: { _ in }
+        )
+    }
+    
+    public var currentCameraPositionBinding: Binding<MapCameraPosition> {
+        Binding(
+            get: { self.currentCameraPosition },
+            set: { _ in }
+        )
+    }
 
     // MARK: - Initialization
 
@@ -365,7 +388,6 @@ extension TripPlannerService: CLLocationManagerDelegate {
 // MARK: - Service Extension
 
 extension TripPlannerService {
-
     /// Formats a coordinate into a string representation
     ///
     /// - Parameter coordinate: The coordinate to format
@@ -399,3 +421,5 @@ extension TripPlannerService {
         return dateFormatter.string(from: currentDate)
     }
 }
+
+// swiftlint:enable file_length

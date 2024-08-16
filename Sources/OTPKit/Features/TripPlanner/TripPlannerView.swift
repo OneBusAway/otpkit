@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct TripPlannerView: View {
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
 
     public init(text: String) {
         self.text = text
@@ -46,5 +46,4 @@ public struct TripPlannerView: View {
 
 #Preview {
     TripPlannerView(text: "43 minutes, departs at 4:15 PM")
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }
