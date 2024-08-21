@@ -2,7 +2,7 @@ import MapKit
 import SwiftUI
 
 public struct DirectionSheetView: View {
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
     @Environment(\.dismiss) private var dismiss
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
@@ -108,5 +108,4 @@ public struct DirectionSheetView: View {
 
 #Preview {
     DirectionSheetView(sheetDetent: .constant(.fraction(0.2)))
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

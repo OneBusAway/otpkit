@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct TripPlannerSheetView: View {
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
     @Environment(\.dismiss) var dismiss
 
     public init() {}
@@ -99,5 +99,4 @@ public struct TripPlannerSheetView: View {
 
 #Preview {
     TripPlannerSheetView()
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

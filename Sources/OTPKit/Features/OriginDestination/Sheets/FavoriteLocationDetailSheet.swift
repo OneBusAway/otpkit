@@ -11,7 +11,7 @@ import SwiftUI
 /// Users can see the details and delete the location sheet
 public struct FavoriteLocationDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
+    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
 
     @State private var isShowErrorAlert = false
     @State private var errorMessage = ""

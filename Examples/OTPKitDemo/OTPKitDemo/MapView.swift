@@ -10,11 +10,11 @@ import OTPKit
 import SwiftUI
 
 struct MapView: View {
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(TripPlannerService.self) private var tripPlanner
 
     var body: some View {
         TripPlannerExtensionView {
-            Map(position: $tripPlanner.currentCameraPosition, interactionModes: .all) {
+            Map(position: tripPlanner.currentCameraPositionBinding, interactionModes: .all) {
                 tripPlanner.generateMarkers()
                 tripPlanner.generateMapPolyline()
                     .stroke(.blue, lineWidth: 5)
@@ -26,7 +26,6 @@ struct MapView: View {
                 }
             }
         }
-        .environmentObject(tripPlanner)
     }
 }
 
@@ -38,5 +37,4 @@ struct MapView: View {
     )
 
     return MapView()
-        .environmentObject(planner)
 }

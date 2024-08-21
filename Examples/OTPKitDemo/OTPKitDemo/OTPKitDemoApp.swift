@@ -27,10 +27,13 @@ struct OTPKitDemoApp: App {
         searchCompleter: MKLocalSearchCompleter()
     )
 
+    let sheetEnvironment = OriginDestinationSheetEnvironment()
+
     var body: some Scene {
         WindowGroup {
             MapView()
-                .environmentObject(tripPlannerService)
+                .environment(tripPlannerService)
+                .environment(sheetEnvironment)
         }
     }
 }

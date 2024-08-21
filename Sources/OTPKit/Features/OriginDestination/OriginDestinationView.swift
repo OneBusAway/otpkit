@@ -11,8 +11,8 @@ import SwiftUI
 /// OriginDestinationView is the main view for setting up Origin/Destination in OTPKit.
 /// It consists a list of Origin and Destination along with the `MapKit`
 public struct OriginDestinationView: View {
-    @EnvironmentObject private var sheetEnvironment: OriginDestinationSheetEnvironment
-    @EnvironmentObject private var tripPlanner: TripPlannerService
+    @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
+    @Environment(TripPlannerService.self) private var tripPlanner
     @State private var isSheetOpened = false
 
     // Public Initializer
@@ -63,5 +63,4 @@ public struct OriginDestinationView: View {
 
 #Preview {
     OriginDestinationView()
-        .environmentObject(PreviewHelpers.buildTripPlannerService())
 }

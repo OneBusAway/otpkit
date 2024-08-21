@@ -13,7 +13,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "OTPKit",
-            targets: ["OTPKit"])
+            targets: ["OTPKit"]
+        )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,7 +29,8 @@ let package = Package(
                 // Copy Tests/ExampleTests/Resources directories as-is.
                 // Use to retain directory structure.
                 // Will be at top level in bundle.
-                .process("Resources"),
-              ]),
+                .process("Resources")
+            ]
+        )
     ]
 )
