@@ -300,17 +300,9 @@ public final class TripPlannerService: NSObject {
 
     // MARK: - User Location Methods
 
-    /// Checks if location services are enabled and requests authorization if necessary
-    public func checkIfLocationServicesIsEnabled() {
-        DispatchQueue.global().async {
-            if CLLocationManager.locationServicesEnabled() {
-                self.checkLocationAuthorization()
-            }
-        }
-    }
-
-    private func checkLocationAuthorization() {
-        switch locationManager.authorizationStatus {
+    public func checkLocationAuthorization() async {
+        let status = await locationManager.authorizationStatus
+        switch status {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .restricted, .denied:
@@ -322,6 +314,7 @@ public final class TripPlannerService: NSObject {
             break
         }
     }
+
 }
 
 // MARK: - MKLocalSearchCompleterDelegate
@@ -382,7 +375,9 @@ extension TripPlannerService: CLLocationManagerDelegate {
     }
 
     public func locationManagerDidChangeAuthorization(_: CLLocationManager) {
-        checkLocationAuthorization()
+        Task {
+            await checkLocationAuthorization()
+        }
     }
 }
 
