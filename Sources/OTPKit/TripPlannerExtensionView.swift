@@ -49,8 +49,8 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
 
             overlayContent
         }
-        .task {
-            await tripPlanner.checkLocationAuthorization()
+        .onAppear {
+            tripPlanner.checkLocationAuthorization()
         }
     }
 

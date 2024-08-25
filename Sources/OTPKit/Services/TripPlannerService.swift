@@ -300,19 +300,9 @@ public final class TripPlannerService: NSObject {
 
     // MARK: - User Location Methods
 
-    public func checkLocationAuthorization() async {
-        let status = await locationManager.authorizationStatus
-        switch status {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            // Handle restricted or denied
-            break
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-        @unknown default:
-            break
-        }
+    public func checkLocationAuthorization() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
 
 }
@@ -371,12 +361,6 @@ extension TripPlannerService: CLLocationManagerDelegate {
                 longitudinalMeters: 1000
             )
             self.updateCompleterRegion()
-        }
-    }
-
-    public func locationManagerDidChangeAuthorization(_: CLLocationManager) {
-        Task {
-            await checkLocationAuthorization()
         }
     }
 }
