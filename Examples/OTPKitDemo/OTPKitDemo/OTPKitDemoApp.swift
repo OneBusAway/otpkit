@@ -21,19 +21,20 @@ import SwiftUI
 
 @main
 struct OTPKitDemoApp: App {
-    let tripPlannerService = TripPlannerService(
-        apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
-        locationManager: CLLocationManager(),
-        searchCompleter: MKLocalSearchCompleter()
-    )
-
-    let sheetEnvironment = OriginDestinationSheetEnvironment()
-
+    @State private var hasCompletedOnboarding = false
+    @State private var selectedRegionURL: URL?
+    @State private var tripPlannerService: TripPlannerService?
+    
     var body: some Scene {
         WindowGroup {
-            MapView()
-                .environment(tripPlannerService)
-                .environment(sheetEnvironment)
+            if hasCompletedOnboarding, let service = tripPlannerService {
+                MapView()
+                    .environment(service)
+                    .environment(OriginDestinationSheetEnvironment())
+            } else {
+                OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding, selectedRegionURL: $selectedRegionURL, tripPlannerService: $tripPlannerService)
+            }
         }
     }
 }
+

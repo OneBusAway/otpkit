@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0111FD712C6CFBE400B4472E /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0111FD702C6CFBE400B4472E /* OTPKit */; };
 		014316DF2C6B6F2C00B33240 /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 014316DE2C6B6F2C00B33240 /* OTPKit */; };
+		015364702C7E93BE00146182 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0153646F2C7E93BE00146182 /* OnboardingView.swift */; };
 		01AA23162C758E62008F484E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AA23152C758E62008F484E /* LaunchScreen.storyboard */; };
 		01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */; };
 		01AA80562C6B6A7500D4038A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80552C6B6A7500D4038A /* MapView.swift */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		014316E02C6B713D00B33240 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0153646F2C7E93BE00146182 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		01AA23152C758E62008F484E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		01AA80502C6B6A7500D4038A /* OTPKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPKitDemoApp.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 				014316E02C6B713D00B33240 /* Info.plist */,
 				01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */,
 				01AA80552C6B6A7500D4038A /* MapView.swift */,
+				0153646F2C7E93BE00146182 /* OnboardingView.swift */,
 				01AA80572C6B6A7600D4038A /* Assets.xcassets */,
 				01AA80592C6B6A7600D4038A /* Preview Content */,
 			);
@@ -154,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				015364702C7E93BE00146182 /* OnboardingView.swift in Sources */,
 				01AA80562C6B6A7500D4038A /* MapView.swift in Sources */,
 				01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */,
 			);

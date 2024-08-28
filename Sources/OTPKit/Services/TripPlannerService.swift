@@ -194,6 +194,14 @@ public final class TripPlannerService: NSObject {
     public func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
     }
+    
+    /// Changes the map camera to focus on the given coordinate
+    ///
+    /// - Parameter to coordinate: Add the CLLocationCoordinate2D object
+    public func changeMapCamera(to coordinate: CLLocationCoordinate2D) {
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        currentCameraPosition = .region(region)
+    }
 
     /// Generates markers for the map based on selected points
     ///
