@@ -21,15 +21,15 @@ This project was created by Hilmy Veradin with Aaron Brethorst as part of the [G
 
 We make extensive use of unit testing in this project to ensure that our code works as expected and our changes do not cause regressions. All PR merges are gated on unit tests passing in GitHub Actions. Please be sure to run tests locally before opening a pull request. Also, please add or update unit tests to account for changes to your code.
 
-### Swiftlint
+### SwiftLint
 
-We make extensive use of [Swiflint](https://github.com/realm/SwiftLint) in order to ensure that our code adheres to standard styles and conventions. Please install Swiftlint locally via Homebrew:
+We make extensive use of [SwiftLint](https://github.com/realm/SwiftLint) in order to ensure that our code adheres to standard styles and conventions. Please install Swiftlint locally via Homebrew:
 
 ```
 brew install swiftlint
 ```
 
-A clean bill of health from Swiftlint is required for merging pull requests.
+A clean bill of health from SwiftLint is required for merging pull requests.
 
 ## License
 

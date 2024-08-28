@@ -89,6 +89,7 @@
 				01AA804C2C6B6A7500D4038A /* Sources */,
 				01AA804D2C6B6A7500D4038A /* Frameworks */,
 				01AA804E2C6B6A7500D4038A /* Resources */,
+				933C43692C7EC6B600DEB5B7 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -151,6 +152,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		933C43692C7EC6B600DEB5B7 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		01AA804C2C6B6A7500D4038A /* Sources */ = {
@@ -295,6 +319,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"OTPKitDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = 4ZQCMA634J;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OTPKitDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "OTPKit Demo";
@@ -328,6 +353,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"OTPKitDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = 4ZQCMA634J;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OTPKitDemo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "OTPKit Demo";

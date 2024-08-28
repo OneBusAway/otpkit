@@ -24,7 +24,7 @@ struct OTPKitDemoApp: App {
     @State private var hasCompletedOnboarding = false
     @State private var selectedRegionURL: URL?
     @State private var tripPlannerService: TripPlannerService?
-    
+
     var body: some Scene {
         WindowGroup {
             if hasCompletedOnboarding, let service = tripPlannerService {
@@ -32,9 +32,12 @@ struct OTPKitDemoApp: App {
                     .environment(service)
                     .environment(OriginDestinationSheetEnvironment())
             } else {
-                OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding, selectedRegionURL: $selectedRegionURL, tripPlannerService: $tripPlannerService)
+                OnboardingView(
+                    hasCompletedOnboarding: $hasCompletedOnboarding,
+                    selectedRegionURL: $selectedRegionURL,
+                    tripPlannerService: $tripPlannerService
+                )
             }
         }
     }
 }
-

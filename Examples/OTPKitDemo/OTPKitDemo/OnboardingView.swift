@@ -8,7 +8,7 @@ struct OnboardingView: View {
     @Binding var selectedRegionURL: URL?
     @Binding var tripPlannerService: TripPlannerService?
     @State private var selectedRegion: String = "Puget Sound"
-    
+
     private let regions = [
         "Puget Sound": [
             "url": "https://otp.prod.sound.obaweb.org/otp/routers/default/",
@@ -26,7 +26,7 @@ struct OnboardingView: View {
             "lon": -82.445851
         ]
     ]
-    
+
     var body: some View {
         VStack(spacing: 20) {
             Text("Hello! Welcome to OTPKitDemo!")
@@ -89,6 +89,10 @@ struct OnboardingView: View {
         locationManager: CLLocationManager(),
         searchCompleter: MKLocalSearchCompleter()
     )
-    
-    return OnboardingView(hasCompletedOnboarding: .constant(true), selectedRegionURL: .constant(nil), tripPlannerService: .constant(planner))
+
+    return OnboardingView(
+        hasCompletedOnboarding: .constant(true),
+        selectedRegionURL: .constant(nil),
+        tripPlannerService: .constant(planner)
+    )
 }
