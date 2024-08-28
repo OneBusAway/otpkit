@@ -11,34 +11,32 @@ struct OnboardingView: View {
 
     private let regions = [
         "Puget Sound": [
-            "url": "https://otp.prod.sound.obaweb.org/otp/routers/default/",
-            "lat": 47.64585,
-            "lon": -122.2963
+            "url": URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!,
+            "center": CLLocationCoordinate2D(latitude: 47.64585, longitude: -122.2963)
         ],
         "San Diego": [
-            "url": "https://realtime.sdmts.com:9091/otp/routers/default/",
-            "lat": 32.731591,
-            "lon": -117.1896335
+            "url": URL(string: "https://realtime.sdmts.com:9091/otp/routers/default/")!,
+            "center": CLLocationCoordinate2D(latitude: 32.731591, longitude: -117.1896335)
         ],
         "Tampa": [
-            "url": "https://otp.prod.obahart.org/otp/routers/default/",
-            "lat": 27.9769105,
-            "lon": -82.445851
+            "url": URL(string: "https://otp.prod.obahart.org/otp/routers/default/")!,
+            "center": CLLocationCoordinate2D(latitude: 27.9769105, longitude: -82.445851)
         ]
     ]
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Hello! Welcome to OTPKitDemo!")
+        VStack {
+            Spacer(minLength: 20)
+            Text("Welcome to OTPKitDemo!")
+                .bold()
                 .font(.title)
-            
-            Text("Please choose your initial region.")
-                .font(.subheadline)
-            
-            List(Array(regions.keys), id: \.self) { key in
-                Button(action: {
+
+            Text("Please choose your region.")
+
+            List(Array(regions.keys.sorted()), id: \.self) { key in
+                Button {
                     selectedRegion = key
-                }) {
+                } label: {
                     HStack {
                         Text(key)
                         Spacer()
@@ -50,36 +48,34 @@ struct OnboardingView: View {
                 }
                 .foregroundColor(.primary)
             }
-            .frame(height: 200)
-            
-            Button(action: {
-                if let urlString = regions[selectedRegion]?["url"] as? String,
-                   let url = URL(string: urlString),
-                   let latitude = regions[selectedRegion]?["lat"] as? Double,
-                   let longitude = regions[selectedRegion]?["lon"] as? Double {
-                    
-                    selectedRegionURL = url
-                    
-                    print(urlString)
-                    tripPlannerService = TripPlannerService(
-                        apiClient: RestAPI(baseURL: url),
-                        locationManager: CLLocationManager(),
-                        searchCompleter: MKLocalSearchCompleter()
-                    )
-                    
-                    let locationCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                    tripPlannerService?.changeMapCamera(to: locationCoordinate)
-                    hasCompletedOnboarding = true
-                }
-            }) {
-                Text("Submit")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+
+            Button {
+                let selection = regions[selectedRegion]!
+
+                // swiftlint:disable force_cast
+                let url = selection["url"] as! URL
+                let center = selection["center"] as! CLLocationCoordinate2D
+                // swiftlint:enable force_cast
+
+                selectedRegionURL = url
+
+                tripPlannerService = TripPlannerService(
+                    apiClient: RestAPI(baseURL: url),
+                    locationManager: CLLocationManager(),
+                    searchCompleter: MKLocalSearchCompleter()
+                )
+
+                tripPlannerService?.changeMapCamera(to: center)
+                hasCompletedOnboarding = true
+
+            } label: {
+                Text("OK")
+                    .frame(maxWidth: .infinity, minHeight: 44)
             }
+            .buttonStyle(BorderedProminentButtonStyle())
+            .padding()
         }
-        .padding()
+        .background(Color(UIColor.systemGroupedBackground))
     }
 }
 
