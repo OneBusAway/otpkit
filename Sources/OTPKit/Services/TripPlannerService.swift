@@ -53,7 +53,8 @@ public final class TripPlannerService: NSObject {
     // User Location
     var currentLocation: Location?
     private let locationManager: CLLocationManager
-
+    private var currentLocations = [CLLocation]()
+    
     // View Bindings
     public var isStepsViewPresentedBinding: Binding<Bool> {
         Binding(
@@ -206,7 +207,7 @@ public final class TripPlannerService: NSObject {
     /// Generates markers for the map based on selected points
     ///
     /// - Returns: MapContent containing the markers
-    public func generateMarkers() -> some MapContent {
+    @MainActor public func generateMarkers() -> some MapContent {
         ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
             Marker(item: markerItem.item)
         }
@@ -355,20 +356,64 @@ extension TripPlannerService: MKLocalSearchCompleterDelegate {
 extension TripPlannerService: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        DispatchQueue.main.async {
-            self.currentLocation = Location(
-                title: "My Location",
-                subTitle: "Your current location",
-                latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
-            )
+        
+        // Check and Cache last location to avoid multiple geocoding requests
+        let isLatestLocation = currentLocations.contains {
+            $0.coordinate.latitude == location.coordinate.latitude
+                && $0.coordinate.longitude == location.coordinate.longitude
+        }
+        
+        guard !isLatestLocation else {
+            return
+        }
+        currentLocations.append(location)
+        
+        getPlaceName(from: location) { [weak self] name, address in
+            
+            guard let self = self else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.currentLocation = Location(
+                    title: name ?? "MyLocation",
+                    subTitle: address ?? "Your current location",
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude
+                )
 
-            self.currentRegion = MKCoordinateRegion(
-                center: location.coordinate,
-                latitudinalMeters: 1000,
-                longitudinalMeters: 1000
-            )
-            self.updateCompleterRegion()
+                self.currentRegion = MKCoordinateRegion(
+                    center: location.coordinate,
+                    latitudinalMeters: 1000,
+                    longitudinalMeters: 1000
+                )
+                self.updateCompleterRegion()
+            }
+        }
+    }
+}
+
+// MARK: - Get Place Address Information
+
+extension TripPlannerService {
+    /// Gets the place name and address from a given location
+    func getPlaceName(from location: CLLocation, completion: @escaping (String?, String?) -> Void) {
+        
+        let geocoder = CLGeocoder()
+        
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            guard let placemark = placemarks?.first, error == nil else {
+                print("Error getting place name: \(error?.localizedDescription ?? "Unknown error")")
+                completion(nil, nil)
+                return
+            }
+            
+            let name = placemark.name
+            let district = placemark.subLocality
+            let city = placemark.locality
+            let country = placemark.country
+
+            let address = [district, city, country].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
+            completion(name, address)
         }
     }
 }
