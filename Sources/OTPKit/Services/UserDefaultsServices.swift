@@ -88,23 +88,48 @@ public final class UserDefaultsServices {
 
         let decoder = JSONDecoder()
         do {
-            let decodedSavedLocations = try decoder.decode([Location].self, from: savedLocationsData)
-            return .success(decodedSavedLocations)
+            let decodedSavedLocations = try decoder.decode(Set<Location>.self, from: savedLocationsData)
+            let savedLocationsArray = decodedSavedLocations.sorted { $0.date > $1.date }
+            return .success(savedLocationsArray)
         } catch {
             return .failure(error)
         }
     }
 
     func saveRecentLocations(data: Location) -> Result<Void, Error> {
-        var locations: [Location] = switch getFavoriteLocationsData() {
+        var locations: Set<Location> = switch getRecentLocations() {
         case let .success(existingLocations):
-            existingLocations
+            Set(existingLocations)
         case .failure:
             []
         }
 
-        locations.insert(data, at: 0)
+        locations.insert(data)
 
+        let encoder = JSONEncoder()
+        do {
+            let encoded = try encoder.encode(locations)
+            userDefaults.set(encoded, forKey: recentLocationsKey)
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    // MARK: - Update Recent Location Date
+    func updateRecentLocations(_ data: Location) -> Result<Void, Error> {
+        var locations: Set<Location> = switch getRecentLocations() {
+        case let .success(existingLocations):
+            Set(existingLocations)
+        case .failure:
+            []
+        }
+        
+        if var existingLocation = locations.first(where: { $0.id == data.id }) {
+            existingLocation.date = Date()
+            locations.update(with: existingLocation)
+        }
+        
         let encoder = JSONEncoder()
         do {
             let encoded = try encoder.encode(locations)

@@ -103,7 +103,12 @@ public struct OriginDestinationSheetView: View {
                     Button {
                         tripPlanner.appendMarker(location: location)
                         tripPlanner.addOriginDestinationData()
-                        dismiss()
+                        switch UserDefaultsServices.shared.updateRecentLocations(location) {
+                        case .success:
+                            dismiss()
+                        case .failure:
+                            break
+                        }
                     } label: {
                         VStack(alignment: .leading) {
                             Text(location.title)
@@ -217,7 +222,23 @@ public struct OriginDestinationSheetView: View {
             sheetEnvironment.refreshFavoriteLocations()
             sheetEnvironment.refreshRecentLocations()
         }
-        .sheet(item: $presentationManager.activePresentation) { presentation in
+        .sheet(item: $presentationManager.activePresentation, onDismiss: {
+            
+            // Case of more recent sheet
+            if let location = sheetEnvironment.selectedRecentLocation {
+                tripPlanner.appendMarker(location: location)
+                tripPlanner.addOriginDestinationData()
+                sheetEnvironment.selectedRecentLocation = nil
+                
+                switch UserDefaultsServices.shared.updateRecentLocations(location) {
+                case .success:
+                    dismiss()
+                case .failure:
+                    break
+                }
+            }
+
+        }, content: { presentation in
             switch presentation {
             case .addFavoriteSheet:
                 AddFavoriteLocationsSheet()
@@ -231,7 +252,7 @@ public struct OriginDestinationSheetView: View {
             case .moreRecentsSheet:
                 MoreRecentLocationsSheet()
             }
-        }
+        })
         .alert(isPresented: $isShowErrorAlert) {
             Alert(title: Text(errorTitle),
                   message: Text(errorMessage),
