@@ -20,23 +20,35 @@ struct NoResultsView: View {
     }
     
     var body: some View {
-        VStack {
+        
+        VStack(alignment: .center, spacing: 8) {
             Image(systemName: iconName)
                 .resizable()
-                .frame(width: 50, height: 50)
-                .font(.largeTitle)
+                .scaledToFit()
+                .frame(width: 45, height: 45)
                 .foregroundColor(.secondary)
-                .padding()
+                .padding(.top, 15)
+                .padding(.bottom, 8)
             
             Text(title)
-                .font(.title)
+                .font(.headline)
                 .foregroundColor(.black)
-                .padding()
-            
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
             Text(subtitle)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .padding()
+                .multilineTextAlignment(.leading)
+                .padding(.horizontal, 10)
         }
+        .frame(maxWidth: .infinity)
+
+    }
+}
+
+#Preview {
+    List {
+        NoResultsView(iconName: "clock", title: "No results found", subtitle: "Try searching for something else")
     }
 }
