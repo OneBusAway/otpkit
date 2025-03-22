@@ -192,7 +192,7 @@ public struct OriginDestinationSheetView: View {
                 }, label: {
                     HStack {
                         Image(systemName: "mappin")
-                        Text("Set current location as \(tripPlanner.originDestinationState)")
+                        Text("Set current location as \(tripPlanner.originDestinationState.name.capitalized)")
                     }
                 })
                 .buttonStyle(.plain)
