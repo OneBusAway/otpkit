@@ -236,6 +236,11 @@ public struct OriginDestinationSheetView: View {
                 case .failure:
                     break
                 }
+            } else if let location = sheetEnvironment.selectedFavoriteLocation {
+                tripPlanner.appendMarker(location: location)
+                tripPlanner.addOriginDestinationData()
+                sheetEnvironment.selectedFavoriteLocation = nil
+                dismiss()
             }
 
         }, content: { presentation in

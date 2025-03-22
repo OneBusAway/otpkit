@@ -24,7 +24,10 @@ public struct MoreFavoriteLocationsSheet: View {
 
             List {
                 ForEach(sheetEnvironment.favoriteLocations) { location in
-                    Button(action: {}, label: {
+                    Button(action: {
+                        sheetEnvironment.selectedFavoriteLocation = location
+                        dismiss()
+                    }, label: {
                         VStack(alignment: .leading) {
                             Text(location.title)
                                 .font(.headline)

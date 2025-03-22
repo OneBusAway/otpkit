@@ -26,6 +26,9 @@ public final class OriginDestinationSheetEnvironment {
     /// Value of selected more recent location in `MoreRecentLocationSheet`
     public var selectedRecentLocation: Location?
     
+    /// Value of selected favorite location in `MoreFavoriteLocationSheet` to be set as [Origin/Destination]
+    public var selectedFavoriteLocation: Location?
+    
     public var isSheetOpenedBinding: Binding<Bool> {
         Binding(
             get: { self.isSheetOpened },
