@@ -15,3 +15,14 @@ public enum OriginDestinationState {
     case origin
     case destination
 }
+
+public extension OriginDestinationState {
+    var name: String {
+        switch self {
+        case .origin:
+            return "origin"
+        case .destination:
+            return "destination"
+        }
+    }
+}
