@@ -61,8 +61,8 @@ struct SearchView: View {
     }
 }
 
- #Preview {
-     @State var text: String = ""
-     SearchView(placeholder: "TEST", searchText: $text)
-         .padding(.horizontal, 16)
- }
+// #Preview {
+//     @Previewable @State var text: String = ""
+//     SearchView(placeholder: "TEST", searchText: $text)
+//         .padding(.horizontal, 16)
+// }
