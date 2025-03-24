@@ -43,7 +43,7 @@ public struct OriginDestinationSheetView: View {
         tripPlanner.appendMarker(location: location)
         tripPlanner.addOriginDestinationData()
     }
-    
+
     private func onLocationSelection(for location: Location) {
         updateTripPlanner(for: location)
         switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
@@ -53,7 +53,7 @@ public struct OriginDestinationSheetView: View {
             break
         }
     }
-    
+
     private func favoriteSectionConfirmationDialog() -> some View {
         Group {
             Button(action: {
@@ -117,7 +117,12 @@ public struct OriginDestinationSheetView: View {
                 ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
                     Button {
                         updateTripPlanner(for: location)
-                        dismiss()
+                        switch UserDefaultsServices.shared.updateRecentLocations(location) {
+                        case .success:
+                            dismiss()
+                        case .failure:
+                            break
+                        }
                     } label: {
                         VStack(alignment: .leading) {
                             Text(location.title)
@@ -201,7 +206,7 @@ public struct OriginDestinationSheetView: View {
             }
         }
     }
-    
+
     private func locationSelectionSection() -> some View {
         Section(content: {
             selectLocationBasedOnMap()
@@ -211,7 +216,7 @@ public struct OriginDestinationSheetView: View {
                 .textCase(.none)
         })
     }
-    
+
     public var body: some View {
         VStack {
             PageHeaderView(text: "Choose \(tripPlanner.originDestinationState.name.capitalized)") {
@@ -243,7 +248,26 @@ public struct OriginDestinationSheetView: View {
             sheetEnvironment.refreshFavoriteLocations()
             sheetEnvironment.refreshRecentLocations()
         }
-        .sheet(item: $presentationManager.activePresentation) { presentation in
+        .sheet(item: $presentationManager.activePresentation, onDismiss: {
+
+            // Case of more recent sheet
+            if let location = sheetEnvironment.selectedRecentLocation {
+                updateTripPlanner(for: location)
+                sheetEnvironment.selectedRecentLocation = nil
+
+                switch UserDefaultsServices.shared.updateRecentLocations(location) {
+                case .success:
+                    dismiss()
+                case .failure:
+                    break
+                }
+            } else if let location = sheetEnvironment.selectedFavoriteLocation {
+                updateTripPlanner(for: location)
+                sheetEnvironment.selectedFavoriteLocation = nil
+                dismiss()
+            }
+
+        }, content: { presentation in
             switch presentation {
             case .addFavoriteSheet:
                 AddFavoriteLocationsSheet()
@@ -257,7 +281,7 @@ public struct OriginDestinationSheetView: View {
             case .moreRecentsSheet:
                 MoreRecentLocationsSheet()
             }
-        }
+        })
         .alert(isPresented: $isShowErrorAlert) {
             Alert(title: Text(errorTitle),
                   message: Text(errorMessage),

@@ -22,11 +22,17 @@ public struct MoreRecentLocationsSheet: View {
 
             List {
                 ForEach(sheetEnvironment.recentLocations) { location in
-                    VStack(alignment: .leading) {
-                        Text(location.title)
-                            .font(.headline)
-                        Text(location.subTitle)
-                    }
+                    Button(action: {
+                        sheetEnvironment.selectedRecentLocation = location
+                        dismiss()
+                    }, label: {
+                        VStack(alignment: .leading) {
+                            Text(location.title)
+                                .font(.headline)
+                            Text(location.subTitle)
+                        }
+                        .foregroundStyle(.foreground)
+                    })
                 }
             }
         }
