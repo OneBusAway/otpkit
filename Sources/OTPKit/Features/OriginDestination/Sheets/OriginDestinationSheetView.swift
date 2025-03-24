@@ -43,7 +43,7 @@ public struct OriginDestinationSheetView: View {
         tripPlanner.appendMarker(location: location)
         tripPlanner.addOriginDestinationData()
     }
-    
+
     private func onLocationSelection(for location: Location) {
         updateTripPlanner(for: location)
         switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
@@ -53,7 +53,7 @@ public struct OriginDestinationSheetView: View {
             break
         }
     }
-    
+
     private func favoriteSectionConfirmationDialog() -> some View {
         Group {
             Button(action: {
@@ -206,7 +206,7 @@ public struct OriginDestinationSheetView: View {
             }
         }
     }
-    
+
     private func locationSelectionSection() -> some View {
         Section(content: {
             selectLocationBasedOnMap()
@@ -216,7 +216,7 @@ public struct OriginDestinationSheetView: View {
                 .textCase(.none)
         })
     }
-    
+
     public var body: some View {
         VStack {
             PageHeaderView(text: "Choose \(tripPlanner.originDestinationState.name.capitalized)") {
@@ -249,12 +249,12 @@ public struct OriginDestinationSheetView: View {
             sheetEnvironment.refreshRecentLocations()
         }
         .sheet(item: $presentationManager.activePresentation, onDismiss: {
-            
+
             // Case of more recent sheet
             if let location = sheetEnvironment.selectedRecentLocation {
                 updateTripPlanner(for: location)
                 sheetEnvironment.selectedRecentLocation = nil
-                
+
                 switch UserDefaultsServices.shared.updateRecentLocations(location) {
                 case .success:
                     dismiss()

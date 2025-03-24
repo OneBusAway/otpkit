@@ -19,7 +19,7 @@ public struct AddFavoriteLocationsSheet: View {
     @FocusState private var isSearchFocused: Bool
 
     @State private var isAllRecentPresented: Bool = false
-    
+
     private var filteredCompletions: [Location] {
         let favorites = sheetEnvironment.favoriteLocations
         return tripPlanner.completions.filter { completion in
@@ -43,7 +43,7 @@ public struct AddFavoriteLocationsSheet: View {
             }
         }
     }
-    
+
     private var isCurrentLocationFavorite: Bool {
         guard let currentLocation = tripPlanner.currentLocation else { return false }
         return sheetEnvironment.favoriteLocations.contains { favorite in
@@ -53,7 +53,7 @@ public struct AddFavoriteLocationsSheet: View {
             favorite.longitude == currentLocation.longitude
         }
     }
-    
+
     private func saveFavoriteLocation(_ location: Location) {
         switch UserDefaultsServices.shared.saveFavoriteLocationData(data: location) {
         case .success:
@@ -63,7 +63,7 @@ public struct AddFavoriteLocationsSheet: View {
             print(error)
         }
     }
-    
+
     private func currentUserSection() -> some View {
         if search.isEmpty, let userLocation = tripPlanner.currentLocation, !isCurrentLocationFavorite {
             AnyView(
@@ -71,7 +71,7 @@ public struct AddFavoriteLocationsSheet: View {
                     title: userLocation.title,
                     subtitle: userLocation.subTitle,
                     action: {
-                        
+
                         switch UserDefaultsServices.shared.saveFavoriteLocationData(data: userLocation) {
                         case .success:
                             sheetEnvironment.refreshFavoriteLocations()
@@ -81,14 +81,14 @@ public struct AddFavoriteLocationsSheet: View {
                         }
                     })
             )
-            
+
         } else {
             AnyView(EmptyView())
         }
     }
 
     private func searchedResultsSection() -> some View {
-        
+
         if filteredCompletions.isEmpty {
             return AnyView(
                 NoResultsView(

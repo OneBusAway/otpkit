@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct AddFavoriteCell: View {
-    
+
     private let title: String
     private let subtitle: String
     private let action: VoidBlock
-    
+
     init(title: String, subtitle: String, action: @escaping VoidBlock) {
         self.title = title
         self.subtitle = subtitle
         self.action = action
     }
-    
+
     var body: some View {
         Button(action: {
             action()
