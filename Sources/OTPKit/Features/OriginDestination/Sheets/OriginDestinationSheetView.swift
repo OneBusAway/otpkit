@@ -38,6 +38,22 @@ public struct OriginDestinationSheetView: View {
     // Public initializer
     public init() {}
 
+    // MARK: - Shared Actions
+    private func updateTripPlanner(for location: Location) {
+        tripPlanner.appendMarker(location: location)
+        tripPlanner.addOriginDestinationData()
+    }
+    
+    private func onLocationSelection(for location: Location) {
+        updateTripPlanner(for: location)
+        switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
+        case .success:
+            dismiss()
+        case .failure:
+            break
+        }
+    }
+    
     private func favoriteSectionConfirmationDialog() -> some View {
         Group {
             Button(action: {
@@ -71,8 +87,7 @@ public struct OriginDestinationSheetView: View {
                 HStack {
                     ForEach(sheetEnvironment.favoriteLocations, content: { location in
                         FavoriteView(title: location.title, imageName: "mappin", tapAction: {
-                            tripPlanner.appendMarker(location: location)
-                            tripPlanner.addOriginDestinationData()
+                            updateTripPlanner(for: location)
                             dismiss()
                         }, longTapAction: {
                             isShowFavoriteConfirmationDialog = true
@@ -101,8 +116,7 @@ public struct OriginDestinationSheetView: View {
             Section(content: {
                 ForEach(Array(sheetEnvironment.recentLocations.prefix(5)), content: { location in
                     Button {
-                        tripPlanner.appendMarker(location: location)
-                        tripPlanner.addOriginDestinationData()
+                        updateTripPlanner(for: location)
                         switch UserDefaultsServices.shared.updateRecentLocations(location) {
                         case .success:
                             dismiss()
@@ -130,15 +144,7 @@ public struct OriginDestinationSheetView: View {
         Group {
             ForEach(tripPlanner.completions) { location in
                 Button(action: {
-                    tripPlanner.appendMarker(location: location)
-                    tripPlanner.addOriginDestinationData()
-                    switch UserDefaultsServices.shared.saveRecentLocations(data: location) {
-                    case .success:
-                        dismiss()
-                    case .failure:
-                        break
-                    }
-
+                    onLocationSelection(for: location)
                 }, label: {
                     VStack(alignment: .leading) {
                         Text(location.title)
@@ -155,15 +161,7 @@ public struct OriginDestinationSheetView: View {
         Group {
             if let userLocation = tripPlanner.currentLocation {
                 Button(action: {
-                    tripPlanner.appendMarker(location: userLocation)
-                    tripPlanner.addOriginDestinationData()
-                    switch UserDefaultsServices.shared.saveRecentLocations(data: userLocation) {
-                    case .success:
-                        dismiss()
-                    case .failure:
-                        break
-                    }
-
+                    onLocationSelection(for: userLocation)
                 }, label: {
                     VStack(alignment: .leading) {
                         Text("My Location")
@@ -191,9 +189,37 @@ public struct OriginDestinationSheetView: View {
         .buttonStyle(PlainButtonStyle())
     }
 
+    private func currentLocationAsOriginDestination() -> some View {
+        Group {
+            if let location = tripPlanner.currentLocation {
+                Button(action: {
+                    onLocationSelection(for: location)
+                }, label: {
+                    HStack {
+                        Image(systemName: "mappin")
+                        Text("Set current location as \(tripPlanner.originDestinationState.name.capitalized)")
+                    }
+                })
+                .buttonStyle(.plain)
+            } else {
+                EmptyView()
+            }
+        }
+    }
+    
+    private func locationSelectionSection() -> some View {
+        Section(content: {
+            selectLocationBasedOnMap()
+            currentLocationAsOriginDestination()
+        }, header: {
+            Text("Select Location")
+                .textCase(.none)
+        })
+    }
+    
     public var body: some View {
         VStack {
-            PageHeaderView(text: "Change Stop") {
+            PageHeaderView(text: "Choose \(tripPlanner.originDestinationState.name.capitalized)") {
                 dismiss()
             }
             .padding()
@@ -205,7 +231,7 @@ public struct OriginDestinationSheetView: View {
                 if search.isEmpty, isSearchFocused {
                     currentUserSection()
                 } else if search.isEmpty {
-                    selectLocationBasedOnMap()
+                    locationSelectionSection()
                     favoritesSection()
                     recentsSection()
                 } else {
@@ -226,8 +252,7 @@ public struct OriginDestinationSheetView: View {
             
             // Case of more recent sheet
             if let location = sheetEnvironment.selectedRecentLocation {
-                tripPlanner.appendMarker(location: location)
-                tripPlanner.addOriginDestinationData()
+                updateTripPlanner(for: location)
                 sheetEnvironment.selectedRecentLocation = nil
                 
                 switch UserDefaultsServices.shared.updateRecentLocations(location) {
@@ -237,8 +262,7 @@ public struct OriginDestinationSheetView: View {
                     break
                 }
             } else if let location = sheetEnvironment.selectedFavoriteLocation {
-                tripPlanner.appendMarker(location: location)
-                tripPlanner.addOriginDestinationData()
+                updateTripPlanner(for: location)
                 sheetEnvironment.selectedFavoriteLocation = nil
                 dismiss()
             }
