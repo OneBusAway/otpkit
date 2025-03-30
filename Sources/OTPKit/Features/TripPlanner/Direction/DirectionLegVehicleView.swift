@@ -44,6 +44,12 @@ struct DirectionLegVehicleView: View {
             Color.pink
         }
     }
+    
+    private var boardingText: String {
+            let agency = leg.agencyName ?? ""
+            let routeText = leg.route != nil && !leg.route!.isEmpty ? "Route \(leg.route!)" : ""
+            return "Board \(agency) \(routeText)"
+    }
 }
 
 #Preview {
