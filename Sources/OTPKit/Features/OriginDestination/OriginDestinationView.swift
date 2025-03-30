@@ -18,42 +18,42 @@ public struct OriginDestinationView: View {
     // Public Initializer
     public init() {}
 
+    private func originDestinationField(icon: String, text: String, action: @escaping () -> Void) -> some View {
+        
+        Button(action: action, label: {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .background(
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 30, height: 30)
+                    )
+                
+                Text(text)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(2)
+            }
+            .frame(minHeight: 35, maxHeight: 40)
+        })
+        .foregroundStyle(.foreground)
+
+    }
+    
     public var body: some View {
         VStack {
             List {
-                Button(action: {
+                
+                originDestinationField(icon: "paperplane.fill", text: tripPlanner.originName) {
                     sheetEnvironment.isSheetOpened.toggle()
                     tripPlanner.originDestinationState = .origin
-                }, label: {
-                    HStack(spacing: 16) {
-                        Image(systemName: "paperplane.fill")
-                            .background(
-                                Circle()
-                                    .fill(Color.green)
-                                    .frame(width: 30, height: 30)
-                            )
-                        Text(tripPlanner.originName)
-                    }
-                })
-                .foregroundStyle(.foreground)
-
-                Button(action: {
+                }
+                
+                originDestinationField(icon: "mappin", text: tripPlanner.destinationName) {
                     sheetEnvironment.isSheetOpened.toggle()
                     tripPlanner.originDestinationState = .destination
-                }, label: {
-                    HStack(spacing: 16) {
-                        Image(systemName: "mappin")
-                            .background(
-                                Circle()
-                                    .fill(Color.green)
-                                    .frame(width: 30, height: 30)
-                            )
-                        Text(tripPlanner.destinationName)
-                    }
-                })
-                .foregroundStyle(.foreground)
+                }
             }
-            .frame(height: 135)
+            .frame(minHeight: 135, maxHeight: 170)
             .scrollContentBackground(.hidden)
             .scrollDisabled(true)
             .padding(.bottom, 24)
