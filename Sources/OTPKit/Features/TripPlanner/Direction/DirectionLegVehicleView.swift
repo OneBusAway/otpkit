@@ -11,26 +11,69 @@ struct DirectionLegVehicleView: View {
     let leg: Leg
 
     var body: some View {
-        HStack(spacing: 24) {
-            Text(leg.route ?? "")
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(backgroundColor)
-                .foregroundStyle(.foreground)
-                .font(.caption)
-                .clipShape(RoundedRectangle(cornerRadius: 4))
-                .frame(width: 40)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Board to \(leg.agencyName ?? "")")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("\(leg.headsign ?? "")")
-                    .foregroundStyle(.gray)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
-                    .fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading, spacing: 4) {
+            // Boarding section
+            HStack(alignment: .top, spacing: 16) {
+                // Route number badge
+                Text(leg.route ?? "")
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(backgroundColor)
+                    .foregroundStyle(.white)
+                    .font(.caption)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .frame(width: 40, height: 40)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(boardingText)
+                        .font(.headline)
+                    
+                    Text(leg.headsign ?? "")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    HStack {
+                        if let stopCode = leg.to.stopCode {
+                            Text("Stop ID: \(stopCode)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .padding(.bottom, 4)
+            
+            // Alighting section
+            HStack(alignment: .top, spacing: 16) {
+                // Spacer to align with the route badge
+                Rectangle()
+                    .fill(.clear)
+                    .frame(width: 40, height: 0)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Deboard at")
+                        .font(.headline)
+                    
+                    Text(leg.to.name ?? "")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    HStack {
+                        if let stopCode = leg.to.stopCode {
+                            Text("Stop ID: \(stopCode)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Text("Arrives at \(Formatters.formatDateToTime(leg.endTime))")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
     }
