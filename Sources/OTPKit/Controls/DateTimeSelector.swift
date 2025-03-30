@@ -99,7 +99,7 @@ struct DateTimeSelector: View {
                 Image(systemName: "clock")
                     .foregroundColor(.blue)
                     .font(.system(size: 14))
-                Text(selectedTime.formattedTripDate)
+                Text(selectedTime.formattedTripTime)
                     .foregroundColor(.primary)
                     .font(.system(size: 14))
             }
