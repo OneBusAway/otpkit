@@ -287,8 +287,8 @@ public final class TripPlannerService: NSObject {
                 let response = try await apiClient.fetchPlan(
                     fromPlace: fromPlace,
                     toPlace: toPlace,
-                    time: getCurrentTimeFormatted(),
-                    date: getFormattedTodayDate(),
+                    time: tripTime,
+                    date: tripDate,
                     mode: "TRANSIT,WALK",
                     arriveBy: false,
                     maxWalkDistance: 1000,
