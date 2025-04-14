@@ -20,6 +20,10 @@ struct MapView: View {
                     tripPlanner.generateMapPolyline()
                         .stroke(.blue, lineWidth: 5)
                 }
+                .animation(
+                    .easeIn(duration: 0.01),
+                    value: tripPlanner.currentCameraPositionBinding.wrappedValue
+                )
                 .mapControls {
                     if !tripPlanner.isMapMarkingMode {
                         MapUserLocationButton()
