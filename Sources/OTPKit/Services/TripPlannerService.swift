@@ -38,7 +38,7 @@ public final class TripPlannerService: NSObject {
 
     private let originKey = OriginDestinationState.origin.name
     private let destinationKey = OriginDestinationState.destination.name
-    
+
     var completions = [Location]()
 
     // Map Extension
@@ -57,7 +57,7 @@ public final class TripPlannerService: NSObject {
     var currentLocation: Location?
     private let locationManager: CLLocationManager
     private var currentLocations = [CLLocation]()
-    
+
     // View Bindings
     public var isStepsViewPresentedBinding: Binding<Bool> {
         Binding(
@@ -143,10 +143,15 @@ public final class TripPlannerService: NSObject {
     ///
     /// - Parameter location: The location to add a marker for
     public func appendMarker(location: Location) {
+
         let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-        let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
-        mapItem.name = location.title
+
+        let placeMark = MKPlacemark(coordinate: coordinate)
+        let mapItem = MKMapItem(placemark: placeMark)
+        mapItem.name = "Finding location..."
+
         let markerItem = MarkerItem(item: mapItem)
+
         switch originDestinationState {
         case .origin:
             selectedMapPoint[originKey] = markerItem
@@ -154,6 +159,33 @@ public final class TripPlannerService: NSObject {
         case .destination:
             selectedMapPoint[destinationKey] = markerItem
             changeMapCamera(mapItem)
+        }
+
+        // Get accurate location name in background
+        let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        reverseGeoCode(clLocation) { [weak self] locationName in
+            guard let self = self else { return }
+
+            // Update marker with real location name once geocoding completes
+            self.updateMarkerName(coordinate: coordinate, newName: locationName)
+        }
+    }
+
+    /// Updates an existing marker's name after geocoding completes
+    private func updateMarkerName(coordinate: CLLocationCoordinate2D, newName: String) {
+        let placeMark = MKPlacemark(coordinate: coordinate)
+        let mapItem = MKMapItem(placemark: placeMark)
+        mapItem.name = newName
+
+        let updatedMarkerItem = MarkerItem(item: mapItem)
+
+        switch originDestinationState {
+        case .origin:
+            originName = updatedMarkerItem.item.name ?? "...."
+            selectedMapPoint[originKey] = updatedMarkerItem
+        case .destination:
+            destinationName = updatedMarkerItem.item.name ?? "...."
+            selectedMapPoint[destinationKey] = updatedMarkerItem
         }
     }
 
@@ -198,7 +230,7 @@ public final class TripPlannerService: NSObject {
     public func changeMapCamera(_ item: MKMapItem) {
         currentCameraPosition = MapCameraPosition.item(item)
     }
-    
+
     /// Changes the map camera to focus on the given coordinate
     ///
     /// - Parameter to coordinate: Add the CLLocationCoordinate2D object
@@ -360,27 +392,27 @@ extension TripPlannerService: MKLocalSearchCompleterDelegate {
 extension TripPlannerService: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        
+
         // Check and Cache last location to avoid multiple geocoding requests
         let isLatestLocation = currentLocations.contains {
             $0.coordinate.latitude == location.coordinate.latitude
-                && $0.coordinate.longitude == location.coordinate.longitude
+            && $0.coordinate.longitude == location.coordinate.longitude
         }
-        
+
         guard !isLatestLocation else {
             return
         }
         currentLocations.append(location)
-        
-        getPlaceName(from: location) { [weak self] name, address in
-            
+
+        reverseGeoCode(location) { [weak self] locationName in
             guard let self = self else {
                 return
             }
+
             DispatchQueue.main.async {
                 self.currentLocation = Location(
-                    title: name ?? "MyLocation",
-                    subTitle: address ?? "Your current location",
+                    title: locationName,
+                    subTitle: "Your current location",
                     latitude: location.coordinate.latitude,
                     longitude: location.coordinate.longitude
                 )
@@ -399,26 +431,52 @@ extension TripPlannerService: CLLocationManagerDelegate {
 // MARK: - Get Place Address Information
 
 extension TripPlannerService {
-    /// Gets the place name and address from a given location
-    func getPlaceName(from location: CLLocation, completion: @escaping (String?, String?) -> Void) {
-        
-        let geocoder = CLGeocoder()
-        
-        geocoder.reverseGeocodeLocation(location) { placemarks, error in
-            guard let placemark = placemarks?.first, error == nil else {
-                print("Error getting place name: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil, nil)
+    /// Performs reverse geocoding to get a readable location name
+    private func reverseGeoCode(
+        _ location: CLLocation,
+        completion: @escaping (
+            String
+        ) -> Void
+    ){
+        let geoCoder = CLGeocoder()
+
+        geoCoder.reverseGeocodeLocation(location) { placeMarks, error in
+            if let error = error {
+                print("Geocoding error: \(error.localizedDescription)")
+                completion("Unknown Location")
                 return
             }
-            
-            let name = placemark.name
-            let district = placemark.subLocality
-            let city = placemark.locality
-            let country = placemark.country
 
-            let address = [district, city, country].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
-            completion(name, address)
+            guard let placeMark = placeMarks?.first else {
+                completion("Unknown Location")
+                return
+            }
+
+            let locationName = self.formatLocationName(from: placeMark)
+            completion(locationName)
         }
+    }
+
+    /// Formats a readable location name from a placemark
+    private func formatLocationName(from placeMark: CLPlacemark) -> String {
+        if let name = placeMark.name {
+            return name
+        }
+
+        // street address associated with this placed mark
+        if let thoroughfare = placeMark.thoroughfare {
+            if let subToroughFare = placeMark.subThoroughfare {
+                return "\(subToroughFare) \(thoroughfare)"
+            }
+            return thoroughfare
+        }
+
+        // Try city name if cannot get the street address
+        if let locality = placeMark.locality {
+            return locality
+        }
+
+        return "Unknown Location"
     }
 }
 
