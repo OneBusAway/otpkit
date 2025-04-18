@@ -23,64 +23,48 @@ public struct OriginDestinationView: View {
     // Public Initializer
     public init() {}
 
+    private func originDestinationField(icon: String, text: String, action: @escaping () -> Void) -> some View {
+        Button(action: action, label: {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 32, height: 32)
+
+                    Image(systemName: icon)
+                        .foregroundColor(.white)
+                }
+
+                Text(text)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(2)
+
+                Spacer()
+            }
+            .padding(7)
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(10)
+            .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        })
+        .foregroundStyle(.foreground)
+    }
+
     public var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 8) {
                 // Origin Button
-                Button(action: {
+                originDestinationField(icon: "paperplane.fill", text: tripPlanner.originName) {
                     sheetEnvironment.isSheetOpened.toggle()
                     tripPlanner.originDestinationState = .origin
-                }, label: {
-                    HStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.green)
-                                .frame(width: 32, height: 32)
-
-                            Image(systemName: "paperplane.fill")
-                                .foregroundColor(.white)
-                        }
-
-                        Text(tripPlanner.originName)
-                            .lineLimit(1)
-
-                        Spacer()
-                    }
-                    .padding(7)
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
-                    .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
-                })
-                .foregroundStyle(.primary)
+                }
 
                 Divider()
 
                 // Destination Button
-                Button(action: {
+                originDestinationField(icon: "mappin", text: tripPlanner.destinationName) {
                     sheetEnvironment.isSheetOpened.toggle()
                     tripPlanner.originDestinationState = .destination
-                }, label: {
-                    HStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.green)
-                                .frame(width: 32, height: 32)
-
-                            Image(systemName: "mappin")
-                                .foregroundColor(.white)
-                        }
-
-                        Text(tripPlanner.destinationName)
-                            .lineLimit(1)
-
-                        Spacer()
-                    }
-                    .padding(7)
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
-                    .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
-                })
-                .foregroundStyle(.primary)
+                }
 
                 // Date/Time Selector
                 DateTimeSelector(
@@ -93,10 +77,10 @@ public struct OriginDestinationView: View {
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(10)
                 .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                .padding(.top, 8)
 
-                // get directions button
+                // Get directions button
                 getDirectionsButtonView()
-
             }
             .padding(.horizontal)
             .padding(.vertical, 6)
