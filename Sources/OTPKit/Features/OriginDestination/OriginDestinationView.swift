@@ -13,8 +13,7 @@ import SwiftUI
 public struct OriginDestinationView: View {
     @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
     @Environment(TripPlannerService.self) private var tripPlanner
-    @State private var isSheetOpened = false
-
+    
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State private var isDatePickerVisible = false
@@ -50,7 +49,7 @@ public struct OriginDestinationView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             VStack(spacing: 8) {
                 // Origin Button
                 originDestinationField(icon: "paperplane.fill", text: tripPlanner.originName) {
@@ -84,6 +83,8 @@ public struct OriginDestinationView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 6)
+            .frame(minHeight: 135) 
+            .scrollContentBackground(.hidden)
         }
         .background()
     }
@@ -98,7 +99,7 @@ public struct OriginDestinationView: View {
                 ) {
                     tripPlanner.fetchTrip()
                 }
-                    .padding(.top, 12)
+                .padding(.top, 12)
             )
         } else {
             return AnyView(EmptyView())
