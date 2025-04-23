@@ -9,11 +9,12 @@ import MapKit
 import SwiftUI
 
 /// OriginDestinationView is the main view for setting up Origin/Destination in OTPKit.
-/// It consists a list of Origin and Destination along with the `MapKit`
+/// It consists a list of Origin and Destination along with the MapKit
 public struct OriginDestinationView: View {
     @Environment(OriginDestinationSheetEnvironment.self) private var sheetEnvironment
     @Environment(TripPlannerService.self) private var tripPlanner
-    
+
+    // State variables for date/time selection
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State private var isDatePickerVisible = false
@@ -29,7 +30,6 @@ public struct OriginDestinationView: View {
                     Circle()
                         .fill(Color.green)
                         .frame(width: 32, height: 32)
-
                     Image(systemName: icon)
                         .foregroundColor(.white)
                 }
@@ -37,7 +37,6 @@ public struct OriginDestinationView: View {
                 Text(text)
                     .minimumScaleFactor(0.6)
                     .lineLimit(2)
-
                 Spacer()
             }
             .padding(7)
@@ -49,15 +48,13 @@ public struct OriginDestinationView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             VStack(spacing: 8) {
                 // Origin Button
                 originDestinationField(icon: "paperplane.fill", text: tripPlanner.originName) {
                     sheetEnvironment.isSheetOpened.toggle()
                     tripPlanner.originDestinationState = .origin
                 }
-
-                Divider()
 
                 // Destination Button
                 originDestinationField(icon: "mappin", text: tripPlanner.destinationName) {
@@ -83,8 +80,6 @@ public struct OriginDestinationView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 6)
-            .frame(minHeight: 135) 
-            .scrollContentBackground(.hidden)
         }
         .background()
     }
@@ -99,7 +94,7 @@ public struct OriginDestinationView: View {
                 ) {
                     tripPlanner.fetchTrip()
                 }
-                .padding(.top, 12)
+                    .padding(.top, 12)
             )
         } else {
             return AnyView(EmptyView())

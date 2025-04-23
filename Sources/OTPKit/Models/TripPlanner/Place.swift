@@ -29,4 +29,25 @@ public struct Place: Codable, Hashable {
 
     /// Type of vertex representing the place, such as 'NORMAL', 'STOP', or 'STATION'.
     public let vertexType: String
+    
+    ///StopId of the stop
+    public let stopId: String?
+    
+    //StopCode of the stop
+    public let stopCode: String?
+    
+    /// Custom initializer for creating Place instances
+    public init(name: String,
+                lon: Double,
+                lat: Double,
+                vertexType: String,
+                stopId: String? = nil,
+                stopCode: String? = nil) {
+        self.name = name
+        self.lon = lon
+        self.lat = lat
+        self.vertexType = vertexType
+        self.stopId = stopId
+        self.stopCode = stopCode
+    }
 }
