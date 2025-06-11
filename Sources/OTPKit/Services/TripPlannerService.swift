@@ -24,6 +24,10 @@ public final class TripPlannerService: NSObject {
     public var selectedItinerary: Itinerary?
     public var isStepsViewPresented = false
 
+    // Date and Time
+    public var selectedDate: Date?
+    public var selectedTime: Date?
+
     // Origin Destination
     public var originDestinationState: OriginDestinationState = .origin
     public var originCoordinate: CLLocationCoordinate2D?
@@ -199,8 +203,6 @@ public final class TripPlannerService: NSObject {
             destinationName = selectedMapPoint[destinationKey]??.item.name ?? "Location unknown"
             destinationCoordinate = selectedMapPoint[destinationKey]??.item.placemark.coordinate
         }
-
-        checkAndFetchTripPlanner()
     }
 
     /// Removes origin or destination data based on the current state
@@ -290,6 +292,12 @@ public final class TripPlannerService: NSObject {
 
     // MARK: - Trip Planner Methods
 
+    /// public method to call `checkAndFetchTripPlanner()`
+    public func fetchTrip() {
+        print("Date - \(selectedDate), Time - \(selectedTime)")
+        checkAndFetchTripPlanner()
+    }
+
     /// Automatically fetch the Trip Planner if there's origin coordinate and destination coordinate
     private func checkAndFetchTripPlanner() {
         guard originCoordinate != nil,
@@ -301,6 +309,9 @@ public final class TripPlannerService: NSObject {
         let fromPlace = formatCoordinate(originCoordinate)
         let toPlace = formatCoordinate(destinationCoordinate)
 
+        let tripDate = selectedDate?.formattedTripDate ?? getFormattedTodayDate()
+        let tripTime = selectedTime?.formattedTripTime ?? getCurrentTimeFormatted()
+
         isFetchingResponse = true
 
         Task {
@@ -308,8 +319,8 @@ public final class TripPlannerService: NSObject {
                 let response = try await apiClient.fetchPlan(
                     fromPlace: fromPlace,
                     toPlace: toPlace,
-                    time: getCurrentTimeFormatted(),
-                    date: getFormattedTodayDate(),
+                    time: tripTime,
+                    date: tripDate,
                     mode: "TRANSIT,WALK",
                     arriveBy: false,
                     maxWalkDistance: 1000,
@@ -496,24 +507,22 @@ extension TripPlannerService {
     ///
     /// - Returns: The formatted date string
     func getFormattedTodayDate() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy"
-        let today = Date()
-
-        return dateFormatter.string(from: today)
+         Date.currentFormattedDate
     }
 
     /// Gets the current time formatted as a string
     ///
     /// - Returns: The formatted time string
     func getCurrentTimeFormatted() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        let currentDate = Date()
+         Date.currentFormattedTime
+    }
 
-        return dateFormatter.string(from: currentDate)
+    private func getFormattedDate(_ date: Date) -> String {
+        date.formattedTripDate
+    }
+
+    private func getFormattedTime(_ date: Date) -> String {
+        date.formattedTripTime
     }
 }
 
