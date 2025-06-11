@@ -7,101 +7,144 @@ public struct DirectionSheetView: View {
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
 
+    // MARK: - ViewModel
+    private var viewModel: DirectionSheetViewModel {
+        DirectionSheetViewModel(tripPlannerService: tripPlanner)
+    }
+
+    // MARK: - Initialization
     public init(sheetDetent: Binding<PresentationDetent>) {
         _sheetDetent = sheetDetent
     }
 
-    private func generateLegView(leg: Leg) -> some View {
-        Group {
-            switch leg.mode {
-            case "BUS", "TRAM":
-                DirectionLegVehicleView(leg: leg)
-            case "WALK":
-                DirectionLegWalkView(leg: leg)
-            default:
-                DirectionLegUnknownView(leg: leg)
-            }
-        }
-    }
-
-    private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {
-        let placemark = MKPlacemark(coordinate: coordinate)
-        let item = MKMapItem(placemark: placemark)
-        tripPlanner.changeMapCamera(item)
-        scrollToItem = itemId
-        sheetDetent = .fraction(0.2)
-    }
-
+    // MARK: - Body
     public var body: some View {
         ScrollViewReader { proxy in
             List {
-                Section {
-                    PageHeaderView(text: "\(tripPlanner.destinationName)") {
-                        tripPlanner.resetTripPlanner()
-                        dismiss()
-                    }
-                    .frame(height: 50)
-                    .listRowInsets(EdgeInsets())
-                }
+                headerSection()
 
-                if let itinerary = tripPlanner.selectedItinerary {
-                    Section {
-                        createOriginView(itinerary: itinerary)
-                        createLegsView(itinerary: itinerary)
-                        createDestinationView(itinerary: itinerary)
-                    }
+                if let itinerary = viewModel.selectedItinerary {
+                    directionsSection(itinerary: itinerary)
                 }
             }
             .padding(.horizontal, 12)
             .padding(.top, 16)
             .listStyle(PlainListStyle())
             .onChange(of: scrollToItem) {
-                if let itemId = scrollToItem {
-                    withAnimation {
-                        proxy.scrollTo(itemId, anchor: .top)
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        scrollToItem = nil
-                    }
-                }
+                handleScrollToItem(proxy: proxy)
+            }
+        }
+        .alert(
+            viewModel.currentError?.title ?? "Error",
+            isPresented: Binding(
+                get: { viewModel.showErrorAlert },
+                set: { _ in viewModel.clearError() }
+            )
+        ) {
+            Button("OK") {
+                viewModel.clearError()
+            }
+        } message: {
+            Text(viewModel.currentError?.errorDescription ?? "")
+        }
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.regularMaterial)
             }
         }
     }
 
-    private func createOriginView(itinerary _: Itinerary) -> some View {
+    // MARK: - View Sections
+
+    private func headerSection() -> some View {
+        Section {
+            PageHeaderView(text: viewModel.pageTitle) {
+                viewModel.resetTripPlanner()
+                dismiss()
+            }
+            .frame(height: 50)
+            .listRowInsets(EdgeInsets())
+        }
+    }
+
+    private func directionsSection(itinerary: Itinerary) -> some View {
+        Section {
+            originView()
+            legsView(itinerary: itinerary)
+            destinationView(itinerary: itinerary)
+        }
+    }
+
+    private func originView() -> some View {
         DirectionLegOriginDestinationView(
             title: "Origin",
-            description: tripPlanner.originName
+            description: viewModel.originName
         )
-        .id("item-0")
+        .id(viewModel.originItemId)
         .onTapGesture {
-            if let originCoordinate = tripPlanner.originCoordinate {
-                handleTap(coordinate: originCoordinate, itemId: "item-0")
+            handleTap(itemId: viewModel.originItemId) {
+                viewModel.handleOriginTap()
             }
         }
     }
 
-    private func createLegsView(itinerary: Itinerary) -> some View {
+    private func legsView(itinerary: Itinerary) -> some View {
         ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
-            generateLegView(leg: leg)
-                .id("item-\(index + 1)")
+            legView(for: leg)
+                .id(viewModel.generateItemId(for: index + 1))
                 .onTapGesture {
-                    let coordinate = CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)
-                    handleTap(coordinate: coordinate, itemId: "item-\(index + 1)")
+                    let itemId = viewModel.generateItemId(for: index + 1)
+                    handleTap(itemId: itemId) {
+                        viewModel.handleLegTap(leg)
+                    }
                 }
         }
     }
 
-    private func createDestinationView(itinerary: Itinerary) -> some View {
+    @ViewBuilder
+    private func legView(for leg: Leg) -> some View {
+        switch viewModel.getLegViewType(for: leg) {
+        case .vehicle:
+            DirectionLegVehicleView(leg: leg)
+        case .walk:
+            DirectionLegWalkView(leg: leg)
+        case .unknown:
+            DirectionLegUnknownView(leg: leg)
+        }
+    }
+
+    private func destinationView(itinerary: Itinerary) -> some View {
         DirectionLegOriginDestinationView(
             title: "Destination",
-            description: tripPlanner.destinationName
+            description: viewModel.destinationName
         )
-        .id("item-\(itinerary.legs.count + 1)")
+        .id(viewModel.destinationItemId(for: itinerary))
         .onTapGesture {
-            if let destinationCoordinate = tripPlanner.destinationCoordinate {
-                handleTap(coordinate: destinationCoordinate, itemId: "item-\(itinerary.legs.count + 1)")
+            handleTap(itemId: viewModel.destinationItemId(for: itinerary)) {
+                viewModel.handleDestinationTap()
             }
+        }
+    }
+
+    // MARK: - Actions
+
+    private func handleTap(itemId: String, action: () -> Void) {
+        action()
+        scrollToItem = itemId
+        sheetDetent = .fraction(0.2)
+    }
+
+    private func handleScrollToItem(proxy: ScrollViewProxy) {
+        guard let itemId = scrollToItem else { return }
+
+        withAnimation {
+            proxy.scrollTo(itemId, anchor: .top)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            scrollToItem = nil
         }
     }
 }
