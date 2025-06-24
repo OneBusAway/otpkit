@@ -16,6 +16,15 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
 
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
+
+    // MARK: - ViewModel
+    private var viewModel: TripPlannerExtensionViewModel {
+        TripPlannerExtensionViewModel(
+            tripPlannerService: tripPlanner,
+            sheetEnvironment: sheetEnvironment
+        )
+    }
+
     private let mapContent: () -> MapContent
 
     public init(@ViewBuilder mapContent: @escaping () -> MapContent) {
@@ -27,66 +36,76 @@ public struct TripPlannerExtensionView<MapContent: View>: View {
             MapReader { proxy in
                 mapContent()
                     .onTapGesture { tappedLocation in
-                        handleMapTap(proxy: proxy, tappedLocation: tappedLocation)
+                        viewModel.handleMapTap(proxy: proxy, tappedLocation: tappedLocation)
                     }
             }
-            .sheet(isPresented: sheetEnvironment.isSheetOpenedBinding) {
+            .sheet(isPresented: viewModel.isOriginDestinationSheetPresented) {
                 OriginDestinationSheetView()
             }
-            .sheet(isPresented: tripPlanner.isPlanResponsePresentedBinding) {
+            .sheet(isPresented: viewModel.isTripPlannerSheetPresented) {
                 TripPlannerSheetView()
                     .presentationDetents([.medium, .large])
                     .interactiveDismissDisabled()
             }
-            .sheet(isPresented: tripPlanner.isStepsViewPresentedBinding, onDismiss: {
-                tripPlanner.resetTripPlanner()
-            }, content: {
+            .sheet(
+                isPresented: viewModel.isStepsViewSheetPresented,
+                onDismiss: {
+                    viewModel.handleStepsViewDismissal()
+                }
+            ) {
                 DirectionSheetView(sheetDetent: $directionSheetDetent)
                     .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
-            })
+            }
 
             overlayContent
         }
         .onAppear {
-            tripPlanner.checkLocationAuthorization()
+            viewModel.onViewAppear()
+        }
+        .alert(
+            viewModel.currentError?.title ?? "Error",
+            isPresented: Binding(
+                get: { viewModel.showErrorAlert },
+                set: { _ in viewModel.clearError() }
+            )
+        ) {
+            Button("OK") {
+                viewModel.clearError()
+            }
+        } message: {
+            Text(viewModel.currentError?.errorDescription ?? "")
         }
     }
 
+    // MARK: - Overlay Content
+
     @ViewBuilder
     private var overlayContent: some View {
-        if tripPlanner.isFetchingResponse {
+        switch viewModel.overlayContentType {
+        case .loading:
             ProgressView()
-        } else if tripPlanner.isMapMarkingMode {
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.regularMaterial)
+
+        case .mapMarking:
             MapMarkingView()
 
-        } else if let selectedItinerary = tripPlanner.selectedItinerary, !tripPlanner.isStepsViewPresented {
+        case .tripPlanner:
             VStack {
                 Spacer()
-                TripPlannerView(text: selectedItinerary.summary)
+                TripPlannerView(text: viewModel.getItinerarySummary())
             }
-        } else if tripPlanner.planResponse == nil, tripPlanner.isStepsViewPresented == false {
+
+        case .originDestination:
             VStack {
                 Spacer()
                 OriginDestinationView()
             }
-        }
-    }
 
-    private func handleMapTap(proxy: MapProxy, tappedLocation: CGPoint) {
-        if tripPlanner.isMapMarkingMode {
-            guard let coordinate = proxy.convert(tappedLocation, from: .local) else { return }
-            let mapItem = MKMapItem(placemark: .init(coordinate: coordinate))
-            let locationTitle = mapItem.name ?? "Location unknown"
-            let locationSubtitle = mapItem.placemark.title ?? "Location unknown"
-            let location = Location(
-                title: locationTitle,
-                subTitle: locationSubtitle,
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude
-            )
-            tripPlanner.appendMarker(location: location)
+        case .none:
+            EmptyView()
         }
     }
 }
