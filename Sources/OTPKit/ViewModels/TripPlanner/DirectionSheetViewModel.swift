@@ -119,12 +119,3 @@ final class DirectionSheetViewModel: BaseViewModel {
         itinerary.legs.count + 2 // origin + legs + destination
     }
 }
-
-// MARK: - Supporting Types
-
-/// Enum to determine which direction leg view to display
-public enum DirectionLegViewType {
-    case vehicle
-    case walk
-    case unknown
-}

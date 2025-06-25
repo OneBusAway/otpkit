@@ -126,6 +126,10 @@ final class OriginDestinationSheetViewModel: BaseViewModel {
         saveToRecentLocations(location)
     }
 
+    private func mockSelection(_ location: Location) {
+        // connect it with mock
+    }
+
     /// Selects current user location
     func selectCurrentUserLocation() {
         guard let userLocation = currentUserLocation else {

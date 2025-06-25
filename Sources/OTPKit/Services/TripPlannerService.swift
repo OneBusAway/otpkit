@@ -45,11 +45,7 @@ public final class TripPlannerService: NSObject {
 
     var completions = [Location]()
 
-    // Map Extension
-    public var selectedMapPoint: [String: MarkerItem?] = [
-        "origin": nil,
-        "destination": nil
-    ]
+    private var selectedMapPoints = TripMapMarkers()
 
     public var isMapMarkingMode = false
     public var currentCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
@@ -135,10 +131,14 @@ public final class TripPlannerService: NSObject {
     public func selectAndRefreshCoordinate() {
         switch originDestinationState {
         case .origin:
-            guard let coordinate = selectedMapPoint[originKey]??.item.placemark.coordinate else { return }
+            guard let coordinate = selectedMapPoints.origin?.item.placemark.coordinate else {
+                return
+            }
             originCoordinate = coordinate
         case .destination:
-            guard let coordinate = selectedMapPoint[destinationKey]??.item.placemark.coordinate else { return }
+            guard let coordinate = selectedMapPoints.destination?.item.placemark.coordinate else {
+                return
+            }
             destinationCoordinate = coordinate
         }
     }
@@ -156,14 +156,7 @@ public final class TripPlannerService: NSObject {
 
         let markerItem = MarkerItem(item: mapItem)
 
-        switch originDestinationState {
-        case .origin:
-            selectedMapPoint[originKey] = markerItem
-            changeMapCamera(mapItem)
-        case .destination:
-            selectedMapPoint[destinationKey] = markerItem
-            changeMapCamera(mapItem)
-        }
+        selectedMapPoints[originDestinationState] = markerItem
 
         // Get accurate location name in background
         let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -186,10 +179,10 @@ public final class TripPlannerService: NSObject {
         switch originDestinationState {
         case .origin:
             originName = updatedMarkerItem.item.name ?? "...."
-            selectedMapPoint[originKey] = updatedMarkerItem
+            selectedMapPoints.origin = updatedMarkerItem
         case .destination:
             destinationName = updatedMarkerItem.item.name ?? "...."
-            selectedMapPoint[destinationKey] = updatedMarkerItem
+            selectedMapPoints.destination = updatedMarkerItem
         }
     }
 
@@ -197,11 +190,11 @@ public final class TripPlannerService: NSObject {
     public func addOriginDestinationData() {
         switch originDestinationState {
         case .origin:
-            originName = selectedMapPoint[originKey]??.item.name ?? "Location unknown"
-            originCoordinate = selectedMapPoint[originKey]??.item.placemark.coordinate
+            originName = selectedMapPoints.origin?.item.name ?? "Location unknown"
+            originCoordinate = selectedMapPoints.origin?.item.placemark.coordinate
         case .destination:
-            destinationName = selectedMapPoint[destinationKey]??.item.name ?? "Location unknown"
-            destinationCoordinate = selectedMapPoint[destinationKey]??.item.placemark.coordinate
+            destinationName = selectedMapPoints.destination?.item.name ?? "Location unknown"
+            destinationCoordinate = selectedMapPoints.destination?.item.placemark.coordinate
         }
     }
 
@@ -211,11 +204,11 @@ public final class TripPlannerService: NSObject {
         case .origin:
             originName = OriginDestinationState.origin.name.capitalized
             originCoordinate = nil
-            selectedMapPoint[originKey] = nil
+            selectedMapPoints.origin = nil
         case .destination:
             destinationName = OriginDestinationState.destination.name.capitalized
             destinationCoordinate = nil
-            selectedMapPoint[destinationKey] = nil
+            selectedMapPoints.destination = nil
         }
     }
 
@@ -246,7 +239,7 @@ public final class TripPlannerService: NSObject {
     /// - Returns: MapContent containing the markers
     @MainActor
     public func generateMarkers() -> some MapContent {
-        ForEach(Array(selectedMapPoint.values.compactMap { $0 }), id: \.id) { markerItem in
+        ForEach(selectedMapPoints.allMarkers, id: \.id) { markerItem in
             Marker(item: markerItem.item)
         }
     }
@@ -342,10 +335,7 @@ public final class TripPlannerService: NSObject {
     /// Resets all trip planner related data
     public func resetTripPlanner() {
         planResponse = nil
-        selectedMapPoint = [
-            originKey: nil,
-            destinationKey: nil
-        ]
+        selectedMapPoints.reset()
         destinationCoordinate = nil
         originCoordinate = nil
         originName = OriginDestinationState.origin.name.capitalized
