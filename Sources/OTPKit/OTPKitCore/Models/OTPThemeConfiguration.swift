@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 
+/// Theme configuration for customizing OTPKit UI appearance including colors and styling.
 public struct OTPThemeConfiguration {
     public let primaryColor: Color
     public let secondaryColor: Color
