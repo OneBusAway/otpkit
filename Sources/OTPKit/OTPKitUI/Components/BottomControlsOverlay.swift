@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+/// A reusable overlay view that provides key trip-planning controls,
+/// including transport mode selection, origin/destination inputs, and action buttons.
+///
+/// - Displays mode selection buttons (e.g. transit, walk, bike, car)
+/// - Allows users to choose "From" and "To" locations
+/// - Provides quick access to search and additional trip options
+/// - Includes a "Directions" button to trigger trip planning
+///
+/// Designed to sit at the bottom of the map screen in trip planning UI.
 struct BottomControlsOverlay: View {
     @EnvironmentObject private var viewModel: TripPlanningModel
     @Binding var selectedMode: LocationMode
