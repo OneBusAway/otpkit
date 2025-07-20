@@ -22,6 +22,12 @@ extension DateFormatter {
         formatter.pmSymbol = "PM"
         return formatter
     }()
+
+    static let tripAPITimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
     
 }
 
@@ -37,6 +43,11 @@ extension Date {
         return DateFormatter.tripTimeFormatter.string(from: self)
     }
 
+    /// Format time as "HH:mm" for API
+    var formattedAPITime: String {
+        return DateFormatter.tripAPITimeFormatter.string(from: self)
+    }
+
     /// Get current date formatted as "MM-dd-yyyy"
     static var currentFormattedDate: String {
         return Date().formattedTripDate
@@ -46,6 +57,5 @@ extension Date {
     static var currentFormattedTime: String {
         return Date().formattedTripTime
     }
-
 
 }

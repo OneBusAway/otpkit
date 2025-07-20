@@ -1,21 +1,19 @@
-//
-//  PreviewHelpers.swift
-//  OTPKit
-//
-//  Created by Aaron Brethorst on 8/5/24.
-//
+////
+////  PreviewHelpers.swift
+////  OTPKit
+////
+////  Created by Aaron Brethorst on 8/5/24.
+////
 
 import CoreLocation
 import MapKit
 import SwiftUI
 
 class PreviewHelpers {
-    static func buildTripPlannerService() -> TripPlannerService {
-        TripPlannerService(
-            apiClient: RestAPI(baseURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!),
-            locationManager: CLLocationManager(),
-            searchCompleter: MKLocalSearchCompleter()
-        )
+    static func buildTripPlannerService() -> TripPlannerServiceProtocol {
+        let baseURL = URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!
+        let apiClient = RestAPI(baseURL: baseURL)
+        return TripPlannerAPIService(apiClient: apiClient)
     }
 
     static func buildLeg() -> Leg {

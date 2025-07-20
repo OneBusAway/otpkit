@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias VoidBlock = () -> Void
+public typealias VoidBlock = () -> Void
