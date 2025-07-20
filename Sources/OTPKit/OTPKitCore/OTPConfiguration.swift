@@ -26,7 +26,6 @@ public struct OTPConfiguration {
         otpServerURL: URL,
         enabledTransportModes: [TransportMode] = TransportMode.allCases,
         themeConfiguration: OTPThemeConfiguration = OTPThemeConfiguration(),
-        maxRecentLocations: Int = 10,
         region: MapCameraPosition
     ) {
         self.otpServerURL = otpServerURL
