@@ -1,9 +1,10 @@
-//
-//  OTPTransportMode.swift
+//  TransportMode.swift
 //  OTPKit
 //
 //  Created by Manu on 2025-07-05.
 //
+
+import Foundation
 
 /// Represents different transportation modes available for trip planning
 public enum TransportMode: String, CaseIterable, Codable {
@@ -16,17 +17,17 @@ public enum TransportMode: String, CaseIterable, Codable {
     /// Driving
     case car = "CAR"
 
-    /// Human-readable description of the transport mode
+    /// Localized, human-readable description of the transport mode
     public var displayName: String {
         switch self {
         case .transit:
-            return "Transit"
+            return NSLocalizedString("transport_mode_transit", comment: "Transport mode: Transit")
         case .walk:
-            return "Walk"
+            return NSLocalizedString("transport_mode_walk", comment: "Transport mode: Walk")
         case .bike:
-            return "Bike"
+            return NSLocalizedString("transport_mode_bike", comment: "Transport mode: Bike")
         case .car:
-            return "Drive"
+            return NSLocalizedString("transport_mode_car", comment: "Transport mode: Car")
         }
     }
 
