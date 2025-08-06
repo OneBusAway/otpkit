@@ -95,7 +95,7 @@ extension OTPKitError {
     }
 
     /// Whether this error is recoverable with retry
-    var isRetryable: Bool {
+    public var isRetryable: Bool {
         switch self {
         case .networkUnavailable, .apiError:
             return true
