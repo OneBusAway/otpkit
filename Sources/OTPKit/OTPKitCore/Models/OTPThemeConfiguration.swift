@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 /// Theme configuration for customizing OTPKit UI appearance including colors and styling.
 public struct OTPThemeConfiguration {
@@ -19,8 +18,8 @@ public struct OTPThemeConfiguration {
     public init(
         primaryColor: Color = .blue,
         secondaryColor: Color = .gray,
-        backgroundColor: Color = Color(UIColor.systemBackground),
-        textColor: Color = Color(UIColor.label),
+        backgroundColor: Color = Color(.systemBackground),
+        textColor: Color = .primary,
         cornerRadius: CGFloat = 12
     ) {
         self.primaryColor = primaryColor
