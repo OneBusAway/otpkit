@@ -22,20 +22,16 @@ import SwiftUI
 @main
 struct OTPKitDemoApp: App {
     @State private var hasCompletedOnboarding = false
-    @State private var selectedRegionURL: URL?
-    @State private var tripPlannerService: TripPlannerService?
+    @State private var otpConfiguration: OTPConfiguration?
 
     var body: some Scene {
         WindowGroup {
-            if hasCompletedOnboarding, let service = tripPlannerService {
-                MapView()
-                    .environment(service)
-                    .environment(OriginDestinationSheetEnvironment())
+            if hasCompletedOnboarding, let config = otpConfiguration {
+                TripPlannerView(otpConfig: config)
             } else {
                 OnboardingView(
                     hasCompletedOnboarding: $hasCompletedOnboarding,
-                    selectedRegionURL: $selectedRegionURL,
-                    tripPlannerService: $tripPlannerService
+                    otpConfiguration: $otpConfiguration
                 )
             }
         }
