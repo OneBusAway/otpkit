@@ -26,4 +26,13 @@
 "map.finding" = "Finding...";
 "map.searching_address" = "Searching for address";
 
+/* Bottom Controls */
+"bottom.from" = "From";
+"bottom.to" = "To";
+"bottom.current_location" = "Current location";
+"bottom.choose_destination" = "Choose destination";
+"bottom.search" = "Search";
+"bottom.options" = "Options";
+"bottom.directions" = "Directions";
+
 
