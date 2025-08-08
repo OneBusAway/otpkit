@@ -1,0 +1,29 @@
+/*
+ Localizable.strings (Base)
+*/
+
+/* Test */
+"test_loc" = "Hello from OTPKit";
+
+
+/* Titles */
+"error.network.title" = "Network Error";
+"error.invalid_coordinates.title" = "Invalid Coordinates";
+"error.location.title" = "Location Error";
+"error.storage.title" = "Storage Error";
+
+/* Messages */
+"error.invalid_coordinates.message" = "The provided coordinates are invalid.";
+"error.api.message" = "API Error: %@";
+"error.location_unavailable.message" = "Location services are unavailable.";
+"error.save_failed.message" = "Could not save: %@";
+"error.delete_failed.message" = "Could not delete: %@";
+"error.unknown" = "An unknown error occurred.";
+
+/* Map */
+"map.origin" = "Origin";
+"map.destination" = "Destination";
+"map.finding" = "Finding...";
+"map.searching_address" = "Searching for address";
+
+

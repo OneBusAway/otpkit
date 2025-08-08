@@ -1,0 +1,29 @@
+/*
+ Localizable.strings (Spanish - es)
+*/
+
+/* Test */
+"test_loc" = "¡Hola desde OTPKit!";
+
+
+/* Titles */
+"error.network.title" = "Error de red";
+"error.invalid_coordinates.title" = "Coordenadas no válidas";
+"error.location.title" = "Error de ubicación";
+"error.storage.title" = "Error de almacenamiento";
+
+/* Messages */
+"error.invalid_coordinates.message" = "Las coordenadas proporcionadas no son válidas.";
+"error.api.message" = "Error de API: %@";
+"error.location_unavailable.message" = "Los servicios de ubicación no están disponibles.";
+"error.save_failed.message" = "No se pudo guardar: %@";
+"error.delete_failed.message" = "No se pudo eliminar: %@";
+"error.unknown" = "Ocurrió un error desconocido.";
+
+/* Map */
+"map.origin" = "Origen";
+"map.destination" = "Destino";
+"map.finding" = "Buscando...";
+"map.searching_address" = "Buscando dirección";
+
+
