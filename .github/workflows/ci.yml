@@ -8,27 +8,44 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Switch Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.0.1.app
-
-      # Build
-      - name: Build OTPKit
-        run: |
-          xcodebuild build-for-testing \
-            -scheme OTPKit \
-            -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" \
-            -enableCodeCoverage YES
-
-      # Upload results
-      - uses: kishikawakatsumi/xcresulttool@v1.7.0
-        continue-on-error: true
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
         with:
-          show-passed-tests: false # Avoid truncation of annotations by GitHub by omitting succeeding tests.
-          path: |
-            OTPKitTests.xcresult
-        if: success() || failure()
+          xcode-version: '15.4'
+
+      - name: Show Xcode & list schemes
+        run: |
+          xcodebuild -version
+          xcodebuild -list
+
+      - name: Build & Test OTPKit (Simulator)
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -scheme OTPKit \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            test \
+            -enableCodeCoverage YES \
+            -resultBundlePath OTPKitTests.xcresult | xcpretty
+
+      - name: Upload xcresult
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OTPKitTests.xcresult
+          path: OTPKitTests.xcresult
+
+      # Add PR annotations from the xcresult
+      - name: Annotate PR with test results
+        if: always()
+        uses: kishikawakatsumi/xcresulttool@v1.7.0
+        with:
+          show-passed-tests: false
+          path: OTPKitTests.xcresult
