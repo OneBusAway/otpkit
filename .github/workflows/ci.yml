@@ -41,11 +41,3 @@ jobs:
         with:
           name: OTPKitTests.xcresult
           path: OTPKitTests.xcresult
-
-      # Add PR annotations from the xcresult
-      - name: Annotate PR with test results
-        if: always()
-        uses: kishikawakatsumi/xcresulttool@v1.7.0
-        with:
-          show-passed-tests: false
-          path: OTPKitTests.xcresult
