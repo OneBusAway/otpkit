@@ -41,3 +41,10 @@ jobs:
         with:
           name: OTPKitTests.xcresult
           path: OTPKitTests.xcresult
+
+      - uses: kishikawakatsumi/xcresulttool@v1.7.0
+        if: always()
+        continue-on-error: true
+        with:
+          show-passed-tests: false
+          path: OTPKitTests.xcresult
