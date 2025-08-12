@@ -113,10 +113,7 @@ private extension MapLocationSelectorView {
     }
 
     func updateSelectedLocation(with location: Location) {
-        switch locationMode {
-        case .origin: tripPlannerVM.setOrigin(location)
-        case .destination: tripPlannerVM.setDestination(location)
-        }
+        tripPlannerVM.handleLocationSelection(location, for: locationMode)
     }
 }
 
@@ -126,12 +123,5 @@ private extension MapLocationSelectorView {
         guard let itinerary = tripPlannerVM.previewItinerary else { return nil }
         let coordinates = itinerary.legs.compactMap { $0.decodePolyline() }.flatMap { $0 }
         return coordinates.isEmpty ? nil : MapPolyline(coordinates: coordinates)
-    }
-}
-
-// MARK: - Location Extension
-private extension Location {
-    var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
