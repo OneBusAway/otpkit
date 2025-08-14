@@ -138,12 +138,13 @@ private extension TripPlannerView {
                 selectedMode: selectedMode,
                 onLocationSelected: handleLocationSelection
             )
-
+            
         case .routeDetails:
-            Text("Route Details Coming Soon")
-
+            Text("Route Details")
+        case .dateTime:
+            Text("Date Time")
         case .settings:
-            Text("Settings Coming Soon")
+            Text("Settings")
         }
     }
 }
