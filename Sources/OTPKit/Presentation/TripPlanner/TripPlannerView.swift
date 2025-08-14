@@ -73,7 +73,7 @@ private extension TripPlannerView {
     var bottomControls: some View {
         VStack {
             Spacer()
-//            BottomControlsOverlay(selectedMode: $selectedMode)
+            BottomControlsOverlay(selectedMode: $selectedMode)
         }
     }
 
