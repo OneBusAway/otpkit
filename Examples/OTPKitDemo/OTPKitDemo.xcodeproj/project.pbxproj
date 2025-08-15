@@ -12,7 +12,6 @@
 		015364702C7E93BE00146182 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0153646F2C7E93BE00146182 /* OnboardingView.swift */; };
 		01AA23162C758E62008F484E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AA23152C758E62008F484E /* LaunchScreen.storyboard */; };
 		01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */; };
-		01AA80562C6B6A7500D4038A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AA80552C6B6A7500D4038A /* MapView.swift */; };
 		01AA80582C6B6A7600D4038A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AA80572C6B6A7600D4038A /* Assets.xcassets */; };
 		01AA805B2C6B6A7600D4038A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AA805A2C6B6A7600D4038A /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -23,7 +22,6 @@
 		01AA23152C758E62008F484E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		01AA80502C6B6A7500D4038A /* OTPKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPKitDemoApp.swift; sourceTree = "<group>"; };
-		01AA80552C6B6A7500D4038A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		01AA80572C6B6A7600D4038A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		01AA805A2C6B6A7600D4038A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,7 +61,6 @@
 				01AA23152C758E62008F484E /* LaunchScreen.storyboard */,
 				014316E02C6B713D00B33240 /* Info.plist */,
 				01AA80532C6B6A7500D4038A /* OTPKitDemoApp.swift */,
-				01AA80552C6B6A7500D4038A /* MapView.swift */,
 				0153646F2C7E93BE00146182 /* OnboardingView.swift */,
 				01AA80572C6B6A7600D4038A /* Assets.xcassets */,
 				01AA80592C6B6A7600D4038A /* Preview Content */,
@@ -182,7 +179,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				015364702C7E93BE00146182 /* OnboardingView.swift in Sources */,
-				01AA80562C6B6A7500D4038A /* MapView.swift in Sources */,
 				01AA80542C6B6A7500D4038A /* OTPKitDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
