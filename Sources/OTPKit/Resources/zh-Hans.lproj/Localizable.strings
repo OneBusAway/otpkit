@@ -1,0 +1,37 @@
+/*
+ Localizable.strings (Simplified Chinese - zh-Hans)
+*/
+
+/* Test */
+"test_loc" = "来自 OTPKit 的问候";
+
+/* Titles */
+"error.network.title" = "网络错误";
+"error.invalid_coordinates.title" = "坐标无效";
+"error.location.title" = "定位错误";
+"error.storage.title" = "存储错误";
+
+/* Messages */
+"error.invalid_coordinates.message" = "提供的坐标无效。";
+"error.api.message" = "API 错误：%@";
+"error.location_unavailable.message" = "定位服务不可用。";
+"error.save_failed.message" = "无法保存：%@";
+"error.delete_failed.message" = "无法删除：%@";
+"error.unknown" = "发生未知错误。";
+
+/* Map */
+"map.origin" = "起点";
+"map.destination" = "终点";
+"map.finding" = "正在查找...";
+"map.searching_address" = "正在搜索地址";
+
+/* Bottom Controls */
+"bottom.from" = "从";
+"bottom.to" = "到";
+"bottom.current_location" = "当前位置";
+"bottom.choose_destination" = "选择目的地";
+"bottom.search" = "搜索";
+"bottom.options" = "选项";
+"bottom.directions" = "路线";
+
+
