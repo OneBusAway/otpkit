@@ -113,10 +113,7 @@ private extension MapLocationSelectorView {
     }
 
     func updateSelectedLocation(with location: Location) {
-        switch locationMode {
-        case .origin: tripPlannerVM.setOrigin(location)
-        case .destination: tripPlannerVM.setDestination(location)
-        }
+        tripPlannerVM.handleLocationSelection(location, for: locationMode)
     }
 }
 
@@ -128,4 +125,3 @@ private extension MapLocationSelectorView {
         return coordinates.isEmpty ? nil : MapPolyline(coordinates: coordinates)
     }
 }
-
