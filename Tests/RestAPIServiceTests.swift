@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) Open Transit Software Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@testable import OTPKit
+import XCTest
+import CoreLocation
+
+class RestAPIServiceTests: OTPTestCase {
+    
+    private var restAPIService: RestAPIService!
+    private var mockDataLoader: MockDataLoader!
+    
+    override func setUp() {
+        super.setUp()
+        restAPIService = buildRestAPIService()
+        mockDataLoader = (restAPIService.dataLoader as! MockDataLoader)
+    }
+    
+    func testFetchPlanWithTripPlanRequest() async throws {
+        // Arrange
+        let request = createTripPlanRequest(transportModes: [.transit, .walk], maxWalkDistance: 800)
+        let expectedURL = createExpectedURL(for: request)
+        
+        mockDataLoader.mock(URLString: expectedURL, with: Fixtures.loadData(file: "plan_basic_case.json"))
+        
+        // Act
+        let result = try await restAPIService.fetchPlan(request)
+        
+        // Assert
+        XCTAssertNotNil(result, "Response should not be nil")
+        XCTAssertNotNil(result.plan, "Plan should not be nil")
+        XCTAssertEqual(result.plan?.itineraries.count, 3, "Should return 3 itineraries")
+    }
+    
+    func testFetchPlanWithDifferentTransportModes() async throws {
+        // Arrange
+        let request = createTripPlanRequest(transportModes: [.bike, .walk], maxWalkDistance: 1000)
+        let expectedURL = createExpectedURL(for: request)
+        
+        mockDataLoader.mock(URLString: expectedURL, with: Fixtures.loadData(file: "plan_basic_case.json"))
+        
+        // Act
+        let result = try await restAPIService.fetchPlan(request)
+        
+        // Assert
+        XCTAssertNotNil(result, "Response should not be nil")
+        XCTAssertNotNil(result.plan, "Plan should not be nil")
+    }
+}
+
+// MARK: - Test Helpers
+private extension RestAPIServiceTests {
+    func createTripPlanRequest(
+        transportModes: [TransportMode] = [.transit, .walk],
+        maxWalkDistance: Int = 800,
+        wheelchairAccessible: Bool = false,
+        arriveBy: Bool = false
+    ) -> TripPlanRequest {
+        TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
+            destination: CLLocationCoordinate2D(latitude: 47.6154, longitude: -122.3208),
+            date: DateFormatter.tripDateFormatter.date(from: "05-10-2024")!,
+            time: DateFormatter.tripAPITimeFormatter.date(from: "08:00")!,
+            transportModes: transportModes,
+            maxWalkDistance: maxWalkDistance,
+            wheelchairAccessible: wheelchairAccessible,
+            arriveBy: arriveBy
+        )
+    }
+    
+    func createExpectedURL(for request: TripPlanRequest) -> String {
+        let baseURL = "https://otp.prod.sound.obaweb.org/otp/routers/default/plan"
+        let fromPlace = request.origin.formattedForAPI
+        let toPlace = request.destination.formattedForAPI
+        let time = request.time.formattedTripTime
+        let date = request.date.formattedTripDate
+        let mode = request.transportModesString
+        let arriveBy = request.arriveBy ? "true" : "false"
+        let maxWalkDistance = String(request.maxWalkDistance)
+        let wheelchair = request.wheelchairAccessible ? "true" : "false"
+        
+        return "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
+    }
+}
