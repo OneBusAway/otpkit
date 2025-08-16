@@ -13,22 +13,24 @@ struct LocationButton: View {
     let isSelected: Bool
     let hasLocation: Bool
     let action: () -> Void
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {
                 Image(systemName: icon)
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(isSelected ? .accentColor : .secondary)
+                    .foregroundColor(isSelected ? theme.primaryColor : theme.secondaryColor)
                     .frame(width: 16)
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(theme.secondaryColor)
                     Text(subtitle)
                         .font(.system(size: 14))
-                        .foregroundColor(hasLocation ? .primary : .secondary)
+                        .foregroundColor(hasLocation ? .primary : theme.secondaryColor)
                         .lineLimit(1)
                 }
 
@@ -38,10 +40,10 @@ struct LocationButton: View {
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(isSelected ? Color.accentColor.opacity(0.1) : Color(.systemGray6))
+                    .fill(isSelected ? theme.primaryColor.opacity(0.1) : Color(.systemGray6))
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(isSelected ? Color.accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
+                            .stroke(isSelected ? theme.primaryColor.opacity(0.3) : Color.clear, lineWidth: 1)
                     )
             )
         }

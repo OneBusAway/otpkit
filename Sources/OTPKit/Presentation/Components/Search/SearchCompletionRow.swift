@@ -10,6 +10,8 @@ import MapKit
 struct SearchCompletionRow: View {
     let completion: MKLocalSearchCompletion
     let onTap: () -> Void
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         Button(action: onTap) {
@@ -17,7 +19,7 @@ struct SearchCompletionRow: View {
                 // Location icon
                 Image(systemName: iconForCompletion(completion))
                     .font(.system(size: 20))
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(theme.primaryColor)
                     .frame(width: 24)
 
                 // Location details
@@ -30,7 +32,7 @@ struct SearchCompletionRow: View {
                     if !completion.subtitle.isEmpty {
                         Text(completion.subtitle)
                             .font(.system(size: 14))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
                             .lineLimit(2)
                     }
                 }
@@ -40,7 +42,7 @@ struct SearchCompletionRow: View {
                 // Arrow icon
                 Image(systemName: "arrow.up.left")
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(theme.secondaryColor)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

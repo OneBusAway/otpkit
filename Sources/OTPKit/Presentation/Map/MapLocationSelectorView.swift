@@ -12,6 +12,7 @@ import SwiftUI
 public struct MapLocationSelectorView: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @State private var mapState: MapState
+    @Environment(\.otpTheme) private var theme
 
     let locationMode: LocationMode
     let config: OTPConfiguration
@@ -54,7 +55,7 @@ private extension MapLocationSelectorView {
     @MapContentBuilder
     var locationAnnotations: some MapContent {
         if let origin = tripPlannerVM.selectedOrigin {
-            locationAnnotation(for: origin, title: "Origin", color: .green)
+            locationAnnotation(for: origin, title: "Origin", color: theme.primaryColor)
         }
 
         if let destination = tripPlannerVM.selectedDestination {
@@ -68,7 +69,7 @@ private extension MapLocationSelectorView {
             // White halo
             polyline.stroke(Color.white.opacity(0.7), style: StrokeStyle(lineWidth: 8, lineCap: .round))
             // Main route
-            polyline.stroke(Color(.systemBlue), style: StrokeStyle(lineWidth: 7, lineCap: .round))
+            polyline.stroke(theme.primaryColor, style: StrokeStyle(lineWidth: 7, lineCap: .round))
         }
     }
 

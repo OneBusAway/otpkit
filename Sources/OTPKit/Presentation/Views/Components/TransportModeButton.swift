@@ -11,6 +11,8 @@ struct TransportModeButton: View {
     let icon: String
     let isSelected: Bool
     let action: () -> Void
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         Button(action: action) {
@@ -20,7 +22,7 @@ struct TransportModeButton: View {
                 .frame(width: 44, height: 36)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(isSelected ? Color.accentColor : Color(.systemGray6))
+                        .fill(isSelected ? theme.primaryColor : Color(.systemGray6))
                 )
         }
         .buttonStyle(PlainButtonStyle())

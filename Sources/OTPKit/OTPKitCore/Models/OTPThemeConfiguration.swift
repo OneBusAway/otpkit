@@ -11,21 +11,25 @@ import SwiftUI
 public struct OTPThemeConfiguration {
     public let primaryColor: Color
     public let secondaryColor: Color
-    public let backgroundColor: Color
-    public let textColor: Color
-    public let cornerRadius: CGFloat
 
     public init(
         primaryColor: Color = .blue,
-        secondaryColor: Color = .gray,
-        backgroundColor: Color = Color(.systemBackground),
-        textColor: Color = .primary,
-        cornerRadius: CGFloat = 12
+        secondaryColor: Color = .gray
     ) {
         self.primaryColor = primaryColor
         self.secondaryColor = secondaryColor
-        self.backgroundColor = backgroundColor
-        self.textColor = textColor
-        self.cornerRadius = cornerRadius
+    }
+}
+
+/// Environment key for accessing theme configuration in SwiftUI views
+private struct OTPThemeConfigurationKey: EnvironmentKey {
+    static let defaultValue = OTPThemeConfiguration()
+}
+
+extension EnvironmentValues {
+    /// Access theme configuration from environment
+    public var otpTheme: OTPThemeConfiguration {
+        get { self[OTPThemeConfigurationKey.self] }
+        set { self[OTPThemeConfigurationKey.self] = newValue }
     }
 }

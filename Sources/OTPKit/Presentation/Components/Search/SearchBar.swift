@@ -12,11 +12,12 @@ struct SearchBar: View {
     let onSearchTextChange: (String) -> Void
 
     @FocusState private var isSearchFocused: Bool
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
+                .foregroundColor(theme.secondaryColor)
                 .font(.system(size: 16))
 
             TextField("Search for places", text: $searchText)
@@ -33,7 +34,7 @@ struct SearchBar: View {
                     onSearchTextChange("")
                 }) {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(theme.secondaryColor)
                         .font(.system(size: 16))
                 }
             }

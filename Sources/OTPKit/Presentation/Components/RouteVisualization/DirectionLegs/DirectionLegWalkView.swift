@@ -10,6 +10,8 @@ import SwiftUI
 struct DirectionLegWalkView: View {
     let leg: Leg
     @State private var showSteps = false
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -41,7 +43,7 @@ struct DirectionLegWalkView: View {
                     Button(action: { showSteps.toggle() }) {
                         Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
                             .font(.system(size: 20))
-                            .foregroundColor(.blue)
+                            .foregroundColor(theme.primaryColor)
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -53,7 +55,7 @@ struct DirectionLegWalkView: View {
                     ForEach(steps, id: \.self) { step in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "mappin.circle.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(theme.primaryColor)
                                 .frame(width: 20)
 
                             Text(stepDescription(for: step))

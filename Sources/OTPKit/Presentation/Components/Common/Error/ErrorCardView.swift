@@ -11,6 +11,8 @@ struct ErrorCardView: View {
     let message: String
     let onDismiss: () -> Void
     
+    @Environment(\.otpTheme) private var theme
+    
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -33,7 +35,7 @@ struct ErrorCardView: View {
             
             Text(message)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(theme.secondaryColor)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }

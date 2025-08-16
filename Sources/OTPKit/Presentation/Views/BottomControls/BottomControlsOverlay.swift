@@ -12,6 +12,8 @@ import SwiftUI
 struct BottomControlsOverlay: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @Binding var selectedMode: LocationMode
+    
+    @Environment(\.otpTheme) private var theme
 
     private let transportModes: [(mode: TransportMode, icon: String)] = [
         (.transit, "tram.fill"),
@@ -120,11 +122,11 @@ struct BottomControlsOverlay: View {
                         Text("Directions")
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundColor(tripPlannerVM.canPlanTrip ? .white : .secondary)
+                    .foregroundColor(tripPlannerVM.canPlanTrip ? .white : theme.secondaryColor)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
                     .background(
-                        tripPlannerVM.canPlanTrip ? Color.accentColor : Color(.systemGray5)
+                        tripPlannerVM.canPlanTrip ? theme.primaryColor : Color(.systemGray5)
                     )
                     .cornerRadius(8)
                 }
