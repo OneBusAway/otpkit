@@ -41,10 +41,10 @@ public class OTPTestCase: XCTestCase {
         MockDataLoader(testName: name)
     }
 
-    func buildRestAPIClient(
+    func buildRestAPIService(
         baseURLString: String = "https://otp.prod.sound.obaweb.org/otp/routers/default/"
-    ) -> RestAPI {
+    ) -> RestAPIService {
         let baseURL = URL(string: baseURLString)!
-        return RestAPI(baseURL: baseURL, dataLoader: buildMockDataLoader())
+        return RestAPIService(baseURL: baseURL, dataLoader: buildMockDataLoader())
     }
 }
