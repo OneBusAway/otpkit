@@ -16,12 +16,16 @@ jobs:
       - name: Switch Xcode 16
         run: sudo xcode-select -switch /Applications/Xcode_16.0.app
 
+      # List available simulators for troubleshooting (optional)
+      - name: List simulators
+        run: xcrun simctl list devices
+
       # Build
       - name: Build OTPKit
         run: |
           xcodebuild build-for-testing \
             -scheme OTPKit \
-            -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" \
+            -destination "platform=iOS Simulator,name=iPhone 14,OS=17.0" \
             -enableCodeCoverage YES
 
       # Upload results
