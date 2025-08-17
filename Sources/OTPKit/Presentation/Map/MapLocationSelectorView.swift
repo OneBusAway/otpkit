@@ -54,11 +54,11 @@ private extension MapLocationSelectorView {
     @MapContentBuilder
     var locationAnnotations: some MapContent {
         if let origin = tripPlannerVM.selectedOrigin {
-            locationAnnotation(for: origin, title: "Origin", color: .green)
+            locationAnnotation(for: origin, titleKey: "map.origin", color: .green)
         }
 
         if let destination = tripPlannerVM.selectedDestination {
-            locationAnnotation(for: destination, title: "Destination", color: .red)
+            locationAnnotation(for: destination, titleKey: "map.destination", color: .red)
         }
     }
 
@@ -72,12 +72,15 @@ private extension MapLocationSelectorView {
         }
     }
 
-    func locationAnnotation(for location: Location, title: String, color: Color) -> some MapContent {
-        Annotation(title, coordinate: location.coordinate) {
-            Image(systemName: "mappin.circle.fill")
-                .foregroundColor(color)
-                .font(.title2)
-                .background(Color.white, in: Circle())
+    func locationAnnotation(for location: Location, titleKey: String, color: Color) -> some MapContent {
+        Annotation(Localization.string(titleKey), coordinate: location.coordinate) {
+            HStack(spacing: 6) {
+                Image(systemName: "mappin.circle.fill")
+                    .foregroundColor(color)
+                    .font(.title2)
+                    .background(Color.white, in: Circle())
+                LocalizedText(titleKey)
+            }
         }
     }
 }
@@ -89,8 +92,8 @@ private extension MapLocationSelectorView {
               let coordinate = mapProxy.convert(location, from: .local) else { return }
 
         let tempLocation = Location(
-            title: "Finding...",
-            subTitle: "Searching for address",
+            title: Localization.string("map.finding"),
+            subTitle: Localization.string("map.searching_address"),
             latitude: coordinate.latitude,
             longitude: coordinate.longitude
         )
@@ -128,4 +131,3 @@ private extension MapLocationSelectorView {
         return coordinates.isEmpty ? nil : MapPolyline(coordinates: coordinates)
     }
 }
-

@@ -57,8 +57,8 @@ struct BottomControlsOverlay: View {
             // Location selection buttons stacked vertically
             VStack(spacing: 8) {
                 LocationButton(
-                    title: "From",
-                    subtitle: tripPlannerVM.selectedOrigin?.title ?? "Current location",
+                    title: Localization.string("bottom.from"),
+                    subtitle: tripPlannerVM.selectedOrigin?.title ?? Localization.string("bottom.current_location"),
                     icon: "location.fill",
                     isSelected: selectedMode == .origin,
                     hasLocation: tripPlannerVM.selectedOrigin != nil,
@@ -67,8 +67,8 @@ struct BottomControlsOverlay: View {
                     }
                 )
                 LocationButton(
-                    title: "To",
-                    subtitle: tripPlannerVM.selectedDestination?.title ?? "Choose destination",
+                    title: Localization.string("bottom.to"),
+                    subtitle: tripPlannerVM.selectedDestination?.title ?? Localization.string("bottom.choose_destination"),
                     icon: "mappin",
                     isSelected: selectedMode == .destination,
                     hasLocation: tripPlannerVM.selectedDestination != nil,
@@ -85,7 +85,7 @@ struct BottomControlsOverlay: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 16, weight: .medium))
-                    Text("Search")
+                    LocalizedText("bottom.search")
                         .font(.system(size: 16, weight: .medium))
                 }
                 .foregroundColor(.primary)
@@ -102,7 +102,7 @@ struct BottomControlsOverlay: View {
                     HStack(spacing: 6) {
                         Image(systemName: "ellipsis")
                             .font(.system(size: 14, weight: .medium))
-                        Text("Options")
+                        LocalizedText("bottom.options")
                             .font(.system(size: 14, weight: .medium))
                     }
                     .foregroundColor(.primary)
@@ -117,7 +117,7 @@ struct BottomControlsOverlay: View {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.right")
                             .font(.system(size: 14, weight: .medium))
-                        Text("Directions")
+                        LocalizedText("bottom.directions")
                             .font(.system(size: 14, weight: .medium))
                     }
                     .foregroundColor(tripPlannerVM.canPlanTrip ? .white : .secondary)
@@ -144,9 +144,9 @@ struct BottomControlsOverlay: View {
         let date = tripPlannerVM.departureDate ?? Date()
         let time = tripPlannerVM.departureTime ?? Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d"
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMM d")
         let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a"
+        timeFormatter.setLocalizedDateFormatFromTemplate("h:mm a")
 
         return "\(dateFormatter.string(from: date)) \(timeFormatter.string(from: time))"
     }
