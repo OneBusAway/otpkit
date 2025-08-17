@@ -90,18 +90,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     // MARK: - Location Management
 
-    /// Set the trip origin location
-    /// - Parameter location: The selected origin location
-    func setOrigin(_ location: Location?) {
-        selectedOrigin = location
-    }
-
-    /// Set the trip destination location
-    /// - Parameter location: The selected destination location
-    func setDestination(_ location: Location?) {
-        selectedDestination = location
-    }
-
     /// Update map camera to focus on specific coordinate
     /// - Parameter coordinate: The coordinate to center the map on
     func changeMapCamera(to coordinate: CLLocationCoordinate2D) {
@@ -181,19 +169,14 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     ///   - location: The selected location
     ///   - mode: Whether this is for origin or destination
     func handleLocationSelection(_ location: Location, for mode: LocationMode) {
-        // Convert location to coordinate for map camera
-        let coordinate = CLLocationCoordinate2D(
-            latitude: location.latitude,
-            longitude: location.longitude
-        )
-        changeMapCamera(to: coordinate)
+        changeMapCamera(to: location.coordinate)
 
         // Update the appropriate location based on mode
         switch mode {
         case .origin:
-            setOrigin(location)
+            selectedOrigin = location
         case .destination:
-            setDestination(location)
+            selectedDestination = location
         }
 
         // Dismiss the current sheet

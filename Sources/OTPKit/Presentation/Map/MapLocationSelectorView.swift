@@ -116,10 +116,7 @@ private extension MapLocationSelectorView {
     }
 
     func updateSelectedLocation(with location: Location) {
-        switch locationMode {
-        case .origin: tripPlannerVM.setOrigin(location)
-        case .destination: tripPlannerVM.setDestination(location)
-        }
+        tripPlannerVM.handleLocationSelection(location, for: locationMode)
     }
 }
 
