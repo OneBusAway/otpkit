@@ -14,6 +14,14 @@ import SwiftUI
 final class TripPlannerViewModelTests: XCTestCase {
     private var viewModel: TripPlannerViewModel!
     private var mockConfig: OTPConfiguration!
+    private var mockAPIService: MockAPIService!
+
+    // MARK: - Mock API Service
+    private class MockAPIService: APIService {
+        func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
+            return OTPResponse(plan: nil, error: nil)
+        }
+    }
 
     // MARK: - Lifecycle
     override func setUpWithError() throws {
@@ -23,12 +31,14 @@ final class TripPlannerViewModelTests: XCTestCase {
             enabledTransportModes: [.transit, .walk, .bike],
             region: .userLocation(fallback: .automatic)
         )
-        viewModel = TripPlannerViewModel(config: mockConfig)
+        mockAPIService = MockAPIService()
+        viewModel = TripPlannerViewModel(config: mockConfig, apiService: mockAPIService)
     }
 
     override func tearDownWithError() throws {
         viewModel = nil
         mockConfig = nil
+        mockAPIService = nil
     }
 
     // MARK: - Initial State
@@ -105,7 +115,8 @@ final class TripPlannerViewModelTests: XCTestCase {
             enabledTransportModes: [],
             region: .userLocation(fallback: .automatic)
         )
-        let vm = TripPlannerViewModel(config: cfg)
+        let mockAPIService = MockAPIService()
+        let vm = TripPlannerViewModel(config: cfg, apiService: mockAPIService)
         XCTAssertEqual(vm.selectedTransportMode, .transit)
     }
 
