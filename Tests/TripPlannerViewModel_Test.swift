@@ -19,7 +19,24 @@ final class TripPlannerViewModelTests: XCTestCase {
     // MARK: - Mock API Service
     private class MockAPIService: APIService {
         func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
-            return OTPResponse(plan: nil, error: nil)
+            // Create mock request parameters
+            let mockRequestParameters = RequestParameters(
+                fromPlace: "0.0,0.0",
+                toPlace: "0.0,0.0", 
+                time: "12:00:00",
+                date: "2025-01-01",
+                mode: "TRANSIT",
+                arriveBy: "false",
+                maxWalkDistance: "1000",
+                wheelchair: "false"
+            )
+            
+            // Return a mock response for testing
+            return OTPResponse(
+                requestParameters: mockRequestParameters,
+                plan: nil, 
+                error: nil
+            )
         }
     }
 
