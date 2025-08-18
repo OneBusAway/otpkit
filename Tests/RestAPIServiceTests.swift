@@ -26,7 +26,7 @@ class RestAPIServiceTests: OTPTestCase {
     override func setUp() {
         super.setUp()
         restAPIService = buildRestAPIService()
-        mockDataLoader = (restAPIService.dataLoader as! MockDataLoader)
+        mockDataLoader = (restAPIService.dataLoader as? MockDataLoader)!
     }
     
     func testFetchPlanWithTripPlanRequest() async throws {
