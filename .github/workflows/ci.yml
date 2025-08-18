@@ -28,9 +28,9 @@ jobs:
         run: |
           set -eo pipefail
           xcodebuild \
-            -scheme OTPKitDemo \
+            -scheme OTPKit \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             test \
             -enableCodeCoverage YES \
             -resultBundlePath OTPKitTests.xcresult | xcpretty
