@@ -1,43 +1,47 @@
 name: OTPKitTests
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   build:
     runs-on: macos-15
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.4'
+
       - name: Show Xcode & list schemes
         run: |
           xcodebuild -version
           xcodebuild -list
-      - name: List available simulators
-        run: |
-          echo "Available simulators:"
-          xcrun simctl list devices available iOS
+
       - name: Build & Test OTPKit (Simulator)
         run: |
           set -eo pipefail
           xcodebuild \
             -scheme OTPKit \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             test \
             -enableCodeCoverage YES \
             -resultBundlePath OTPKitTests.xcresult | xcpretty
+
       - name: Upload xcresult
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: OTPKitTests.xcresult
           path: OTPKitTests.xcresult
+
       - uses: kishikawakatsumi/xcresulttool@v1.7.0
         if: always()
         continue-on-error: true
