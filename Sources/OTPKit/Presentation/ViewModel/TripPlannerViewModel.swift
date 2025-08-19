@@ -122,7 +122,8 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     // MARK: - Trip Planning
 
     /// Plan a trip using the current origin, destination,
-    /// Makes API call to OTP server and updates UI state accordingly
+    /// Plans a trip using the current origin, destination, and transport mode settings.
+    /// Makes an API call to the OTP server and updates the UI state accordingly.
     @MainActor
     func planTrip() {
         // Validate that we have required locations
