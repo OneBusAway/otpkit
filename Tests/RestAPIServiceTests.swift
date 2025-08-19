@@ -63,35 +63,41 @@ class RestAPIServiceTests: OTPTestCase {
 
 // MARK: - Test Helpers
 private extension RestAPIServiceTests {
-    func createTripPlanRequest(
-        transportModes: [TransportMode] = [.transit, .walk],
-        maxWalkDistance: Int = 800,
-        wheelchairAccessible: Bool = false,
-        arriveBy: Bool = false
-    ) -> TripPlanRequest {
-        TripPlanRequest(
-            origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
-            destination: CLLocationCoordinate2D(latitude: 47.6154, longitude: -122.3208),
-            date: DateFormatter.tripDateFormatter.date(from: "05-10-2024")!,
-            time: DateFormatter.tripAPITimeFormatter.date(from: "08:00")!,
-            transportModes: transportModes,
-            maxWalkDistance: maxWalkDistance,
-            wheelchairAccessible: wheelchairAccessible,
-            arriveBy: arriveBy
-        )
-    }
-    
-    func createExpectedURL(for request: TripPlanRequest) -> String {
-        let baseURL = "https://otp.prod.sound.obaweb.org/otp/routers/default/plan"
-        let fromPlace = request.origin.formattedForAPI
-        let toPlace = request.destination.formattedForAPI
-        let time = request.time.formattedTripTime
-        let date = request.date.formattedTripDate
-        let mode = request.transportModesString
-        let arriveBy = request.arriveBy ? "true" : "false"
-        let maxWalkDistance = String(request.maxWalkDistance)
-        let wheelchair = request.wheelchairAccessible ? "true" : "false"
-        
-        return "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
-    }
+   func createTripPlanRequest(
+       transportModes: [TransportMode] = [.transit, .walk],
+       maxWalkDistance: Int = 800,
+       wheelchairAccessible: Bool = false,
+       arriveBy: Bool = false
+   ) -> TripPlanRequest {
+       guard let date = DateFormatter.tripDateFormatter.date(from: "05-10-2024"),
+             let time = DateFormatter.tripAPITimeFormatter.date(from: "08:00") else {
+           XCTFail("Failed to parse test dates")
+           fatalError("Test setup failure")
+       }
+       
+       return TripPlanRequest(
+           origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
+           destination: CLLocationCoordinate2D(latitude: 47.6154, longitude: -122.3208),
+           date: date,
+           time: time,
+           transportModes: transportModes,
+           maxWalkDistance: maxWalkDistance,
+           wheelchairAccessible: wheelchairAccessible,
+           arriveBy: arriveBy
+       )
+   }
+   
+   func createExpectedURL(for request: TripPlanRequest) -> String {
+       let baseURL = "https://otp.prod.sound.obaweb.org/otp/routers/default/plan"
+       let fromPlace = request.origin.formattedForAPI
+       let toPlace = request.destination.formattedForAPI
+       let time = request.time.formattedTripTime
+       let date = request.date.formattedTripDate
+       let mode = request.transportModesString
+       let arriveBy = request.arriveBy ? "true" : "false"
+       let maxWalkDistance = String(request.maxWalkDistance)
+       let wheelchair = request.wheelchairAccessible ? "true" : "false"
+       
+       return "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
+   }
 }
