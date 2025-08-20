@@ -43,19 +43,5 @@ extension Date {
         return DateFormatter.tripTimeFormatter.string(from: self)
     }
 
-    /// Format time as "HH:mm" for API
-    var formattedAPITime: String {
-        return DateFormatter.tripAPITimeFormatter.string(from: self)
-    }
-
-    /// Get current date formatted as "MM-dd-yyyy"
-    static var currentFormattedDate: String {
-        return Date().formattedTripDate
-    }
-
-    /// Get current time formatted as "h:mm a"
-    static var currentFormattedTime: String {
-        return Date().formattedTripTime
-    }
 
 }

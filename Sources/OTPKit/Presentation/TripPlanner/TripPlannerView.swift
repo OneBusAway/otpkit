@@ -19,8 +19,8 @@ public struct TripPlannerView: View {
     let otpConfig: OTPConfiguration
 
     /// Initializes the TripPlannerView with optional origin and destination
-    public init(otpConfig: OTPConfiguration, origin: Location? = nil, destination: Location? = nil) {
-        let tripPlannerVM = TripPlannerViewModel(config: otpConfig)
+    public init(otpConfig: OTPConfiguration, apiService: APIService, origin: Location? = nil, destination: Location? = nil) {
+        let tripPlannerVM = TripPlannerViewModel(config: otpConfig, apiService: apiService)
         tripPlannerVM.selectedOrigin = origin
         tripPlannerVM.selectedDestination = destination
         self._tripPlannerVM = StateObject(wrappedValue: tripPlannerVM)

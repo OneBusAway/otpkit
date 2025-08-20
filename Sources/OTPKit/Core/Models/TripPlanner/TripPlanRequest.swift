@@ -146,73 +146,9 @@ extension CLLocationCoordinate2D: Codable {
         case latitude
         case longitude
     }
-}
-
-// MARK: - TripPlanRequest Convenience Extensions
-
-extension TripPlanRequest {
-    /// Creates a TripPlanRequest from existing service data
-    /// - Parameters:
-    ///   - originCoordinate: The origin coordinate
-    ///   - destinationCoordinate: The destination coordinate
-    ///   - selectedDate: The selected date (defaults to current date)
-    ///   - selectedTime: The selected time (defaults to current time)
-    ///   - transportModes: The transport modes (defaults to transit and walk)
-    ///   - maxWalkDistance: The maximum walk distance (defaults to 1000)
-    ///   - wheelchairAccessible: Whether wheelchair accessible (defaults to false)
-    ///   - arriveBy: Whether to arrive by the specified time (defaults to false)
-    /// - Returns: A configured TripPlanRequest
-    public static func fromServiceData(
-        originCoordinate: CLLocationCoordinate2D,
-        destinationCoordinate: CLLocationCoordinate2D,
-        selectedDate: Date? = nil,
-        selectedTime: Date? = nil,
-        transportModes: [TransportMode] = [.transit, .walk],
-        maxWalkDistance: Int = 1000,
-        wheelchairAccessible: Bool = false,
-        arriveBy: Bool = false
-    ) -> TripPlanRequest {
-        let tripDate = selectedDate ?? Date()
-        let tripTime = selectedTime ?? Date()
-        
-        return TripPlanRequest(
-            origin: originCoordinate,
-            destination: destinationCoordinate,
-            date: tripDate,
-            time: tripTime,
-            transportModes: transportModes,
-            maxWalkDistance: maxWalkDistance,
-            wheelchairAccessible: wheelchairAccessible,
-            arriveBy: arriveBy
-        )
-    }
     
-    /// Creates a TripPlanRequest with current date and time
-    /// - Parameters:
-    ///   - originCoordinate: The origin coordinate
-    ///   - destinationCoordinate: The destination coordinate
-    ///   - transportModes: The transport modes (defaults to transit and walk)
-    ///   - maxWalkDistance: The maximum walk distance (defaults to 1000)
-    ///   - wheelchairAccessible: Whether wheelchair accessible (defaults to false)
-    ///   - arriveBy: Whether to arrive by the specified time (defaults to false)
-    /// - Returns: A configured TripPlanRequest with current date/time
-    public static func withCurrentDateTime(
-        originCoordinate: CLLocationCoordinate2D,
-        destinationCoordinate: CLLocationCoordinate2D,
-        transportModes: [TransportMode] = [.transit, .walk],
-        maxWalkDistance: Int = 1000,
-        wheelchairAccessible: Bool = false,
-        arriveBy: Bool = false
-    ) -> TripPlanRequest {
-        return TripPlanRequest(
-            origin: originCoordinate,
-            destination: destinationCoordinate,
-            date: Date(),
-            time: Date(),
-            transportModes: transportModes,
-            maxWalkDistance: maxWalkDistance,
-            wheelchairAccessible: wheelchairAccessible,
-            arriveBy: arriveBy
-        )
+    /// Formats the coordinate as a string for API requests
+    public var formattedForAPI: String {
+        return String(format: "%.4f,%.4f", latitude, longitude)
     }
-} 
+}

@@ -62,10 +62,14 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     /// OTP configuration containing server URL and enabled transport modes
     private let config: OTPConfiguration
+    
+    /// API service for making trip planning requests
+    private let apiService: APIService
 
-    /// Initialize with OTP configuration and set up default values
-    init(config: OTPConfiguration) {
+    /// Initialize with OTP configuration and API service
+    init(config: OTPConfiguration, apiService: APIService) {
         self.config = config
+        self.apiService = apiService
         self.region = config.region
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
@@ -95,7 +99,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func changeMapCamera(to coordinate: CLLocationCoordinate2D) {
         let pos = MKCoordinateRegion(
             center: coordinate,
-            latitudinalMeters: 1000, // 1km radius
+            latitudinalMeters: 1000, 
             longitudinalMeters: 1000
         )
         region = .region(pos)
@@ -117,11 +121,65 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     // MARK: - Trip Planning
 
-    /// Plan a trip using the current origin, destination, and transport mode
-    /// Makes API call to OTP server and updates UI state accordingly
+    /// Plan a trip using the current origin, destination,
+    /// Plans a trip using the current origin, destination, and transport mode settings.
+    /// Makes an API call to the OTP server and updates the UI state accordingly.
     @MainActor
     func planTrip() {
-        // will implement the logic later 
+        // Validate that we have required locations
+        guard let origin = selectedOrigin, let destination = selectedDestination else {
+            showError(OTPKitError.missingOriginOrDestination)
+            return
+        }
+
+        // Create trip plan request
+        let request = TripPlanRequest(
+            origin: origin.coordinate,
+            destination: destination.coordinate,
+            date: departureDate ?? Date(),
+            time: departureTime ?? Date(),
+            transportModes: selectedTransportMode.apiModes,
+            maxWalkDistance: 1000,
+            wheelchairAccessible: false,
+            arriveBy: false
+        )
+        
+        // Start loading state
+        isLoading = true
+        errorMessage = nil
+        showingError = false
+
+        Task {
+            do {
+                let response = try await apiService.fetchPlan(request)
+                await MainActor.run {
+                    self.handleSuccess(response)
+                }
+            } catch {
+                await MainActor.run {
+                    self.handleError(error)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Private Helpers
+    private func handleSuccess(_ response: OTPResponse) {
+        triPlanResponse = response
+        isLoading = false
+        showingTripResults = true
+        showTripResultsSheet()
+    }
+    
+    private func handleError(_ error: Error) {
+        let otpError = error as? OTPKitError ?? OTPKitError.tripPlanningFailed(error.localizedDescription)
+        showError(otpError)
+    }
+    
+    private func showError(_ error: OTPKitError) {
+        errorMessage = error.displayMessage
+        showingError = true
+        isLoading = false
     }
 
     // MARK: - Sheet Presentation
@@ -169,6 +227,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     ///   - location: The selected location
     ///   - mode: Whether this is for origin or destination
     func handleLocationSelection(_ location: Location, for mode: LocationMode) {
+        // Use location coordinate helper for map camera
         changeMapCamera(to: location.coordinate)
 
         // Update the appropriate location based on mode
