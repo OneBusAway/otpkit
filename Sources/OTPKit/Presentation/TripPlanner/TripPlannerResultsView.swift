@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct TripPlannerResultsView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.otpTheme) private var theme
     
     let availableItineraries: [Itinerary]
     let onItinerarySelected: (Itinerary) -> Void
@@ -72,7 +73,7 @@ public struct TripPlannerResultsView: View {
                 .foregroundStyle(.foreground)
 
             Text(formatStartTime(itinerary))
-                .foregroundStyle(.gray)
+                .foregroundStyle(theme.secondaryColor)
 
             legsFlow(itinerary: itinerary)
         }
@@ -85,7 +86,7 @@ public struct TripPlannerResultsView: View {
         }) {
             Text("Preview")
                 .padding(30)
-                .background(Color.green)
+                .background(theme.primaryColor)
                 .foregroundStyle(.foreground)
                 .fontWeight(.bold)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -123,7 +124,7 @@ public struct TripPlannerResultsView: View {
     private func noItinerariesView() -> some View {
         VStack {
             Text("No trips found")
-                .foregroundStyle(.gray)
+                .foregroundStyle(theme.secondaryColor)
                 .padding()
         }
     }

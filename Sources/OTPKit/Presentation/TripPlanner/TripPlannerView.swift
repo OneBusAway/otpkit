@@ -34,7 +34,6 @@ public struct TripPlannerView: View {
             if !tripPlannerVM.showingPolyline { bottomControls }
             if tripPlannerVM.showingPolyline { previewControls }
         }
-        .environment(\.otpTheme, otpConfig.themeConfiguration)
         .environmentObject(tripPlannerVM)
         .errorCard(
             isPresented: tripPlannerVM.showingError,
