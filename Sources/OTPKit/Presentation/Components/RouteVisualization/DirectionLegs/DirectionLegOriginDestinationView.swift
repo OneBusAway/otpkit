@@ -3,12 +3,14 @@ import SwiftUI
 struct DirectionLegOriginDestinationView: View {
     let title: String
     let description: String
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: "mappin.circle.fill")
                 .font(.system(size: 24))
-                .foregroundColor(.blue)
+                .foregroundColor(theme.primaryColor)
                 .frame(width: 40)
 
             VStack(alignment: .leading, spacing: 4) {

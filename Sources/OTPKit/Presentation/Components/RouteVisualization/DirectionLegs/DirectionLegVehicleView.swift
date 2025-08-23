@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DirectionLegVehicleView: View {
     let leg: Leg
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -80,7 +82,7 @@ struct DirectionLegVehicleView: View {
 
     private var backgroundColor: Color {
         if leg.mode == "TRAM" {
-            Color.blue
+            theme.primaryColor
         } else if leg.mode == "BUS" {
             Color.green
         } else {

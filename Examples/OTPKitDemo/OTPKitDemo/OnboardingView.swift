@@ -145,6 +145,10 @@ struct OnboardingView: View {
 
             otpConfiguration = OTPConfiguration(
                 otpServerURL: selectedRegionInfo.url,
+                themeConfiguration: OTPThemeConfiguration(
+                    primaryColor: .green,
+                    secondaryColor: .gray
+                ),
                 region: .region(MKCoordinateRegion(
                     center: selectedRegionInfo.center,
                     latitudinalMeters: 50000,
@@ -173,6 +177,10 @@ struct OnboardingView: View {
 #Preview {
     let config = OTPConfiguration(
         otpServerURL: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!,
+        themeConfiguration: OTPThemeConfiguration(
+            primaryColor: .green,
+            secondaryColor: .gray
+        ),
         region: .region(MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 47.64585, longitude: -122.2963),
             latitudinalMeters: 50000,

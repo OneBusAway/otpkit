@@ -10,6 +10,8 @@ import SwiftUI
 /// Represents an itinerary leg that uses a vehicular method of conveyance.
 struct ItineraryLegVehicleView: View {
     let leg: Leg
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         HStack(spacing: 4) {
@@ -38,7 +40,7 @@ struct ItineraryLegVehicleView: View {
 
     private var backgroundColor: Color {
         if leg.mode == "TRAM" {
-            Color.blue
+            theme.primaryColor
         } else if leg.mode == "BUS" {
             Color.green
         } else {

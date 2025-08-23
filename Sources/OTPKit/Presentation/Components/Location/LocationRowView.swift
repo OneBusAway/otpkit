@@ -11,6 +11,8 @@ struct LocationRowView: View {
     let location: Location
     var showHeart: Bool = false
     var showClock: Bool = false
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         HStack(spacing: 16) {
@@ -23,12 +25,12 @@ struct LocationRowView: View {
             } else if showClock {
                 Image(systemName: "clock.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .frame(width: 30)
             } else {
                 Image(systemName: "mappin.circle.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .frame(width: 30)
             }
 
@@ -42,7 +44,7 @@ struct LocationRowView: View {
                 if !location.title.isEmpty {
                     Text(location.title)
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(theme.secondaryColor)
                         .lineLimit(2)
                 }
             }
@@ -52,7 +54,7 @@ struct LocationRowView: View {
             // Arrow
             Image(systemName: "chevron.right")
                 .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.secondary)
+                .foregroundColor(theme.secondaryColor)
         }
         .padding(.vertical, 8)
     }

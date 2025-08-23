@@ -14,6 +14,7 @@ import CoreLocation
 /// - Choose from recently used locations
 struct LocationOptionsSheet: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.otpTheme) private var theme
     @State private var locationManager = CLLocationManager()
     @State private var showingFavourites = false
     @State private var showingRecents = false
@@ -29,7 +30,7 @@ struct LocationOptionsSheet: View {
                         icon: "location.fill",
                         title: "Current Location",
                         subtitle: "Use your current GPS location",
-                        color: .blue
+                        color: theme.primaryColor
                     ) { requestCurrentLocation() }
 
                     Divider().padding(.leading, 52)
@@ -47,7 +48,7 @@ struct LocationOptionsSheet: View {
                         icon: "clock.fill",
                         title: "Recents",
                         subtitle: "View your recent locations",
-                        color: .gray
+                        color: theme.secondaryColor
                     ) { showingRecents = true }
                 }
                 .background(Color(.secondarySystemGroupedBackground))

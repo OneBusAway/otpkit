@@ -13,6 +13,8 @@ struct LocationOptionButton: View {
     let subtitle: String
     let color: Color
     let action: () -> Void
+    
+    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         Button(action: action) {
@@ -32,12 +34,12 @@ struct LocationOptionButton: View {
                         .foregroundColor(.primary)
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(theme.secondaryColor)
                 }
 
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(theme.secondaryColor)
                     .font(.system(size: 14, weight: .semibold))
             }
             .padding(.vertical, 10)

@@ -10,6 +10,8 @@ import MapKit
 /// A sheet that allows users to search for a location.
 /// Integrates with MapKit to fetch and display search suggestions and details.
 struct SearchSheetView: View {
+    @Environment(\.otpTheme) private var theme
+    
     let selectedMode: LocationMode
     let onLocationSelected: (Location) -> Void
 
@@ -27,7 +29,7 @@ struct SearchSheetView: View {
                 // Search Bar
                 HStack {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(theme.secondaryColor)
                         .font(.system(size: 16))
 
                     TextField("Search for places", text: $searchText)
@@ -49,7 +51,7 @@ struct SearchSheetView: View {
                             searchManager.clear()
                         }) {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(theme.secondaryColor)
                                 .font(.system(size: 16))
                         }
                     }
@@ -69,7 +71,7 @@ struct SearchSheetView: View {
                             .scaleEffect(1.2)
                         Text("Searching...")
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
                     }
                     .padding(.top, 60)
                     Spacer()
@@ -78,15 +80,15 @@ struct SearchSheetView: View {
                     VStack(spacing: 16) {
                         Image(systemName: "magnifyingglass")
                             .font(.system(size: 48))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
 
                         Text("No results found")
                             .font(.headline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
 
                         Text("Try searching for a different location")
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
                             .multilineTextAlignment(.center)
                     }
                     .padding(.top, 60)
@@ -107,7 +109,7 @@ struct SearchSheetView: View {
                     VStack(spacing: 24) {
                         Image(systemName: "location.magnifyingglass")
                             .font(.system(size: 48))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(theme.secondaryColor)
 
                         VStack(spacing: 8) {
                             Text("Search for \(selectedMode == .origin ? "origin" : "destination")")
@@ -116,7 +118,7 @@ struct SearchSheetView: View {
 
                             Text("Enter a place name, address, or landmark")
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(theme.secondaryColor)
                                 .multilineTextAlignment(.center)
                         }
                     }
