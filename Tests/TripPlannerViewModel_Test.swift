@@ -71,7 +71,7 @@ final class TripPlannerViewModelTests: XCTestCase {
             (viewModel.departureDate as Any?, "departureDate"),
             (viewModel.triPlanResponse as Any?, "triPlanResponse"),
             (viewModel.errorMessage as Any?, "errorMessage"),
-            (viewModel.previewItinerary as Any?, "previewItinerary")
+            (viewModel.selectedItinerary as Any?, "previewItinerary")
         ] {
             XCTAssertNil(value, "\(name) should be nil initially")
         }
@@ -185,11 +185,11 @@ final class TripPlannerViewModelTests: XCTestCase {
         viewModel.showTripResultsSheet()
         XCTAssertEqual(viewModel.activeSheet, .tripResults)
 
-        viewModel.showRouteDetails()
-        XCTAssertEqual(viewModel.activeSheet, .routeDetails)
+        viewModel.present(.directions)
+        XCTAssertEqual(viewModel.activeSheet, .directions)
 
-        viewModel.showSettings()
-        XCTAssertEqual(viewModel.activeSheet, .settings)
+        viewModel.present(.search)
+        XCTAssertEqual(viewModel.activeSheet, .search)
     }
 
     // MARK: - Preview & Actions
@@ -198,11 +198,11 @@ final class TripPlannerViewModelTests: XCTestCase {
     func test_ClearPreview_resetsState() {
         let itin = TestHelpers.itinerary()
         viewModel.handleItineraryPreview(itin) // sets preview + polyline + dismiss
-        XCTAssertNotNil(viewModel.previewItinerary)
+        XCTAssertNotNil(viewModel.selectedItinerary)
         XCTAssertTrue(viewModel.showingPolyline)
 
         viewModel.clearPreview()
-        XCTAssertNil(viewModel.previewItinerary)
+        XCTAssertNil(viewModel.selectedItinerary)
         XCTAssertFalse(viewModel.showingPolyline)
     }
 
@@ -213,7 +213,7 @@ final class TripPlannerViewModelTests: XCTestCase {
 
         viewModel.handleItineraryPreview(itin)
 
-        XCTAssertEqual(viewModel.previewItinerary, itin)
+        XCTAssertEqual(viewModel.selectedItinerary, itin)
         XCTAssertTrue(viewModel.showingPolyline)
         XCTAssertNil(viewModel.activeSheet) // dismissed
     }
@@ -225,9 +225,9 @@ final class TripPlannerViewModelTests: XCTestCase {
 
         viewModel.handleItinerarySelection(itin)
 
-        XCTAssertEqual(viewModel.previewItinerary, itin)
+        XCTAssertEqual(viewModel.selectedItinerary, itin)
         XCTAssertTrue(viewModel.showingPolyline)
-        XCTAssertEqual(viewModel.activeSheet, .routeDetails)
+        XCTAssertEqual(viewModel.activeSheet, .directions)
     }
 
     // MARK: - Map Camera
