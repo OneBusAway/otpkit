@@ -11,6 +11,8 @@ struct DirectionLegOriginDestinationView: View {
     private let title: String
     private let description: String
 
+    @Environment(\.otpTheme) private var theme
+
     init(title: String, description: String) {
         self.title = title
         self.description = description
@@ -21,7 +23,7 @@ struct DirectionLegOriginDestinationView: View {
             Image(systemName: "mappin")
                 .font(.system(size: 24))
                 .padding(8)
-                .background(Color.red.opacity(0.8))
+                .background(theme.primaryColor)
                 .clipShape(Circle())
                 .frame(width: 40, height: 40)
                 .padding(.bottom, 16)

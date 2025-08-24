@@ -14,11 +14,14 @@ struct OptionRowView: View {
     let description: String
     let isSelected: Bool
     let action: () -> Void
-    
+
+    // theme
+    @Environment(\.otpTheme) private var theme
+
     var body: some View {
         HStack {
             Image(systemName: iconName)
-                .foregroundColor(.blue)
+                .foregroundColor(theme.primaryColor)
                 .frame(width: 24)
             
             VStack(alignment: .leading, spacing: 2) {
@@ -33,7 +36,7 @@ struct OptionRowView: View {
             
             if isSelected {
                 Image(systemName: "checkmark")
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .fontWeight(.semibold)
             }
         }
