@@ -15,7 +15,7 @@ struct DirectionLegUnknownView: View {
             Image(systemName: "questionmark.circle.fill")
                 .font(.system(size: 24))
                 .foregroundColor(.gray)
-                .frame(width: 40)
+                .frame(width: 40, height: 40)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Unknown Transit Mode")

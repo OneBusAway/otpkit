@@ -1,38 +1,42 @@
+//
+//  DirectionLegOriginDestinationView.swift
+//  OTPKit
+//
+//  Created by Hilmy Veradin on 08/08/24.
+//
+
 import SwiftUI
 
 struct DirectionLegOriginDestinationView: View {
-    let title: String
-    let description: String
-    
-    @Environment(\.otpTheme) private var theme
+    private let title: String
+    private let description: String
+
+    init(title: String, description: String) {
+        self.title = title
+        self.description = description
+    }
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "mappin.circle.fill")
+            Image(systemName: "mappin")
                 .font(.system(size: 24))
-                .foregroundColor(theme.primaryColor)
-                .frame(width: 40)
+                .padding(8)
+                .background(Color.red.opacity(0.8))
+                .clipShape(Circle())
+                .frame(width: 40, height: 40)
+                .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.headline)
+                    .font(.title3)
+                    .fontWeight(.bold)
                 Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.gray)
             }
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .foregroundColor(.secondary)
         }
-        .padding(.vertical, 12)
     }
 }
 
 #Preview {
-    DirectionLegOriginDestinationView(
-        title: "Origin",
-        description: "123 Main St"
-    )
-} 
+    DirectionLegOriginDestinationView(title: "Origin", description: "Unknown Location")
+}
