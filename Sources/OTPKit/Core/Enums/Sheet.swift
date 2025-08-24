@@ -8,10 +8,10 @@
 enum Sheet: String, CaseIterable, Identifiable {
     case tripResults
     case locationOptions
-    case routeDetails
-    case settings
+    case directions
     case search
-    case dateTime
+    case advancedOptions
 
     var id: String { rawValue }
 }
+ 
