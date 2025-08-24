@@ -15,15 +15,12 @@ struct OptionRowView: View {
     let isSelected: Bool
     let action: () -> Void
 
-    // theme
-    @Environment(\.otpTheme) private var theme
-
     var body: some View {
         HStack {
             Image(systemName: iconName)
-                .foregroundColor(theme.primaryColor)
+                .foregroundColor(.blue)
                 .frame(width: 24)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .foregroundColor(.primary)
@@ -31,12 +28,12 @@ struct OptionRowView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
-            
+
             if isSelected {
                 Image(systemName: "checkmark")
-                    .foregroundColor(theme.primaryColor)
+                    .foregroundColor(.blue)
                     .fontWeight(.semibold)
             }
         }
@@ -46,7 +43,10 @@ struct OptionRowView: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(title): \(description)")
-        .accessibilityHint(isSelected ? OTPLoc("option_row.selected_hint", comment: "Accessibility hint for selected option") : OTPLoc("option_row.tap_to_select_hint", comment: "Accessibility hint for unselected option"))
+        .accessibilityHint(isSelected ? 
+            OTPLoc("option_row.selected_hint", comment: "Accessibility hint for selected option") : 
+            OTPLoc("option_row.tap_to_select_hint", comment: "Accessibility hint for unselected option")
+        )
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
@@ -62,7 +62,7 @@ struct OptionRowView: View {
             ) {
                 // Preview action
             }
-            
+
             OptionRowView(
                 iconName: "arrow.triangle.swap",
                 title: OTPLoc("option_row.fewest_transfers_title", comment: "Fewest transfers option title"),
