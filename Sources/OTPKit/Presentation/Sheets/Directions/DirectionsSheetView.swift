@@ -12,6 +12,7 @@ import MapKit
 struct DirectionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
+  
     @Environment(\.otpTheme) private var theme
 
     @Binding var sheetDetent: PresentationDetent

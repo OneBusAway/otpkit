@@ -9,14 +9,18 @@ import Foundation
 import CoreLocation
 import Combine
 
+// Singleton manager to handle CoreLocation tasks across the app
 public class LocationManager: NSObject, ObservableObject {
     public static let shared = LocationManager()
 
     private let geocoder = CLGeocoder()
     private let locationManager = CLLocationManager()
 
+    // Publishes the user’s current location updates
     @Published public var currentLocation: CLLocation?
+    // Publishes the current permission/authorization status
     @Published public var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    // Publishes any error encountered during location updates
     @Published public var locationError: Error?
 
     public override init() {
