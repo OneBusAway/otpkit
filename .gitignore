@@ -90,3 +90,6 @@ fastlane/test_output
 iOSInjectionProject/
 
 *.xcresult
+
+# macOS
+.DS_Store

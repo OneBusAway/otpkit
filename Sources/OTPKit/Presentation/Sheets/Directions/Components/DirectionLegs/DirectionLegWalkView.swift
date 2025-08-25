@@ -10,16 +10,13 @@ import SwiftUI
 struct DirectionLegWalkView: View {
     let leg: Leg
     @State private var showSteps = false
-    
-    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 16) {
                 Image(systemName: "figure.walk")
                     .font(.system(size: 24))
-                    .padding()
-                    .frame(width: 40)
+                    .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Walk to \(leg.to.name)")
@@ -43,7 +40,7 @@ struct DirectionLegWalkView: View {
                     Button(action: { showSteps.toggle() }) {
                         Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
                             .font(.system(size: 20))
-                            .foregroundColor(theme.primaryColor)
+                            .foregroundColor(.blue)
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -51,13 +48,10 @@ struct DirectionLegWalkView: View {
 
             //MARK: Expandable Steps List View
             if showSteps, let steps = leg.steps {
-                VStack(alignment: .leading, spacing: 6) {
-                    ForEach(steps, id: \.self) { step in
-                        HStack(alignment: .top, spacing: 8) {
-                            Image(systemName: "mappin.circle.fill")
-                                .foregroundColor(theme.primaryColor)
-                                .frame(width: 20)
-
+                HStack(alignment: .top, spacing: 12) {
+                    // Step descriptions
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(steps, id: \.self) { step in
                             Text(stepDescription(for: step))
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
@@ -65,8 +59,7 @@ struct DirectionLegWalkView: View {
                         }
                     }
                 }
-                .padding(.leading, 40)
-                .transition(.opacity.combined(with: .move(edge: .top)))
+                .padding(.leading, 20)
             }
         }
     }

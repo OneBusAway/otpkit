@@ -11,28 +11,36 @@ import SwiftUI
 
 public struct MapLocationSelectorView: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
-    @State private var mapState: MapState
-    @Environment(\.otpTheme) private var theme
 
     let locationMode: LocationMode
-    let config: OTPConfiguration
-    private let locationManager = LocationManager()
+    private let locationManager = LocationManager.shared
+
+    // MARK: - Constants
+    private enum Constants {
+        static let haloLineWidth: CGFloat = 5
+        static let mainLineWidth: CGFloat = 4
+        static let haloOpacity: Double = 0.8
+        static let stationDotSize: CGFloat = 10
+        static let stationDotBorderWidth: CGFloat = 2
+        static let iconSize: CGFloat = 14
+        static let iconPadding: CGFloat = 6
+    }
 
     public init(
-        otpConfig: OTPConfiguration,
         locationMode: LocationMode
     ){
-        self.config = otpConfig
         self.locationMode = locationMode
-        self._mapState = State(initialValue: MapState(region: otpConfig.region))
     }
 
     public var body: some View {
         MapReader { mapProxy in
-            Map(position: $mapState.region) {
+            Map(position: $tripPlannerVM.region) {
                 locationAnnotations
                 routeOverlay
-                if locationMode == .origin { UserAnnotation() }
+                stationDots
+                legModeAnnotations
+
+                UserAnnotation()
             }
             .mapControls {
                 MapCompass()
@@ -43,9 +51,6 @@ public struct MapLocationSelectorView: View {
             .onTapGesture { location in
                 handleMapTap(at: location, with: mapProxy)
             }
-        }
-        .onChange(of: tripPlannerVM.previewItinerary) { _, newItinerary in
-            updateMapForPreview(newItinerary)
         }
     }
 }
@@ -63,13 +68,63 @@ private extension MapLocationSelectorView {
         }
     }
 
+    /// Renders colored polylines for each leg of the trip itinerary
+    /// Uses strategic colors: gray (walking), blue (transit), orange (personal transport)
     @MapContentBuilder
     var routeOverlay: some MapContent {
-        if tripPlannerVM.showingPolyline, let polyline = routePolyline {
-            // White halo
-            polyline.stroke(Color.white.opacity(0.7), style: StrokeStyle(lineWidth: 8, lineCap: .round))
-            // Main route
-            polyline.stroke(theme.primaryColor, style: StrokeStyle(lineWidth: 7, lineCap: .round))
+        if tripPlannerVM.showingPolyline, let itinerary = tripPlannerVM.selectedItinerary {
+            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+                if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
+                    let polyline = MapPolyline(coordinates: coordinates)
+                    let legColor = colorForLegMode(leg.mode)
+
+                    // White halo for better visibility
+                    polyline.stroke(Color.white.opacity(Constants.haloOpacity), style: StrokeStyle(lineWidth: Constants.haloLineWidth, lineCap: .round))
+                    // Colored route for each leg
+                    polyline.stroke(legColor, style: StrokeStyle(lineWidth: Constants.mainLineWidth, lineCap: .round))
+                }
+            }
+        }
+    }
+
+    /// Displays transport mode icons at the midpoint of each leg
+    @MapContentBuilder
+    var legModeAnnotations: some MapContent {
+        if tripPlannerVM.showingPolyline, let itinerary = tripPlannerVM.selectedItinerary {
+            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+                if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
+                    // Use midpoint of each leg for icon placement
+                    let midIndex = coordinates.count / 2
+                    let position = coordinates[midIndex]
+
+                    Annotation("", coordinate: position) {
+                        Image(systemName: iconForLegMode(leg.mode))
+                            .foregroundColor(.white)
+                            .font(.system(size: Constants.iconSize, weight: .medium))
+                            .padding(Constants.iconPadding)
+                            .background(Circle().fill(colorForLegMode(leg.mode)))
+                    }
+                    .annotationTitles(.hidden)
+                }
+            }
+        }
+    }
+
+    /// Shows station/stop annotations with names for transit stations
+    @MapContentBuilder
+    var stationDots: some MapContent {
+        if tripPlannerVM.showingPolyline, let itinerary = tripPlannerVM.selectedItinerary {
+            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+                // Add dot for the "from" location (start of leg)
+                if shouldShowStationDot(for: leg.from) {
+                    createStationAnnotation(for: leg.from)
+                }
+
+                // Add dot for the "to" location (end of leg) - only for the last leg
+                if index == itinerary.legs.count - 1 && shouldShowStationDot(for: leg.to) {
+                    createStationAnnotation(for: leg.to)
+                }
+            }
         }
     }
 
@@ -80,7 +135,6 @@ private extension MapLocationSelectorView {
                     .foregroundColor(color)
                     .font(.title2)
                     .background(Color.white, in: Circle())
-                LocalizedText(titleKey)
             }
         }
     }
@@ -108,24 +162,84 @@ private extension MapLocationSelectorView {
         }
     }
 
-    func updateMapForPreview(_ itinerary: Itinerary?) {
-        if let itinerary = itinerary {
-            mapState.showPreview(for: itinerary)
-        } else {
-            mapState.hidePreview()
-        }
-    }
-
     func updateSelectedLocation(with location: Location) {
         tripPlannerVM.handleLocationSelection(location, for: locationMode)
     }
 }
 
-// MARK: - Computed Properties
+// MARK: - Transport Mode Helpers
 private extension MapLocationSelectorView {
-    var routePolyline: MapPolyline? {
-        guard let itinerary = tripPlannerVM.previewItinerary else { return nil }
-        let coordinates = itinerary.legs.compactMap { $0.decodePolyline() }.flatMap { $0 }
-        return coordinates.isEmpty ? nil : MapPolyline(coordinates: coordinates)
+    /// Returns the appropriate SF Symbol icon for a given transport mode
+    func iconForLegMode(_ mode: String) -> String {
+        switch mode.uppercased() {
+        case "WALK":
+            return "figure.walk"
+        case "BUS":
+            return "bus"
+        case "TRAM":
+            return "tram"
+        case "BIKE":
+            return "bicycle"
+        case "CAR":
+            return "car"
+        case "TRAIN", "SUBWAY":
+            return "train.side.front.car"
+        case "FERRY":
+            return "ferry"
+        default:
+            return "questionmark"
+        }
+    }
+
+    /// Returns strategic color for transport mode: gray (walking), blue (transit), orange (personal)
+    func colorForLegMode(_ mode: String) -> Color {
+        switch mode.uppercased() {
+        case "WALK":
+            return .gray
+        case "BUS", "TRAM", "TRAIN", "SUBWAY", "FERRY":
+            return Color(.systemBlue)
+        case "BIKE", "CAR":
+            return .orange
+        default:
+            return .gray
+        }
+    }
+}
+
+// MARK: - Station Helpers
+private extension MapLocationSelectorView {
+    /// Determines if a place should display a station dot (stops and stations only)
+    func shouldShowStationDot(for place: Place) -> Bool {
+        return place.vertexType == "STOP" || place.vertexType == "STATION" || place.stopId != nil
+    }
+
+    /// Creates a station annotation with a blue-outlined white dot and station name
+    @MapContentBuilder
+    func createStationAnnotation(for place: Place) -> some MapContent {
+        Annotation(place.name, coordinate: CLLocationCoordinate2D(latitude: place.lat, longitude: place.lon)) {
+            Circle()
+                .fill(Color.white)
+                .frame(width: Constants.stationDotSize, height: Constants.stationDotSize)
+                .overlay(
+                    Circle()
+                        .stroke(Color(.systemBlue), lineWidth: Constants.stationDotBorderWidth)
+                )
+        }
+    }
+
+}
+
+#Preview {
+    @Previewable @StateObject var vm = PreviewHelpers.mockTripPlannerViewModel()
+
+    MapLocationSelectorView(
+        locationMode: .origin
+    )
+    .environmentObject(vm)
+    .onAppear {
+        let cafe = PreviewHelpers.createOrigin()
+        vm.selectedOrigin = cafe
+
+        vm.changeMapCamera(to: cafe.coordinate)
     }
 }

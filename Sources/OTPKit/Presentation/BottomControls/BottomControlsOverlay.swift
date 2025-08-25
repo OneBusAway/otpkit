@@ -12,15 +12,6 @@ import SwiftUI
 struct BottomControlsOverlay: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @Binding var selectedMode: LocationMode
-    
-    @Environment(\.otpTheme) private var theme
-
-    private let transportModes: [(mode: TransportMode, icon: String)] = [
-        (.transit, "tram.fill"),
-        (.walk, "figure.walk"),
-        (.bike, "bicycle"),
-        (.car, "car.fill")
-    ]
 
     var body: some View {
         VStack(spacing: 12) {
@@ -38,13 +29,13 @@ struct BottomControlsOverlay: View {
                     }
 
                     Button(action: {
-                        tripPlannerVM.present(.dateTime)
+                        tripPlannerVM.present(.search)
                     }) {
                         HStack(spacing: 6) {
-                            Image(systemName: "clock.fill")
-                                .font(.system(size: 10, weight: .medium))
-                            Text(formatDateTime())
-                                .font(.system(size: 12, weight: .medium))
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 14, weight: .medium))
+                            LocalizedText("bottom.search")
+                                .font(.system(size: 14, weight: .medium))
                         }
                         .foregroundColor(.primary)
                         .frame(height: 36)
@@ -80,20 +71,26 @@ struct BottomControlsOverlay: View {
                 )
             }
 
-            // Full width Search Button
+            // Advanced Options Button
             Button(action: {
-                tripPlannerVM.present(.search)
+                tripPlannerVM.present(.advancedOptions)
             }) {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16, weight: .medium))
-                    LocalizedText("bottom.search")
-                        .font(.system(size: 16, weight: .medium))
+                HStack(spacing: 6) {
+                    Image(systemName: hasAdvancedOptionsSet ? "ellipsis.circle.fill" : "ellipsis.circle")
+                        .font(.system(size: 14, weight: .medium))
+                    LocalizedText("bottom.advanced_options")
+                        .font(.system(size: 14, weight: .medium))
+
+                    if hasAdvancedOptionsSet {
+                        Circle()
+                            .fill(.blue)
+                            .frame(width: 6, height: 6)
+                    }
                 }
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
-                .background(Color(.systemGray6))
+                .background(hasAdvancedOptionsSet ? Color(.systemBlue).opacity(0.1) : Color(.systemGray6))
                 .cornerRadius(8)
             }
 
@@ -122,11 +119,11 @@ struct BottomControlsOverlay: View {
                         LocalizedText("bottom.directions")
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundColor(tripPlannerVM.canPlanTrip ? .white : theme.secondaryColor)
+                    .foregroundColor(tripPlannerVM.canPlanTrip ? .white : .secondary)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
                     .background(
-                        tripPlannerVM.canPlanTrip ? theme.primaryColor : Color(.systemGray5)
+                        tripPlannerVM.canPlanTrip ? Color.accentColor : Color(.systemGray5)
                     )
                     .cornerRadius(8)
                 }
@@ -152,5 +149,35 @@ struct BottomControlsOverlay: View {
 
         return "\(dateFormatter.string(from: date)) \(timeFormatter.string(from: time))"
     }
+
+    /// Checks if any advanced options are set to non-default values
+    private var hasAdvancedOptionsSet: Bool {
+        return tripPlannerVM.isWheelchairAccessible ||
+        tripPlannerVM.maxWalkingDistance != .oneMile ||
+        tripPlannerVM.timePreference != .leaveNow ||
+        tripPlannerVM.routePreference != .fastestTrip
+    }
+
+    private let transportModes: [(mode: TransportMode, icon: String)] = [
+        (.transit, "tram.fill"),
+        (.walk, "figure.walk"),
+        (.bike, "bicycle"),
+        (.car, "car.fill")
+    ]
+
 }
 
+// MARK: - Preview
+
+import MapKit
+
+#Preview {
+    ZStack{
+        Map()
+        VStack{
+            Spacer()
+            BottomControlsOverlay(selectedMode: .constant(.destination))
+                .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
+        }
+    }
+}

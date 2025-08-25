@@ -9,8 +9,6 @@ import SwiftUI
 
 struct DirectionLegVehicleView: View {
     let leg: Leg
-    
-    @Environment(\.otpTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -25,22 +23,22 @@ struct DirectionLegVehicleView: View {
                     .font(.caption)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .frame(width: 40, height: 40)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(boardingText)
                         .font(.headline)
-                    
+
                     Text(leg.headsign ?? "")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    
+
                     HStack {
                         if let stopCode = leg.to.stopCode {
                             Text("Stop ID: \(stopCode)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -48,29 +46,28 @@ struct DirectionLegVehicleView: View {
                 }
             }
             .padding(.bottom, 4)
-            
+
             // Alighting section
             HStack(alignment: .top, spacing: 16) {
-                // Spacer to align with the route badge
-                Rectangle()
-                    .fill(.clear)
-                    .frame(width: 40, height: 0)
-                
+                // Empty space to align with the route badge
+                Spacer()
+                    .frame(width: 40, height: 40)
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Deboard at")
                         .font(.headline)
-                    
+
                     Text(leg.to.name ?? "")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    
+
                     HStack {
                         if let stopCode = leg.to.stopCode {
                             Text("Stop ID: \(stopCode)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Text("Arrives at \(Formatters.formatDateToTime(leg.endTime))")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -82,18 +79,18 @@ struct DirectionLegVehicleView: View {
 
     private var backgroundColor: Color {
         if leg.mode == "TRAM" {
-            theme.primaryColor
+            Color.blue
         } else if leg.mode == "BUS" {
             Color.green
         } else {
             Color.pink
         }
     }
-    
+
     private var boardingText: String {
-            let agency = leg.agencyName ?? ""
-            let routeText = leg.route != nil && !leg.route!.isEmpty ? "Route \(leg.route!)" : ""
-            return "Board \(agency) \(routeText)"
+        let agency = leg.agencyName ?? ""
+        let routeText = leg.route != nil && !leg.route!.isEmpty ? "Route \(leg.route!)" : ""
+        return "Board \(agency) \(routeText)"
     }
 }
 

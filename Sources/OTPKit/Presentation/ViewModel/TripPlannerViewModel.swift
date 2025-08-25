@@ -34,6 +34,20 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     /// User-selected departure date
     @Published var departureDate: Date?
 
+    // MARK: - Advanced Options
+
+    /// Whether the route should be wheelchair accessible
+    @Published var isWheelchairAccessible: Bool = false
+
+    /// Maximum walking distance preference
+    @Published var maxWalkingDistance: WalkingDistance = .oneMile
+
+    /// Time preference (leave now, depart at, arrive by)
+    @Published var timePreference: TimePreference = .leaveNow
+
+    /// Route optimization preference
+    @Published var routePreference: RoutePreference = .fastestTrip
+
     /// Loading state for API calls
     @Published var isLoading = false
 
@@ -50,7 +64,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     @Published var showingError = false
 
     /// Currently previewed itinerary for map display
-    @Published var previewItinerary: Itinerary?
+    @Published var selectedItinerary: Itinerary?
 
     /// Whether to show the route polyline on map
     @Published var showingPolyline = false
@@ -62,7 +76,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     /// OTP configuration containing server URL and enabled transport modes
     private let config: OTPConfiguration
-    
+
     /// API service for making trip planning requests
     private let apiService: APIService
 
@@ -73,6 +87,14 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
         self.region = config.region
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
+    }
+
+    /// Sets the current location as the origin for trip planning
+    @MainActor
+    func setCurrentLocationAsOrigin() async {
+        if let currentLocation = await LocationManager.shared.getCurrentLocation() {
+            selectedOrigin = currentLocation
+        }
     }
 
     // MARK: - Computed Properties
@@ -90,19 +112,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     /// All available itineraries from the current trip plan response
     var itineraries: [Itinerary] {
         triPlanResponse?.plan?.itineraries ?? []
-    }
-
-    // MARK: - Location Management
-
-    /// Update map camera to focus on specific coordinate
-    /// - Parameter coordinate: The coordinate to center the map on
-    func changeMapCamera(to coordinate: CLLocationCoordinate2D) {
-        let pos = MKCoordinateRegion(
-            center: coordinate,
-            latitudinalMeters: 1000, 
-            longitudinalMeters: 1000
-        )
-        region = .region(pos)
     }
 
     // MARK: - Transport & Time Management
@@ -132,18 +141,21 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
             return
         }
 
+        // Determine date and time based on time preference
+        let (requestDate, requestTime) = getRequestDateTime()
+
         // Create trip plan request
         let request = TripPlanRequest(
             origin: origin.coordinate,
             destination: destination.coordinate,
-            date: departureDate ?? Date(),
-            time: departureTime ?? Date(),
+            date: requestDate,
+            time: requestTime,
             transportModes: selectedTransportMode.apiModes,
-            maxWalkDistance: 1000,
-            wheelchairAccessible: false,
-            arriveBy: false
+            maxWalkDistance: maxWalkingDistance.meters,
+            wheelchairAccessible: isWheelchairAccessible,
+            arriveBy: timePreference == .arriveBy
         )
-        
+
         // Start loading state
         isLoading = true
         errorMessage = nil
@@ -162,20 +174,38 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
             }
         }
     }
-    
+
     // MARK: - Private Helpers
+
+    /// Determines the appropriate date and time for the trip request based on time preference
+    /// - Returns: A tuple containing the date and time to use for the request
+    private func getRequestDateTime() -> (Date, Date) {
+        switch timePreference {
+        case .leaveNow:
+            // Use current date and time
+            let now = Date()
+            return (now, now)
+        case .departAt, .arriveBy:
+            // Use stored departure date and time, fallback to current if nil
+            let requestDate = departureDate ?? Date()
+            let requestTime = departureTime ?? Date()
+            return (requestDate, requestTime)
+        }
+    }
+
     private func handleSuccess(_ response: OTPResponse) {
         triPlanResponse = response
         isLoading = false
         showingTripResults = true
         showTripResultsSheet()
+        HapticManager.shared.success()
     }
-    
+
     private func handleError(_ error: Error) {
         let otpError = error as? OTPKitError ?? OTPKitError.tripPlanningFailed(error.localizedDescription)
         showError(otpError)
     }
-    
+
     private func showError(_ error: OTPKitError) {
         errorMessage = error.displayMessage
         showingError = true
@@ -194,29 +224,21 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
         present(.tripResults)
     }
 
-    /// Present the route details sheet
-    func showRouteDetails() {
-        present(.routeDetails)
-    }
-
-    /// Present the settings sheet
-    func showSettings() {
-        present(.settings)
-    }
-
     // MARK: - Preview Management
 
     /// Clear the current route preview from the map
     func clearPreview() {
-        previewItinerary = nil
+        selectedItinerary = nil
         showingPolyline = false
     }
 
     /// Show route preview on the map for a specific itinerary
     /// - Parameter itinerary: The itinerary to preview
     private func showPreview(for itinerary: Itinerary) {
-        previewItinerary = itinerary
+        selectedItinerary = itinerary
         showingPolyline = true
+        // Zoom to fit the entire trip with padding
+        zoomToFitItinerary(itinerary)
     }
 
     // MARK: - Action Handlers
@@ -246,9 +268,18 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     /// Shows preview on map, dismisses current sheet, and opens route details
     /// - Parameter itinerary: The selected itinerary
     func handleItinerarySelection(_ itinerary: Itinerary) {
-        showPreview(for: itinerary)
+        selectedItinerary = itinerary
+        showingPolyline = true
+        // Zoom to origin for turn-by-turn directions like Apple Maps
+        if let origin = selectedOrigin {
+            changeMapCamera(
+                to: origin.coordinate,
+                latMeters: 1800,
+                longMeters: 1800
+            )
+        }
         dismiss()
-        present(.routeDetails)
+        present(.directions)
     }
 
     /// Handle itinerary preview (user wants to see route on map)
@@ -257,5 +288,113 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func handleItineraryPreview(_ itinerary: Itinerary) {
         showPreview(for: itinerary)
         dismiss()
+    }
+
+    // MARK: - Reset Functionality
+
+    /// Reset all trip planner state to initial values
+    /// Clears locations, itineraries, and returns to clean state
+    func resetTripPlanner() {
+        // Clear location selections
+        selectedOrigin = nil
+        selectedDestination = nil
+
+        // Clear trip planning results
+        triPlanResponse = nil
+        selectedItinerary = nil
+
+        // Reset map state
+        showingPolyline = false
+        region = .userLocation(fallback: .automatic)
+
+        // Clear error states
+        errorMessage = nil
+        showingError = false
+        isLoading = false
+
+        // Reset to default transport mode
+        selectedTransportMode = config.enabledTransportModes.first ?? .transit
+
+        // Reset advanced options to defaults
+        isWheelchairAccessible = false
+        maxWalkingDistance = .oneMile
+        timePreference = .leaveNow
+        routePreference = .fastestTrip
+        departureTime = nil
+        departureDate = nil
+
+        // Dismiss any active sheets
+        activeSheet = nil
+    }
+}
+
+// MARK: - Map Management
+extension TripPlannerViewModel {
+    /// Update map camera to focus on specific coordinate
+    /// - Parameters:
+    ///   - coordinate: The coordinate to center the map on
+    ///   - latMeters: Latitudinal meters for zoom level
+    ///   - longMeters: Longitudinal meters for zoom level
+    func changeMapCamera(
+        to coordinate: CLLocationCoordinate2D,
+        latMeters: Double = 1000,
+        longMeters: Double = 1000
+    ) {
+        let pos = MKCoordinateRegion(
+            center: coordinate,
+            latitudinalMeters: latMeters,
+            longitudinalMeters: longMeters
+        )
+
+        withAnimation(.easeInOut(duration: 0.8)) {
+            region = .region(pos)
+        }
+    }
+
+    /// Zoom camera to fit entire itinerary using native Apple MapKit API
+    /// - Parameter itinerary: The itinerary to fit in view
+    func zoomToFitItinerary(_ itinerary: Itinerary) {
+        var coordinates: [CLLocationCoordinate2D] = []
+
+        // Add origin if available
+        if let origin = selectedOrigin { coordinates.append(origin.coordinate) }
+
+        // Add all coordinates from legs
+        for leg in itinerary.legs {
+            if let legCoordinates = leg.decodePolyline(), !legCoordinates.isEmpty {
+                coordinates.append(contentsOf: legCoordinates)
+            }
+        }
+
+        // Add destination if available
+        if let destination = selectedDestination { coordinates.append(destination.coordinate) }
+
+        guard !coordinates.isEmpty else { return }
+
+        // Handle single coordinate case
+        if coordinates.count == 1 {
+            changeMapCamera(to: coordinates[0])
+            return
+        }
+
+        // Use Apple's native MKPolyline to get the bounding map rect
+        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        let mapRect = polyline.boundingMapRect
+
+        // Convert MKMapRect to MKCoordinateRegion with native Apple padding
+        let region = MKCoordinateRegion(mapRect)
+
+        // Apply native Apple-style padding by expanding the region slightly
+        let paddedRegion = MKCoordinateRegion(
+            center: region.center,
+            span: MKCoordinateSpan(
+                latitudeDelta: region.span.latitudeDelta * 1.15,
+                longitudeDelta: region.span.longitudeDelta * 1.15
+            )
+        )
+
+        withAnimation(.easeInOut(duration: 1.0)) {
+            self.region = .region(paddedRegion)
+        }
     }
 }

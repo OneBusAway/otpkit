@@ -28,8 +28,7 @@ struct OTPKitDemoApp: App {
         WindowGroup {
             if hasCompletedOnboarding, let config = otpConfiguration {
                 let apiService = RestAPIService(baseURL: config.otpServerURL)
-                TripPlannerView(otpConfig: config, apiService: apiService)
-                    .environment(\.otpTheme, config.themeConfiguration)
+                OTPView(otpConfig: config, apiService: apiService)
             } else {
                 OnboardingView(
                     hasCompletedOnboarding: $hasCompletedOnboarding,

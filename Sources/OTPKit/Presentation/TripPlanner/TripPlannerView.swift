@@ -9,32 +9,30 @@ import SwiftUI
 import MapKit
 
 /// Main view for planning trips, showing map, controls, and results.
-public struct TripPlannerView: View {
+struct TripPlannerView: View {
     /// ViewModel managing trip planning state and logic
-    @StateObject private var tripPlannerVM: TripPlannerViewModel
+    @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     /// Currently selected location mode (origin or destination)
     @State private var selectedMode: LocationMode = .origin
+
+    @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
     /// OTP configuration for the planner
     let otpConfig: OTPConfiguration
 
-    /// Initializes the TripPlannerView with optional origin and destination
-    public init(otpConfig: OTPConfiguration, apiService: APIService, origin: Location? = nil, destination: Location? = nil) {
-        let tripPlannerVM = TripPlannerViewModel(config: otpConfig, apiService: apiService)
-        tripPlannerVM.selectedOrigin = origin
-        tripPlannerVM.selectedDestination = destination
-        self._tripPlannerVM = StateObject(wrappedValue: tripPlannerVM)
+    /// Initializes the TripPlannerView with configuration
+    init(otpConfig: OTPConfiguration) {
         self.otpConfig = otpConfig
     }
 
     public var body: some View {
         ZStack {
             mapView
-            if tripPlannerVM.isLoading { loadingOverlay }
             if !tripPlannerVM.showingPolyline { bottomControls }
             if tripPlannerVM.showingPolyline { previewControls }
+
+            if tripPlannerVM.isLoading { LoadingOverlay() }
         }
-        .environmentObject(tripPlannerVM)
         .errorCard(
             isPresented: tripPlannerVM.showingError,
             message: tripPlannerVM.errorMessage ?? "An error occurred",
@@ -48,25 +46,7 @@ public struct TripPlannerView: View {
 private extension TripPlannerView {
     /// Map view for selecting locations
     var mapView: some View {
-        MapLocationSelectorView(otpConfig: otpConfig, locationMode: selectedMode)
-    }
-
-    /// Overlay shown while trip is being planned
-    var loadingOverlay: some View {
-        Color.black.opacity(0.3)
-            .ignoresSafeArea()
-            .overlay {
-                VStack {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-
-                    Text("Planning your trip...")
-                        .foregroundColor(.white)
-                        .font(.headline)
-                        .padding(.top)
-                }
-            }
+        MapLocationSelectorView(locationMode: selectedMode)
     }
 
     /// Controls shown at the bottom when not previewing a route
@@ -80,26 +60,12 @@ private extension TripPlannerView {
     /// Controls shown when previewing a selected itinerary
     var previewControls: some View {
         VStack {
-            closeButton
             Spacer()
-            if let itinerary = tripPlannerVM.previewItinerary {
+            if let itinerary = tripPlannerVM.selectedItinerary,
+               tripPlannerVM.activeSheet != .directions
+            {
                 tripPreviewControl(for: itinerary)
             }
-        }
-    }
-
-    /// Button to close the itinerary preview
-    var closeButton: some View {
-        HStack {
-            Spacer()
-            Button(action: tripPlannerVM.clearPreview) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .background(Color.black.opacity(0.7))
-                    .clipShape(Circle())
-            }
-            .padding()
         }
     }
 
@@ -138,13 +104,18 @@ private extension TripPlannerView {
                 selectedMode: selectedMode,
                 onLocationSelected: handleLocationSelection
             )
-            
-        case .routeDetails:
-            Text("Route Details")
-        case .dateTime:
-            Text("Date Time")
-        case .settings:
-            Text("Settings")
+
+        case .directions:
+            DirectionsSheetView(
+                sheetDetent: $directionSheetDetent
+            )
+            .presentationDragIndicator(.visible)
+            .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
+            .interactiveDismissDisabled()
+            .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
+
+        case .advancedOptions:
+            AdvancedOptionsSheet()
         }
     }
 }
@@ -161,4 +132,14 @@ private extension TripPlannerView {
     func handleLocationSelection(_ location: Location) {
         tripPlannerVM.handleLocationSelection(location, for: selectedMode)
     }
+}
+
+#Preview {
+    TripPlannerView(
+        otpConfig: .init(
+            otpServerURL: URL(string: "example")!,
+            region: .automatic
+        )
+    )
+    .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
 }

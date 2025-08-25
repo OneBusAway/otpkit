@@ -1,6 +1,6 @@
 /*
  Localizable.strings (Base)
-*/
+ */
 
 /* Test */
 "test_loc" = "Hello from OTPKit";
@@ -8,16 +8,12 @@
 
 /* Titles */
 "error.network.title" = "Network Error";
-"error.invalid_coordinates.title" = "Invalid Coordinates";
-"error.location.title" = "Location Error";
-"error.storage.title" = "Storage Error";
+"error.trip_planning.title" = "Trip Planning Error";
 
 /* Messages */
-"error.invalid_coordinates.message" = "The provided coordinates are invalid.";
 "error.api.message" = "API Error: %@";
-"error.location_unavailable.message" = "Location services are unavailable.";
-"error.save_failed.message" = "Could not save: %@";
-"error.delete_failed.message" = "Could not delete: %@";
+"error.trip_planning.message" = "Trip planning failed: %@";
+"error.missing_locations.message" = "Please select both origin and destination locations.";
 "error.unknown" = "An unknown error occurred.";
 
 /* Map */
@@ -25,6 +21,66 @@
 "map.destination" = "Destination";
 "map.finding" = "Finding...";
 "map.searching_address" = "Searching for address";
+
+/* Loading */
+"loading.planning_trip" = "Planning your trip...";
+
+/* Time Selection */
+"time_selection.title" = "Time Selection";
+"time_selection.date" = "Date";
+"time_selection.time" = "Time";
+"time_selection.select_date_accessibility" = "Select departure date";
+"time_selection.select_time_accessibility" = "Select departure time";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "Leave Now";
+"time_preference.depart_at_title" = "Depart At";
+"time_preference.arrive_by_title" = "Arrive By";
+"time_preference.leave_now_desc" = "Start your trip immediately";
+"time_preference.depart_at_desc" = "Leave at a specific time";
+"time_preference.arrive_by_desc" = "Arrive by a specific time";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "Fastest Trip";
+"route_preference.fewest_transfers_title" = "Fewest Transfers";
+"route_preference.fastest_trip_desc" = "Prioritize shortest travel time";
+"route_preference.fewest_transfers_desc" = "Minimize number of connections";
+
+/* Search Bar */
+"search_bar.placeholder" = "Search for places";
+
+/* Trip Results */
+"trip_results.preview_button" = "Preview";
+"trip_results.cancel_button" = "Cancel";
+"trip_results.no_trips_found" = "No trips found";
+"trip_results.duration_format" = "%d min";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "Cancel";
+"trip_preview.start_button" = "Start";
+
+/* Option Row */
+"option_row.selected_hint" = "Selected";
+"option_row.tap_to_select_hint" = "Tap to select";
+"option_row.preview_section" = "Preview";
+"option_row.fastest_trip_title" = "Fastest Trip";
+"option_row.fastest_trip_desc" = "Prioritize shortest travel time";
+"option_row.fewest_transfers_title" = "Fewest Transfers";
+"option_row.fewest_transfers_desc" = "Minimize number of connections";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "Departure Time";
+"advanced_options.route_optimization_title" = "Route Optimization";
+"advanced_options.walking_distance_title" = "Walking Distance";
+"advanced_options.wheelchair_accessible" = "Wheelchair accessible";
+"advanced_options.wheelchair_accessible_label" = "Wheelchair accessible routes";
+"advanced_options.wheelchair_toggle_hint" = "Toggle to find routes suitable for mobility devices";
+"advanced_options.wheelchair_footer" = "Find routes suitable for mobility devices and wheelchairs";
+"advanced_options.max_walking_distance" = "Maximum walking distance";
+"advanced_options.cancel" = "Cancel";
+"advanced_options.done" = "Done";
+"advanced_options.cancel_accessibility" = "Cancel advanced options";
+"advanced_options.save_accessibility" = "Save advanced options";
 
 /* Bottom Controls */
 "bottom.from" = "From";
@@ -34,5 +90,6 @@
 "bottom.search" = "Search";
 "bottom.options" = "Options";
 "bottom.directions" = "Directions";
+"bottom.advanced_options" = "Advanced Options";
 
 
