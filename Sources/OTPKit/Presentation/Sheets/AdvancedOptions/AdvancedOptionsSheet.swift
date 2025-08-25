@@ -11,6 +11,7 @@ import MapKit
 /// A bottom sheet that presents advanced options for trip planning
 struct AdvancedOptionsSheet: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.otpTheme) private var theme
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     
     @State private var selectedDate: Date = Date()
@@ -71,7 +72,7 @@ private extension AdvancedOptionsSheet {
         Section {
             HStack {
                 Image(systemName: "figure.roll")
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .frame(width: 24)
                 
                 Text(OTPLoc("advanced_options.wheelchair_accessible", comment: "Wheelchair accessible toggle label"))
@@ -80,7 +81,7 @@ private extension AdvancedOptionsSheet {
                 
                 Toggle("", isOn: $tripPlannerVM.isWheelchairAccessible)
                     .labelsHidden()
-                    .tint(.blue)
+                    .tint(theme.primaryColor)
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(OTPLoc("advanced_options.wheelchair_accessible_label", comment: "Accessibility label for wheelchair toggle"))
@@ -109,7 +110,7 @@ private extension AdvancedOptionsSheet {
         Section(OTPLoc("advanced_options.walking_distance_title", comment: "Walking distance section title")) {
             HStack {
                 Image(systemName: "figure.walk")
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .frame(width: 24)
                 
                 Picker(OTPLoc("advanced_options.max_walking_distance", comment: "Maximum walking distance picker label"), selection: $tripPlannerVM.maxWalkingDistance) {
@@ -118,7 +119,7 @@ private extension AdvancedOptionsSheet {
                     }
                 }
                 .pickerStyle(.menu)
-                .tint(.blue)
+                .tint(theme.primaryColor)
                 .accessibilityLabel(OTPLoc("advanced_options.max_walking_distance", comment: "Maximum walking distance accessibility label"))
                 .accessibilityValue(tripPlannerVM.maxWalkingDistance.title)
             }
@@ -129,7 +130,7 @@ private extension AdvancedOptionsSheet {
         Button(OTPLoc("advanced_options.cancel", comment: "Cancel button text")) {
             dismiss()
         }
-        .foregroundColor(.gray)
+        .foregroundColor(theme.secondaryColor)
         .accessibilityLabel(OTPLoc("advanced_options.cancel_accessibility", comment: "Cancel button accessibility label"))
     }
     
@@ -139,7 +140,7 @@ private extension AdvancedOptionsSheet {
             dismiss()
         }
         .fontWeight(.semibold)
-        .foregroundColor(.blue)
+        .foregroundColor(theme.primaryColor)
         .accessibilityLabel(OTPLoc("advanced_options.save_accessibility", comment: "Done button accessibility label"))
     }
 }

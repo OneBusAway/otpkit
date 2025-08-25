@@ -40,9 +40,9 @@ struct ItineraryLegVehicleView: View {
 
     private var backgroundColor: Color {
         if leg.mode == "TRAM" {
-            theme.primaryColor
-        } else if leg.mode == "BUS" {
             Color.green
+        } else if leg.mode == "BUS" {
+            theme.primaryColor
         } else {
             Color.pink
         }

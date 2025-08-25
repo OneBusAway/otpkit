@@ -34,6 +34,7 @@ public struct OTPView: View {
     public var body: some View {
         TripPlannerView(otpConfig: otpConfig)
             .environmentObject(tripPlannerVM)
+            .environment(\.otpTheme, otpConfig.themeConfiguration)
             .task {
                 // Auto-set current location as origin if no origin is provided
                 if tripPlannerVM.selectedOrigin == nil {
