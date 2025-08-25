@@ -38,3 +38,10 @@ struct OTPKitDemoApp: App {
         }
     }
 }
+
+#Preview("Onboarding") {
+    OnboardingView(
+        hasCompletedOnboarding: .constant(false),
+        otpConfiguration: .constant(nil)
+    )
+}

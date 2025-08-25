@@ -13,6 +13,8 @@ struct BottomControlsOverlay: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @Binding var selectedMode: LocationMode
 
+    @Environment(\.otpTheme) private var theme
+
     var body: some View {
         VStack(spacing: 12) {
             // Transport Mode and DateTime Selection
@@ -78,19 +80,20 @@ struct BottomControlsOverlay: View {
                 HStack(spacing: 6) {
                     Image(systemName: hasAdvancedOptionsSet ? "ellipsis.circle.fill" : "ellipsis.circle")
                         .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(theme.primaryColor)
                     LocalizedText("bottom.advanced_options")
                         .font(.system(size: 14, weight: .medium))
 
                     if hasAdvancedOptionsSet {
                         Circle()
-                            .fill(.blue)
+                            .fill(theme.primaryColor)
                             .frame(width: 6, height: 6)
                     }
                 }
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
-                .background(hasAdvancedOptionsSet ? Color(.systemBlue).opacity(0.1) : Color(.systemGray6))
+                .background(hasAdvancedOptionsSet ? theme.primaryColor.opacity(0.1) : Color(.systemGray6))
                 .cornerRadius(8)
             }
 
@@ -123,7 +126,7 @@ struct BottomControlsOverlay: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
                     .background(
-                        tripPlannerVM.canPlanTrip ? Color.accentColor : Color(.systemGray5)
+                        tripPlannerVM.canPlanTrip ? theme.primaryColor : Color(.systemGray5)
                     )
                     .cornerRadius(8)
                 }
@@ -133,7 +136,7 @@ struct BottomControlsOverlay: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
+                .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -4)
         )
         .padding(.horizontal, 16)

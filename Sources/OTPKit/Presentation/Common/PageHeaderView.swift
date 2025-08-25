@@ -12,6 +12,8 @@ struct PageHeaderView: View {
     private let text: String
     private let action: VoidBlock?
 
+    @Environment(\.otpTheme) private var theme
+
     init(text: String, action: VoidBlock? = nil) {
         self.text = text
         self.action = action
@@ -28,6 +30,7 @@ struct PageHeaderView: View {
             }, label: {
                 Image(systemName: "xmark.circle.fill")
                     .font(.title)
+                    .foregroundStyle(theme.primaryColor)
             })
         }
     }

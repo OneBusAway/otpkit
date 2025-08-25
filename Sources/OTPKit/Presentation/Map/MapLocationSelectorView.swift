@@ -10,6 +10,7 @@ import MapKit
 import SwiftUI
 
 public struct MapLocationSelectorView: View {
+    @Environment(\.otpTheme) private var theme
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
 
     let locationMode: LocationMode
@@ -42,6 +43,7 @@ public struct MapLocationSelectorView: View {
 
                 UserAnnotation()
             }
+            .tint(theme.primaryColor)
             .mapControls {
                 MapCompass()
                 MapPitchToggle()
@@ -60,11 +62,15 @@ private extension MapLocationSelectorView {
     @MapContentBuilder
     var locationAnnotations: some MapContent {
         if let origin = tripPlannerVM.selectedOrigin {
-            locationAnnotation(for: origin, titleKey: "map.origin", color: .green)
+            locationAnnotation(for: origin,
+                               titleKey: Localization.string("map.origin"),
+                               color: theme.primaryColor)
         }
 
         if let destination = tripPlannerVM.selectedDestination {
-            locationAnnotation(for: destination, titleKey: "map.destination", color: .red)
+            locationAnnotation(for: destination,
+                               titleKey: Localization.string("map.destination"),
+                               color: theme.primaryColor)
         }
     }
 
@@ -128,15 +134,15 @@ private extension MapLocationSelectorView {
         }
     }
 
-    func locationAnnotation(for location: Location, titleKey: String, color: Color) -> some MapContent {
-        Annotation(Localization.string(titleKey), coordinate: location.coordinate) {
-            HStack(spacing: 6) {
-                Image(systemName: "mappin.circle.fill")
-                    .foregroundColor(color)
-                    .font(.title2)
-                    .background(Color.white, in: Circle())
-            }
-        }
+    func locationAnnotation(
+        for location: Location,
+        titleKey: String,
+        color: Color,
+        systemImage: String = "mappin.circle.fill"
+    ) -> some MapContent {
+        Marker(titleKey, systemImage: systemImage, coordinate: location.coordinate)
+            .tint(color)
+            .annotationTitles(.visible)
     }
 }
 
@@ -197,7 +203,7 @@ private extension MapLocationSelectorView {
         case "WALK":
             return .gray
         case "BUS", "TRAM", "TRAIN", "SUBWAY", "FERRY":
-            return Color(.systemBlue)
+            return theme.primaryColor
         case "BIKE", "CAR":
             return .orange
         default:

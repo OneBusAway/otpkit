@@ -87,7 +87,7 @@ public struct TripPlannerResultsView: View {
             Text("Preview")
                 .padding(30)
                 .background(theme.primaryColor)
-                .foregroundStyle(.foreground)
+                .foregroundStyle(.white)
                 .fontWeight(.bold)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
