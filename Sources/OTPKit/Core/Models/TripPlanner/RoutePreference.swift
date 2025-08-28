@@ -11,7 +11,7 @@ import Foundation
 public enum RoutePreference: String, CaseIterable, Sendable {
     case fastestTrip = "fastest"
     case fewestTransfers = "transfers"
-    
+
     /// Human-readable title for the route preference
     public var title: String {
         switch self {
@@ -21,7 +21,7 @@ public enum RoutePreference: String, CaseIterable, Sendable {
             return OTPLoc("route_preference.fewest_transfers_title", comment: "Fewest transfers route preference title")
         }
     }
-    
+
     /// Description explaining what this preference optimizes for
     public var description: String {
         switch self {
@@ -31,7 +31,7 @@ public enum RoutePreference: String, CaseIterable, Sendable {
             return OTPLoc("route_preference.fewest_transfers_desc", comment: "Fewest transfers route preference description")
         }
     }
-    
+
     /// System icon name for this route preference
     public var iconName: String {
         switch self {
@@ -41,7 +41,7 @@ public enum RoutePreference: String, CaseIterable, Sendable {
             return "arrow.triangle.swap"
         }
     }
-    
+
     /// Accessibility description for VoiceOver
     public var accessibilityDescription: String {
         return "\(title): \(description)"

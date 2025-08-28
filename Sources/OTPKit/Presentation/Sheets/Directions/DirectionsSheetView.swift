@@ -12,7 +12,7 @@ import MapKit
 struct DirectionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
-  
+
     @Environment(\.otpTheme) private var theme
 
     @Binding var sheetDetent: PresentationDetent
@@ -21,7 +21,7 @@ struct DirectionsSheetView: View {
     public init(sheetDetent: Binding<PresentationDetent>) {
         _sheetDetent = sheetDetent
     }
-    
+
     public var body: some View {
         ScrollViewReader { proxy in
             List {

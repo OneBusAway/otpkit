@@ -42,6 +42,18 @@ public final class UserDefaultsServices {
             []
         }
 
+        // Check if location already exists (by title and coordinates to avoid duplicates)
+        let locationExists = locations.contains { existingLocation in
+            existingLocation.title == data.title &&
+            abs(existingLocation.latitude - data.latitude) < 0.0001 &&
+            abs(existingLocation.longitude - data.longitude) < 0.0001
+        }
+
+        if locationExists {
+            // Location already exists, no need to add again
+            return .success(())
+        }
+
         locations.append(data)
 
         let encoder = JSONEncoder()
@@ -124,12 +136,37 @@ public final class UserDefaultsServices {
         case .failure:
             []
         }
-        
+
         if var existingLocation = locations.first(where: { $0.id == data.id }) {
             existingLocation.date = Date()
             locations.update(with: existingLocation)
         }
-        
+
+        let encoder = JSONEncoder()
+        do {
+            let encoded = try encoder.encode(locations)
+            userDefaults.set(encoded, forKey: recentLocationsKey)
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    // MARK: - Delete Recent Location
+    func deleteRecentLocation(with id: UUID) -> Result<Void, Error> {
+        var locations: Set<Location>
+
+        switch getRecentLocations() {
+        case let .success(existingLocations):
+            locations = Set(existingLocations)
+        case let .failure(error):
+            return .failure(error)
+        }
+
+        if let index = locations.firstIndex(where: { $0.id == id }) {
+            locations.remove(at: index)
+        }
+
         let encoder = JSONEncoder()
         do {
             let encoded = try encoder.encode(locations)
@@ -143,6 +180,7 @@ public final class UserDefaultsServices {
     // MARK: - User Defaults Utils
 
     func deleteAllObjects() {
+
         userDefaults.removeObject(forKey: savedLocationsKey)
         userDefaults.removeObject(forKey: recentLocationsKey)
     }

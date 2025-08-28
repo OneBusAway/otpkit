@@ -14,33 +14,30 @@ struct FavouriteLocationsSheet: View {
     @State private var isLoading = true
     @State private var errorMessage: String?
 
+    @Environment(\.otpTheme) private var theme
+
     let selectedMode: LocationMode
     let onLocationSelected: (Location) -> Void
 
     var body: some View {
-        NavigationView {
-            VStack {
-                if isLoading {
-                    ProgressView("Loading favourites...")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if favouriteLocations.isEmpty {
-                    emptyStateView()
-                } else {
-                    locationsList()
-                }
+        VStack(spacing: 0) {
+            PageHeaderView(text: "Favourite Stops") {
+                dismiss()
             }
-            .navigationTitle("Favourite Stops")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+
+            if isLoading {
+                ProgressView("Loading favourites...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if favouriteLocations.isEmpty {
+                emptyStateView()
+            } else {
+                locationsList()
             }
-            .onAppear {
-                loadFavouriteLocations()
-            }
+        }
+        .onAppear {
+            loadFavouriteLocations()
         }
     }
 
@@ -53,14 +50,21 @@ struct FavouriteLocationsSheet: View {
                 LocationRowView(location: location, showHeart: true)
             }
             .foregroundStyle(.foreground)
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button(role: .destructive) {
+                    deleteLocation(location)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
         }
     }
 
     private func emptyStateView() -> some View {
         VStack(spacing: 16) {
             Image(systemName: "heart.slash")
-                .font(.system(size: 50))
-                .foregroundColor(.gray)
+                .font(.system(size: 40))
+                .foregroundColor(theme.primaryColor)
 
             Text("No Favourite Stops")
                 .font(.title2)
@@ -88,5 +92,22 @@ struct FavouriteLocationsSheet: View {
         }
 
         isLoading = false
+    }
+
+    private func deleteLocation(_ location: Location) {
+        // Optimistically remove from UI first
+        favouriteLocations.removeAll { $0.id == location.id }
+
+        // Then delete from UserDefaults
+        let result = UserDefaultsServices.shared.deleteFavoriteLocationData(with: location.id)
+        switch result {
+        case .success:
+            // Successfully deleted
+            break
+        case .failure(let error):
+            print("Failed to delete favorite location: \(error.localizedDescription)")
+            // Reload data to restore UI state if deletion failed
+            loadFavouriteLocations()
+        }
     }
 }

@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import os.log
 
 /// Protocol defining the interface for trip planning API services
 /// Enables plugin architecture supporting different backends (REST, GraphQL, etc.)
 public protocol APIService {
+    /// Logger for API operations
+    var logger: os.Logger { get }
+
     /// Fetches a trip plan from the API service
     /// - Parameter request: The trip planning request with origin, destination, and preferences
     /// - Returns: Response containing available trip itineraries
     func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse
 }
-

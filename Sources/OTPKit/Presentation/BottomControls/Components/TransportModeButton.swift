@@ -11,7 +11,7 @@ struct TransportModeButton: View {
     let icon: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     @Environment(\.otpTheme) private var theme
 
     var body: some View {

@@ -11,7 +11,7 @@ struct LocationRowView: View {
     let location: Location
     var showHeart: Bool = false
     var showClock: Bool = false
-    
+
     @Environment(\.otpTheme) private var theme
 
     var body: some View {

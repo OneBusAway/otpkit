@@ -146,7 +146,7 @@ struct OnboardingView: View {
             otpConfiguration = OTPConfiguration(
                 otpServerURL: selectedRegionInfo.url,
                 themeConfiguration: OTPThemeConfiguration(
-                    primaryColor: .obaTheme,
+                    primaryColor: .indigo,
                     secondaryColor: .gray
                 ),
                 region: .region(MKCoordinateRegion(

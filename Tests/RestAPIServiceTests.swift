@@ -19,42 +19,42 @@ import XCTest
 import CoreLocation
 
 class RestAPIServiceTests: OTPTestCase {
-    
+
     private var restAPIService: RestAPIService!
     private var mockDataLoader: MockDataLoader!
-    
+
     override func setUp() {
         super.setUp()
         restAPIService = buildRestAPIService()
         mockDataLoader = (restAPIService.dataLoader as? MockDataLoader)!
     }
-    
+
     func testFetchPlanWithTripPlanRequest() async throws {
         // Arrange
         let request = createTripPlanRequest(transportModes: [.transit, .walk], maxWalkDistance: 800)
         let expectedURL = createExpectedURL(for: request)
-        
+
         mockDataLoader.mock(URLString: expectedURL, with: Fixtures.loadData(file: "plan_basic_case.json"))
-        
+
         // Act
         let result = try await restAPIService.fetchPlan(request)
-        
+
         // Assert
         XCTAssertNotNil(result, "Response should not be nil")
         XCTAssertNotNil(result.plan, "Plan should not be nil")
         XCTAssertEqual(result.plan?.itineraries.count, 3, "Should return 3 itineraries")
     }
-    
+
     func testFetchPlanWithDifferentTransportModes() async throws {
         // Arrange
         let request = createTripPlanRequest(transportModes: [.bike, .walk], maxWalkDistance: 1000)
         let expectedURL = createExpectedURL(for: request)
-        
+
         mockDataLoader.mock(URLString: expectedURL, with: Fixtures.loadData(file: "plan_basic_case.json"))
-        
+
         // Act
         let result = try await restAPIService.fetchPlan(request)
-        
+
         // Assert
         XCTAssertNotNil(result, "Response should not be nil")
         XCTAssertNotNil(result.plan, "Plan should not be nil")
@@ -74,7 +74,7 @@ private extension RestAPIServiceTests {
            XCTFail("Failed to parse test dates")
            fatalError("Test setup failure")
        }
-       
+
        return TripPlanRequest(
            origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
            destination: CLLocationCoordinate2D(latitude: 47.6154, longitude: -122.3208),
@@ -86,7 +86,7 @@ private extension RestAPIServiceTests {
            arriveBy: arriveBy
        )
    }
-   
+
    func createExpectedURL(for request: TripPlanRequest) -> String {
        let baseURL = "https://otp.prod.sound.obaweb.org/otp/routers/default/plan"
        let fromPlace = request.origin.formattedForAPI
@@ -97,7 +97,7 @@ private extension RestAPIServiceTests {
        let arriveBy = request.arriveBy ? "true" : "false"
        let maxWalkDistance = String(request.maxWalkDistance)
        let wheelchair = request.wheelchairAccessible ? "true" : "false"
-       
+
        return "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
    }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 /// Represents an itinerary leg that uses a vehicular method of conveyance.
 struct ItineraryLegVehicleView: View {
     let leg: Leg
-    
+
     @Environment(\.otpTheme) private var theme
 
     var body: some View {

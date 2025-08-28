@@ -136,8 +136,8 @@ struct BottomControlsOverlay: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -4)
+                .fill(.ultraThickMaterial)
+                .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: -2)
         )
         .padding(.horizontal, 16)
     }
@@ -175,9 +175,9 @@ struct BottomControlsOverlay: View {
 import MapKit
 
 #Preview {
-    ZStack{
+    ZStack {
         Map()
-        VStack{
+        VStack {
             Spacer()
             BottomControlsOverlay(selectedMode: .constant(.destination))
                 .environmentObject(PreviewHelpers.mockTripPlannerViewModel())

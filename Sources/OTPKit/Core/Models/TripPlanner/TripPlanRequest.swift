@@ -35,7 +35,7 @@ public struct TripPlanRequest: Codable, Hashable {
     public let wheelchairAccessible: Bool
     /// Whether the time parameter refers to arrival time (true) or departure time (false)
     public let arriveBy: Bool
-    
+
     /// Creates a new trip plan request
     /// - Parameters:
     ///   - origin: The starting location coordinates
@@ -65,12 +65,12 @@ public struct TripPlanRequest: Codable, Hashable {
         self.wheelchairAccessible = wheelchairAccessible
         self.arriveBy = arriveBy
     }
-    
+
     /// Converts the transport modes to the API string format
     public var transportModesString: String {
         transportModes.map { $0.rawValue }.joined(separator: ",")
     }
-    
+
     /// Validates the request parameters
     /// - Returns: True if the request is valid, false otherwise
     public func isValid() -> Bool {
@@ -81,22 +81,22 @@ public struct TripPlanRequest: Codable, Hashable {
               destination.longitude >= -180 && destination.longitude <= 180 else {
             return false
         }
-        
+
         // Validate max walk distance
         guard maxWalkDistance > 0 else {
             return false
         }
-        
+
         // Validate that at least one transport mode is selected
         guard !transportModes.isEmpty else {
             return false
         }
-        
+
         return true
     }
-    
+
     // MARK: - Hashable Implementation
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(origin.latitude)
         hasher.combine(origin.longitude)
@@ -109,7 +109,7 @@ public struct TripPlanRequest: Codable, Hashable {
         hasher.combine(wheelchairAccessible)
         hasher.combine(arriveBy)
     }
-    
+
     public static func == (lhs: TripPlanRequest, rhs: TripPlanRequest) -> Bool {
         return lhs.origin.latitude == rhs.origin.latitude &&
                lhs.origin.longitude == rhs.origin.longitude &&
@@ -124,8 +124,6 @@ public struct TripPlanRequest: Codable, Hashable {
     }
 }
 
-
-
 // MARK: - CLLocationCoordinate2D Codable Extension
 
 extension CLLocationCoordinate2D: Codable {
@@ -135,18 +133,18 @@ extension CLLocationCoordinate2D: Codable {
         let longitude = try container.decode(Double.self, forKey: .longitude)
         self.init(latitude: latitude, longitude: longitude)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(latitude, forKey: .latitude)
         try container.encode(longitude, forKey: .longitude)
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case latitude
         case longitude
     }
-    
+
     /// Formats the coordinate as a string for API requests
     public var formattedForAPI: String {
         return String(format: "%.4f,%.4f", latitude, longitude)

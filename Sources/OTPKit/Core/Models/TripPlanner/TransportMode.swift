@@ -45,7 +45,7 @@ public enum TransportMode: String, CaseIterable, Codable {
             return "car"
         }
     }
-    
+
     /// Returns the appropriate transport modes for API requests
     /// Some UI modes like transit require multiple API modes (transit + walk)
     public var apiModes: [TransportMode] {

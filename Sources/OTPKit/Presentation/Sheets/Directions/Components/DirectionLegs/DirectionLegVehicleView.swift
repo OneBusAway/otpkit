@@ -10,6 +10,8 @@ import SwiftUI
 struct DirectionLegVehicleView: View {
     let leg: Leg
 
+    @Environment(\.otpTheme) private var theme
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             // Boarding section
@@ -42,6 +44,7 @@ struct DirectionLegVehicleView: View {
                         Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .fontWeight(.light)
                     }
                 }
             }
@@ -57,7 +60,7 @@ struct DirectionLegVehicleView: View {
                     Text("Deboard at")
                         .font(.headline)
 
-                    Text(leg.to.name ?? "")
+                    Text(leg.to.name)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
@@ -73,6 +76,7 @@ struct DirectionLegVehicleView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .fontWeight(.light)
             }
         }
     }

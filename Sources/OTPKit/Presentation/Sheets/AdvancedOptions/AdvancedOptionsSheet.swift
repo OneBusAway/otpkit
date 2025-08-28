@@ -13,10 +13,10 @@ struct AdvancedOptionsSheet: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.otpTheme) private var theme
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
-    
+
     @State private var selectedDate: Date = Date()
     @State private var selectedTime: Date = Date()
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -45,7 +45,7 @@ struct AdvancedOptionsSheet: View {
 // MARK: - View Components
 
 private extension AdvancedOptionsSheet {
-    
+
     var departureTimeSection: some View {
         Section(OTPLoc("advanced_options.departure_time_title", comment: "Departure time section title")) {
             ForEach(TimePreference.allCases, id: \.self) { preference in
@@ -67,18 +67,18 @@ private extension AdvancedOptionsSheet {
             }
         }
     }
-    
+
     var accessibilitySection: some View {
         Section {
             HStack {
                 Image(systemName: "figure.roll")
                     .foregroundColor(theme.primaryColor)
                     .frame(width: 24)
-                
+
                 Text(OTPLoc("advanced_options.wheelchair_accessible", comment: "Wheelchair accessible toggle label"))
-                
+
                 Spacer()
-                
+
                 Toggle("", isOn: $tripPlannerVM.isWheelchairAccessible)
                     .labelsHidden()
                     .tint(theme.primaryColor)
@@ -90,7 +90,7 @@ private extension AdvancedOptionsSheet {
             Text(OTPLoc("advanced_options.wheelchair_footer", comment: "Footer text explaining wheelchair accessibility"))
         }
     }
-    
+
     var routeOptimizationSection: some View {
         Section(OTPLoc("advanced_options.route_optimization_title", comment: "Route optimization section title")) {
             ForEach(RoutePreference.allCases, id: \.self) { preference in
@@ -105,14 +105,14 @@ private extension AdvancedOptionsSheet {
             }
         }
     }
-    
+
     var walkingDistanceSection: some View {
         Section(OTPLoc("advanced_options.walking_distance_title", comment: "Walking distance section title")) {
             HStack {
                 Image(systemName: "figure.walk")
                     .foregroundColor(theme.primaryColor)
                     .frame(width: 24)
-                
+
                 Picker(OTPLoc("advanced_options.max_walking_distance", comment: "Maximum walking distance picker label"), selection: $tripPlannerVM.maxWalkingDistance) {
                     ForEach(WalkingDistance.allCases, id: \.self) { distance in
                         Text(distance.title).tag(distance)
@@ -125,7 +125,7 @@ private extension AdvancedOptionsSheet {
             }
         }
     }
-    
+
     var cancelButton: some View {
         Button(OTPLoc("advanced_options.cancel", comment: "Cancel button text")) {
             dismiss()
@@ -133,7 +133,7 @@ private extension AdvancedOptionsSheet {
         .foregroundColor(theme.secondaryColor)
         .accessibilityLabel(OTPLoc("advanced_options.cancel_accessibility", comment: "Cancel button accessibility label"))
     }
-    
+
     var doneButton: some View {
         Button(OTPLoc("advanced_options.done", comment: "Done button text")) {
             saveAdvancedOptions()
@@ -148,7 +148,7 @@ private extension AdvancedOptionsSheet {
 // MARK: - Private Methods
 
 private extension AdvancedOptionsSheet {
-    
+
     func syncWithViewModel() {
         if let departureDate = tripPlannerVM.departureDate {
             selectedDate = departureDate
@@ -157,7 +157,7 @@ private extension AdvancedOptionsSheet {
             selectedTime = departureTime
         }
     }
-    
+
     func saveAdvancedOptions() {
         switch tripPlannerVM.timePreference {
         case .leaveNow:

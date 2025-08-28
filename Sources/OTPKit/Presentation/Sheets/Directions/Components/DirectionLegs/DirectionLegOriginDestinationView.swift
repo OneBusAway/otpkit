@@ -24,6 +24,7 @@ struct DirectionLegOriginDestinationView: View {
                 .font(.system(size: 24))
                 .padding(8)
                 .background(theme.primaryColor)
+                .foregroundStyle(.white)
                 .clipShape(Circle())
                 .frame(width: 40, height: 40)
                 .padding(.bottom, 16)

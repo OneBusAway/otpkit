@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import os.log
 
 // swiftlint:disable function_parameter_count
 
@@ -22,6 +23,7 @@ import Foundation
 public actor RestAPIService: APIService {
     public let baseURL: URL
     public nonisolated let dataLoader: URLDataLoader
+    public nonisolated let logger = os.Logger(subsystem: "otpkit", category: "RestAPIService")
 
     /// Creates a REST API client
     /// - Parameters:
@@ -77,19 +79,29 @@ public actor RestAPIService: APIService {
         ]
 
         let request = URLRequest(url: components.url!)
-        let (data, response) = try await dataLoader.data(for: request)
+        logger.info("Fetching trip plan: \(components.url!.absoluteString)")
 
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            httpResponse.statusCode == 200
-        else {
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            throw OTPKitError.apiError("Server returned invalid response", statusCode: statusCode)
+        do {
+            let (data, response) = try await dataLoader.data(for: request)
+
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                httpResponse.statusCode == 200
+            else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                logger.error("API error - Status: \(statusCode), URL: \(components.url!.absoluteString)")
+                throw OTPKitError.apiError("Server returned invalid response", statusCode: statusCode)
+            }
+
+            logger.info("Received response: \(httpResponse.statusCode) - \(data.count) bytes")
+
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .millisecondsSince1970
+            return try decoder.decode(OTPResponse.self, from: data)
+        } catch {
+            logger.error("Network error: \(error.localizedDescription)")
+            throw error
         }
-
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .millisecondsSince1970
-        return try decoder.decode(OTPResponse.self, from: data)
     }
 
     /// Builds a URL for the given endpoint

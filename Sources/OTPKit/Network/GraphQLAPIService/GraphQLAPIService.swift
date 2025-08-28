@@ -15,9 +15,13 @@
  */
 
 import Foundation
+import os.log
 
 public actor GraphQLAPIService: APIService {
+    public nonisolated let logger = os.Logger(subsystem: "com.otpkit", category: "GraphQLAPI")
+
     public func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
-       fatalError("GraphQL API service is not yet implemented. Please use RestAPIService instead.")
+        logger.warning("GraphQL API service not yet implemented")
+        fatalError("GraphQL API service is not yet implemented. Please use RestAPIService instead.")
     }
 }

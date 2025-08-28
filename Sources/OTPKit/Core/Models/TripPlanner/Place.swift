@@ -29,13 +29,13 @@ public struct Place: Codable, Hashable {
 
     /// Type of vertex representing the place, such as 'NORMAL', 'STOP', or 'STATION'.
     public let vertexType: String
-    
-    ///StopId of the stop
+
+    /// StopId of the stop
     public let stopId: String?
-    
-    //StopCode of the stop
+
+    // StopCode of the stop
     public let stopCode: String?
-    
+
     /// Custom initializer for creating Place instances
     public init(name: String,
                 lon: Double,
