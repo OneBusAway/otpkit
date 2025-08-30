@@ -13,7 +13,7 @@
 
 # Introduction
 OpenTripPlanner library for iOS, written in Swift.
-**OTPKit** is a reusable library that powers trip planning in the [OneBusAway iOS app](https://onebusaway.org/) and can be integrated into any iOS application.  
+**OTPKit** is a reusable library that powers trip planning in the [OneBusAway iOS app](https://github.com/OneBusAway/onebusaway-ios) and can be integrated into any iOS application.  
 
 - Compatible with **iOS 17+**  
 - Works with **OpenTripPlanner 1.5.x and higher**
