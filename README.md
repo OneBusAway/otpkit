@@ -33,6 +33,8 @@ dependencies: [
 ``` 
 ### SwiftUI Usage
 ```swift
+import OTPKit
+
 struct ContentView: View {
    var body: some View {
        // 1. Configure OTPKit with server URL and theme
@@ -56,6 +58,8 @@ struct ContentView: View {
 ### UIKit Usage
 
 ```swift
+import OTPKit
+
 let config = OTPConfiguration(
     otpServerURL: URL(string: "https://your-otp-server.com")!,
     region: .userLocation(fallback: .automatic)
