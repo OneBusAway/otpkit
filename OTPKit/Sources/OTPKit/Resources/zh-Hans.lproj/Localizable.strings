@@ -1,0 +1,94 @@
+/*
+ Localizable.strings (Simplified Chinese - zh-Hans)
+ */
+
+/* Test */
+"test_loc" = "来自 OTPKit 的问候";
+
+/* Titles */
+"error.network.title" = "网络错误";
+"error.trip_planning.title" = "行程规划错误";
+
+/* Messages */
+"error.api.message" = "API 错误：%@";
+"error.trip_planning.message" = "行程规划失败：%@";
+"error.missing_locations.message" = "请选择起点和终点位置。";
+"error.unknown" = "发生未知错误。";
+
+/* Map */
+"map.origin" = "起点";
+"map.destination" = "终点";
+"map.finding" = "正在查找...";
+"map.searching_address" = "正在搜索地址";
+
+/* Loading */
+"loading.planning_trip" = "正在规划您的行程...";
+
+/* Time Selection */
+"time_selection.title" = "时间选择";
+"time_selection.date" = "日期";
+"time_selection.time" = "时间";
+"time_selection.select_date_accessibility" = "选择出发日期";
+"time_selection.select_time_accessibility" = "选择出发时间";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "现在出发";
+"time_preference.depart_at_title" = "定时出发";
+"time_preference.arrive_by_title" = "定时到达";
+"time_preference.leave_now_desc" = "立即开始您的行程";
+"time_preference.depart_at_desc" = "在指定时间出发";
+"time_preference.arrive_by_desc" = "在指定时间到达";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "最快路线";
+"route_preference.fewest_transfers_title" = "最少换乘";
+"route_preference.fastest_trip_desc" = "优先考虑最短旅行时间";
+"route_preference.fewest_transfers_desc" = "最大程度减少换乘次数";
+
+/* Search Bar */
+"search_bar.placeholder" = "搜索地点";
+
+/* Trip Results */
+"trip_results.preview_button" = "预览";
+"trip_results.cancel_button" = "取消";
+"trip_results.no_trips_found" = "未找到行程";
+"trip_results.duration_format" = "%d 分钟";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "取消";
+"trip_preview.start_button" = "开始";
+
+/* Option Row */
+"option_row.selected_hint" = "已选择";
+"option_row.tap_to_select_hint" = "点击选择";
+"option_row.preview_section" = "预览";
+"option_row.fastest_trip_title" = "最快路线";
+"option_row.fastest_trip_desc" = "优先考虑最短旅行时间";
+"option_row.fewest_transfers_title" = "最少换乘";
+"option_row.fewest_transfers_desc" = "最大程度减少换乘次数";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "出发时间";
+"advanced_options.route_optimization_title" = "路线优化";
+"advanced_options.walking_distance_title" = "步行距离";
+"advanced_options.wheelchair_accessible" = "无障碍通行";
+"advanced_options.wheelchair_accessible_label" = "无障碍路线";
+"advanced_options.wheelchair_toggle_hint" = "切换以查找适合移动设备的路线";
+"advanced_options.wheelchair_footer" = "查找适合移动设备和轮椅的路线";
+"advanced_options.max_walking_distance" = "最大步行距离";
+"advanced_options.cancel" = "取消";
+"advanced_options.done" = "完成";
+"advanced_options.cancel_accessibility" = "取消高级选项";
+"advanced_options.save_accessibility" = "保存高级选项";
+
+/* Bottom Controls */
+"bottom.from" = "从";
+"bottom.to" = "到";
+"bottom.current_location" = "当前位置";
+"bottom.choose_destination" = "选择目的地";
+"bottom.search" = "搜索";
+"bottom.options" = "选项";
+"bottom.directions" = "路线";
+"bottom.advanced_options" = "高级选项";
+
+
