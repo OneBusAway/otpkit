@@ -110,7 +110,7 @@ The goal was to build the first **Apache 2.0-licensed trip planning library** fo
 - Successfully integrated into the OneBusAway iOS app  
 
 ### Current State
-OTPKit is now available for testing via the **OTPKitDemo** app, has been successfully integrated into the **OneBusAway iOS app**, supports both **SwiftUI** and **UIKit** integration, includes support for the **REST API of OpenTripPlanner**, and currently provides approximately **95% localization coverage**.
+OTPKit is now available for testing via the **OTPKitDemo** app and has been successfully integrated into the **OneBusAway iOS app**, where it can also be tested. It supports both **SwiftUI** and **UIKit** integration, includes support for the **REST API of OpenTripPlanner**, and currently provides approximately **95% localization coverage**.  
 
 ### What's Left To Do
 Next steps include adding GraphQL support for OTP 2.x, extending multi-modal support, collecting feedback, making minor UI improvements, expanding localization coverage (currently ~95%), adding more test coverage for edge cases, and exploring possible support for real-time GTFS-RT.
