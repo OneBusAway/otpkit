@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		938180AC2E63A52B001B363B /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938180AB2E63A52B001B363B /* OTPKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		9399D5FB2E638C13007D2E0D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -41,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				938180AC2E63A52B001B363B /* OTPKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +59,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		938180AA2E63A52B001B363B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9399D5E32E638C12007D2E0D = {
 			isa = PBXGroup;
 			children = (
@@ -61,6 +73,7 @@
 				9399D6172E638C31007D2E0D /* OTPKit */,
 				9399D5EE2E638C12007D2E0D /* OTPKitDemo */,
 				9399D5FD2E638C13007D2E0D /* OTPKitDemoTests */,
+				938180AA2E63A52B001B363B /* Frameworks */,
 				9399D5ED2E638C12007D2E0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +107,7 @@
 			);
 			name = OTPKitDemo;
 			packageProductDependencies = (
+				938180AB2E63A52B001B363B /* OTPKit */,
 			);
 			productName = OTPKitDemo;
 			productReference = 9399D5EC2E638C12007D2E0D /* OTPKitDemo.app */;
@@ -475,6 +489,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		938180AB2E63A52B001B363B /* OTPKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OTPKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9399D5E42E638C12007D2E0D /* Project object */;
 }
