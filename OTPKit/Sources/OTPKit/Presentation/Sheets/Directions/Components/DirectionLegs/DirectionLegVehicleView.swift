@@ -57,7 +57,7 @@ struct DirectionLegVehicleView: View {
                     Text("Deboard at")
                         .font(.headline)
 
-                    Text(leg.to.name ?? "")
+                    Text(leg.to.name)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
