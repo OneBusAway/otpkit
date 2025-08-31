@@ -102,18 +102,31 @@ This project was developed as part of **[Google Summer of Code 2025](https://sum
 **Project Duration:** May – August 2025  
 
 ### Project Goals
-The goal was to build the first **Apache 2.0-licensed trip planning library** for the **OneBusAway iOS app** to help *hundreds of thousands of people* reach their destinations, while also delivering a **reusable Swift Package (OTPKit)** for any iOS app. The goal also included creating a **production-quality trip planning framework** built in **Swift** and **SwiftUI**, designed for both reusability and real-world deployment.
+Trip planning has been the most requested feature in the **OneBusAway iOS app** for years, but until now there was no open-source, production-ready library for iOS that worked with **OpenTripPlanner (OTP)**.  
+
+**OTPKit** is the first **Apache 2.0-licensed trip planning library for iOS**, built in Swift and SwiftUI. It powers trip planning in OneBusAway, helping hundreds of thousands of people reach their destinations, and is also available as a reusable Swift Package for any iOS app.  
 
 ### What Was Done
-- Main objectives were accomplished  
+- Main objectives were accomplished
+    - Trip planning features implemented:  
+      - Multi-modal support  
+      - Date and time selection  
+      - Advanced options (arrive by, depart at, wheelchair accessibility, etc.)  
+- Developed OTPKit as a reusable Swift Package for integration into any iOS app   
 - Developed a fully working iOS library (OTPKit) for trip planning  
 - Successfully integrated into the OneBusAway iOS app  
 
 ### Current State
 OTPKit is now available for testing via the **OTPKitDemo** app and has been successfully integrated into the **OneBusAway iOS app**, where it can also be tested. It supports both **SwiftUI** and **UIKit** integration, includes support for the **REST API of OpenTripPlanner**, and currently provides approximately **95% localization coverage**.  
 
-### What's Left To Do
-Next steps include adding GraphQL support for OTP 2.x, extending multi-modal support, collecting feedback, making minor UI improvements, expanding localization coverage (currently ~95%), adding more test coverage for edge cases, and exploring possible support for real-time GTFS-RT.
+### What's Left To Do  
+
+- Add GraphQL support for OTP 2.x  
+- Extend multi-modal support  
+- Collect feedback  
+- Make minor UI improvements  
+- Add more test coverage for edge cases and UI tests  
+- Explore possible support for real-time GTFS-RT (e.g., live bus information)  
 
 ### Upstream Status
 OTPKit has been successfully integrated upstream into the **OneBusAway iOS app** 
@@ -123,22 +136,26 @@ OTPKit has been successfully integrated upstream into the **OneBusAway iOS app**
 - [PR #832 – Trip Planner Integration](https://github.com/OneBusAway/onebusaway-ios/pull/832)
 
 **OTPKit Codebase Improvements**  
-- [PR #101](https://github.com/OneBusAway/otpkit/pull/101)  
-- [PR #100](https://github.com/OneBusAway/otpkit/pull/100)  
-- [PR #99](https://github.com/OneBusAway/otpkit/pull/99)  
-- [PR #98](https://github.com/OneBusAway/otpkit/pull/98)  
-- [PR #97](https://github.com/OneBusAway/otpkit/pull/97)  
-- [PR #96](https://github.com/OneBusAway/otpkit/pull/96)  
-- [PR #95](https://github.com/OneBusAway/otpkit/pull/95)  
-- [PR #92](https://github.com/OneBusAway/otpkit/pull/92)  
-- [PR #91](https://github.com/OneBusAway/otpkit/pull/91)  
-- [PR #89](https://github.com/OneBusAway/otpkit/pull/89)  
-- [PR #86](https://github.com/OneBusAway/otpkit/pull/86)  
-- [PR #85](https://github.com/OneBusAway/otpkit/pull/85)  
-- [PR #84](https://github.com/OneBusAway/otpkit/pull/84)    
+- **[#101](https://github.com/OneBusAway/otpkit/pull/101)** - Add OTP theme
+- **[#100](https://github.com/OneBusAway/otpkit/pull/100)** - Trip planner enhancements  
+- **[#99](https://github.com/OneBusAway/otpkit/pull/99)** - Integrate theme configuration
+- **[#98](https://github.com/OneBusAway/otpkit/pull/98)** - Plugin architecture for APIs
+- **[#97](https://github.com/OneBusAway/otpkit/pull/97)** - Unit tests for TripPlannerViewModel
+- **[#96](https://github.com/OneBusAway/otpkit/pull/96)** - Multi-language support
+- **[#95](https://github.com/OneBusAway/otpkit/pull/95)** - TripPlannerView refactor
+- **[#92](https://github.com/OneBusAway/otpkit/pull/92)** - Bottom controls overlay
+- **[#91](https://github.com/OneBusAway/otpkit/pull/91)** - Main map view implementation
+- **[#89](https://github.com/OneBusAway/otpkit/pull/89)** - Core architecture restructure
+- **[#86](https://github.com/OneBusAway/otpkit/pull/86)** - Theme and config models
+- **[#85](https://github.com/OneBusAway/otpkit/pull/85)** - TripPlannerService refactor
+- **[#84](https://github.com/OneBusAway/otpkit/pull/84)** - MVVM foundation 
 
 **Pending**  
 - [PR #102 – Apply minor UI improvements, bug fixes, and lint warning cleanups](https://github.com/OneBusAway/otpkit/pull/102)
 
 ### Challenges & Learnings
 There were several challenges while developing OTPKit, especially aiming to build an Apple-quality framework. The most interesting part was learning about SwiftUI data flow across views and exploring the best architectural patterns. Making mistakes in code and learning from them, improving modularity in the codebase, and finding the balance between “perfect” and “good enough” in open-source development were some of the key learnings.  
+
+### Acknowledgment  
+
+I want to thank my mentor ♡ [**Aaron Brethorst**](https://github.com/aaronbrethorst) for his support, guidance, thoughtful code reviews, and technical assistance throughout the project. I’m also grateful to the **Open Transit Software Foundation** and **Google Summer of Code** for this opportunity.  
