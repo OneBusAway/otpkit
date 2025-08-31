@@ -55,7 +55,6 @@ struct BottomControlsOverlay: View {
                     title: Localization.string("bottom.from"),
                     subtitle: tripPlannerVM.selectedOriginTitle,
                     icon: "location.fill",
-                    isSelected: selectedMode == .origin,
                     hasLocation: tripPlannerVM.selectedOrigin != nil,
                     action: {
                         selectedMode = .origin
@@ -65,7 +64,6 @@ struct BottomControlsOverlay: View {
                     title: Localization.string("bottom.to"),
                     subtitle: tripPlannerVM.selectedDestinationTitle,
                     icon: "mappin",
-                    isSelected: selectedMode == .destination,
                     hasLocation: tripPlannerVM.selectedDestination != nil,
                     action: {
                         selectedMode = .destination

@@ -11,7 +11,6 @@ struct LocationButton: View {
     let title: String
     let subtitle: String
     let icon: String
-    let isSelected: Bool
     let hasLocation: Bool
     let action: () -> Void
 
@@ -48,27 +47,23 @@ struct LocationButton: View {
     }
 
     private var textColor: Color {
-        isSelected ? Color(.systemBackground) : theme.secondaryColor
+        Color(.systemBackground)
     }
 
     // Different background colors for selected, has location, and empty states
     private var backgroundColorValue: Color {
-        if isSelected {
-            return theme.primaryColor
-        } else if hasLocation {
+        if hasLocation {
             return theme.primaryColor.opacity(0.25)
         } else {
-            return Color(.systemGray6)
+            return theme.primaryColor
         }
     }
 
     private var strokeColor: Color {
-        if isSelected {
-            return theme.primaryColor.opacity(0.3)
-        } else if hasLocation {
+        if hasLocation {
             return theme.primaryColor.opacity(0.2)
         } else {
-            return Color.clear
+            return theme.primaryColor.opacity(0.3)
         }
     }
 }
@@ -80,7 +75,6 @@ struct LocationButton: View {
             title: "Current Location",
             subtitle: "123 Main Street",
             icon: "location.fill",
-            isSelected: true,
             hasLocation: true,
             action: {}
         )
@@ -90,7 +84,6 @@ struct LocationButton: View {
             title: "Home",
             subtitle: "456 Oak Avenue",
             icon: "house.fill",
-            isSelected: false,
             hasLocation: true,
             action: {}
         )
@@ -100,7 +93,6 @@ struct LocationButton: View {
             title: "Destination",
             subtitle: "Tap to set location",
             icon: "mappin",
-            isSelected: false,
             hasLocation: false,
             action: {}
         )
