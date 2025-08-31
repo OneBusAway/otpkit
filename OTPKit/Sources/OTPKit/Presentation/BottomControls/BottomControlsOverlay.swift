@@ -29,22 +29,6 @@ struct BottomControlsOverlay: View {
                             tripPlannerVM.selectTransportMode(config.mode)
                         }
                     }
-
-                    Button(action: {
-                        tripPlannerVM.present(.search)
-                    }, label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 14, weight: .medium))
-                            LocalizedText("bottom.search")
-                                .font(.system(size: 14, weight: .medium))
-                        }
-                        .foregroundColor(.primary)
-                        .frame(height: 36)
-                        .padding(.horizontal, 12)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                    })
                 }
                 .padding(.horizontal, 4)
             }
