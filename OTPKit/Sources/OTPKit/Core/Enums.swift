@@ -1,11 +1,21 @@
 //
-//  LocationType.swift
+//  Enums.swift
 //  OTPKit
 //
-//  Created by Manu on 2025-06-05.
+//  Created by Aaron Brethorst on 8/31/25.
 //
 
-import Foundation
+/// Enum to determine which direction leg view to display
+public enum DirectionLegViewType {
+    case vehicle
+    case walk
+    case unknown
+}
+
+public enum LocationMode {
+    case origin
+    case destination
+}
 
 /// Enum-based location type system to replace string-based approach
 /// This provides type safety and prevents runtime errors from typos
@@ -34,8 +44,6 @@ public enum LocationType: String, CaseIterable, Codable {
     }
 }
 
-// MARK: - Convenience Extensions
-
 public extension LocationType {
     /// Toggle between origin and destination
     var opposite: LocationType {
@@ -55,5 +63,28 @@ public extension LocationType {
         case .destination:
             return "mappin"
         }
+    }
+}
+
+/// Enum defining different overlay content types
+public enum OverlayContentType {
+    case loading
+    case mapMarking
+    case tripPlanner
+    case originDestination
+    case none
+}
+
+enum Sheet: Identifiable, Hashable {
+    case tripResults
+    case locationOptions
+    case directions
+    case search(LocationMode)
+    case advancedOptions
+
+    var id: Int {
+        var hasher = Hasher()
+        hasher.combine(self)
+        return hasher.finalize()
     }
 }
