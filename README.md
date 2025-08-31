@@ -1,93 +1,144 @@
 # OTPKit
 
+[![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
+[![iOS](https://img.shields.io/badge/iOS-17.0%2B-lightgrey.svg)](https://developer.apple.com/ios/)
+[![SPM](https://img.shields.io/badge/SPM-Supported-brightgreen.svg)](https://swift.org/package-manager/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Build](https://github.com/OneBusAway/otpkit/actions/workflows/ci.yml/badge.svg)](https://github.com/OneBusAway/otpkit/actions)
+
+
+![otpkit-showcase](https://github.com/user-attachments/assets/c5f819f0-4803-4a6e-86df-55f2677499c3)
+
+
+
+# Introduction
 OpenTripPlanner library for iOS, written in Swift.
+**OTPKit** is a reusable library that powers trip planning in the [OneBusAway iOS app](https://github.com/OneBusAway/onebusaway-ios) and can be integrated into any iOS application.  
 
-## Compatibility
+- Compatible with **iOS 17+**  
+- Works with **OpenTripPlanner 1.5.x and higher**
+- Licensed under **Apache 2.0**  
+- Provides networking, models, and APIs for building a complete trip planning experience
 
-* iOS: OTPKit is compatible with iOS 17.0 and higher.
-* OTP: OTPKit is known to be compatible with OpenTripPlanner 1.5.x and higher. It is presumed to work on earlier versions, but is not tested on them.
+## Quick Start
 
-## Architecture
+### Installation
 
-More to come on this in the future, but for now it's worth mentioning that OTPKit uses OTP 1.x's REST API to communicate with OpenTripPlanner servers because the servers we care most about this framework working with are all running on OTP 1.5.x.
+Add **OTPKit** to your iOS project using **Swift Package Manager**:  
 
-## History
+```swift
+dependencies: [
+    .package(url: "https://github.com/OneBusAway/OTPKit.git", from: "1.0.0")
+]
+``` 
+### SwiftUI Usage
+```swift
+import OTPKit
 
-This project was created by Hilmy Veradin with Aaron Brethorst as part of the [Google Summer of Code 2024](https://summerofcode.withgoogle.com/programs/2024/projects/RHtM4Lyc) program.
+struct ContentView: View {
+   var body: some View {
+       // 1. Configure OTPKit with server URL and theme
+       let config = OTPConfiguration(
+           otpServerURL: URL(string: "https://your-otp-server.com")!,
+           region: .userLocation(fallback: .automatic),
+           themeConfiguration: OTPThemeConfiguration(primaryColor: .blue, secondaryColor: .gray)
+       )
+       
+       // 2. Create API service for OpenTripPlanner
+       let apiService = RestAPIService(baseURL: config.otpServerURL)
+       
+       VStack {
+           // 3. Add complete trip planner to your app
+           OTPView(otpConfig: config, apiService: apiService)
+       }
+   }
+}
+```
 
-## Code Quality
+### UIKit Usage
 
-### Unit Testing and CI
+```swift
+import OTPKit
 
-We make extensive use of unit testing in this project to ensure that our code works as expected and our changes do not cause regressions. All PR merges are gated on unit tests passing in GitHub Actions. Please be sure to run tests locally before opening a pull request. Also, please add or update unit tests to account for changes to your code.
+let config = OTPConfiguration(
+    otpServerURL: URL(string: "https://your-otp-server.com")!,
+    region: .userLocation(fallback: .automatic)
+)
+
+let apiService = RestAPIService(baseURL: config.otpServerURL)
+let tripPlannerView = OTPView(otpConfig: config, apiService: apiService)
+
+// Embed in UIKit using UIHostingController
+let hostingController = UIHostingController(rootView: tripPlannerView)
+addChild(hostingController)
+view.addSubview(hostingController.view)
+
+```
 
 ### SwiftLint
 
-We make extensive use of [SwiftLint](https://github.com/realm/SwiftLint) in order to ensure that our code adheres to standard styles and conventions. Please install Swiftlint locally via Homebrew:
+OTPKit uses [SwiftLint](https://github.com/realm/SwiftLint) to enforce consistent code style and Swift best practices.  
+Install it locally using Homebrew:
 
-```
+```bash
 brew install swiftlint
 ```
 
-A clean bill of health from SwiftLint is required for merging pull requests.
+<hr>
 
-## License
 
-OTPKit is licensed under the Apache 2.0 license. See [LICENSE](LICENSE) for more details.
+## About the project
 
-## Additional Information
 
-As mentioned in the History section, this repo was originally created as a Google Summer of Code Project. Here is the final report:
+This project was developed as part of **[Google Summer of Code 2025](https://summerofcode.withgoogle.com/programs/2025/projects/7hA4Gs1k)**, created by **Manu Rajbhar** with guidance from **Aaron Brethorst**.  
 
-### Google Summer of Code 2024 Final Report
 
-This report covers the work completed from the start of the GSOC 2024 period in May through the end of the program in August 2024.
+### Google Summer of Code 2025 Final Report
+
+**Project:** Build a Trip Planner for OneBusAway iOS  
+**Organization:** Open Transit Software Foundation  
+**Contributor:** Manu Rajbhar  
+**Mentor:** Aaron Brethorst  
+**Project Duration:** May – August 2025  
 
 ### Project Goals
+The goal was to build the first **Apache 2.0-licensed trip planning library** for the **OneBusAway iOS app** to help *hundreds of thousands of people* reach their destinations, while also delivering a **reusable Swift Package (OTPKit)** for any iOS app. The goal also included creating a **production-quality trip planning framework** built in **Swift** and **SwiftUI**, designed for both reusability and real-world deployment.
 
-OTPKit is an OpenTripPlanner Client Library written in Swift. This project aims to encapsulate the functionalities of OpenTripPlanner. In its initial version, we aimed to integrate OTPKit into the [OneBusAway](https://github.com/OneBusAway/onebusaway-ios) app, facilitating seamless integration with existing maps and features within the OneBusAway app.
+### What Was Done
+- Main objectives were accomplished  
+- Developed a fully working iOS library (OTPKit) for trip planning  
+- Successfully integrated into the OneBusAway iOS app  
 
-#### What Was Done
+### Current State
+OTPKit is now available for testing via the **OTPKitDemo** app and has been successfully integrated into the **OneBusAway iOS app**, where it can also be tested. It supports both **SwiftUI** and **UIKit** integration, includes support for the **REST API of OpenTripPlanner**, and currently provides approximately **95% localization coverage**.  
 
-By the end of the GSOC period, several key objectives were accomplished. Most importantly, we successfully integrated OpenTripPlanner using Swift, made the MVP for OpenTripPlanner integration, and managed to make OTPKit usable as a Swift Package.
+### What's Left To Do
+Next steps include adding GraphQL support for OTP 2.x, extending multi-modal support, collecting feedback, making minor UI improvements, expanding localization coverage (currently ~95%), adding more test coverage for edge cases, and exploring possible support for real-time GTFS-RT.
 
-#### Current State
+### Upstream Status
+OTPKit has been successfully integrated upstream into the **OneBusAway iOS app** 
+#### Pull Requests
 
-OTPKit is now available on TestFlight via OTPKitDemo. We are waiting for our beta testers to try it out and gather feedback.
+**Main Integration into OneBusAway iOS**  
+- [PR #832 – Trip Planner Integration](https://github.com/OneBusAway/onebusaway-ios/pull/832)
 
-#### What's Left To Do
+**OTPKit Codebase Improvements**  
+- [PR #101](https://github.com/OneBusAway/otpkit/pull/101)  
+- [PR #100](https://github.com/OneBusAway/otpkit/pull/100)  
+- [PR #99](https://github.com/OneBusAway/otpkit/pull/99)  
+- [PR #98](https://github.com/OneBusAway/otpkit/pull/98)  
+- [PR #97](https://github.com/OneBusAway/otpkit/pull/97)  
+- [PR #96](https://github.com/OneBusAway/otpkit/pull/96)  
+- [PR #95](https://github.com/OneBusAway/otpkit/pull/95)  
+- [PR #92](https://github.com/OneBusAway/otpkit/pull/92)  
+- [PR #91](https://github.com/OneBusAway/otpkit/pull/91)  
+- [PR #89](https://github.com/OneBusAway/otpkit/pull/89)  
+- [PR #86](https://github.com/OneBusAway/otpkit/pull/86)  
+- [PR #85](https://github.com/OneBusAway/otpkit/pull/85)  
+- [PR #84](https://github.com/OneBusAway/otpkit/pull/84)    
 
-After receiving TestFlight feedback, the remaining tasks include integrating OTPKit into the OneBusAway App while making some improvements.
+**Pending**  
+- [PR #102 – Apply minor UI improvements, bug fixes, and lint warning cleanups](https://github.com/OneBusAway/otpkit/pull/102)
 
-#### Code Merged Upstream
-
-Some of the code that has been merged:
-
-##### Codebase improvement
-- https://github.com/OneBusAway/otpkit/pull/18
-- https://github.com/OneBusAway/otpkit/pull/28
-
-##### Main Tasks
-- https://github.com/OneBusAway/otpkit/pull/19
-- https://github.com/OneBusAway/otpkit/pull/20
-- https://github.com/OneBusAway/otpkit/pull/23
-- https://github.com/OneBusAway/otpkit/pull/31
-- https://github.com/OneBusAway/otpkit/pull/32
-- https://github.com/OneBusAway/otpkit/pull/33
-- https://github.com/OneBusAway/otpkit/pull/35
-- https://github.com/OneBusAway/otpkit/pull/39
-- https://github.com/OneBusAway/otpkit/pull/41
-- https://github.com/OneBusAway/otpkit/pull/46
-- https://github.com/OneBusAway/otpkit/pull/47
-- https://github.com/OneBusAway/otpkit/pull/54
-- https://github.com/OneBusAway/otpkit/pull/55
-- https://github.com/OneBusAway/otpkit/pull/56
-
-##### Bug Fixes
-- https://github.com/OneBusAway/otpkit/pull/58
-- https://github.com/OneBusAway/otpkit/pull/61
-- https://github.com/OneBusAway/otpkit/pull/62
-
-#### Challenges and Learnings
-
-There were several challenges and learning opportunities while developing OTPKit. Apart from developing this project using SwiftUI from scratch, the most interesting part was the main business logic: integrating SwiftUI MapKit with the OpenTripPlanner server. Additionally, creating OTPKit as a Swift Package to ensure easy library distribution was quite challenging.
+### Challenges & Learnings
+There were several challenges while developing OTPKit, especially aiming to build an Apple-quality framework. The most interesting part was learning about SwiftUI data flow across views and exploring the best architectural patterns. Making mistakes in code and learning from them, improving modularity in the codebase, and finding the balance between “perfect” and “good enough” in open-source development were some of the key learnings.  
