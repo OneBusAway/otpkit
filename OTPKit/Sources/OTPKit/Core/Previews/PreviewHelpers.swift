@@ -45,8 +45,13 @@ class PreviewHelpers {
         }
     }
 
-    static func buildItin() -> Itinerary {
-        Itinerary(
+    static func buildItin(legsCount: Int = 1) -> Itinerary {
+        var legs: [Leg] = []
+        for _ in 0..<legsCount {
+            legs.append(buildLeg())
+        }
+
+        return Itinerary(
             duration: 1800,
             startTime: Date(),
             endTime: Date().addingTimeInterval(1800),
@@ -58,17 +63,18 @@ class PreviewHelpers {
             elevationLost: 0.0,
             elevationGained: 0.0,
             transfers: 1,
-            legs: [buildLeg()]
+            legs: legs
         )
     }
 
-    static func buildLeg() -> Leg {
+    static func buildLeg(route: String? = nil, agencyName: String? = nil) -> Leg {
         Leg(
             startTime: Date(),
             endTime: Date(),
             mode: "TRAM",
-            route: nil,
-            agencyName: nil,
+            routeType: .tram,
+            route: route ?? String(Int.random(in: 1...999)),
+            agencyName: agencyName,
             from: Place(name: "foo", lon: 47, lat: -122, vertexType: ""),
             to: Place(name: "foo", lon: 47, lat: -122, vertexType: ""),
             legGeometry: LegGeometry(points: "AA@@", length: 4),
@@ -79,7 +85,7 @@ class PreviewHelpers {
             streetNames: nil,
             pathway: nil,
             steps: nil,
-            headsign: nil
+            headsign: "woot"
         )
     }
 

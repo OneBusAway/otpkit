@@ -19,6 +19,18 @@ import Foundation
 
 // swiftlint:disable identifier_name
 
+public enum RouteType: Int, Codable {
+    case nonTransit = -1
+    case tram = 0
+    case subway = 1
+    case train = 2
+    case bus = 3
+    case ferry = 4
+    case cableCar = 5
+    case gondola = 6
+    case funicular = 7
+}
+
 /// Represents a single segment or leg of a travel itinerary.
 public struct Leg: Codable, Hashable {
     /// Start time of the leg.
@@ -29,6 +41,8 @@ public struct Leg: Codable, Hashable {
 
     /// Mode of transportation used in this leg (e.g., "BUS", "TRAIN").
     public let mode: String
+
+    public let routeType: RouteType?
 
     /// Optional route identifier for this leg.
     public let route: String?

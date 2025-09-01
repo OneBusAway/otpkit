@@ -163,3 +163,15 @@ public struct TripPlannerResultsView: View {
         return dateFormatter.string(from: itinerary.startTime)
     }
 }
+
+#Preview {
+    let itineraries = [
+        PreviewHelpers.buildItin(legsCount: 3),
+        PreviewHelpers.buildItin(legsCount: 4),
+    ]
+    TripPlannerResultsView(availableItineraries: itineraries) { _ in
+        //
+    } onItineraryPreview: { _ in
+        //
+    }
+}

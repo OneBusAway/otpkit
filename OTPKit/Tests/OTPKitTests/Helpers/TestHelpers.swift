@@ -32,6 +32,7 @@ enum TestHelpers {
             startTime: now,
             endTime: now.addingTimeInterval(300),
             mode: "WALK",
+            routeType: .nonTransit,
             route: nil,
             agencyName: nil,
             from: Place(name: "A", lon: -122.0, lat: 47.0, vertexType: "NORMAL"),
