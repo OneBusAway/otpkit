@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import OSLog
 
 // swiftlint:disable function_parameter_count
 
@@ -77,6 +78,10 @@ public actor RestAPIService: APIService {
         ]
 
         let request = URLRequest(url: components.url!)
+
+        logger.info("Fetching trip plan: \(String(describing: request.url))")
+
+
         let (data, response) = try await dataLoader.data(for: request)
 
         guard
@@ -96,6 +101,8 @@ public actor RestAPIService: APIService {
     private func buildURL(endpoint: String) -> URL {
         baseURL.appending(path: endpoint)
     }
+
+    private lazy var logger = Logger(subsystem: "org.onebusaway.otpkit", category: "RESTAPIService")
 }
 
 // swiftlint:enable function_parameter_count
