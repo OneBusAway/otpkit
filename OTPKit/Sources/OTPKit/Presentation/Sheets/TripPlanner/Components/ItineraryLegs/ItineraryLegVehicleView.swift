@@ -29,12 +29,17 @@ struct ItineraryLegVehicleView: View {
     }
 
     private var imageName: String {
-        if leg.mode == "TRAM" {
-            "tram"
-        } else if leg.mode == "BUS" {
-            "bus"
-        } else {
-            ""
+        switch leg.routeType {
+        case .nonTransit: return "figure.walk"
+        case .tram: return "tram.fill"
+        case .subway: return "lightrail.fill"
+        case .train: return "tram.fill"
+        case .bus: return "bus.fill"
+        case .ferry: return "ferry.fill"
+        case .cableCar: return "cablecar.fill"
+        case .gondola: fallthrough
+        case .funicular: fallthrough
+        default: return ""
         }
     }
 
