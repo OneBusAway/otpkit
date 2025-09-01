@@ -18,29 +18,24 @@ struct RecentLocationsSheet: View {
     let onLocationSelected: (Location) -> Void
 
     var body: some View {
-        NavigationView {
-            VStack {
-                if isLoading {
-                    ProgressView("Loading recent locations...")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if recentLocations.isEmpty {
-                    emptyStateView()
-                } else {
-                    locationsList()
-                }
+        VStack(spacing: 0) {
+            PageHeaderView(text: "Recent Locations") {
+                dismiss()
             }
-            .navigationTitle("Recent Locations")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+
+            if isLoading {
+                ProgressView("Loading recent locations...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if recentLocations.isEmpty {
+                emptyStateView()
+            } else {
+                locationsList()
             }
-            .onAppear {
-                loadRecentLocations()
-            }
+        }
+        .onAppear {
+            loadRecentLocations()
         }
     }
 
@@ -49,12 +44,19 @@ struct RecentLocationsSheet: View {
             Button(action: {
                 onLocationSelected(location)
                 // Update the recent location date when selected
-                let _ = UserDefaultsServices.shared.updateRecentLocations(location)
+                _ = UserDefaultsServices.shared.updateRecentLocations(location)
                 dismiss()
             }) {
                 LocationRowView(location: location, showClock: true)
             }
             .foregroundStyle(.foreground)
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button(role: .destructive) {
+                    deleteLocation(location)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
         }
     }
 
@@ -90,5 +92,22 @@ struct RecentLocationsSheet: View {
         }
 
         isLoading = false
+    }
+
+    private func deleteLocation(_ location: Location) {
+        // Optimistically remove from UI first
+        recentLocations.removeAll { $0.id == location.id }
+
+        // Then delete from UserDefaults
+        let result = UserDefaultsServices.shared.deleteRecentLocation(with: location.id)
+        switch result {
+        case .success:
+            // Successfully deleted
+            break
+        case .failure(let error):
+            print("Failed to delete recent location: \(error.localizedDescription)")
+            // Reload data to restore UI state if deletion failed
+            loadRecentLocations()
+        }
     }
 }

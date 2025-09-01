@@ -15,10 +15,12 @@ struct OptionRowView: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.otpTheme) private var theme
+
     var body: some View {
         HStack {
             Image(systemName: iconName)
-                .foregroundColor(.blue)
+                .foregroundColor(theme.primaryColor)
                 .frame(width: 24)
 
             VStack(alignment: .leading, spacing: 2) {
@@ -33,7 +35,7 @@ struct OptionRowView: View {
 
             if isSelected {
                 Image(systemName: "checkmark")
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                     .fontWeight(.semibold)
             }
         }
@@ -43,8 +45,8 @@ struct OptionRowView: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(title): \(description)")
-        .accessibilityHint(isSelected ? 
-            OTPLoc("option_row.selected_hint", comment: "Accessibility hint for selected option") : 
+        .accessibilityHint(isSelected ?
+            OTPLoc("option_row.selected_hint", comment: "Accessibility hint for selected option") :
             OTPLoc("option_row.tap_to_select_hint", comment: "Accessibility hint for unselected option")
         )
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])

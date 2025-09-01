@@ -9,6 +9,7 @@ import XCTest
 import CoreLocation
 import MapKit
 import SwiftUI
+import os.log
 @testable import OTPKit
 
 final class TripPlannerViewModelTests: XCTestCase {
@@ -18,11 +19,13 @@ final class TripPlannerViewModelTests: XCTestCase {
 
     // MARK: - Mock API Service
     private class MockAPIService: APIService {
+        public var logger: os.Logger = os.Logger(subsystem: "otpkit", category: "MockAPIService")
+
         func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
             // Create mock request parameters
             let mockRequestParameters = RequestParameters(
                 fromPlace: "0.0,0.0",
-                toPlace: "0.0,0.0", 
+                toPlace: "0.0,0.0",
                 time: "12:00:00",
                 date: "2025-01-01",
                 mode: "TRANSIT",
@@ -30,11 +33,11 @@ final class TripPlannerViewModelTests: XCTestCase {
                 maxWalkDistance: "1000",
                 wheelchair: "false"
             )
-            
+
             // Return a mock response for testing
             return OTPResponse(
                 requestParameters: mockRequestParameters,
-                plan: nil, 
+                plan: nil,
                 error: nil
             )
         }
@@ -180,7 +183,7 @@ final class TripPlannerViewModelTests: XCTestCase {
     /// Each sheet presenter should set the expected `activeSheet`
     func test_ShowSheets_setsActiveSheet() {
         viewModel.showLocationOptions()
-        XCTAssertEqual(viewModel.activeSheet, .locationOptions)
+        XCTAssertEqual(viewModel.activeSheet, .library)
 
         viewModel.showTripResultsSheet()
         XCTAssertEqual(viewModel.activeSheet, .tripResults)

@@ -12,7 +12,7 @@ public enum TimePreference: String, CaseIterable, Sendable {
     case leaveNow = "now"
     case departAt = "depart"
     case arriveBy = "arrive"
-    
+
     /// Human-readable title for the time preference
     public var title: String {
         switch self {
@@ -24,7 +24,7 @@ public enum TimePreference: String, CaseIterable, Sendable {
             return OTPLoc("time_preference.arrive_by_title", comment: "Arrive by specific time preference title")
         }
     }
-    
+
     /// Description explaining what this preference means
     public var description: String {
         switch self {
@@ -36,7 +36,7 @@ public enum TimePreference: String, CaseIterable, Sendable {
             return OTPLoc("time_preference.arrive_by_desc", comment: "Arrive by specific time preference description")
         }
     }
-    
+
     /// System icon name for this time preference
     public var iconName: String {
         switch self {
@@ -48,7 +48,7 @@ public enum TimePreference: String, CaseIterable, Sendable {
             return "clock.badge.checkmark"
         }
     }
-    
+
     /// Whether this preference requires time selection UI
     public var requiresTimeSelection: Bool {
         switch self {
@@ -58,7 +58,7 @@ public enum TimePreference: String, CaseIterable, Sendable {
             return true
         }
     }
-    
+
     /// Accessibility description for VoiceOver
     public var accessibilityDescription: String {
         return "\(title): \(description)"

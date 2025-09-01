@@ -11,6 +11,8 @@ struct DirectionLegWalkView: View {
     let leg: Leg
     @State private var showSteps = false
 
+    @Environment(\.otpTheme) private var theme
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 16) {
@@ -19,47 +21,58 @@ struct DirectionLegWalkView: View {
                     .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Walk to \(leg.to.name)")
-                        .font(.title3)
-                        .fontWeight(.bold)
+                    HStack {
+                        Text("Walk to \(leg.to.name)")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer()
+                    }
+
+                    HStack {
+                        Text(
+                            Formatters.formatDistance(Int(leg.distance)) +
+                            ", about " +
+                            Formatters.formatTimeDuration(leg.duration)
+                        )
+                        .foregroundStyle(.gray)
+                        .fontWeight(.light)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Text(
-                        Formatters.formatDistance(Int(leg.distance)) +
-                        ", about " +
-                        Formatters.formatTimeDuration(leg.duration)
-                    )
-                    .foregroundStyle(.gray)
-                    .fixedSize(horizontal: false, vertical: true)
-                }
+                        Spacer()
 
-                Spacer()
-
-                // Toggle Button
-                if let steps = leg.steps, !steps.isEmpty {
-                    Button(action: { showSteps.toggle() }) {
-                        Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.blue)
+                        // Toggle Button
+                        if let steps = leg.steps, !steps.isEmpty {
+                            Button(action: { showSteps.toggle() }) {
+                                Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(theme.secondaryColor)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
 
-            //MARK: Expandable Steps List View
+            // MARK: Expandable Steps List View
             if showSteps, let steps = leg.steps {
                 HStack(alignment: .top, spacing: 12) {
                     // Step descriptions
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(steps, id: \.self) { step in
-                            Text(stepDescription(for: step))
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                                .fixedSize(horizontal: false, vertical: true)
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("•")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Text(stepDescription(for: step))
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                     }
                 }
-                .padding(.leading, 20)
+                .padding(.leading, 56)
             }
         }
     }

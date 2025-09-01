@@ -62,8 +62,7 @@ private extension TripPlannerView {
         VStack {
             Spacer()
             if let itinerary = tripPlannerVM.selectedItinerary,
-               tripPlannerVM.activeSheet != .directions
-            {
+               tripPlannerVM.activeSheet != .directions {
                 tripPreviewControl(for: itinerary)
             }
         }
@@ -76,6 +75,7 @@ private extension TripPlannerView {
             onCancel: tripPlannerVM.clearPreview,
             onStart: tripPlannerVM.handleItinerarySelection
         )
+        .padding()
     }
 }
 
@@ -92,12 +92,9 @@ private extension TripPlannerView {
                 onItineraryPreview: tripPlannerVM.handleItineraryPreview
             )
 
-        case .locationOptions:
-            LocationOptionsSheet(
-                selectedMode: selectedMode,
-                onLocationSelected: handleLocationSelection
-            )
-            .presentationBackground(.ultraThickMaterial)
+        case .library:
+            LibraryView(selectedMode: selectedMode)
+                .presentationBackground(.ultraThickMaterial)
 
         case .search:
             SearchSheetView(

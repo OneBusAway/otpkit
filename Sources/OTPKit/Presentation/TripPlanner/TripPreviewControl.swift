@@ -133,11 +133,7 @@ public struct TripPreviewControl: View {
         .padding(.vertical, 16)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(.white.opacity(0.2), lineWidth: 1)
-                )
+                .fill(.ultraThickMaterial)
         )
         .shadow(color: .black.opacity(0.1), radius: 20, y: 8)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: itinerary)

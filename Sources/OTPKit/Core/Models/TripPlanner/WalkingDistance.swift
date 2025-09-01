@@ -13,7 +13,7 @@ public enum WalkingDistance: Int, CaseIterable, Sendable {
     case halfMile = 805
     case oneMile = 1609
     case twoMiles = 3219
-    
+
     /// Human-readable title for the walking distance
     public var title: String {
         switch self {
@@ -27,12 +27,12 @@ public enum WalkingDistance: Int, CaseIterable, Sendable {
             return "2 miles"
         }
     }
-    
+
     /// Distance in meters for API usage
     public var meters: Int {
         return self.rawValue
     }
-    
+
     /// Accessibility description for VoiceOver
     public var accessibilityDescription: String {
         return "Maximum walking distance: \(title)"

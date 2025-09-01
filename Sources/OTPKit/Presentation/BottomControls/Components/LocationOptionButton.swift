@@ -13,7 +13,7 @@ struct LocationOptionButton: View {
     let subtitle: String
     let color: Color
     let action: () -> Void
-    
+
     @Environment(\.otpTheme) private var theme
 
     var body: some View {

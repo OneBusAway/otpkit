@@ -7,11 +7,10 @@
 
 enum Sheet: String, CaseIterable, Identifiable {
     case tripResults
-    case locationOptions
+    case library
     case directions
     case search
     case advancedOptions
 
     var id: String { rawValue }
 }
- 

@@ -8,6 +8,7 @@
 import CoreLocation
 import MapKit
 import SwiftUI
+import os.log
 
 class PreviewHelpers {
 
@@ -27,6 +28,8 @@ class PreviewHelpers {
     }
 
     public class MockAPIService: APIService {
+        public var logger: os.Logger = os.Logger(subsystem: "otpkit", category: "MockAPIService")
+
         func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
             return OTPResponse(
                 requestParameters: RequestParameters(
@@ -101,5 +104,3 @@ class PreviewHelpers {
         )
     }
 }
-
-

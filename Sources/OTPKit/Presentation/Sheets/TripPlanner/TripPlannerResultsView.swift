@@ -10,7 +10,7 @@ import SwiftUI
 public struct TripPlannerResultsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.otpTheme) private var theme
-    
+
     let availableItineraries: [Itinerary]
     let onItinerarySelected: (Itinerary) -> Void
     let onItineraryPreview: (Itinerary) -> Void
@@ -34,14 +34,20 @@ public struct TripPlannerResultsView: View {
 
     // MARK: - Body
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
+            PageHeaderView(text: "Trip Options") {
+                dismiss()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+
             if hasItineraries {
                 itinerariesList()
             } else {
                 noItinerariesView()
             }
 
-            cancelButton()
+            Spacer()
         }
     }
 
@@ -129,13 +135,6 @@ public struct TripPlannerResultsView: View {
         }
     }
 
-    private func cancelButton() -> some View {
-        Button("Cancel") {
-            dismiss()
-        }
-        .padding()
-    }
-
     // MARK: - Helper Methods
     private var hasItineraries: Bool {
         !availableItineraries.isEmpty
@@ -164,3 +163,6 @@ public struct TripPlannerResultsView: View {
     }
 }
 
+#Preview {
+    TripPlannerResultsView(availableItineraries: [PreviewHelpers.buildItin()])
+}

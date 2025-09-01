@@ -16,6 +16,7 @@ struct LocationButton: View {
     let action: () -> Void
 
     @Environment(\.otpTheme) private var theme
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Button(action: action) {
@@ -47,9 +48,14 @@ struct LocationButton: View {
         .buttonStyle(PlainButtonStyle())
     }
 
-
     private var textColor: Color {
-        isSelected ? Color(.systemBackground) : theme.secondaryColor
+        if isSelected {
+            return .white
+        } else if hasLocation {
+            return colorScheme == .dark ? .white : .primary
+        } else {
+            return .secondary
+        }
     }
 
     // Different background colors for selected, has location, and empty states

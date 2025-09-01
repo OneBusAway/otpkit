@@ -12,7 +12,7 @@ import MapKit
 public struct OTPView: View {
     /// ViewModel managing trip planning state and logic
     @StateObject private var tripPlannerVM: TripPlannerViewModel
-    
+
     /// OTP configuration for the planner
     private let otpConfig: OTPConfiguration
 

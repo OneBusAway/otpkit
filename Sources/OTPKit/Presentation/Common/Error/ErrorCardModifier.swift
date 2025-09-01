@@ -12,11 +12,11 @@ struct ErrorCardModifier: ViewModifier {
     let message: String
     let onDismiss: () -> Void
     @State private var offset: CGFloat = 1000
-    
+
     func body(content: Content) -> some View {
         ZStack {
             content
-            
+
             if isPresented {
                 VStack {
                     ErrorCardView(message: message, onDismiss: onDismiss)
@@ -50,4 +50,4 @@ extension View {
             onDismiss: onDismiss
         ))
     }
-} 
+}

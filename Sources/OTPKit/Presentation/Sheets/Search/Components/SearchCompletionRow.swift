@@ -10,7 +10,8 @@ import MapKit
 struct SearchCompletionRow: View {
     let completion: MKLocalSearchCompletion
     let onTap: () -> Void
-    
+    let onFavoritesTap: (MKLocalSearchCompletion) -> Void
+
     @Environment(\.otpTheme) private var theme
 
     var body: some View {
@@ -39,10 +40,15 @@ struct SearchCompletionRow: View {
 
                 Spacer()
 
-                // Arrow icon
-                Image(systemName: "arrow.up.left")
-                    .font(.system(size: 12))
-                    .foregroundColor(theme.secondaryColor)
+                // Plus button for favorites
+                Button(action: {
+                    onFavoritesTap(completion)
+                }) {
+                    Image(systemName: "plus.circle")
+                        .font(.system(size: 20))
+                        .foregroundColor(theme.primaryColor)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

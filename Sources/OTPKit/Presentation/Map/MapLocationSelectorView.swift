@@ -29,7 +29,7 @@ public struct MapLocationSelectorView: View {
 
     public init(
         locationMode: LocationMode
-    ){
+    ) {
         self.locationMode = locationMode
     }
 
@@ -79,7 +79,7 @@ private extension MapLocationSelectorView {
     @MapContentBuilder
     var routeOverlay: some MapContent {
         if tripPlannerVM.showingPolyline, let itinerary = tripPlannerVM.selectedItinerary {
-            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { _, leg in
                 if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
                     let polyline = MapPolyline(coordinates: coordinates)
                     let legColor = colorForLegMode(leg.mode)
@@ -97,7 +97,7 @@ private extension MapLocationSelectorView {
     @MapContentBuilder
     var legModeAnnotations: some MapContent {
         if tripPlannerVM.showingPolyline, let itinerary = tripPlannerVM.selectedItinerary {
-            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { _, leg in
                 if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
                     // Use midpoint of each leg for icon placement
                     let midIndex = coordinates.count / 2

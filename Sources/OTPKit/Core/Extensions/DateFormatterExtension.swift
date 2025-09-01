@@ -28,7 +28,7 @@ extension DateFormatter {
         formatter.dateFormat = "HH:mm"
         return formatter
     }()
-    
+
 }
 
 extension Date {
@@ -42,6 +42,5 @@ extension Date {
     var formattedTripTime: String {
         return DateFormatter.tripTimeFormatter.string(from: self)
     }
-
 
 }

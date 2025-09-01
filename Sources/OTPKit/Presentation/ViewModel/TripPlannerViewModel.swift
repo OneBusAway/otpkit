@@ -94,6 +94,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func setCurrentLocationAsOrigin() async {
         if let currentLocation = await LocationManager.shared.getCurrentLocation() {
             selectedOrigin = currentLocation
+            changeMapCamera(to: currentLocation.coordinate)
         }
     }
 
@@ -216,7 +217,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     /// Present the location options sheet
     func showLocationOptions() {
-        present(.locationOptions)
+        present(.library)
     }
 
     /// Present the trip results sheet
@@ -305,7 +306,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
         // Reset map state
         showingPolyline = false
-        region = .userLocation(fallback: .automatic)
+//        region = .userLocation(fallback: .automatic)
 
         // Clear error states
         errorMessage = nil
