@@ -98,6 +98,9 @@ private extension RestAPIServiceTests {
        let maxWalkDistance = String(request.maxWalkDistance)
        let wheelchair = request.wheelchairAccessible ? "true" : "false"
 
-       return "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
+       // swiftlint:disable:next line_length
+       let retVal = "\(baseURL)?fromPlace=\(fromPlace)&toPlace=\(toPlace)&time=\(time)&date=\(date)&mode=\(mode)&arriveBy=\(arriveBy)&maxWalkDistance=\(maxWalkDistance)&wheelchair=\(wheelchair)"
+
+       return retVal
    }
 }
