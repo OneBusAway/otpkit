@@ -26,23 +26,10 @@ xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator
 xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' build
 ```
 
-### Build the OTPKit Package
-```bash
-cd OTPKit
-swift build
-```
-
 ### Run Tests
-```bash
-# Run OTPKit package tests
-cd OTPKit
-swift test
 
-# Run demo app tests (using Swift Testing framework)
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemoTests -sdk iphonesimulator test
-
-# Run tests with specific destination
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemoTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' test
+```
+xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' test
 ```
 
 ### Linting & Code Quality
