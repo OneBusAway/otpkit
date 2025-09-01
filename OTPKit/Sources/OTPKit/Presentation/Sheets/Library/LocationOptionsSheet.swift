@@ -20,7 +20,7 @@ struct LocationOptionsSheet: View {
     @State private var showingRecents = false
 
     let selectedMode: LocationMode
-    let onLocationSelected: (Location) -> Void
+    let onLocationSelected: OnLocationSelectedHandler
 
     var body: some View {
         NavigationView {
@@ -82,7 +82,7 @@ struct LocationOptionsSheet: View {
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude
             )
-            onLocationSelected(currentLocation)
+            onLocationSelected(currentLocation, selectedMode)
         } else {
             print("Current location not available")
         }

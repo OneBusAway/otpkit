@@ -15,7 +15,7 @@ struct RecentLocationsSheet: View {
     @State private var errorMessage: String?
 
     let selectedMode: LocationMode
-    let onLocationSelected: (Location) -> Void
+    let onLocationSelected: OnLocationSelectedHandler
 
     var body: some View {
         NavigationView {
@@ -47,7 +47,7 @@ struct RecentLocationsSheet: View {
     private func locationsList() -> some View {
         List(recentLocations, id: \.id) { location in
             Button(action: {
-                onLocationSelected(location)
+                onLocationSelected(location, selectedMode)
                 // Update the recent location date when selected
                 _ = UserDefaultsServices.shared.updateRecentLocations(location)
                 dismiss()

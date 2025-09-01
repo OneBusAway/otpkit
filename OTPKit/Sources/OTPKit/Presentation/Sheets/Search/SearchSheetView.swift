@@ -13,7 +13,7 @@ struct SearchSheetView: View {
     @Environment(\.otpTheme) private var theme
 
     let selectedMode: LocationMode
-    let onLocationSelected: (Location) -> Void
+    let onLocationSelected: OnLocationSelectedHandler
 
     @State private var searchText = ""
     @State private var searchResults: [Location] = []
@@ -158,7 +158,7 @@ struct SearchSheetView: View {
                     longitude: item.placemark.coordinate.longitude
                 )
 
-                onLocationSelected(location)
+                onLocationSelected(location, selectedMode)
             }
         }
     }

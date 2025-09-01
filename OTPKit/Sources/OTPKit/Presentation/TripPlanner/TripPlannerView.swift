@@ -128,8 +128,8 @@ private extension TripPlannerView {
     }
 
     /// Handles location selection for the current mode
-    func handleLocationSelection(_ location: Location) {
-        tripPlannerVM.handleLocationSelection(location, for: selectedMode)
+    func handleLocationSelection(_ location: Location, locationMode: LocationMode) {
+        tripPlannerVM.handleLocationSelection(location, for: locationMode)
     }
 }
 
