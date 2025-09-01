@@ -212,11 +212,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     // MARK: - Sheet Presentation
 
-    /// Present the location options sheet
-    func showLocationOptions() {
-        present(.locationOptions)
-    }
-
     /// Present the trip results sheet
     func showTripResultsSheet() {
         present(.tripResults)

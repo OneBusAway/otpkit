@@ -90,7 +90,7 @@
 "bottom.search" = "Search";
 "bottom.options" = "Options";
 "bottom.directions" = "Directions";
-"bottom.advanced_options" = "Advanced Options";
+"bottom.advanced_options" = "Trip Options";
 
 // MARK: - Itinerary
 "itinerary.summary" = "Departs at %@; duration: %@";

@@ -179,8 +179,8 @@ final class TripPlannerViewModelTests: XCTestCase {
 
     /// Each sheet presenter should set the expected `activeSheet`
     func test_ShowSheets_setsActiveSheet() {
-        viewModel.showLocationOptions()
-        XCTAssertEqual(viewModel.activeSheet, .locationOptions)
+        viewModel.present(.locationOptions(.origin))
+        XCTAssertEqual(viewModel.activeSheet, .locationOptions(.origin))
 
         viewModel.showTripResultsSheet()
         XCTAssertEqual(viewModel.activeSheet, .tripResults)
@@ -188,8 +188,8 @@ final class TripPlannerViewModelTests: XCTestCase {
         viewModel.present(.directions)
         XCTAssertEqual(viewModel.activeSheet, .directions)
 
-        viewModel.present(.search)
-        XCTAssertEqual(viewModel.activeSheet, .search)
+        viewModel.present(.search(.origin))
+        XCTAssertEqual(viewModel.activeSheet, .search(.origin))
     }
 
     // MARK: - Preview & Actions

@@ -91,16 +91,16 @@ private extension TripPlannerView {
                 onItineraryPreview: tripPlannerVM.handleItineraryPreview
             )
 
-        case .locationOptions:
+        case .locationOptions(let mode):
             LocationOptionsSheet(
-                selectedMode: selectedMode,
+                selectedMode: mode,
                 onLocationSelected: handleLocationSelection
             )
             .presentationBackground(.ultraThickMaterial)
 
-        case .search:
+        case .search(let mode):
             SearchSheetView(
-                selectedMode: selectedMode,
+                selectedMode: mode,
                 onLocationSelected: handleLocationSelection
             )
 

@@ -33,29 +33,32 @@ struct LocationButton: View {
                         .foregroundColor(textColor)
                         .lineLimit(1)
                 }
-
                 Spacer()
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(backgroundColorValue)
+                    .fill(backgroundValue)
             )
         }
         .buttonStyle(PlainButtonStyle())
     }
 
     private var textColor: Color {
-        Color(.systemBackground)
+        if hasLocation {
+            return Color(.systemBackground)
+        } else {
+            return Color(.label)
+        }
     }
 
     // Different background colors for selected, has location, and empty states
-    private var backgroundColorValue: Color {
+    private var backgroundValue: Color {
         if hasLocation {
-            return theme.primaryColor.opacity(0.25)
+            return theme.primaryColor.opacity(0.6)
         } else {
-            return theme.primaryColor
+            return Color(.secondarySystemBackground)
         }
     }
 

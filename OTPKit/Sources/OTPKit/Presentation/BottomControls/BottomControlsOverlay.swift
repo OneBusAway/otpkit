@@ -12,27 +12,10 @@ import SwiftUI
 struct BottomControlsOverlay: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @Binding var selectedMode: LocationMode
-
     @Environment(\.otpTheme) private var theme
 
     var body: some View {
         VStack(spacing: 12) {
-            // Transport Mode and DateTime Selection
-            VStack(spacing: 8) {
-                HStack(spacing: 12) {
-                    ForEach(transportModes, id: \.mode) { config in
-                        TransportModeButton(
-                            mode: config.mode,
-                            icon: config.icon,
-                            isSelected: tripPlannerVM.selectedTransportMode == config.mode
-                        ) {
-                            tripPlannerVM.selectTransportMode(config.mode)
-                        }
-                    }
-                }
-                .padding(.horizontal, 4)
-            }
-
             // Location selection buttons stacked vertically
             VStack(spacing: 8) {
                 LocationButton(
@@ -41,7 +24,7 @@ struct BottomControlsOverlay: View {
                     icon: "location.fill",
                     hasLocation: tripPlannerVM.selectedOrigin != nil,
                     action: {
-                        selectedMode = .origin
+                        tripPlannerVM.present(.search(.origin))
                     }
                 )
                 LocationButton(
@@ -50,53 +33,26 @@ struct BottomControlsOverlay: View {
                     icon: "mappin",
                     hasLocation: tripPlannerVM.selectedDestination != nil,
                     action: {
-                        selectedMode = .destination
+                        tripPlannerVM.present(.search(.destination))
                     }
                 )
             }
 
-            // Advanced Options Button
-            Button(action: {
-                tripPlannerVM.present(.advancedOptions)
-            }, label: {
-                HStack(spacing: 6) {
-                    Image(systemName: hasAdvancedOptionsSet ? "ellipsis.circle.fill" : "ellipsis.circle")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(theme.primaryColor)
-                    LocalizedText("bottom.advanced_options")
-                        .font(.system(size: 14, weight: .medium))
-
-                    if hasAdvancedOptionsSet {
-                        Circle()
-                            .fill(theme.primaryColor)
-                            .frame(width: 6, height: 6)
-                    }
-                }
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 36)
-                .background(hasAdvancedOptionsSet ? theme.primaryColor.opacity(0.1) : Color(.systemGray6))
-                .cornerRadius(8)
-            })
-
-            // Action buttons
             HStack(spacing: 8) {
-                // More Options Button
-                Button(action: tripPlannerVM.showLocationOptions) {
+                Button(action: {
+                    tripPlannerVM.present(.advancedOptions)
+                }, label: {
                     HStack(spacing: 6) {
-                        Image(systemName: "ellipsis")
+                        Image(systemName: "ellipsis.circle")
                             .font(.system(size: 14, weight: .medium))
-                        LocalizedText("bottom.options")
+                        LocalizedText("bottom.advanced_options")
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundColor(.primary)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                }
+                })
+                .controlSize(.large)
+                .buttonStyle(.bordered)
 
-                // Plan Trip Button
                 Button(action: tripPlannerVM.planTrip) {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.right")
@@ -104,22 +60,18 @@ struct BottomControlsOverlay: View {
                         LocalizedText("bottom.directions")
                             .font(.system(size: 14, weight: .medium))
                     }
-                    .foregroundColor(tripPlannerVM.canPlanTrip ? .white : .secondary)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                    .background(
-                        tripPlannerVM.canPlanTrip ? theme.primaryColor : Color(.systemGray5)
-                    )
-                    .cornerRadius(8)
                 }
+                .controlSize(.large)
+                .buttonStyle(.borderedProminent)
                 .disabled(!tripPlannerVM.canPlanTrip)
             }
         }
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -4)
+                .fill(Color(.systemBackground).opacity(0.9))
+                .shadow(radius: 8)
         )
         .padding(.horizontal, 16)
     }
@@ -142,13 +94,6 @@ struct BottomControlsOverlay: View {
         tripPlannerVM.timePreference != .leaveNow ||
         tripPlannerVM.routePreference != .fastestTrip
     }
-
-    private let transportModes: [(mode: TransportMode, icon: String)] = [
-        (.transit, "tram.fill"),
-        (.walk, "figure.walk"),
-        (.bike, "bicycle"),
-        (.car, "car.fill")
-    ]
 }
 
 // MARK: - Preview
