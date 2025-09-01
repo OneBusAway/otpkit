@@ -1,0 +1,1982 @@
+{
+    "requestParameters": {
+        "date": "09-01-2025",
+        "mode": "TRANSIT,WALK",
+        "arriveBy": "false",
+        "wheelchair": "false",
+        "fromPlace": "47.5420,-122.3904",
+        "toPlace": "47.6578,-122.1433",
+        "time": "12:58 PM",
+        "maxWalkDistance": "1609"
+    },
+    "plan": {
+        "date": 1756756680000,
+        "from": {
+            "name": "Origin",
+            "lon": -122.3904,
+            "lat": 47.542,
+            "orig": "",
+            "vertexType": "NORMAL"
+        },
+        "to": {
+            "name": "Destination",
+            "lon": -122.1433,
+            "lat": 47.6578,
+            "orig": "",
+            "vertexType": "NORMAL"
+        },
+        "itineraries": [
+            {
+                "duration": 4537,
+                "startTime": 1756757330000,
+                "endTime": 1756761867000,
+                "walkTime": 1079,
+                "transitTime": 3279,
+                "waitingTime": 179,
+                "walkDistance": 1337.8206165301694,
+                "walkLimitExceeded": false,
+                "elevationLost": 0.0,
+                "elevationGained": 0.0,
+                "transfers": 1,
+                "fare": {
+                    "fare": {
+                        "senior": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        },
+                        "regular": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 525
+                        },
+                        "youth": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        }
+                    },
+                    "details": {
+                        "senior": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ],
+                        "regular": [
+                            {
+                                "fareId": "1:101",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 250
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:501",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 275
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ],
+                        "youth": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "legs": [
+                    {
+                        "startTime": 1756757330000,
+                        "endTime": 1756757574000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 286.58,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Origin",
+                            "lon": -122.3904,
+                            "lat": 47.542,
+                            "departure": 1756757330000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "to": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756757574000,
+                            "departure": 1756757575000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "mpdaHfl_jVhA?FODa@@]?CBYL?n@@N@b@H~@ZB@HDJD@Y@A@@`Bl@@@TJ",
+                            "length": 21
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 244.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 41.98,
+                                "relativeDirection": "DEPART",
+                                "streetName": "45th Avenue Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39059709203342,
+                                "lat": 47.54199974021558,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 43.304,
+                                "relativeDirection": "LEFT",
+                                "streetName": "Southwest Mills Street",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.390596,
+                                "lat": 47.541622200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 116.856,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "Fauntleroy Way Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39004800000001,
+                                "lat": 47.5415283,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 9.458,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39032230000001,
+                                "lat": 47.540502200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 74.982,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39019660000001,
+                                "lat": 47.5404963,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756757575000,
+                        "endTime": 1756759167000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 11689.436822085976,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "C Line",
+                        "agencyName": "Metro Transit",
+                        "agencyUrl": "https://kingcounty.gov/en/dept/metro",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "9C182F",
+                        "routeType": 3,
+                        "routeId": "1:102576",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772210",
+                        "headsign": "South Lake Union Downtown Seattle",
+                        "agencyId": "1",
+                        "tripId": "1:774718059",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756757574000,
+                            "departure": 1756757575000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "3rd Ave & Marion St",
+                            "stopId": "1:539",
+                            "stopCode": "539",
+                            "lon": -122.33316,
+                            "lat": 47.604805,
+                            "arrival": 1756759167000,
+                            "departure": 1756759167000,
+                            "zoneId": "21",
+                            "stopIndex": 18,
+                            "stopSequence": 395,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "icdaHhl_jVcC_AaA]c@IWE_AA}CCy@?kBAiC?u@Cc@Wa@_@UoBOyAm@uGCSI?mA?A?mCCaC?iJIiJIiJKs@?oHIiJIuCCiEEsJIClGeJKAW@S?_@?sC?Q@M@MDW?oF@kG@cG?mECYGWFk@?yA?}C?cG@eG@wF}CCc@?cD?mCCS?qA??uMIqAMq@[y@Y]e@c@GAgQcJu@?{A?I?eDGC?{BE{@?g@?e@?e@AmC??q@AgB@mABkDDuB@cHAgXCmCKeC@gA@{@?]?c@D}@?C@Q@U@OF}@J}@RaBTkCJuADiAFiB@wA?oJ@mJ?G?_LAsG?mC@gBAcD?w@Ag@Cw@IuASqECmC?yBAgBAa@OcCGiBGqCGyACeBAsBAiB?Q@S?M@MBOBKDKBKBKFIFIDGHGFGFCFEF?H?HCH?F?FBH?JDFDHFHFDHDHBHBFDJBJBJ@J@N@N?RANAPCRENENGLGHIJEDGFIDIDM@KDS@YBU?eDBaALaD?aC?qA?kA?{C?{A?kI?sA?_ACkACuBCiA?uC?cDAgF@sD?qC?iABmA@kAFw@Be@?c@Ce@Eg@GYE]Ic@M_@Oe@Qi@Yi@]kAu@gBiAu@e@q@[g@S_Aa@uCeAkE_BcE}BeAc@aA_@y@Us@O}@QmAS{@Mu@Im@Aa@?u@DcGt@u@DsBNcAFu@FcABICWB}B@[A]?cA?UCm@?k@?}@Ae@@WBg@Ne@Py@h@a@RqCzBKJ{@uCSw@Uq@o@yBm@mBm@mBo@sBc@yAGSsBjB",
+                            "length": 271
+                        },
+                        "routeShortName": "C Line",
+                        "routeLongName": "C-Line Rapid Ride",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1592.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756759167000,
+                        "endTime": 1756759316000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 194.31200000000004,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "3rd Ave & Marion St",
+                            "stopId": "1:539",
+                            "stopCode": "539",
+                            "lon": -122.33316,
+                            "lat": 47.604805,
+                            "arrival": 1756759167000,
+                            "departure": 1756759167000,
+                            "zoneId": "21",
+                            "stopIndex": 18,
+                            "stopSequence": 395,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "4th Ave & Madison St",
+                            "stopId": "1:660",
+                            "stopCode": "660",
+                            "lon": -122.33271,
+                            "lat": 47.606007,
+                            "arrival": 1756759316000,
+                            "departure": 1756759493000,
+                            "zoneId": "21",
+                            "stopIndex": 3,
+                            "stopSequence": 58,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "aypaHbetiVMJA?A?ACa@qAc@uA?ACC?CCMKJOLESCEURqAhA",
+                            "length": 17
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 149.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 97.34400000000001,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33313310993533,
+                                "lat": 47.604816318730165,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 18.093,
+                                "relativeDirection": "LEFT",
+                                "streetName": "4th Avenue",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.33221390000001,
+                                "lat": 47.6053051,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 78.875,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "path",
+                                "absoluteDirection": "NORTHEAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33234100000001,
+                                "lat": 47.605443400000006,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756759493000,
+                        "endTime": 1756761180000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 21793.409451898206,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "545",
+                        "agencyName": "Sound Transit",
+                        "agencyUrl": "https://www.soundtransit.org",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "2B376E",
+                        "routeType": 3,
+                        "routeId": "1:100236",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772655",
+                        "headsign": "Redmond",
+                        "agencyId": "40",
+                        "tripId": "1:347631039",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "4th Ave & Madison St",
+                            "stopId": "1:660",
+                            "stopCode": "660",
+                            "lon": -122.33271,
+                            "lat": 47.606007,
+                            "arrival": 1756759316000,
+                            "departure": 1756759493000,
+                            "zoneId": "21",
+                            "stopIndex": 3,
+                            "stopSequence": 58,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Sr 520 & NE 51st St",
+                            "stopId": "1:71353",
+                            "stopCode": "71353",
+                            "lon": -122.136627,
+                            "lat": 47.654922,
+                            "arrival": 1756761180000,
+                            "departure": 1756761181000,
+                            "zoneId": "19",
+                            "stopIndex": 10,
+                            "stopSequence": 461,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "g`qaH`ctiVWToC~BmCbCmC`CeEvDgErDc@`@gB|Aq@n@GBIHiD|COVk@gBk@iBIWMa@kAwDm@kBo@sBm@oBa@mAK]{A}EuAiEGS{A_Fo@iBo@oBEIOi@K[Qg@Oe@W{@OSSQcA[_@Em@AqDM}@Au@C[AgAAsKG}BTK?_D@cB?qC@M?K?K?oBAM?i@?M?S?aA@_A?o@?qBAw@Gy@Im@Mq@Qq@S}@_@e@Sw@e@_As@cCcC_BcBuFyFk@e@m@g@kAi@iGuBWGk@QyAc@mCi@iBW}ASOAkAGiCG}FE}ASmAC{ESqAGWEWCSIWMi@[OMEEa@e@Yi@[u@Uw@Mw@CGSmBAKAUQ{BS}CKsAIeAMqBWwE?GIyAEuAASEw@Aw@CcBIoMAgC?EAiBE{BCMCY?YAIGs@Gs@K{@eA_I]gCOiAKiAUmCK}@cAeQEsAI_CEaA?k@u@{LM{B?CMsCG}CGcGBoCBmA^aOPmG\\sMH{Eb@iQHcDJuCPqCZcD`@cEjAqK~@uI`AaLj@yHh@yFp@yH`Di`@tJ_kAbC{Y|@aKt@oId@sD`@}Cd@iDXeDd@}D~AkLLw@n@oGTyBp@cJf@cHr@uFF}ABmBA{BCeBG_BK_AKqAYoBYiB_@eB_@sAe@}Am@{As@}A{@yAgAcBoBwC{@}AcAkAq@yAi@oAa@mAe@uAYcAMm@Mm@?CkFqViBeIm@aE}@}De@cCUaBOsAK_BKmBCoC?oBHoCJqCXgETsDZsD`@}Cd@}CN_Ah@_Cr@eC~@uC~@eC|@iBfAmBlAgBvDkFxAmBR[`B}Bj@u@R[xAiBX]Z]`@c@n@i@|@w@d@[hAs@|@e@v@a@zA_Av@c@l@a@h@c@d@i@b@g@^e@^k@Xk@\\m@Rg@Tk@Xs@XaATcARkAPeARiCFyABmB?uEGsEEeEBqDDoBJeCFy@H_APiBR}AXoBr@_D|AmIPcATgAfA_G^_Cb@yCNuBJmC@cCIkCAQKoDQkFEgACy@WiICoA?qA?yA@c@@]B}@DcAT}DtAqYFqB@m@?IB{DCsBEoACiAKeBEo@AW?CCQG}@K_AOoAYkBOcAYeBa@cBa@_B[iAu@{Bq@_Bo@sAi@kAgCiFkAcCaDwGgBsDuAyCmB{D}AeD_C{EeCkFeBoDmAaCcAyA_AiA_AgAkAgA_Aw@w@i@_Ai@mAo@aAq@e@[{@]_AWaAYw@KoASg@Oe@IcAQu@Cw@E{@?eADG?sALs@HaC^_ARC?w@\\wAf@mCzAkGhDoCdAc@RcC|@w@Ze@VwA`@w@Tq@Lq@Jk@Ci@Bq@@g@E_@E_@KmA[s@]a@Ug@Ua@Bi@Bs@D",
+                            "length": 403
+                        },
+                        "routeShortName": "545",
+                        "routeLongName": "Redmond - Seattle",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1687.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756761181000,
+                        "endTime": 1756761867000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 856.5820000000002,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Sr 520 & NE 51st St",
+                            "stopId": "1:71353",
+                            "stopCode": "71353",
+                            "lon": -122.136627,
+                            "lat": 47.654922,
+                            "arrival": 1756761180000,
+                            "departure": 1756761181000,
+                            "zoneId": "19",
+                            "stopIndex": 10,
+                            "stopSequence": 461,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Destination",
+                            "lon": -122.1433,
+                            "lat": 47.6578,
+                            "arrival": 1756761867000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "legGeometry": {
+                            "points": "grzaHvymhVb@?d@FD?D?DABC@G@Z@LEz@]dFK~AADAFADAHCFADADBD@H?HAZCb@GbAGbAGrAKrBCXKtBWjEAFADEB?FALA`@gBAeA@eEAuC?",
+                            "length": 42
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 686.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 56.904,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.13675426984828,
+                                "lat": 47.65492257230964,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 184.104,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "path",
+                                "absoluteDirection": "WEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.136724,
+                                "lat": 47.6544346,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 3.185,
+                                "relativeDirection": "LEFT",
+                                "streetName": "SR 520 Trail",
+                                "absoluteDirection": "SOUTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.13911780000001,
+                                "lat": 47.6547375,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 297.53,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "WEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.13914840000001,
+                                "lat": 47.654717600000005,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 3.609,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.1430569,
+                                "lat": 47.6551393,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 20.843,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "WEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.143077,
+                                "lat": 47.655168800000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 290.40700000000004,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "148th Avenue Northeast",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.14335200000001,
+                                "lat": 47.655188300000006,
+                                "elevation": []
+                            }
+                        ]
+                    }
+                ],
+                "tooSloped": false
+            },
+            {
+                "duration": 4537,
+                "startTime": 1756759130000,
+                "endTime": 1756763667000,
+                "walkTime": 1079,
+                "transitTime": 3279,
+                "waitingTime": 179,
+                "walkDistance": 1337.8206165301694,
+                "walkLimitExceeded": false,
+                "elevationLost": 0.0,
+                "elevationGained": 0.0,
+                "transfers": 1,
+                "fare": {
+                    "fare": {
+                        "senior": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        },
+                        "regular": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 525
+                        },
+                        "youth": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        }
+                    },
+                    "details": {
+                        "senior": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ],
+                        "regular": [
+                            {
+                                "fareId": "1:101",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 250
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:501",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 275
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ],
+                        "youth": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100236"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "legs": [
+                    {
+                        "startTime": 1756759130000,
+                        "endTime": 1756759374000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 286.58,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Origin",
+                            "lon": -122.3904,
+                            "lat": 47.542,
+                            "departure": 1756759130000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "to": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756759374000,
+                            "departure": 1756759375000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "mpdaHfl_jVhA?FODa@@]?CBYL?n@@N@b@H~@ZB@HDJD@Y@A@@`Bl@@@TJ",
+                            "length": 21
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 244.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 41.98,
+                                "relativeDirection": "DEPART",
+                                "streetName": "45th Avenue Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39059709203342,
+                                "lat": 47.54199974021558,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 43.304,
+                                "relativeDirection": "LEFT",
+                                "streetName": "Southwest Mills Street",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.390596,
+                                "lat": 47.541622200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 116.856,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "Fauntleroy Way Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39004800000001,
+                                "lat": 47.5415283,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 9.458,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39032230000001,
+                                "lat": 47.540502200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 74.982,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39019660000001,
+                                "lat": 47.5404963,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756759375000,
+                        "endTime": 1756760967000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 11689.436822085976,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "C Line",
+                        "agencyName": "Metro Transit",
+                        "agencyUrl": "https://kingcounty.gov/en/dept/metro",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "9C182F",
+                        "routeType": 3,
+                        "routeId": "1:102576",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772226",
+                        "headsign": "South Lake Union Downtown Seattle",
+                        "agencyId": "1",
+                        "tripId": "1:774719219",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756759374000,
+                            "departure": 1756759375000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "3rd Ave & Marion St",
+                            "stopId": "1:539",
+                            "stopCode": "539",
+                            "lon": -122.33316,
+                            "lat": 47.604805,
+                            "arrival": 1756760967000,
+                            "departure": 1756760967000,
+                            "zoneId": "21",
+                            "stopIndex": 18,
+                            "stopSequence": 395,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "icdaHhl_jVcC_AaA]c@IWE_AA}CCy@?kBAiC?u@Cc@Wa@_@UoBOyAm@uGCSI?mA?A?mCCaC?iJIiJIiJKs@?oHIiJIuCCiEEsJIClGeJKAW@S?_@?sC?Q@M@MDW?oF@kG@cG?mECYGWFk@?yA?}C?cG@eG@wF}CCc@?cD?mCCS?qA??uMIqAMq@[y@Y]e@c@GAgQcJu@?{A?I?eDGC?{BE{@?g@?e@?e@AmC??q@AgB@mABkDDuB@cHAgXCmCKeC@gA@{@?]?c@D}@?C@Q@U@OF}@J}@RaBTkCJuADiAFiB@wA?oJ@mJ?G?_LAsG?mC@gBAcD?w@Ag@Cw@IuASqECmC?yBAgBAa@OcCGiBGqCGyACeBAsBAiB?Q@S?M@MBOBKDKBKBKFIFIDGHGFGFCFEF?H?HCH?F?FBH?JDFDHFHFDHDHBHBFDJBJBJ@J@N@N?RANAPCRENENGLGHIJEDGFIDIDM@KDS@YBU?eDBaALaD?aC?qA?kA?{C?{A?kI?sA?_ACkACuBCiA?uC?cDAgF@sD?qC?iABmA@kAFw@Be@?c@Ce@Eg@GYE]Ic@M_@Oe@Qi@Yi@]kAu@gBiAu@e@q@[g@S_Aa@uCeAkE_BcE}BeAc@aA_@y@Us@O}@QmAS{@Mu@Im@Aa@?u@DcGt@u@DsBNcAFu@FcABICWB}B@[A]?cA?UCm@?k@?}@Ae@@WBg@Ne@Py@h@a@RqCzBKJ{@uCSw@Uq@o@yBm@mBm@mBo@sBc@yAGSsBjB",
+                            "length": 271
+                        },
+                        "routeShortName": "C Line",
+                        "routeLongName": "C-Line Rapid Ride",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1592.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756760967000,
+                        "endTime": 1756761116000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 194.31200000000004,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "3rd Ave & Marion St",
+                            "stopId": "1:539",
+                            "stopCode": "539",
+                            "lon": -122.33316,
+                            "lat": 47.604805,
+                            "arrival": 1756760967000,
+                            "departure": 1756760967000,
+                            "zoneId": "21",
+                            "stopIndex": 18,
+                            "stopSequence": 395,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "4th Ave & Madison St",
+                            "stopId": "1:660",
+                            "stopCode": "660",
+                            "lon": -122.33271,
+                            "lat": 47.606007,
+                            "arrival": 1756761116000,
+                            "departure": 1756761293000,
+                            "zoneId": "21",
+                            "stopIndex": 3,
+                            "stopSequence": 58,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "aypaHbetiVMJA?A?ACa@qAc@uA?ACC?CCMKJOLESCEURqAhA",
+                            "length": 17
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 149.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 97.34400000000001,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33313310993533,
+                                "lat": 47.604816318730165,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 18.093,
+                                "relativeDirection": "LEFT",
+                                "streetName": "4th Avenue",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.33221390000001,
+                                "lat": 47.6053051,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 78.875,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "path",
+                                "absoluteDirection": "NORTHEAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33234100000001,
+                                "lat": 47.605443400000006,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756761293000,
+                        "endTime": 1756762980000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 21793.409451898206,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "545",
+                        "agencyName": "Sound Transit",
+                        "agencyUrl": "https://www.soundtransit.org",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "2B376E",
+                        "routeType": 3,
+                        "routeId": "1:100236",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772654",
+                        "headsign": "Redmond",
+                        "agencyId": "40",
+                        "tripId": "1:347631049",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "4th Ave & Madison St",
+                            "stopId": "1:660",
+                            "stopCode": "660",
+                            "lon": -122.33271,
+                            "lat": 47.606007,
+                            "arrival": 1756761116000,
+                            "departure": 1756761293000,
+                            "zoneId": "21",
+                            "stopIndex": 3,
+                            "stopSequence": 58,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Sr 520 & NE 51st St",
+                            "stopId": "1:71353",
+                            "stopCode": "71353",
+                            "lon": -122.136627,
+                            "lat": 47.654922,
+                            "arrival": 1756762980000,
+                            "departure": 1756762981000,
+                            "zoneId": "19",
+                            "stopIndex": 10,
+                            "stopSequence": 461,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "g`qaH`ctiVWToC~BmCbCmC`CeEvDgErDc@`@gB|Aq@n@GBIHiD|COVk@gBk@iBIWMa@kAwDm@kBo@sBm@oBa@mAK]{A}EuAiEGS{A_Fo@iBo@oBEIOi@K[Qg@Oe@W{@OSSQcA[_@Em@AqDM}@Au@C[AgAAsKG}BTK?_D@cB?qC@M?K?K?oBAM?i@?M?S?aA@_A?o@?qBAw@Gy@Im@Mq@Qq@S}@_@e@Sw@e@_As@cCcC_BcBuFyFk@e@m@g@kAi@iGuBWGk@QyAc@mCi@iBW}ASOAkAGiCG}FE}ASmAC{ESqAGWEWCSIWMi@[OMEEa@e@Yi@[u@Uw@Mw@CGSmBAKAUQ{BS}CKsAIeAMqBWwE?GIyAEuAASEw@Aw@CcBIoMAgC?EAiBE{BCMCY?YAIGs@Gs@K{@eA_I]gCOiAKiAUmCK}@cAeQEsAI_CEaA?k@u@{LM{B?CMsCG}CGcGBoCBmA^aOPmG\\sMH{Eb@iQHcDJuCPqCZcD`@cEjAqK~@uI`AaLj@yHh@yFp@yH`Di`@tJ_kAbC{Y|@aKt@oId@sD`@}Cd@iDXeDd@}D~AkLLw@n@oGTyBp@cJf@cHr@uFF}ABmBA{BCeBG_BK_AKqAYoBYiB_@eB_@sAe@}Am@{As@}A{@yAgAcBoBwC{@}AcAkAq@yAi@oAa@mAe@uAYcAMm@Mm@?CkFqViBeIm@aE}@}De@cCUaBOsAK_BKmBCoC?oBHoCJqCXgETsDZsD`@}Cd@}CN_Ah@_Cr@eC~@uC~@eC|@iBfAmBlAgBvDkFxAmBR[`B}Bj@u@R[xAiBX]Z]`@c@n@i@|@w@d@[hAs@|@e@v@a@zA_Av@c@l@a@h@c@d@i@b@g@^e@^k@Xk@\\m@Rg@Tk@Xs@XaATcARkAPeARiCFyABmB?uEGsEEeEBqDDoBJeCFy@H_APiBR}AXoBr@_D|AmIPcATgAfA_G^_Cb@yCNuBJmC@cCIkCAQKoDQkFEgACy@WiICoA?qA?yA@c@@]B}@DcAT}DtAqYFqB@m@?IB{DCsBEoACiAKeBEo@AW?CCQG}@K_AOoAYkBOcAYeBa@cBa@_B[iAu@{Bq@_Bo@sAi@kAgCiFkAcCaDwGgBsDuAyCmB{D}AeD_C{EeCkFeBoDmAaCcAyA_AiA_AgAkAgA_Aw@w@i@_Ai@mAo@aAq@e@[{@]_AWaAYw@KoASg@Oe@IcAQu@Cw@E{@?eADG?sALs@HaC^_ARC?w@\\wAf@mCzAkGhDoCdAc@RcC|@w@Ze@VwA`@w@Tq@Lq@Jk@Ci@Bq@@g@E_@E_@KmA[s@]a@Ug@Ua@Bi@Bs@D",
+                            "length": 403
+                        },
+                        "routeShortName": "545",
+                        "routeLongName": "Redmond - Seattle",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1687.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756762981000,
+                        "endTime": 1756763667000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 856.5820000000002,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Sr 520 & NE 51st St",
+                            "stopId": "1:71353",
+                            "stopCode": "71353",
+                            "lon": -122.136627,
+                            "lat": 47.654922,
+                            "arrival": 1756762980000,
+                            "departure": 1756762981000,
+                            "zoneId": "19",
+                            "stopIndex": 10,
+                            "stopSequence": 461,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Destination",
+                            "lon": -122.1433,
+                            "lat": 47.6578,
+                            "arrival": 1756763667000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "legGeometry": {
+                            "points": "grzaHvymhVb@?d@FD?D?DABC@G@Z@LEz@]dFK~AADAFADAHCFADADBD@H?HAZCb@GbAGbAGrAKrBCXKtBWjEAFADEB?FALA`@gBAeA@eEAuC?",
+                            "length": 42
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 686.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 56.904,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.13675426984828,
+                                "lat": 47.65492257230964,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 184.104,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "path",
+                                "absoluteDirection": "WEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.136724,
+                                "lat": 47.6544346,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 3.185,
+                                "relativeDirection": "LEFT",
+                                "streetName": "SR 520 Trail",
+                                "absoluteDirection": "SOUTHWEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.13911780000001,
+                                "lat": 47.6547375,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 297.53,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "WEST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.13914840000001,
+                                "lat": 47.654717600000005,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 3.609,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTHWEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.1430569,
+                                "lat": 47.6551393,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 20.843,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "WEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.143077,
+                                "lat": 47.655168800000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 290.40700000000004,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "148th Avenue Northeast",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.14335200000001,
+                                "lat": 47.655188300000006,
+                                "elevation": []
+                            }
+                        ]
+                    }
+                ],
+                "tooSloped": false
+            },
+            {
+                "duration": 5561,
+                "startTime": 1756758230000,
+                "endTime": 1756763791000,
+                "walkTime": 856,
+                "transitTime": 4505,
+                "waitingTime": 200,
+                "walkDistance": 1064.3846090130826,
+                "walkLimitExceeded": false,
+                "elevationLost": 0.0,
+                "elevationGained": 0.0,
+                "transfers": 2,
+                "fare": {
+                    "fare": {
+                        "senior": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        },
+                        "regular": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 775
+                        },
+                        "youth": {
+                            "currency": {
+                                "symbol": "$",
+                                "currency": "USD",
+                                "defaultFractionDigits": 2,
+                                "currencyCode": "USD"
+                            },
+                            "cents": 0
+                        }
+                    },
+                    "details": {
+                        "senior": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100239"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102548"
+                                ]
+                            }
+                        ],
+                        "regular": [
+                            {
+                                "fareId": "1:101",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 250
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:501",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 275
+                                },
+                                "routes": [
+                                    "1:100239"
+                                ]
+                            },
+                            {
+                                "fareId": "1:101",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 250
+                                },
+                                "routes": [
+                                    "1:102548"
+                                ]
+                            }
+                        ],
+                        "youth": [
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102576"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:100239"
+                                ]
+                            },
+                            {
+                                "fareId": "1:305",
+                                "price": {
+                                    "currency": {
+                                        "symbol": "$",
+                                        "currency": "USD",
+                                        "defaultFractionDigits": 2,
+                                        "currencyCode": "USD"
+                                    },
+                                    "cents": 0
+                                },
+                                "routes": [
+                                    "1:102548"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "legs": [
+                    {
+                        "startTime": 1756758230000,
+                        "endTime": 1756758474000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 286.58,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Origin",
+                            "lon": -122.3904,
+                            "lat": 47.542,
+                            "departure": 1756758230000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "to": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756758474000,
+                            "departure": 1756758475000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "mpdaHfl_jVhA?FODa@@]?CBYL?n@@N@b@H~@ZB@HDJD@Y@A@@`Bl@@@TJ",
+                            "length": 21
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 244.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 41.98,
+                                "relativeDirection": "DEPART",
+                                "streetName": "45th Avenue Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39059709203342,
+                                "lat": 47.54199974021558,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 43.304,
+                                "relativeDirection": "LEFT",
+                                "streetName": "Southwest Mills Street",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.390596,
+                                "lat": 47.541622200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 116.856,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "Fauntleroy Way Southwest",
+                                "absoluteDirection": "SOUTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.39004800000001,
+                                "lat": 47.5415283,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 9.458,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39032230000001,
+                                "lat": 47.540502200000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 74.982,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "SOUTHEAST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.39019660000001,
+                                "lat": 47.5404963,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756758475000,
+                        "endTime": 1756759980000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 10919.805353687727,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "C Line",
+                        "agencyName": "Metro Transit",
+                        "agencyUrl": "https://kingcounty.gov/en/dept/metro",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "9C182F",
+                        "routeType": 3,
+                        "routeId": "1:102576",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772206",
+                        "headsign": "South Lake Union Downtown Seattle",
+                        "agencyId": "1",
+                        "tripId": "1:774718499",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "Fauntleroy Way SW & SW Myrtle St",
+                            "stopId": "1:19750",
+                            "stopCode": "19750",
+                            "lon": -122.390511,
+                            "lat": 47.539867,
+                            "arrival": 1756758474000,
+                            "departure": 1756758475000,
+                            "zoneId": "1",
+                            "stopIndex": 9,
+                            "stopSequence": 123,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Alaskan Way S & S Jackson St",
+                            "stopId": "1:1561",
+                            "stopCode": "1561",
+                            "lon": -122.335556,
+                            "lat": 47.599701,
+                            "arrival": 1756759980000,
+                            "departure": 1756759980000,
+                            "zoneId": "21",
+                            "stopIndex": 16,
+                            "stopSequence": 373,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "icdaHhl_jVcC_AaA]c@IWE_AA}CCy@?kBAiC?u@Cc@Wa@_@UoBOyAm@uGCSI?mA?A?mCCaC?iJIiJIiJKs@?oHIiJIuCCiEEsJIClGeJKAW@S?_@?sC?Q@M@MDW?oF@kG@cG?mECYGWFk@?yA?}C?cG@eG@wF}CCc@?cD?mCCS?qA??uMIqAMq@[y@Y]e@c@GAgQcJu@?{A?I?eDGC?{BE{@?g@?e@?e@AmC??q@AgB@mABkDDuB@cHAgXCmCKeC@gA@{@?]?c@D}@?C@Q@U@OF}@J}@RaBTkCJuADiAFiB@wA?oJ@mJ?G?_LAsG?mC@gBAcD?w@Ag@Cw@IuASqECmC?yBAgBAa@OcCGiBGqCGyACeBAsBAiB?Q@S?M@MBOBKDKBKBKFIFIDGHGFGFCFEF?H?HCH?F?FBH?JDFDHFHFDHDHBHBFDJBJBJ@J@N@N?RANAPCRENENGLGHIJEDGFIDIDM@KDS@YBU?eDBaALaD?aC?qA?kA?{C?{A?kI?sA?_ACkACuBCiA?uC?cDAgF@sD?qC?iABmA@kAFw@Be@?c@Ce@Eg@GYE]Ic@M_@Oe@Qi@Yi@]kAu@gBiAu@e@q@[g@S_Aa@uCeAkE_BcE}BeAc@aA_@y@Us@O}@QmAS{@Mu@Im@Aa@?u@DcGt@u@DsBNcAFu@FcABICWB}B@[A]?cA?",
+                            "length": 249
+                        },
+                        "routeShortName": "C Line",
+                        "routeLongName": "C-Line Rapid Ride",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1505.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756759980000,
+                        "endTime": 1756760322000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 451.3400000000001,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Alaskan Way S & S Jackson St",
+                            "stopId": "1:1561",
+                            "stopCode": "1561",
+                            "lon": -122.335556,
+                            "lat": 47.599701,
+                            "arrival": 1756759980000,
+                            "departure": 1756759980000,
+                            "zoneId": "21",
+                            "stopIndex": 16,
+                            "stopSequence": 373,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "2nd Ave Ext S & Yesler Way",
+                            "stopId": "1:375",
+                            "stopCode": "375",
+                            "lon": -122.331688,
+                            "lat": 47.601253,
+                            "arrival": 1756760322000,
+                            "departure": 1756760340000,
+                            "zoneId": "21",
+                            "stopIndex": 4,
+                            "stopSequence": 26,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "cyoaHvstiVu@?GAC?A?A}B?gB?M?U?K?iB?C@kB?UC?K?iCAM??U?eB?gBG?G?Q?e@?",
+                            "length": 25
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 342.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 38.85,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33547498762789,
+                                "lat": 47.59970053380254,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 193.544,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "South Main Street",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.33546100000001,
+                                "lat": 47.6000493,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 93.453,
+                                "relativeDirection": "LEFT",
+                                "streetName": "Occidental Avenue South",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.3328797,
+                                "lat": 47.6000494,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 85.775,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "South Washington Street",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.33286600000001,
+                                "lat": 47.600889800000004,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 39.718,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.33172200000001,
+                                "lat": 47.6008848,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756760340000,
+                        "endTime": 1756761960000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 17714.231281503606,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "550",
+                        "agencyName": "Sound Transit",
+                        "agencyUrl": "https://www.soundtransit.org",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "2B376E",
+                        "routeType": 3,
+                        "routeId": "1:100239",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772660",
+                        "headsign": "Bellevue",
+                        "agencyId": "40",
+                        "tripId": "1:630433999",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "2nd Ave Ext S & Yesler Way",
+                            "stopId": "1:375",
+                            "stopCode": "375",
+                            "lon": -122.331688,
+                            "lat": 47.601253,
+                            "arrival": 1756760322000,
+                            "departure": 1756760340000,
+                            "zoneId": "21",
+                            "stopIndex": 4,
+                            "stopSequence": 26,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Bellevue Transit Center - Bay 12",
+                            "stopId": "1:68007",
+                            "stopCode": "68007",
+                            "lon": -122.19619,
+                            "lat": 47.61536,
+                            "arrival": 1756761960000,
+                            "departure": 1756761960000,
+                            "zoneId": "19",
+                            "stopIndex": 12,
+                            "stopSequence": 421,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "acpaHl{siVD?`@a@h@e@hD{Cd@a@~BuBLMfB_BZY~@?tABX?z@@`D@L?H?F?xA?~A?X?jD?d@?N?N?P?jF?H?B?D?J?F?L?D?F?F?V?X?P?^`@x@Hv@BrC@RGDCDCFIFIDIBcCC]Cc@Ga@O[MOWQ[GiBF]?a@KUMQOQUOYO[I]Ii@Ek@Ks@Is@Ku@QsAKm@Ky@YmBCEUyA]aBCQa@yBQ_ACKc@_CSiAKk@EUGW?GMs@I]G]cAsFAA[gBa@kBQkAKm@G_@Kk@Ek@Ci@Ck@?a@@[?e@Bc@Bg@Di@He@Ju@V_AV_AVu@DIRa@Xe@Xa@d@c@@Av@k@lDaCzAkAnAy@p@i@t@m@f@g@Za@Vc@HOP[FML[Rk@`@}AVaB@ALaBH{B?eDImWIwTHsF@aCDsI@eA@oKBsE?C@oE?sDBaG?mC?eA?eA?wA?qD?kBAwA@oCNwVJqNXgc@PsVJaNJgPNcXL_SFgH@_DAoAAs@Ci@EcAIcAKoAOkAUsAWoAe@mBq@qBw@uBSa@iBmE[aAQg@[cA]uAW}@Mw@Ku@Iw@Ey@Cw@Ai@Aq@As@?q@?_@?e@Ba@@e@Ba@Bc@HgAHm@PkARiAVeAd@eB^eA`@eAn@sA`@k@f@y@jBgDxAmC`@aAZ{@Ne@VcAn@gCbA}DGEQGYSu@g@GESOi@_@Je@z@_Ej@eCNq@F[DMB[H]X?nA@nA?@OBa@Dc@Jc@Lg@X_ArB}FrAaEhCgHfBuEhHmTbCeG`AwCp@qBd@kAl@qAt@wAzAeCfBmCtA{BdBiDj@yAd@eBb@eB^wBb@eDLoA~@uLjAcP?AP}DDyC?wBG}BI}AOaBQyAWcB_DwQeAgG{@sFQoAMqBGqBAiBDeBJ_BJkDf@cER_BL{AF}A?gAEy@KiAMcAYeA[w@k@y@e@e@m@_@c@Se@Og@Mm@Ka@EcAIe@?c@Bg@FWB[?k@RgAb@s@f@sArAIHqDvDsBrB}A|Ag@d@[V]V_@P_@L]J}@RC?G@uAVIBiJjBm@NSJODQHgFbDiOzJQNQT[t@AB_@fAYx@_@x@S^UZSP_CfBUPgD`Co@VUH}Ad@cCv@o@PmBl@YJs@PmA`@eEjB}Ar@{Ar@aAb@mAf@iClAc@PoD@yBB_DBiDBeID{@?S@_GFoA?aBBaBBsB@eAByABoDD}DB?}E?s@?eC?gC?kCAeC@}AByADgAeFFqA@",
+                            "length": 394
+                        },
+                        "routeShortName": "550",
+                        "routeLongName": "Bellevue - Seattle",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1620.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756761960000,
+                        "endTime": 1756762020000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 76.091,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "Bellevue Transit Center - Bay 12",
+                            "stopId": "1:68007",
+                            "stopCode": "68007",
+                            "lon": -122.19619,
+                            "lat": 47.61536,
+                            "arrival": 1756761960000,
+                            "departure": 1756761960000,
+                            "zoneId": "19",
+                            "stopIndex": 12,
+                            "stopSequence": 421,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Bellevue Transit Center - Bay 3",
+                            "stopId": "1:68003",
+                            "stopCode": "68003",
+                            "lon": -122.195358,
+                            "lat": 47.615505,
+                            "arrival": 1756762020000,
+                            "departure": 1756762200000,
+                            "zoneId": "19",
+                            "stopIndex": 0,
+                            "stopSequence": 1,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "c{raHdmyhV?E?KC@GAE?C?A??iA@iA",
+                            "length": 10
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 60.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 6.754,
+                                "relativeDirection": "DEPART",
+                                "streetName": "path",
+                                "absoluteDirection": "EAST",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.19618991750124,
+                                "lat": 47.615380468896525,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 69.337,
+                                "relativeDirection": "LEFT",
+                                "streetName": "path",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.19609980000001,
+                                "lat": 47.615380300000005,
+                                "elevation": []
+                            }
+                        ]
+                    },
+                    {
+                        "startTime": 1756762200000,
+                        "endTime": 1756763580000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 10042.762830112913,
+                        "pathway": false,
+                        "mode": "BUS",
+                        "route": "B Line",
+                        "agencyName": "Metro Transit",
+                        "agencyUrl": "https://kingcounty.gov/en/dept/metro",
+                        "agencyTimeZoneOffset": -25200000,
+                        "routeColor": "9C182F",
+                        "routeType": 3,
+                        "routeId": "1:102548",
+                        "routeTextColor": "FFFFFF",
+                        "interlineWithPreviousLeg": false,
+                        "tripBlockId": "7772680",
+                        "headsign": "Downtown Redmond Station",
+                        "agencyId": "1",
+                        "tripId": "1:705345409",
+                        "serviceDate": "20250901",
+                        "from": {
+                            "name": "Bellevue Transit Center - Bay 3",
+                            "stopId": "1:68003",
+                            "stopCode": "68003",
+                            "lon": -122.195358,
+                            "lat": 47.615505,
+                            "arrival": 1756762020000,
+                            "departure": 1756762200000,
+                            "zoneId": "19",
+                            "stopIndex": 0,
+                            "stopSequence": 1,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "148th Ave NE & NE 51st St",
+                            "stopId": "1:73350",
+                            "stopCode": "73350",
+                            "lon": -122.143089,
+                            "lat": 47.655735,
+                            "arrival": 1756763580000,
+                            "departure": 1756763581000,
+                            "zoneId": "19",
+                            "stopIndex": 17,
+                            "stopSequence": 158,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "legGeometry": {
+                            "points": "i|raH~gyhV?I?yC?eA@y@B]B]?cDByBFsFqE@S?Y?yBB?}A@yB?qAAk@BsA?w@@_J@cFBeD?oH?_@EwP?iB?}GAcIAcJ@yBBsH?_BB}A?}@B{J?S@uJ?cBDsD?}B?yBDiC?qA@yD?eC@aC?uL?iB@{@?oC?[@aH?eF?}@BmF?S?Q?sA?uE?q@@W?oCBsG?iA?]@Q?sBDiM@kE?qBBwF@Q?Q?qE?sP?aD?kE@{F@yH@sK?Q}B?i@?iBCm@?Q?w@?gC?U?eD?s@?Y?uC?oF?{@?UAgB?o@?o@?yFAyA?o@?aA?mFCeDAyA?kM?a@?I?I?e@?A?wA?oA?cK?iB?i@?}B?mLEsHAq@?cOAcH?q@?iJC@`E?xD@hG@V@nE@~C@`A@`E@bD?~A?h@@fFBxGmDJU?sADwA@uDFcDF_CDqBFmBD_@?wDFm@@yBDkA@mAAoEAI?M?{B?",
+                            "length": 158
+                        },
+                        "routeShortName": "B Line",
+                        "routeLongName": "B-Line Rapid Ride",
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 1380.0,
+                        "transitLeg": true,
+                        "steps": []
+                    },
+                    {
+                        "startTime": 1756763581000,
+                        "endTime": 1756763791000,
+                        "departureDelay": 0,
+                        "arrivalDelay": 0,
+                        "realTime": false,
+                        "distance": 250.07999999999998,
+                        "pathway": false,
+                        "mode": "WALK",
+                        "route": "",
+                        "agencyTimeZoneOffset": -25200000,
+                        "interlineWithPreviousLeg": false,
+                        "from": {
+                            "name": "148th Ave NE & NE 51st St",
+                            "stopId": "1:73350",
+                            "stopCode": "73350",
+                            "lon": -122.143089,
+                            "lat": 47.655735,
+                            "arrival": 1756763580000,
+                            "departure": 1756763581000,
+                            "zoneId": "19",
+                            "stopIndex": 17,
+                            "stopSequence": 158,
+                            "vertexType": "TRANSIT",
+                            "boardAlightType": "DEFAULT"
+                        },
+                        "to": {
+                            "name": "Destination",
+                            "lon": -122.1433,
+                            "lat": 47.6578,
+                            "arrival": 1756763791000,
+                            "orig": "",
+                            "vertexType": "NORMAL"
+                        },
+                        "legGeometry": {
+                            "points": "iwzaHdaohVK?o@AcBBi@@AAA?E?G??TO?Y@?\\uC?",
+                            "length": 14
+                        },
+                        "rentedBike": false,
+                        "flexDrtAdvanceBookMin": 0.0,
+                        "duration": 210.0,
+                        "transitLeg": false,
+                        "steps": [
+                            {
+                                "distance": 122.65299999999999,
+                                "relativeDirection": "DEPART",
+                                "streetName": "sidewalk",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.14306944487232,
+                                "lat": 47.65573493838573,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 43.517,
+                                "relativeDirection": "LEFT",
+                                "streetName": "service road",
+                                "absoluteDirection": "WEST",
+                                "stayOn": true,
+                                "area": false,
+                                "bogusName": true,
+                                "lon": -122.143078,
+                                "lat": 47.656836000000006,
+                                "elevation": []
+                            },
+                            {
+                                "distance": 83.91,
+                                "relativeDirection": "RIGHT",
+                                "streetName": "148th Avenue Northeast",
+                                "absoluteDirection": "NORTH",
+                                "stayOn": false,
+                                "area": false,
+                                "bogusName": false,
+                                "lon": -122.14334690000001,
+                                "lat": 47.6570453,
+                                "elevation": []
+                            }
+                        ]
+                    }
+                ],
+                "tooSloped": false
+            }
+        ]
+    },
+    "debugOutput": {
+        "precalculationTime": 48,
+        "pathCalculationTime": 207,
+        "pathTimes": [
+            61,
+            64,
+            81
+        ],
+        "renderingTime": 2,
+        "totalTime": 257,
+        "timedOut": false
+    },
+    "elevationMetadata": {
+        "ellipsoidToGeoidDifference": -16.68477172581256,
+        "geoidElevation": false
+    }
+}
