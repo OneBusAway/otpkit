@@ -16,6 +16,7 @@
 
 import CoreLocation
 import Foundation
+import SwiftUI
 
 // swiftlint:disable identifier_name
 
@@ -43,6 +44,9 @@ public struct Leg: Codable, Hashable {
     public let mode: String
 
     public let routeType: RouteType?
+
+    public let routeColor: String?
+    public let routeTextColor: String?
 
     /// Optional route identifier for this leg.
     public let route: String?
@@ -87,6 +91,50 @@ public struct Leg: Codable, Hashable {
 
     /// Optional head sign of the transit legs, bus and trams
     public let headsign: String?
+    
+    // MARK: - Computed Properties
+    
+    /// Returns a SwiftUI Color from the routeColor hex string if valid
+    public var routeUIColor: Color? {
+        guard let routeColor = routeColor else { return nil }
+        return Color(hex: routeColor)
+    }
+    
+    /// Returns a SwiftUI Color from the routeTextColor hex string if valid
+    public var routeTextUIColor: Color? {
+        guard let routeTextColor = routeTextColor else { return nil }
+        return Color(hex: routeTextColor)
+    }
+}
+
+// MARK: - Color Extension
+
+private extension Color {
+    init?(hex: String) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+        
+        var rgb: UInt64 = 0
+        
+        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
+        
+        let length = hexSanitized.count
+        var r, g, b: Double
+        
+        if length == 6 {
+            r = Double((rgb & 0xFF0000) >> 16) / 255.0
+            g = Double((rgb & 0x00FF00) >> 8) / 255.0
+            b = Double(rgb & 0x0000FF) / 255.0
+        } else if length == 3 {
+            r = Double((rgb & 0xF00) >> 8) / 15.0
+            g = Double((rgb & 0x0F0) >> 4) / 15.0
+            b = Double(rgb & 0x00F) / 15.0
+        } else {
+            return nil
+        }
+        
+        self.init(red: r, green: g, blue: b)
+    }
 }
 
 // swiftlint:enable identifier_name

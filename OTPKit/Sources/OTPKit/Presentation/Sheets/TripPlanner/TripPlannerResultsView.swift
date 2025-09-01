@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Flow
 
 public struct TripPlannerResultsView: View {
     @Environment(\.dismiss) var dismiss
@@ -41,7 +42,10 @@ public struct TripPlannerResultsView: View {
                 noItinerariesView()
             }
 
-            cancelButton()
+            Button("Cancel") {
+                dismiss()
+            }
+            .padding()
         }
     }
 
@@ -94,16 +98,12 @@ public struct TripPlannerResultsView: View {
     }
 
     private func legsFlow(itinerary: Itinerary) -> some View {
-        FlowLayout {
+        HFlow(alignment: .center, spacing: 4) {
             ForEach(Array(zip(itinerary.legs.indices, itinerary.legs)), id: \.1) { index, leg in
                 legView(for: leg)
-
                 if index < itinerary.legs.count - 1 {
-                    VStack {
-                        Image(systemName: "chevron.right.circle.fill")
-                            .frame(width: 8, height: 16)
-                    }
-                    .frame(height: 40)
+                    Image(systemName: "arrowtriangle.right.fill")
+                        .font(.system(size: 8))
                 }
             }
         }
@@ -111,13 +111,14 @@ public struct TripPlannerResultsView: View {
 
     @ViewBuilder
     private func legView(for leg: Leg) -> some View {
-        switch getLegViewType(for: leg) {
-        case .vehicle:
-            ItineraryLegVehicleView(leg: leg)
-        case .walk:
-            ItineraryLegWalkView(leg: leg)
-        case .unknown:
+        if leg.routeType == nil {
             ItineraryLegUnknownView(leg: leg)
+        } else {
+            if leg.routeType! == .nonTransit {
+                ItineraryLegWalkView(leg: leg)
+            } else {
+                ItineraryLegVehicleView(leg: leg)
+            }
         }
     }
 
@@ -127,13 +128,6 @@ public struct TripPlannerResultsView: View {
                 .foregroundStyle(theme.secondaryColor)
                 .padding()
         }
-    }
-
-    private func cancelButton() -> some View {
-        Button("Cancel") {
-            dismiss()
-        }
-        .padding()
     }
 
     // MARK: - Helper Methods

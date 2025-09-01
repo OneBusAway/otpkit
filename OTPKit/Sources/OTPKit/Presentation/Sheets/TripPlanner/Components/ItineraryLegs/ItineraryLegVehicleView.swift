@@ -14,12 +14,12 @@ struct ItineraryLegVehicleView: View {
     @Environment(\.otpTheme) private var theme
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 2) {
             Text(leg.route ?? "?")
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 1)
                 .background(backgroundColor)
-                .foregroundStyle(.foreground)
+                .foregroundStyle(textColor)
                 .font(.caption)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
@@ -43,14 +43,21 @@ struct ItineraryLegVehicleView: View {
         }
     }
 
-    private var backgroundColor: Color {
-        if leg.mode == "TRAM" {
-            Color.green
-        } else if leg.mode == "BUS" {
-            theme.primaryColor
-        } else {
-            Color.pink
+    private var textColor: Color {
+        if let color = leg.routeTextUIColor {
+            print("Using color \(String(describing: leg.routeTextColor)) for text")
+            return color
         }
+
+        return .white
+    }
+
+    private var backgroundColor: Color {
+        if let color = leg.routeUIColor {
+            return color
+        }
+
+        return Color(.systemFill)
     }
 }
 

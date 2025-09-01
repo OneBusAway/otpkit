@@ -73,6 +73,8 @@ class PreviewHelpers {
             endTime: Date(),
             mode: "TRAM",
             routeType: .tram,
+            routeColor: "FFFFFF",
+            routeTextColor: "000000",
             route: route ?? String(Int.random(in: 1...999)),
             agencyName: agencyName,
             from: Place(name: "foo", lon: 47, lat: -122, vertexType: ""),
