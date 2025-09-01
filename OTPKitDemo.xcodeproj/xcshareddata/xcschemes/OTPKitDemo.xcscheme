@@ -46,17 +46,6 @@
                ReferencedContainer = "container:OTPKitDemo.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9399D6032E638C13007D2E0D"
-               BuildableName = "OTPKitDemoUITests.xctest"
-               BlueprintName = "OTPKitDemoUITests"
-               ReferencedContainer = "container:OTPKitDemo.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
