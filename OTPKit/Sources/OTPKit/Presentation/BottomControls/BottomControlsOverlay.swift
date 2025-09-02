@@ -70,7 +70,7 @@ struct BottomControlsOverlay: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground).opacity(0.9))
+                .fill(.ultraThickMaterial)
                 .shadow(radius: 8)
         )
         .padding(.horizontal, 16)
