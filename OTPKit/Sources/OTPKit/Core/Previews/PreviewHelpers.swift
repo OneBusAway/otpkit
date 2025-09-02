@@ -13,17 +13,19 @@ class PreviewHelpers {
 
     static func mockOTPConfiguration() -> OTPConfiguration {
         return OTPConfiguration(
-            otpServerURL: URL(string: "https://example.com")!,
-            region: .automatic
+            otpServerURL: URL(string: "https://example.com")!
         )
     }
 
+    @MainActor
     static func mockTripPlannerViewModel() -> TripPlannerViewModel {
         let config = OTPConfiguration(
-            otpServerURL: URL(string: "https://example.com")!,
-            region: .automatic
+            otpServerURL: URL(string: "https://example.com")!
         )
-        return TripPlannerViewModel(config: config, apiService: MockAPIService())
+        let mapView = MKMapView()
+        let mapProvider = MKMapViewAdapter(mapView: mapView)
+        let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
+        return TripPlannerViewModel(config: config, apiService: MockAPIService(), mapCoordinator: mapCoordinator)
     }
 
     public class MockAPIService: APIService {

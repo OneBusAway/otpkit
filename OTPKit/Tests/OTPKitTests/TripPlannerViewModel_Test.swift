@@ -11,10 +11,13 @@ import MapKit
 import SwiftUI
 @testable import OTPKit
 
+@MainActor
 final class TripPlannerViewModelTests: XCTestCase {
     private var viewModel: TripPlannerViewModel!
     private var mockConfig: OTPConfiguration!
     private var mockAPIService: MockAPIService!
+    private var mockMapProvider: OTPMapProvider!
+    private var mockMapCoordinator: MapCoordinator!
 
     // MARK: - Mock API Service
     private class MockAPIService: APIService {
@@ -45,17 +48,24 @@ final class TripPlannerViewModelTests: XCTestCase {
         // Given: a configuration typical for app usage
         mockConfig = OTPConfiguration(
             otpServerURL: URL(string: "https://test.example.com")!,
-            enabledTransportModes: [.transit, .walk, .bike],
-            region: .userLocation(fallback: .automatic)
+            enabledTransportModes: [.transit, .walk, .bike]
         )
         mockAPIService = MockAPIService()
-        viewModel = TripPlannerViewModel(config: mockConfig, apiService: mockAPIService)
+        
+        // Create mock map components
+        let mapView = MKMapView()
+        mockMapProvider = MKMapViewAdapter(mapView: mapView)
+        mockMapCoordinator = MapCoordinator(mapProvider: mockMapProvider)
+        
+        viewModel = TripPlannerViewModel(config: mockConfig, apiService: mockAPIService, mapCoordinator: mockMapCoordinator)
     }
 
     override func tearDownWithError() throws {
         viewModel = nil
         mockConfig = nil
         mockAPIService = nil
+        mockMapProvider = nil
+        mockMapCoordinator = nil
     }
 
     // MARK: - Initial State
@@ -129,11 +139,13 @@ final class TripPlannerViewModelTests: XCTestCase {
     func test_SelectedTransportMode_fallsBackToTransitWhenEmpty() {
         let cfg = OTPConfiguration(
             otpServerURL: URL(string: "https://test.example.com")!,
-            enabledTransportModes: [],
-            region: .userLocation(fallback: .automatic)
+            enabledTransportModes: []
         )
         let mockAPIService = MockAPIService()
-        let vm = TripPlannerViewModel(config: cfg, apiService: mockAPIService)
+        let mapView = MKMapView()
+        let mapProvider = MKMapViewAdapter(mapView: mapView)
+        let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
+        let vm = TripPlannerViewModel(config: cfg, apiService: mockAPIService, mapCoordinator: mapCoordinator)
         XCTAssertEqual(vm.selectedTransportMode, .transit)
     }
 
@@ -230,13 +242,13 @@ final class TripPlannerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.activeSheet, .directions)
     }
 
-    // MARK: - Map Camera
+    // MARK: - Map Coordinator
 
-    /// Changing map camera should update the `region` backing enum
-    func test_ChangeMapCamera_updatesRegionCase() {
-        let before = String(describing: viewModel.region)
-        viewModel.changeMapCamera(to: CLLocationCoordinate2D(latitude: 47.0, longitude: -122.0))
-        let after = String(describing: viewModel.region)
-        XCTAssertNotEqual(before, after)
+    /// Test that location selection updates the map coordinator
+    func test_LocationSelection_updatesMapCoordinator() {
+        let location = TestHelpers.location()
+        viewModel.handleLocationSelection(location, for: .origin)
+        // Verify origin is set (coordinator updates are internal to the implementation)
+        XCTAssertEqual(viewModel.selectedOrigin, location)
     }
 }

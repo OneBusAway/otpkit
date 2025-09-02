@@ -23,16 +23,40 @@ import SwiftUI
 struct OTPKitDemoApp: App {
     @State private var hasCompletedOnboarding = false
     @State private var otpConfiguration: OTPConfiguration?
+    @State private var mapProvider: OTPMapProvider?
 
     var body: some Scene {
         WindowGroup {
-            if hasCompletedOnboarding, let config = otpConfiguration {
+            if hasCompletedOnboarding, 
+               let config = otpConfiguration,
+               let provider = mapProvider {
                 let apiService = RestAPIService(baseURL: config.otpServerURL)
-                OTPView(otpConfig: config, apiService: apiService)
+                
+                ZStack {
+                    // The external map view that OTPKit will control
+                    MKMapViewRepresentable(
+                        mapProvider: .constant(provider),
+                        initialRegion: MKCoordinateRegion(
+                            center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+                            latitudinalMeters: 10000,
+                            longitudinalMeters: 10000
+                        ),
+                        showsUserLocation: true
+                    )
+                    .ignoresSafeArea()
+                    
+                    // OTPKit UI overlay
+                    OTPView(
+                        otpConfig: config, 
+                        apiService: apiService,
+                        mapProvider: provider
+                    )
+                }
             } else {
                 OnboardingView(
                     hasCompletedOnboarding: $hasCompletedOnboarding,
-                    otpConfiguration: $otpConfiguration
+                    otpConfiguration: $otpConfiguration,
+                    mapProvider: $mapProvider
                 )
             }
         }
@@ -42,6 +66,7 @@ struct OTPKitDemoApp: App {
 #Preview("Onboarding") {
     OnboardingView(
         hasCompletedOnboarding: .constant(false),
-        otpConfiguration: .constant(nil)
+        otpConfiguration: .constant(nil),
+        mapProvider: .constant(nil)
     )
 }

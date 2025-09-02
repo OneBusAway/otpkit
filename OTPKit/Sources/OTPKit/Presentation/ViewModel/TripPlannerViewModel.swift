@@ -12,6 +12,7 @@ import SwiftUI
 
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
+@MainActor
 class TripPlannerViewModel: SheetPresenter, ObservableObject {
     // MARK: - Published Properties
 
@@ -57,9 +58,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     /// Whether to show the route polyline on map
     @Published var showingPolyline = false
 
-    /// Current map camera position/region
-    @Published var region: MapCameraPosition = .userLocation(fallback: .automatic)
-
     // MARK: - Configuration
 
     /// OTP configuration containing server URL and enabled transport modes
@@ -67,12 +65,15 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     /// API service for making trip planning requests
     private let apiService: APIService
+    
+    /// Map coordinator for managing map operations
+    private let mapCoordinator: MapCoordinator
 
-    /// Initialize with OTP configuration and API service
-    init(config: OTPConfiguration, apiService: APIService) {
+    /// Initialize with OTP configuration, API service, and map coordinator
+    init(config: OTPConfiguration, apiService: APIService, mapCoordinator: MapCoordinator) {
         self.config = config
         self.apiService = apiService
-        self.region = config.region
+        self.mapCoordinator = mapCoordinator
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
     }
@@ -82,6 +83,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func setCurrentLocationAsOrigin() async {
         if let currentLocation = await LocationManager.shared.getCurrentLocation() {
             selectedOrigin = currentLocation
+            mapCoordinator.setOrigin(currentLocation)
         }
     }
 
@@ -223,6 +225,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func clearPreview() {
         selectedItinerary = nil
         showingPolyline = false
+        mapCoordinator.clearRoute()
     }
 
     /// Show route preview on the map for a specific itinerary
@@ -230,8 +233,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     private func showPreview(for itinerary: Itinerary) {
         selectedItinerary = itinerary
         showingPolyline = true
-        // Zoom to fit the entire trip with padding
-        zoomToFitItinerary(itinerary)
+        mapCoordinator.showItinerary(itinerary)
     }
 
     // MARK: - Action Handlers
@@ -242,16 +244,18 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     ///   - location: The selected location
     ///   - mode: Whether this is for origin or destination
     func handleLocationSelection(_ location: Location, for mode: LocationMode) {
-        // Use location coordinate helper for map camera
-        changeMapCamera(to: location.coordinate)
-
-        // Update the appropriate location based on mode
+        // Update map with new location
         switch mode {
         case .origin:
             selectedOrigin = location
+            mapCoordinator.setOrigin(location)
         case .destination:
             selectedDestination = location
+            mapCoordinator.setDestination(location)
         }
+        
+        // Center map on the new location
+        mapCoordinator.centerOn(coordinate: location.coordinate)
 
         // Dismiss the current sheet
         dismiss()
@@ -263,13 +267,11 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     func handleItinerarySelection(_ itinerary: Itinerary) {
         selectedItinerary = itinerary
         showingPolyline = true
+        mapCoordinator.showItinerary(itinerary)
+        
         // Zoom to origin for turn-by-turn directions like Apple Maps
         if let origin = selectedOrigin {
-            changeMapCamera(
-                to: origin.coordinate,
-                latMeters: 1800,
-                longMeters: 1800
-            )
+            mapCoordinator.centerOn(coordinate: origin.coordinate)
         }
         dismiss()
         present(.directions)
@@ -298,7 +300,8 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
         // Reset map state
         showingPolyline = false
-        region = .userLocation(fallback: .automatic)
+        mapCoordinator.clearRoute()
+        mapCoordinator.clearLocations()
 
         // Clear error states
         errorMessage = nil
@@ -318,76 +321,5 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
         // Dismiss any active sheets
         activeSheet = nil
-    }
-}
-
-// MARK: - Map Management
-extension TripPlannerViewModel {
-    /// Update map camera to focus on specific coordinate
-    /// - Parameters:
-    ///   - coordinate: The coordinate to center the map on
-    ///   - latMeters: Latitudinal meters for zoom level
-    ///   - longMeters: Longitudinal meters for zoom level
-    func changeMapCamera(
-        to coordinate: CLLocationCoordinate2D,
-        latMeters: Double = 1000,
-        longMeters: Double = 1000
-    ) {
-        let pos = MKCoordinateRegion(
-            center: coordinate,
-            latitudinalMeters: latMeters,
-            longitudinalMeters: longMeters
-        )
-
-        withAnimation(.easeInOut(duration: 0.8)) {
-            region = .region(pos)
-        }
-    }
-
-    /// Zoom camera to fit entire itinerary using native Apple MapKit API
-    /// - Parameter itinerary: The itinerary to fit in view
-    func zoomToFitItinerary(_ itinerary: Itinerary) {
-        var coordinates: [CLLocationCoordinate2D] = []
-
-        // Add origin if available
-        if let origin = selectedOrigin { coordinates.append(origin.coordinate) }
-
-        // Add all coordinates from legs
-        for leg in itinerary.legs {
-            if let legCoordinates = leg.decodePolyline(), !legCoordinates.isEmpty {
-                coordinates.append(contentsOf: legCoordinates)
-            }
-        }
-
-        // Add destination if available
-        if let destination = selectedDestination { coordinates.append(destination.coordinate) }
-
-        guard !coordinates.isEmpty else { return }
-
-        // Handle single coordinate case
-        if coordinates.count == 1 {
-            changeMapCamera(to: coordinates[0])
-            return
-        }
-
-        // Use Apple's native MKPolyline to get the bounding map rect
-        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-        let mapRect = polyline.boundingMapRect
-
-        // Convert MKMapRect to MKCoordinateRegion with native Apple padding
-        let region = MKCoordinateRegion(mapRect)
-
-        // Apply native Apple-style padding by expanding the region slightly
-        let paddedRegion = MKCoordinateRegion(
-            center: region.center,
-            span: MKCoordinateSpan(
-                latitudeDelta: region.span.latitudeDelta * 1.15,
-                longitudeDelta: region.span.longitudeDelta * 1.15
-            )
-        )
-
-        withAnimation(.easeInOut(duration: 1.0)) {
-            self.region = .region(paddedRegion)
-        }
     }
 }

@@ -6,6 +6,7 @@ import MapKit
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @Binding var otpConfiguration: OTPConfiguration?
+    @Binding var mapProvider: OTPMapProvider?
     @State private var selectedRegion: String = "Puget Sound"
 
     private struct RegionInfo {
@@ -148,13 +149,17 @@ struct OnboardingView: View {
                 themeConfiguration: OTPThemeConfiguration(
                     primaryColor: .obaTheme,
                     secondaryColor: .gray
-                ),
-                region: .region(MKCoordinateRegion(
-                    center: selectedRegionInfo.center,
-                    latitudinalMeters: 50000,
-                    longitudinalMeters: 50000
-                ))
+                )
             )
+            
+            // Create the map view and adapter
+            let mapView = MKMapView()
+            mapView.region = MKCoordinateRegion(
+                center: selectedRegionInfo.center,
+                latitudinalMeters: 50000,
+                longitudinalMeters: 50000
+            )
+            mapProvider = MKMapViewAdapter(mapView: mapView)
 
             hasCompletedOnboarding = true
         } label: {
@@ -180,16 +185,12 @@ struct OnboardingView: View {
         themeConfiguration: OTPThemeConfiguration(
             primaryColor: .indigo,
             secondaryColor: .gray
-        ),
-        region: .region(MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 47.64585, longitude: -122.2963),
-            latitudinalMeters: 50000,
-            longitudinalMeters: 50000
-        ))
+        )
     )
 
-    return OnboardingView(
+    OnboardingView(
         hasCompletedOnboarding: .constant(false),
-        otpConfiguration: .constant(config)
+        otpConfiguration: .constant(config),
+        mapProvider: .constant(nil)
     )
 }

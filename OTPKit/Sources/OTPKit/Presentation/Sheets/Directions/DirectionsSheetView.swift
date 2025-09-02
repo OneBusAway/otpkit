@@ -12,6 +12,7 @@ import MapKit
 struct DirectionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
+    @EnvironmentObject private var mapCoordinator: MapCoordinator
 
     @Environment(\.otpTheme) private var theme
 
@@ -62,7 +63,7 @@ struct DirectionsSheetView: View {
     }
 
     private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {
-        tripPlannerVM.changeMapCamera(to: coordinate)
+        mapCoordinator.centerOn(coordinate: coordinate)
         scrollToItem = itemId
         sheetDetent = .fraction(0.2)
     }

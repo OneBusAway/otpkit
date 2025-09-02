@@ -8,10 +8,13 @@
 import SwiftUI
 import MapKit
 
-/// Main view for planning trips, showing map, controls, and results.
+/// Main view for planning trips, showing controls and results.
+/// The map is provided externally and controlled via MapCoordinator.
 struct TripPlannerView: View {
     /// ViewModel managing trip planning state and logic
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
+    /// Map coordinator for managing map operations
+    @EnvironmentObject private var mapCoordinator: MapCoordinator
     /// Currently selected location mode (origin or destination)
     @State private var selectedMode: LocationMode = .origin
 
@@ -27,7 +30,7 @@ struct TripPlannerView: View {
 
     public var body: some View {
         ZStack {
-            mapView
+            // Note: Map is now provided externally and controlled via MapCoordinator
             if !tripPlannerVM.showingPolyline { bottomControls }
             if tripPlannerVM.showingPolyline { previewControls }
 
@@ -44,11 +47,6 @@ struct TripPlannerView: View {
 
 // MARK: - View Components
 private extension TripPlannerView {
-    /// Map view for selecting locations
-    var mapView: some View {
-        MapLocationSelectorView(locationMode: selectedMode)
-    }
-
     /// Controls shown at the bottom when not previewing a route
     var bottomControls: some View {
         VStack {
@@ -136,8 +134,7 @@ private extension TripPlannerView {
 #Preview {
     TripPlannerView(
         otpConfig: .init(
-            otpServerURL: URL(string: "example")!,
-            region: .automatic
+            otpServerURL: URL(string: "example")!
         )
     )
     .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
