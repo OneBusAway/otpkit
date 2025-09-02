@@ -23,40 +23,43 @@ import SwiftUI
 struct OTPKitDemoApp: App {
     @State private var hasCompletedOnboarding = false
     @State private var otpConfiguration: OTPConfiguration?
+    @State private var selectedRegionInfo: RegionInfo?
     @State private var mapProvider: OTPMapProvider?
 
     var body: some Scene {
         WindowGroup {
             if hasCompletedOnboarding, 
                let config = otpConfiguration,
-               let provider = mapProvider {
+               let regionInfo = selectedRegionInfo {
                 let apiService = RestAPIService(baseURL: config.otpServerURL)
                 
                 ZStack {
                     // The external map view that OTPKit will control
                     MKMapViewRepresentable(
-                        mapProvider: .constant(provider),
+                        mapProvider: $mapProvider,
                         initialRegion: MKCoordinateRegion(
-                            center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
-                            latitudinalMeters: 10000,
-                            longitudinalMeters: 10000
+                            center: regionInfo.center,
+                            latitudinalMeters: 50000,
+                            longitudinalMeters: 50000
                         ),
                         showsUserLocation: true
                     )
                     .ignoresSafeArea()
                     
-                    // OTPKit UI overlay
-                    OTPView(
-                        otpConfig: config, 
-                        apiService: apiService,
-                        mapProvider: provider
-                    )
+                    // OTPKit UI overlay - only render once we have a map provider
+                    if let provider = mapProvider {
+                        OTPView(
+                            otpConfig: config, 
+                            apiService: apiService,
+                            mapProvider: provider
+                        )
+                    }
                 }
             } else {
                 OnboardingView(
                     hasCompletedOnboarding: $hasCompletedOnboarding,
                     otpConfiguration: $otpConfiguration,
-                    mapProvider: $mapProvider
+                    selectedRegionInfo: $selectedRegionInfo
                 )
             }
         }
@@ -67,6 +70,6 @@ struct OTPKitDemoApp: App {
     OnboardingView(
         hasCompletedOnboarding: .constant(false),
         otpConfiguration: .constant(nil),
-        mapProvider: .constant(nil)
+        selectedRegionInfo: .constant(nil)
     )
 }

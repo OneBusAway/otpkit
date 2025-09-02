@@ -3,19 +3,19 @@ import OTPKit
 import MapKit
 
 /// View to select region for demo purposes
+struct RegionInfo {
+    let name: String
+    let description: String
+    let icon: String
+    let url: URL
+    let center: CLLocationCoordinate2D
+}
+
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @Binding var otpConfiguration: OTPConfiguration?
-    @Binding var mapProvider: OTPMapProvider?
+    @Binding var selectedRegionInfo: RegionInfo?
     @State private var selectedRegion: String = "Puget Sound"
-
-    private struct RegionInfo {
-        let name: String
-        let description: String
-        let icon: String
-        let url: URL
-        let center: CLLocationCoordinate2D
-    }
 
     private let regions: [RegionInfo] = [
         RegionInfo(
@@ -142,24 +142,18 @@ struct OnboardingView: View {
 
     private var getStartedButton: some View {
         Button {
-            guard let selectedRegionInfo = regions.first(where: { $0.name == selectedRegion }) else { return }
+            guard let region = regions.first(where: { $0.name == selectedRegion }) else { return }
 
             otpConfiguration = OTPConfiguration(
-                otpServerURL: selectedRegionInfo.url,
+                otpServerURL: region.url,
                 themeConfiguration: OTPThemeConfiguration(
                     primaryColor: .obaTheme,
                     secondaryColor: .gray
                 )
             )
             
-            // Create the map view and adapter
-            let mapView = MKMapView()
-            mapView.region = MKCoordinateRegion(
-                center: selectedRegionInfo.center,
-                latitudinalMeters: 50000,
-                longitudinalMeters: 50000
-            )
-            mapProvider = MKMapViewAdapter(mapView: mapView)
+            // Store the selected region info for map initialization
+            selectedRegionInfo = region
 
             hasCompletedOnboarding = true
         } label: {
@@ -191,6 +185,6 @@ struct OnboardingView: View {
     OnboardingView(
         hasCompletedOnboarding: .constant(false),
         otpConfiguration: .constant(config),
-        mapProvider: .constant(nil)
+        selectedRegionInfo: .constant(nil)
     )
 }
