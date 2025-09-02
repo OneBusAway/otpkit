@@ -54,22 +54,23 @@ struct SearchSheetView: View {
     private func buildDefaultView() -> some View {
         // Default state
         VStack(spacing: 24) {
-            Image(systemName: "location.magnifyingglass")
-                .font(.system(size: 48))
-                .foregroundColor(theme.secondaryColor)
+            CurrentLocationButton() { location in
+                onLocationSelected(location, selectedMode)
+            }
 
-            VStack(spacing: 8) {
-                Text("Search for \(selectedMode == .origin ? "origin" : "destination")")
-                    .font(.headline)
-                    .foregroundColor(.primary)
+            FavoritesSectionView(selectedMode: selectedMode) { loc in
+                onLocationSelected(loc, selectedMode)
+            } onMoreTapped: {
+                // more tapped
+            }
 
-                Text("Enter a place name, address, or landmark")
-                    .font(.subheadline)
-                    .foregroundColor(theme.secondaryColor)
-                    .multilineTextAlignment(.center)
+            RecentsSectionView(selectedMode: selectedMode) { loc in
+                onLocationSelected(loc, selectedMode)
+            } onMoreTapped: {
+                // more tapped
             }
         }
-        .padding(.top, 40)
+        .padding(.top, 20)
 
         Spacer()
     }
@@ -131,4 +132,8 @@ struct SearchSheetView: View {
             return "Choose Destination"
         }
     }
+}
+
+#Preview {
+    SearchSheetView(selectedMode: .origin) { _, _ in }
 }
