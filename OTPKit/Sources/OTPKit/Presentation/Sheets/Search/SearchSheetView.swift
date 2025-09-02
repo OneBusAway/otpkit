@@ -17,8 +17,6 @@ struct SearchSheetView: View {
 
     @State private var searchText = ""
     @State private var searchResults: [Location] = []
-    @State private var isSearching = false
-    @FocusState private var isSearchFocused: Bool
 
     // MapKit search
     @State private var searchManager = SearchManager()
@@ -26,140 +24,111 @@ struct SearchSheetView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Search Bar
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(theme.secondaryColor)
-                        .font(.system(size: 16))
-
-                    TextField("Search for places", text: $searchText)
-                        .focused($isSearchFocused)
-                        .font(.system(size: 16))
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .onChange(of: searchText) { newValue in
-                            if newValue.isEmpty {
-                                searchManager.clear()
-                            } else {
-                                searchManager.search(query: newValue)
-                            }
-                        }
-
-                    if !searchText.isEmpty {
-                        Button(action: {
-                            searchText = ""
-                            searchResults = []
-                            searchManager.clear()
-                        }, label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(theme.secondaryColor)
-                                .font(.system(size: 16))
-                        })
+                SearchBar(searchText: $searchText) { newValue in
+                    if newValue.isEmpty {
+                        searchManager.clear()
+                    } else {
+                        searchManager.search(query: newValue)
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
 
                 // Search Results
-                if isSearching {
-                    // Loading state
-                    VStack(spacing: 16) {
-                        ProgressView()
-                            .scaleEffect(1.2)
-                        Text("Searching...")
-                            .font(.subheadline)
-                            .foregroundColor(theme.secondaryColor)
-                    }
-                    .padding(.top, 60)
-                    Spacer()
+                if searchManager.isSearching {
+                    buildSearchingView()
                 } else if searchManager.searchCompletions.isEmpty && !searchText.isEmpty {
-                    // Empty state
-                    VStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 48))
-                            .foregroundColor(theme.secondaryColor)
-
-                        Text("No results found")
-                            .font(.headline)
-                            .foregroundColor(theme.secondaryColor)
-
-                        Text("Try searching for a different location")
-                            .font(.subheadline)
-                            .foregroundColor(theme.secondaryColor)
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding(.top, 60)
-
-                    Spacer()
+                    buildNoSearchResultsView()
                 } else if !searchManager.searchCompletions.isEmpty {
-                    List(searchManager.searchCompletions, id: \.self) { completion in
-                        SearchCompletionRow(completion: completion) {
-                            performDetailedSearch(for: completion)
-                        }
-                        .listRowInsets(EdgeInsets())
-                        .listRowSeparator(.hidden)
-                    }
-                    .listStyle(PlainListStyle())
-                    .padding(.top, 16)
+                    buildSearchResultsView()
                 } else {
-                    // Default state
-                    VStack(spacing: 24) {
-                        Image(systemName: "location.magnifyingglass")
-                            .font(.system(size: 48))
-                            .foregroundColor(theme.secondaryColor)
-
-                        VStack(spacing: 8) {
-                            Text("Search for \(selectedMode == .origin ? "origin" : "destination")")
-                                .font(.headline)
-                                .foregroundColor(.primary)
-
-                            Text("Enter a place name, address, or landmark")
-                                .font(.subheadline)
-                                .foregroundColor(theme.secondaryColor)
-                                .multilineTextAlignment(.center)
-                        }
-                    }
-                    .padding(.top, 40)
-
-                    Spacer()
+                    buildDefaultView()
                 }
             }
-            .navigationTitle("Search Places")
+            .navigationTitle(buildNavigationTitle())
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                isSearchFocused = true
-            }
         }
     }
 
-    private func performDetailedSearch(for completion: MKLocalSearchCompletion) {
-        isSearching = true
+    @ViewBuilder
+    private func buildDefaultView() -> some View {
+        // Default state
+        VStack(spacing: 24) {
+            Image(systemName: "location.magnifyingglass")
+                .font(.system(size: 48))
+                .foregroundColor(theme.secondaryColor)
 
-        let request = MKLocalSearch.Request(completion: completion)
-        let search = MKLocalSearch(request: request)
+            VStack(spacing: 8) {
+                Text("Search for \(selectedMode == .origin ? "origin" : "destination")")
+                    .font(.headline)
+                    .foregroundColor(.primary)
 
-        search.start { response, error in
-            DispatchQueue.main.async {
-                isSearching = false
-
-                guard let response = response,
-                      let item = response.mapItems.first else {
-                    print("Search error: \(error?.localizedDescription ?? "Unknown error")")
-                    return
-                }
-
-                let location = Location(
-                    title: item.name ?? completion.title,
-                    subTitle: item.placemark.title ?? completion.subtitle,
-                    latitude: item.placemark.coordinate.latitude,
-                    longitude: item.placemark.coordinate.longitude
-                )
-
-                onLocationSelected(location, selectedMode)
+                Text("Enter a place name, address, or landmark")
+                    .font(.subheadline)
+                    .foregroundColor(theme.secondaryColor)
+                    .multilineTextAlignment(.center)
             }
+        }
+        .padding(.top, 40)
+
+        Spacer()
+    }
+
+    @ViewBuilder
+    private func buildSearchingView() -> some View {
+        // Loading state
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text("Searching...")
+                .font(.subheadline)
+                .foregroundColor(theme.secondaryColor)
+        }
+        .padding(.top, 60)
+        Spacer()
+    }
+
+    @ViewBuilder
+    private func buildNoSearchResultsView() -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 48))
+                .foregroundColor(theme.secondaryColor)
+
+            Text("No results found")
+                .font(.headline)
+                .foregroundColor(theme.secondaryColor)
+
+            Text("Try searching for a different location")
+                .font(.subheadline)
+                .foregroundColor(theme.secondaryColor)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.top, 60)
+        Spacer()
+    }
+
+    @ViewBuilder
+    private func buildSearchResultsView() -> some View {
+        List(searchManager.searchCompletions, id: \.self) { completion in
+            SearchCompletionRow(completion: completion) {
+                searchManager.performDetailedSearch(for: completion) { location in
+                    onLocationSelected(location, selectedMode)
+                }
+            }
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+        }
+        .listStyle(PlainListStyle())
+        .padding(.top, 16)
+    }
+
+    private func buildNavigationTitle() -> String {
+        switch selectedMode {
+        case .origin:
+            return "Choose Start"
+        case .destination:
+            return "Choose Destination"
         }
     }
 }
