@@ -14,62 +14,387 @@
  * limitations under the License.
  */
 
+import UIKit
 import CoreLocation
 import MapKit
-import OTPKit
 import SwiftUI
+import OTPKit
+
+// MARK: - OTPRegionInfo
+
+struct OTPRegionInfo: Codable {
+    let name: String
+    let description: String
+    let icon: String
+    let url: URL
+    let center: CLLocationCoordinate2D
+    
+    enum CodingKeys: String, CodingKey {
+        case name, description, icon, url
+        case latitude, longitude
+    }
+    
+    init(name: String, description: String, icon: String, url: URL, center: CLLocationCoordinate2D) {
+        self.name = name
+        self.description = description
+        self.icon = icon
+        self.url = url
+        self.center = center
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        description = try container.decode(String.self, forKey: .description)
+        icon = try container.decode(String.self, forKey: .icon)
+        url = try container.decode(URL.self, forKey: .url)
+        let latitude = try container.decode(Double.self, forKey: .latitude)
+        let longitude = try container.decode(Double.self, forKey: .longitude)
+        center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(description, forKey: .description)
+        try container.encode(icon, forKey: .icon)
+        try container.encode(url, forKey: .url)
+        try container.encode(center.latitude, forKey: .latitude)
+        try container.encode(center.longitude, forKey: .longitude)
+    }
+}
 
 @main
-struct OTPKitDemoApp: App {
-    @State private var hasCompletedOnboarding = false
-    @State private var otpConfiguration: OTPConfiguration?
-    @State private var selectedRegionInfo: RegionInfo?
-    @State private var mapProvider: OTPMapProvider?
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var body: some Scene {
-        WindowGroup {
-            if hasCompletedOnboarding, 
-               let config = otpConfiguration,
-               let regionInfo = selectedRegionInfo {
-                let apiService = RestAPIService(baseURL: config.otpServerURL)
-                
-                ZStack {
-                    // The external map view that OTPKit will control
-                    MKMapViewRepresentable(
-                        mapProvider: $mapProvider,
-                        initialRegion: MKCoordinateRegion(
-                            center: regionInfo.center,
-                            latitudinalMeters: 50000,
-                            longitudinalMeters: 50000
-                        ),
-                        showsUserLocation: true
-                    )
-                    .ignoresSafeArea()
-                    
-                    // OTPKit UI overlay - only render once we have a map provider
-                    if let provider = mapProvider {
-                        OTPView(
-                            otpConfig: config, 
-                            apiService: apiService,
-                            mapProvider: provider
-                        )
-                    }
-                }
-            } else {
-                OnboardingView(
-                    hasCompletedOnboarding: $hasCompletedOnboarding,
-                    otpConfiguration: $otpConfiguration,
-                    selectedRegionInfo: $selectedRegionInfo
-                )
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .systemBackground
+
+        // Check if onboarding has been completed
+        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+
+        print("SceneDelegate - Setting up window")
+        print("Has completed onboarding: \(hasCompletedOnboarding)")
+
+        if hasCompletedOnboarding,
+           let serverURL = UserDefaults.standard.url(forKey: "otpServerURL"),
+           let regionData = UserDefaults.standard.data(forKey: "selectedRegion"),
+           let region = try? JSONDecoder().decode(OTPRegionInfo.self, from: regionData) {
+            // Show main OTP view controller
+            let mainViewController = OTPDemoViewController(serverURL: serverURL, regionInfo: region)
+            let navigationController = UINavigationController(rootViewController: mainViewController)
+            window?.rootViewController = navigationController
+        } else {
+            // Show onboarding
+            print("Showing onboarding screen")
+            let onboardingVC = OnboardingViewController()
+            onboardingVC.onboardingCompleteHandler = { [weak self] serverURL, regionInfo in
+                self?.showMainViewController(serverURL: serverURL, regionInfo: regionInfo)
             }
+            window?.rootViewController = onboardingVC
+        }
+
+        window?.makeKeyAndVisible()
+        print("Window is key and visible")
+
+        return true
+    }
+
+    private func showMainViewController(serverURL: URL, regionInfo: OTPRegionInfo) {
+        let mainViewController = OTPDemoViewController(serverURL: serverURL, regionInfo: regionInfo)
+        let navigationController = UINavigationController(rootViewController: mainViewController)
+
+        if let window = window {
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = navigationController
+            })
         }
     }
 }
 
-#Preview("Onboarding") {
-    OnboardingView(
-        hasCompletedOnboarding: .constant(false),
-        otpConfiguration: .constant(nil),
-        selectedRegionInfo: .constant(nil)
-    )
+// MARK: - Main View Controller
+
+class OTPDemoViewController: UIViewController {
+    
+    // MARK: - Properties
+    
+    private let serverURL: URL
+    private let regionInfo: OTPRegionInfo
+    private var mapView: MKMapView!
+    private var mapProvider: OTPMapProvider?
+    private var apiService: RestAPIService!
+    private var otpHostingController: UIHostingController<OTPView>?
+    
+    // MARK: - Initialization
+    
+    init(serverURL: URL, regionInfo: OTPRegionInfo) {
+        self.serverURL = serverURL
+        self.regionInfo = regionInfo
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupMapView()
+        setupOTPKit()
+        setupUI()
+        
+        // Request location permission
+        LocationManager.shared.requestLocationPermission()
+    }
+    
+    // MARK: - Setup
+    
+    private func setupMapView() {
+        mapView = MKMapView()
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.showsUserLocation = true
+        mapView.showsCompass = true
+        mapView.showsScale = true
+        
+        // Set initial region
+        let region = MKCoordinateRegion(
+            center: regionInfo.center,
+            latitudinalMeters: 50000,
+            longitudinalMeters: 50000
+        )
+        mapView.setRegion(region, animated: false)
+        
+        view.addSubview(mapView)
+        
+        NSLayoutConstraint.activate([
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Create the map adapter for OTPKit
+        mapProvider = MKMapViewAdapter(mapView: mapView)
+    }
+    
+    private func setupUI() {
+        title = "OTPKit Demo"
+        
+        // Add clear trip button to navigation bar
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Clear",
+            style: .plain,
+            target: self,
+            action: #selector(clearTripTapped)
+        )
+    }
+    
+    private func setupOTPKit() {
+        // Create OTP configuration
+        let config = OTPConfiguration(
+            otpServerURL: serverURL
+        )
+        
+        // Create API service
+        apiService = RestAPIService(baseURL: serverURL)
+        
+        // Create OTPView with the map provider
+        if let provider = mapProvider {
+            let otpView = OTPView(
+                otpConfig: config,
+                apiService: apiService,
+                mapProvider: provider
+            )
+            
+            // Create hosting controller for OTPView
+            let hostingController = UIHostingController(rootView: otpView)
+            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+            hostingController.view.backgroundColor = .clear
+            
+            // Add as child view controller
+            addChild(hostingController)
+            view.addSubview(hostingController.view)
+            hostingController.didMove(toParent: self)
+            
+            // Store reference
+            otpHostingController = hostingController
+            
+            // Setup constraints to overlay the OTPView UI on top of the map
+            NSLayoutConstraint.activate([
+                hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func planTripTapped() {
+        // This is now handled by OTPKit internally
+    }
+    
+    @objc private func clearTripTapped() {
+        // Clear map annotations and routes
+        mapProvider?.clearAllRoutes()
+        mapProvider?.clearAllAnnotations()
+    }
+    
+    // Map tap handling is now managed by OTPKit through the map provider
+    
+    // MARK: - Trip Planning
+    // Trip planning is now handled by TripPlannerViewModel
+    
+    // MARK: - Helper Methods
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+}
+
+// MARK: - Removed UITextFieldDelegate
+// Text input is now handled by BottomControlsOverlay
+
+// MARK: - Onboarding View Controller
+
+class OnboardingViewController: UIViewController {
+    
+    var onboardingCompleteHandler: ((URL, OTPRegionInfo) -> Void)?
+
+    private var regionPicker: UIPickerView!
+    private var continueButton: UIButton!
+    
+    private let regions = [
+        OTPRegionInfo(
+            name: "Seattle",
+            description: "Puget Sound region",
+            icon: "building.2.fill",
+            url: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!,
+            center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
+        ),
+        OTPRegionInfo(
+            name: "Portland",
+            description: "Portland Metro area",
+            icon: "tram.fill",
+            url: URL(string: "https://otp.trimet.org/otp/routers/default/")!,
+            center: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+        ),
+        OTPRegionInfo(
+            name: "San Francisco",
+            description: "Bay Area transit",
+            icon: "ferry.fill",
+            url: URL(string: "https://otp.example.com")!,
+            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+        )
+    ]
+    
+    private var selectedRegion: OTPRegionInfo?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .systemBackground
+        setupUI()
+        
+        selectedRegion = regions.first
+    }
+    
+    private func setupUI() {
+        let titleLabel = UILabel()
+        titleLabel.text = "OTPKit Demo Setup"
+        titleLabel.font = .systemFont(ofSize: 28, weight: .bold)
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let regionLabel = UILabel()
+        regionLabel.text = "Select Region:"
+        regionLabel.font = .systemFont(ofSize: 16)
+        regionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        regionPicker = UIPickerView()
+        regionPicker.delegate = self
+        regionPicker.dataSource = self
+        regionPicker.translatesAutoresizingMaskIntoConstraints = false
+        
+        continueButton = UIButton(type: .system)
+        continueButton.setTitle("Continue", for: .normal)
+        continueButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        continueButton.backgroundColor = .systemBlue
+        continueButton.setTitleColor(.white, for: .normal)
+        continueButton.layer.cornerRadius = 8
+        continueButton.translatesAutoresizingMaskIntoConstraints = false
+        continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
+        
+        view.addSubview(titleLabel)
+        view.addSubview(regionLabel)
+        view.addSubview(regionPicker)
+        view.addSubview(continueButton)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            regionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            regionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            
+            regionPicker.topAnchor.constraint(equalTo: regionLabel.bottomAnchor, constant: 10),
+            regionPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            regionPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            regionPicker.heightAnchor.constraint(equalToConstant: 150),
+            
+            continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            continueButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            continueButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            continueButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    @objc private func continueTapped() {
+        guard let region = selectedRegion else {
+            let alert = UIAlertController(title: "Invalid Input", message: "Please select a region", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+
+        // Save to UserDefaults
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        UserDefaults.standard.set(region.url, forKey: "otpServerURL")
+
+        if let regionData = try? JSONEncoder().encode(region) {
+            UserDefaults.standard.set(regionData, forKey: "selectedRegion")
+        }
+        
+        onboardingCompleteHandler?(region.url, region)
+    }
+}
+
+// MARK: - UIPickerViewDataSource & UIPickerViewDelegate
+
+extension OnboardingViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return regions.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return regions[row].name
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedRegion = regions[row]
+    }
 }
