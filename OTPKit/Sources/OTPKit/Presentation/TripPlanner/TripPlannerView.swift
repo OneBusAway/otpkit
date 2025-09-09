@@ -50,8 +50,8 @@ private extension TripPlannerView {
     /// Controls shown at the bottom when not previewing a route
     var bottomControls: some View {
         VStack {
-            Spacer()
             BottomControlsOverlay(selectedMode: $selectedMode)
+            Spacer()
         }
     }
 
