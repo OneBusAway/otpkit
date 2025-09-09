@@ -157,6 +157,7 @@ class OTPDemoViewController: UIViewController {
     
     private func setupMapView() {
         mapView = MKMapView()
+        mapView.mapType = .mutedStandard
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = true
         mapView.showsCompass = true
@@ -236,22 +237,13 @@ class OTPDemoViewController: UIViewController {
     }
     
     // MARK: - Actions
-    
-    @objc private func planTripTapped() {
-        // This is now handled by OTPKit internally
-    }
-    
+
     @objc private func clearTripTapped() {
         // Clear map annotations and routes
         mapProvider?.clearAllRoutes()
         mapProvider?.clearAllAnnotations()
     }
-    
-    // Map tap handling is now managed by OTPKit through the map provider
-    
-    // MARK: - Trip Planning
-    // Trip planning is now handled by TripPlannerViewModel
-    
+
     // MARK: - Helper Methods
     
     private func showAlert(title: String, message: String) {
@@ -260,9 +252,6 @@ class OTPDemoViewController: UIViewController {
         present(alert, animated: true)
     }
 }
-
-// MARK: - Removed UITextFieldDelegate
-// Text input is now handled by BottomControlsOverlay
 
 // MARK: - Onboarding View Controller
 
@@ -280,20 +269,6 @@ class OnboardingViewController: UIViewController {
             icon: "building.2.fill",
             url: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!,
             center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
-        ),
-        OTPRegionInfo(
-            name: "Portland",
-            description: "Portland Metro area",
-            icon: "tram.fill",
-            url: URL(string: "https://otp.trimet.org/otp/routers/default/")!,
-            center: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
-        ),
-        OTPRegionInfo(
-            name: "San Francisco",
-            description: "Bay Area transit",
-            icon: "ferry.fill",
-            url: URL(string: "https://otp.example.com")!,
-            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
         )
     ]
     
