@@ -9,8 +9,8 @@ import SwiftUI
 import Flow
 
 public struct TripPlannerResultsView: View {
-    @Environment(\.dismiss) var dismiss
     @Environment(\.otpTheme) private var theme
+    @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
 
     let availableItineraries: [Itinerary]
     let onItinerarySelected: (Itinerary) -> Void
@@ -35,66 +35,82 @@ public struct TripPlannerResultsView: View {
 
     // MARK: - Body
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if hasItineraries {
-                itinerariesList()
+                itinerariesScrollView()
             } else {
                 noItinerariesView()
             }
-
-            Button("Cancel") {
-                dismiss()
-            }
-            .padding()
         }
     }
 
     // MARK: - View Components
-    private func itinerariesList() -> some View {
-        List(availableItineraries, id: \.self) { itinerary in
-            Button(action: {
-                onItinerarySelected(itinerary)
-                dismiss()
-            }, label: {
-                itineraryRow(itinerary: itinerary)
-            })
-            .foregroundStyle(.foreground)
+    private func itinerariesScrollView() -> some View {
+        LazyVStack(spacing: 16) {
+            ForEach(availableItineraries, id: \.self) { itinerary in
+                Button(action: {
+                    onItineraryPreview(itinerary)
+                }, label: {
+                    itineraryRow(itinerary: itinerary)
+                })
+                .foregroundStyle(.foreground)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(.regularMaterial)
+                        .shadow(color: .black.opacity(0.05), radius: 6, y: 3)
+                )
+                .scaleEffect(1.0)
+                .animation(.easeInOut(duration: 0.15), value: itinerary)
+            }
         }
+        .padding(.horizontal, 16)
     }
 
     private func itineraryRow(itinerary: Itinerary) -> some View {
-        HStack(spacing: 20) {
-            itineraryInfo(itinerary: itinerary)
-            previewButton(itinerary: itinerary)
+        HStack(spacing: 16) {
+            // Route info
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Text(formatDuration(itinerary))
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.primary)
+
+                    Spacer()
+
+                    Text(formatStartTime(itinerary))
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.secondary)
+                }
+
+                // Transport modes with improved layout
+                legsFlow(itinerary: itinerary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            // Go button
+            goButton(itinerary: itinerary)
         }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 16)
+        .contentShape(Rectangle())
     }
 
-    private func itineraryInfo(itinerary: Itinerary) -> some View {
-        VStack(alignment: .leading) {
-            Text(formatDuration(itinerary))
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundStyle(.foreground)
-
-            Text(formatStartTime(itinerary))
-                .foregroundStyle(theme.secondaryColor)
-
-            legsFlow(itinerary: itinerary)
-        }
-    }
-
-    private func previewButton(itinerary: Itinerary) -> some View {
+    private func goButton(itinerary: Itinerary) -> some View {
         Button(action: {
-            onItineraryPreview(itinerary)
-            dismiss()
+            onItinerarySelected(itinerary)
         }, label: {
-            Text("Preview")
-                .padding(30)
-                .background(theme.primaryColor)
-                .foregroundStyle(.white)
-                .fontWeight(.bold)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            VStack(spacing: 2) {
+                Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                Text("Go")
+                    .font(.system(size: 12, weight: .bold))
+            }
+            .foregroundStyle(.white)
+            .frame(width: 50, height: 50)
+            .background(theme.primaryColor)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         })
+        .buttonStyle(.plain)
     }
 
     private func legsFlow(itinerary: Itinerary) -> some View {

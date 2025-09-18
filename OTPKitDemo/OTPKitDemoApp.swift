@@ -118,15 +118,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - Main View Controller
 
 class OTPDemoViewController: UIViewController {
-    
+
     // MARK: - Properties
-    
+
     private let serverURL: URL
     private let regionInfo: OTPRegionInfo
     private var mapView: MKMapView!
     private var mapProvider: OTPMapProvider?
     private var apiService: RestAPIService!
-    private var otpHostingController: UIHostingController<OTPView>?
+    private var otpBottomSheet: OTPBottomSheet?
+    private var isTripPlannerPresented = false
     
     // MARK: - Initialization
     
@@ -186,57 +187,59 @@ class OTPDemoViewController: UIViewController {
     
     private func setupUI() {
         title = "OTPKit Demo"
-        
-        // Add clear trip button to navigation bar
+
+        // Add navigation bar buttons
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Trip Planner",
+            style: .plain,
+            target: self,
+            action: #selector(showTripPlannerTapped)
+        )
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Clear",
             style: .plain,
             target: self,
             action: #selector(clearTripTapped)
         )
+
+        // Add floating action button for trip planning
+        setupFloatingActionButton()
     }
-    
+
+    private func setupFloatingActionButton() {
+        let fabButton = UIButton(type: .system)
+        fabButton.setTitle("🗺️", for: .normal)
+        fabButton.titleLabel?.font = .systemFont(ofSize: 24)
+        fabButton.backgroundColor = .systemBlue
+        fabButton.layer.cornerRadius = 28
+        fabButton.layer.shadowColor = UIColor.black.cgColor
+        fabButton.layer.shadowOpacity = 0.3
+        fabButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        fabButton.layer.shadowRadius = 4
+        fabButton.translatesAutoresizingMaskIntoConstraints = false
+        fabButton.addTarget(self, action: #selector(showTripPlannerTapped), for: .touchUpInside)
+
+        view.addSubview(fabButton)
+
+        NSLayoutConstraint.activate([
+            fabButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            fabButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            fabButton.widthAnchor.constraint(equalToConstant: 56),
+            fabButton.heightAnchor.constraint(equalToConstant: 56)
+        ])
+    }
+
     private func setupOTPKit() {
-        // Create OTP configuration
-        let config = OTPConfiguration(
-            otpServerURL: serverURL
-        )
-        
         // Create API service
         apiService = RestAPIService(baseURL: serverURL)
-        
-        // Create OTPView with the map provider
-        if let provider = mapProvider {
-            let otpView = OTPView(
-                otpConfig: config,
-                apiService: apiService,
-                mapProvider: provider
-            )
-            
-            // Create hosting controller for OTPView
-            let hostingController = UIHostingController(rootView: otpView)
-            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-            hostingController.view.backgroundColor = .clear
-            
-            // Add as child view controller
-            addChild(hostingController)
-            view.addSubview(hostingController.view)
-            hostingController.didMove(toParent: self)
-            
-            // Store reference
-            otpHostingController = hostingController
-            
-            // Setup constraints to overlay the OTPView UI on top of the map
-            NSLayoutConstraint.activate([
-                hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
-        }
     }
     
     // MARK: - Actions
+
+    @objc private func showTripPlannerTapped() {
+        presentTripPlanner()
+    }
 
     @objc private func clearTripTapped() {
         // Clear map annotations and routes
@@ -244,12 +247,46 @@ class OTPDemoViewController: UIViewController {
         mapProvider?.clearAllAnnotations()
     }
 
+    private func presentTripPlanner() {
+        guard let provider = mapProvider else { return }
+
+        isTripPlannerPresented = true
+
+        // Create OTP configuration
+        let config = OTPConfiguration(
+            otpServerURL: serverURL
+        )
+
+        // Create bottom sheet and present OTPView
+        otpBottomSheet = OTPBottomSheet(
+            otpConfig: config,
+            apiService: apiService,
+            mapProvider: provider
+        )
+        otpBottomSheet?.delegate = self
+        otpBottomSheet?.present(on: self)
+    }
+
+    @objc private func tripPlannerDismissed() {
+        isTripPlannerPresented = false
+        otpBottomSheet?.dismiss()
+        otpBottomSheet = nil
+    }
+
     // MARK: - Helper Methods
-    
+
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+}
+
+// MARK: - OTPBottomSheetDelegate
+extension OTPDemoViewController: OTPBottomSheetDelegate {
+    public func bottomSheetDidChangePosition(_ position: BottomSheetPosition) {
+        // Handle position changes if needed
+        print("Bottom sheet moved to position: \(position)")
     }
 }
 

@@ -46,8 +46,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     @Published var triPlanResponse: OTPResponse?
     /// Error message to display to user
     @Published var errorMessage: String?
-    /// Whether to show the trip results sheet
-    @Published var showingTripResults = false
 
     /// Whether to show error alert
     @Published var showingError = false
@@ -58,6 +56,9 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     /// Whether to show the route polyline on map
     @Published var showingPolyline = false
 
+    /// Whether currently previewing a route (for UI state)
+    @Published var isPreviewingRoute = false
+
     // MARK: - Configuration
 
     /// OTP configuration containing server URL and enabled transport modes
@@ -65,7 +66,7 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     /// API service for making trip planning requests
     private let apiService: APIService
-    
+
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
 
@@ -196,8 +197,6 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     private func handleSuccess(_ response: OTPResponse) {
         triPlanResponse = response
         isLoading = false
-        showingTripResults = true
-        showTripResultsSheet()
         HapticManager.shared.success()
     }
 
@@ -214,18 +213,17 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
     // MARK: - Sheet Presentation
 
-    /// Present the trip results sheet
-    func showTripResultsSheet() {
-        present(.tripResults)
-    }
-
     // MARK: - Preview Management
 
     /// Clear the current route preview from the map
     func clearPreview() {
         selectedItinerary = nil
         showingPolyline = false
+        isPreviewingRoute = false
         mapCoordinator.clearRoute()
+
+        // Notify that route preview ended - bottom sheet should restore position
+        NotificationCenter.default.post(name: BottomSheetNotifications.endRoutePreview, object: nil)
     }
 
     /// Show route preview on the map for a specific itinerary
@@ -233,7 +231,11 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
     private func showPreview(for itinerary: Itinerary) {
         selectedItinerary = itinerary
         showingPolyline = true
+        isPreviewingRoute = true
         mapCoordinator.showItinerary(itinerary)
+
+        // Notify that route preview started - bottom sheet should move to tip position
+        NotificationCenter.default.post(name: BottomSheetNotifications.startRoutePreview, object: nil)
     }
 
     // MARK: - Action Handlers
@@ -268,21 +270,23 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
         selectedItinerary = itinerary
         showingPolyline = true
         mapCoordinator.showItinerary(itinerary)
-        
+
         // Zoom to origin for turn-by-turn directions like Apple Maps
         if let origin = selectedOrigin {
             mapCoordinator.centerOn(coordinate: origin.coordinate)
         }
         dismiss()
         present(.directions)
+
+        // Keep bottom sheet at tip position for directions (Apple Maps style)
+        NotificationCenter.default.post(name: BottomSheetNotifications.startRoutePreview, object: nil)
     }
 
     /// Handle itinerary preview (user wants to see route on map)
-    /// Shows preview on map and dismisses current sheet
+    /// Shows preview on map
     /// - Parameter itinerary: The itinerary to preview
     func handleItineraryPreview(_ itinerary: Itinerary) {
         showPreview(for: itinerary)
-        dismiss()
     }
 
     // MARK: - Reset Functionality
@@ -300,8 +304,12 @@ class TripPlannerViewModel: SheetPresenter, ObservableObject {
 
         // Reset map state
         showingPolyline = false
+        isPreviewingRoute = false
         mapCoordinator.clearRoute()
         mapCoordinator.clearLocations()
+
+        // Notify that route preview ended - bottom sheet should restore position
+        NotificationCenter.default.post(name: BottomSheetNotifications.endRoutePreview, object: nil)
 
         // Clear error states
         errorMessage = nil

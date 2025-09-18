@@ -12,7 +12,7 @@ import MapKit
 public struct OTPView: View {
     /// ViewModel managing trip planning state and logic
     @StateObject private var tripPlannerVM: TripPlannerViewModel
-    
+
     /// Map coordinator for managing map operations
     @StateObject private var mapCoordinator: MapCoordinator
 
@@ -42,7 +42,7 @@ public struct OTPView: View {
         )
         tripPlannerVM.selectedOrigin = origin
         tripPlannerVM.selectedDestination = destination
-        
+
         self._tripPlannerVM = StateObject(wrappedValue: tripPlannerVM)
         self._mapCoordinator = StateObject(wrappedValue: mapCoordinator)
         self.otpConfig = otpConfig
@@ -58,7 +58,7 @@ public struct OTPView: View {
                 if tripPlannerVM.selectedOrigin == nil {
                     await tripPlannerVM.setCurrentLocationAsOrigin()
                 }
-                
+
                 // Show user location on the map
                 mapCoordinator.showUserLocation(true)
             }
@@ -68,7 +68,7 @@ public struct OTPView: View {
 #Preview {
     let mapView = MKMapView()
     let mapProvider = MKMapViewAdapter(mapView: mapView)
-    
+
     return OTPView(
         otpConfig: OTPConfiguration(
             otpServerURL: URL(string: "https://example.com")!
