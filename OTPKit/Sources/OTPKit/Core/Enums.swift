@@ -76,7 +76,6 @@ public enum OverlayContentType {
 }
 
 enum Sheet: Identifiable, Hashable {
-    case tripResults
     case locationOptions(LocationMode)
     case directions
     case search(LocationMode)

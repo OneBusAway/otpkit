@@ -61,6 +61,7 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         lineWidth: CGFloat,
         identifier: String
     ) {
+        print("Adding Route")
         guard let mapView = mapView else { return }
         
         // Remove existing route with same identifier if present

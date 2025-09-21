@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 /// Main view for planning trips, showing controls and results.
-/// The map is provided externally and controlled via MapCoordinator.
+/// Full-screen interface with navigation bar, top controls, and inline results.
 struct TripPlannerView: View {
     /// ViewModel managing trip planning state and logic
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
@@ -20,6 +20,9 @@ struct TripPlannerView: View {
 
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
+    /// Environment dismiss action
+    @Environment(\.dismiss) private var dismiss
+
     /// OTP configuration for the planner
     let otpConfig: OTPConfiguration
 
@@ -29,12 +32,52 @@ struct TripPlannerView: View {
     }
 
     public var body: some View {
-        ZStack {
-            // Note: Map is now provided externally and controlled via MapCoordinator
-            if !tripPlannerVM.showingPolyline { bottomControls }
-            if tripPlannerVM.showingPolyline { previewControls }
+        NavigationView {
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(spacing: 0, pinnedViews: []) {
+                    // Top controls for location selection and trip planning
+                    TopControlsOverlay(selectedMode: $selectedMode)
+                        .padding(.bottom, 24)
 
-            if tripPlannerVM.isLoading { LoadingOverlay() }
+                    // Trip results (shown inline when available)
+                    if !tripPlannerVM.itineraries.isEmpty {
+                        tripResultsSection
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .top).combined(with: .opacity),
+                                removal: .opacity
+                            ))
+                    }
+
+                    // Bottom spacer for proper scrolling and safe area
+                    Spacer(minLength: 120)
+                }
+                .padding(.top, 8)
+            }
+            .scrollDismissesKeyboard(.interactively)
+            .navigationTitle("Trip Planning")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Close") {
+                        tripPlannerVM.resetTripPlanner()
+                        dismiss()
+                    }
+                }
+            }
+            .onDisappear {
+                // Notify when the view disappears to restore navigation UI
+                NotificationCenter.default.post(
+                    name: Notification.Name("TripPlannerDismissed"),
+                    object: nil
+                )
+            }
+            .overlay {
+                // Loading overlay
+                if tripPlannerVM.isLoading {
+                    LoadingOverlay()
+                }
+            }
         }
         .errorCard(
             isPresented: tripPlannerVM.showingError,
@@ -43,38 +86,40 @@ struct TripPlannerView: View {
         )
         .sheet(item: $tripPlannerVM.activeSheet, content: sheetView)
     }
-}
 
-// MARK: - View Components
-private extension TripPlannerView {
-    /// Controls shown at the bottom when not previewing a route
-    var bottomControls: some View {
-        VStack {
-            BottomControlsOverlay(selectedMode: $selectedMode)
-            Spacer()
-        }
-    }
+    // MARK: - Trip Results Section
 
-    /// Controls shown when previewing a selected itinerary
-    var previewControls: some View {
-        VStack {
-            Spacer()
-            if let itinerary = tripPlannerVM.selectedItinerary,
-               tripPlannerVM.activeSheet != .directions {
-                tripPreviewControl(for: itinerary)
+    private var tripResultsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Section header with improved spacing
+            HStack {
+                Text("Route Options")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                Spacer()
+
+                // Results count badge
+                Text("\(tripPlannerVM.itineraries.count)")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(.quaternary, in: Capsule())
             }
+            .padding(.horizontal, 16)
+
+            // Results with proper spacing
+            TripPlannerResultsView(
+                availableItineraries: tripPlannerVM.itineraries,
+                onItinerarySelected: tripPlannerVM.handleItinerarySelection,
+                onItineraryPreview: tripPlannerVM.handleItineraryPreview
+            )
         }
     }
-
-    /// Control for previewing and starting a trip
-    func tripPreviewControl(for itinerary: Itinerary) -> some View {
-        TripPreviewControl(
-            itinerary: itinerary,
-            onCancel: tripPlannerVM.clearPreview,
-            onStart: tripPlannerVM.handleItinerarySelection
-        )
-    }
 }
+
 
 // MARK: - Sheet Content
 private extension TripPlannerView {
@@ -82,13 +127,6 @@ private extension TripPlannerView {
     @ViewBuilder
     func sheetView(for sheet: Sheet) -> some View {
         switch sheet {
-        case .tripResults:
-            TripPlannerResultsView(
-                availableItineraries: tripPlannerVM.itineraries,
-                onItinerarySelected: tripPlannerVM.handleItinerarySelection,
-                onItineraryPreview: tripPlannerVM.handleItineraryPreview
-            )
-
         case .locationOptions(let mode):
             LocationOptionsSheet(
                 selectedMode: mode,
@@ -138,4 +176,5 @@ private extension TripPlannerView {
         )
     )
     .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
+    .environmentObject(MapCoordinator(mapProvider: MKMapViewAdapter(mapView: MKMapView())))
 }
