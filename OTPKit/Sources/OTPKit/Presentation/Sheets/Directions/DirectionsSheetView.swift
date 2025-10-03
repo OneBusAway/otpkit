@@ -36,6 +36,7 @@ struct DirectionsSheetView: View {
                     .frame(height: 50)
                     .listRowInsets(EdgeInsets())
                 }
+                .listRowBackground(Color.clear)
 
                 if let itinerary = tripPlannerVM.selectedItinerary {
                     Section {
@@ -43,6 +44,7 @@ struct DirectionsSheetView: View {
                         createLegsView(itinerary: itinerary)
                         createDestinationView(itinerary: itinerary)
                     }
+                    .listRowBackground(Color.clear)
                 }
             }
             .padding(.horizontal, 12)
