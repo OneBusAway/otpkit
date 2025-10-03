@@ -202,32 +202,6 @@ class OTPDemoViewController: UIViewController {
             target: self,
             action: #selector(clearTripTapped)
         )
-
-        // Add floating action button for trip planning
-        setupFloatingActionButton()
-    }
-
-    private func setupFloatingActionButton() {
-        let fabButton = UIButton(type: .system)
-        fabButton.setTitle("🗺️", for: .normal)
-        fabButton.titleLabel?.font = .systemFont(ofSize: 24)
-        fabButton.backgroundColor = .systemBlue
-        fabButton.layer.cornerRadius = 28
-        fabButton.layer.shadowColor = UIColor.black.cgColor
-        fabButton.layer.shadowOpacity = 0.3
-        fabButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-        fabButton.layer.shadowRadius = 4
-        fabButton.translatesAutoresizingMaskIntoConstraints = false
-        fabButton.addTarget(self, action: #selector(showTripPlannerTapped), for: .touchUpInside)
-
-        view.addSubview(fabButton)
-
-        NSLayoutConstraint.activate([
-            fabButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            fabButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            fabButton.widthAnchor.constraint(equalToConstant: 56),
-            fabButton.heightAnchor.constraint(equalToConstant: 56)
-        ])
     }
 
     private func setupOTPKit() {
