@@ -27,21 +27,35 @@ xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator
 ```
 
 ### Run Tests
-
-```
+```bash
+# Run all tests
 xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' test
+
+# Run specific test (XCTest framework in OTPKit package)
+swift test --filter OTPKitTests.RestAPIServiceTests/testFetchPlan
+
+# Run Swift Testing tests (OTPKitDemoTests)
+xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
 ```
 
 ### Linting & Code Quality
 ```bash
-# The project does not currently have a linter configured
-# Consider adding SwiftLint or SwiftFormat if needed
+# Run SwiftLint
+swiftlint
+
+# Auto-fix issues
+swiftlint --fix
+
+# Install SwiftLint if needed
+brew install swiftlint
 ```
 
 ## Architecture
 
 ### Package Dependencies
-- **External**: None (pure Swift implementation)
+- **External**:
+  - `SwiftUI-Flow` (from tevelee/SwiftUI-Flow.git, 3.1.0+) - Flow layout for SwiftUI
+  - `FloatingPanel` (from scenee/FloatingPanel.git, 3.0.0+) - Bottom sheet panel UI
 - **System Frameworks**:
   - SwiftUI (UI components)
   - MapKit (Map display and interactions)
@@ -63,25 +77,31 @@ xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator
     - `LocationManager` - Singleton for CoreLocation integration
     - `SearchManager` - Location search and geocoding
   - `Types/` - Custom error types and enums
+  - `Map/` - Map coordination and provider abstraction
+    - `OTPMapProvider` - Protocol for external map implementations
+    - `MapCoordinator` - Manages map state and operations
+    - `MKMapViewAdapter` - MapKit implementation of OTPMapProvider
 - `Network/` - API communication layer
   - `APIService` - Protocol defining trip planning interface
-  - `RestAPIService` - OTP 1.x REST API implementation
+  - `RestAPIService` - OTP 1.x REST API implementation (actor-based)
   - `GraphQLAPIService` - OTP 2.x GraphQL placeholder (not implemented)
   - `URLDataLoader` - Network request handling
 - `Presentation/` - SwiftUI views and ViewModels
   - `OTPView` - Main entry point view that sets up the environment
   - `TripPlannerView` - Primary UI for trip planning
   - `ViewModel/TripPlannerViewModel` - Main state management (@MainActor)
-  - `Map/` - Map-related views and state management
-  - `Sheets/` - Bottom sheet UI components
-  - `Common/` - Reusable UI components
+  - `Sheets/` - Bottom sheet UI components (search, directions, options)
+  - `BottomControls/` - Controls for location selection and planning
+  - `TopControls/` - Top UI controls
+  - `OTPPanel/` - Bottom sheet implementation using FloatingPanel
 
 ### Key Integration Points
 
-1. **Initialization**: Create `OTPConfiguration` with server URL and region, then instantiate `OTPView` with config and API service
-2. **API Service**: Implement `APIService` protocol for custom networking or use provided `RestAPIService`
-3. **Location Services**: `LocationManager.shared` handles location permissions and current location updates
-4. **Theme Customization**: Configure appearance via `OTPThemeConfiguration` in the config
+1. **Initialization**: Host app provides an `OTPMapProvider` implementation, creates `OTPConfiguration` with server URL, then instantiates `OTPView`
+2. **Map Provider**: OTPKit controls an external map view through the `OTPMapProvider` protocol - host app retains ownership of the actual map view
+3. **API Service**: Implement `APIService` protocol for custom networking or use provided `RestAPIService`
+4. **Location Services**: `LocationManager.shared` handles location permissions and current location updates
+5. **Theme Customization**: Configure appearance via `OTPThemeConfiguration` in the config
 
 ### Data Flow
 
@@ -89,6 +109,7 @@ xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator
 2. ViewModel calls `APIService` to fetch trip plans from OTP server
 3. Response models (OTPResponse, Itinerary, etc.) are decoded and stored in ViewModel
 4. UI updates reactively via SwiftUI property wrappers (@Published, @StateObject)
+5. Map updates are coordinated through `MapCoordinator` which calls methods on the `OTPMapProvider`
 
 ## Development Notes
 
@@ -99,6 +120,8 @@ xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator
 - The demo app includes an onboarding flow for server configuration
 - All models conform to `Codable` for JSON serialization
 - Views use `@StateObject`, `@Published`, and `@EnvironmentObject` for reactive updates
+- `RestAPIService` is an actor for thread-safe network operations
+- `TripPlannerViewModel` is marked `@MainActor` for UI thread safety
 
 ## Testing
 
@@ -127,20 +150,26 @@ func testFetchPlan() async throws {
 ```swift
 import OTPKit
 
-// 1. Create configuration
+// 1. Create your map view (OTPKit doesn't provide one)
+let mapView = MKMapView()
+let mapProvider = MKMapViewAdapter(mapView: mapView)
+
+// 2. Create configuration
 let config = OTPConfiguration(
-    serverURL: URL(string: "https://otp.example.com")!,
-    region: MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
-        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-    )
+    otpServerURL: URL(string: "https://otp.example.com")!,
+    enabledTransportModes: [.transit, .walk, .bike],
+    themeConfiguration: OTPThemeConfiguration(primaryColor: .blue)
 )
 
-// 2. Initialize API service
-let apiService = RestAPIService(configuration: config)
+// 3. Initialize API service
+let apiService = RestAPIService(baseURL: config.otpServerURL)
 
-// 3. Create and present OTP view
-let otpView = OTPView(configuration: config, apiService: apiService)
+// 4. Create and present OTP view
+let otpView = OTPView(
+    otpConfig: config,
+    apiService: apiService,
+    mapProvider: mapProvider
+)
 ```
 
 ### Custom Theme Configuration
@@ -150,16 +179,36 @@ let themeConfig = OTPThemeConfiguration(
     secondaryColor: .green,
     backgroundColor: .systemBackground
 )
-config.themeConfiguration = themeConfig
+let config = OTPConfiguration(
+    otpServerURL: url,
+    themeConfiguration: themeConfig
+)
 ```
 
 ### Implementing Custom API Service
 ```swift
-class CustomAPIService: APIService {
-    func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
+public actor CustomAPIService: APIService {
+    public func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
         // Custom implementation
         // e.g., add authentication, caching, etc.
     }
+}
+```
+
+### Implementing Custom Map Provider
+```swift
+class CustomMapProvider: OTPMapProvider {
+    // Implement all required protocol methods
+    // to integrate with your preferred mapping solution
+    func addRoute(coordinates: [CLLocationCoordinate2D], color: Color, lineWidth: CGFloat, identifier: String) {
+        // Add route to your map
+    }
+
+    func addAnnotation(coordinate: CLLocationCoordinate2D, title: String, subtitle: String?, identifier: String, type: OTPAnnotationType) {
+        // Add marker to your map
+    }
+
+    // ... implement remaining protocol methods
 }
 ```
 
@@ -169,6 +218,7 @@ class CustomAPIService: APIService {
 - `TripPlannerViewModel` is marked with `@MainActor` for UI thread safety
 - Uses `@Published` properties for reactive UI updates
 - Async/await for API calls with proper error handling
+- Implements `SheetPresenter` protocol for managing bottom sheet presentations
 
 ### Location State Management
 ```swift
@@ -183,38 +233,10 @@ LocationManager.shared.$currentLocation
 ```
 
 ### Sheet Presentation Pattern
-- Uses `SheetPresenter` for bottom sheet management
-- Sheets are defined in the `Sheet` enum
+- Uses `PresentationManager` generic class for type-safe sheet management
+- Sheets are defined in the `Sheet` enum: `.locationOptions`, `.directions`, `.search`, `.advancedOptions`
 - Each sheet view is self-contained with its own state
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Build Failures**
-   - Ensure Xcode 15+ is installed
-   - Check iOS deployment target is 17.0+
-   - Clean build folder: `cmd+shift+k`
-
-2. **Location Services Not Working**
-   - Check Info.plist has required location usage descriptions
-   - Verify simulator/device location services are enabled
-   - Reset location permissions in Settings if needed
-
-3. **API Connection Issues**
-   - Verify OTP server URL is correct and accessible
-   - Check if server supports CORS for web testing
-   - Ensure server version matches API service (REST for 1.x)
-
-4. **SwiftUI Preview Crashes**
-   - Use `PreviewHelpers` for mock data
-   - Ensure environment objects are provided in previews
-   - Check for force unwrapped optionals
-
-### Debug Tips
-- Enable network debugging: `URLDataLoader` logs requests/responses
-- Use `DebugDescriptionBuilder` for readable model output
-- Check `OTPKitError` types for specific failure reasons
+- Bottom sheet uses `FloatingPanel` library for iOS native behavior
 
 ## Code Style & Conventions
 
@@ -224,6 +246,7 @@ LocationManager.shared.$currentLocation
 - Use meaningful variable names (avoid abbreviations)
 - Prefer `let` over `var` when possible
 - Use trailing closure syntax for single closure parameters
+- SwiftLint configuration in `.swiftlint.yml` (disabled rules: identifier_name, todo)
 
 ### SwiftUI Best Practices
 - Keep views small and focused (extract subviews)
@@ -237,9 +260,3 @@ LocationManager.shared.$currentLocation
 - Keep protocols and implementations separate
 - Place extensions in separate files when substantial
 - Use descriptive file names matching the primary type
-
-### Documentation
-- Add doc comments for public APIs
-- Include usage examples in comments
-- Document complex algorithms
-- Keep README up to date

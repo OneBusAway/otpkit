@@ -27,11 +27,13 @@ let package = Package(
             dependencies: [
                 .product(name: "Flow", package: "SwiftUI-Flow"),
                 .product(name: "FloatingPanel", package: "FloatingPanel")
-            ]
+            ],
+            path: "OTPKit/Sources/OTPKit"
         ),
         .testTarget(
             name: "OTPKitTests",
             dependencies: ["OTPKit"],
+            path: "OTPKit/Tests/OTPKitTests",
             resources: [
                 .process("Fixtures")
             ]
