@@ -270,17 +270,10 @@ public class OTPBottomSheet {
 }
 
 // MARK: - FloatingPanelControllerDelegate
+
 extension OTPBottomSheet: FloatingPanelControllerDelegate {
     public func floatingPanelDidChangeState(_ fpc: FloatingPanelController) {
         let position = BottomSheetPosition(from: fpc.state)
         delegate?.bottomSheetDidChangePosition(position)
-    }
-
-    public func floatingPanelWillBeginDragging(_ fpc: FloatingPanelController) {
-        // Can be used for additional drag handling if needed
-    }
-
-    public func floatingPanelDidEndDragging(_ fpc: FloatingPanelController, withVelocity velocity: CGPoint, targetState: UnsafeMutablePointer<FloatingPanelState>) {
-        // Can be used for custom target state logic if needed
     }
 }
