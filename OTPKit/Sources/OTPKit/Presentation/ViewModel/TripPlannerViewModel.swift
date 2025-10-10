@@ -13,7 +13,7 @@ import SwiftUI
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
-class TripPlannerViewModel: SheetPresenter, ObservableObject {
+class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
     // MARK: - Published Properties
 
     /// Currently active sheet being presented

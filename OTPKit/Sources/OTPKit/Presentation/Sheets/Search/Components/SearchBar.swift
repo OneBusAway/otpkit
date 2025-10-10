@@ -24,7 +24,7 @@ struct SearchBar: View {
                 .focused($isSearchFocused)
                 .font(.system(size: 16))
                 .textFieldStyle(PlainTextFieldStyle())
-                .onChange(of: searchText) { newValue in
+                .onChange(of: searchText) { _, newValue in
                     onSearchTextChange(newValue)
                 }
 
