@@ -207,9 +207,9 @@ public class MapCoordinator: ObservableObject {
     }
     
     private func addTransportModeAnnotation(for leg: Leg, index: Int, coordinates: [CLLocationCoordinate2D]) {
-        let midIndex = coordinates.count / 2
-        let position = coordinates[midIndex]
-        
+//        let midIndex = coordinates.count / 2
+//        let position = coordinates[midIndex]
+
         // For now, we'll skip mode annotations as they require custom rendering
         // This can be enhanced later with custom annotation views
     }

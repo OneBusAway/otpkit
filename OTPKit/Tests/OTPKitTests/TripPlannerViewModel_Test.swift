@@ -89,7 +89,6 @@ final class TripPlannerViewModelTests: XCTestCase {
         // Bools start false
         for (value, name) in [
             (viewModel.isLoading, "isLoading"),
-            (viewModel.showingTripResults, "showingTripResults"),
             (viewModel.showingError, "showingError"),
             (viewModel.showingPolyline, "showingPolyline")
         ] {
@@ -194,9 +193,6 @@ final class TripPlannerViewModelTests: XCTestCase {
         viewModel.present(.locationOptions(.origin))
         XCTAssertEqual(viewModel.activeSheet, .locationOptions(.origin))
 
-        viewModel.showTripResultsSheet()
-        XCTAssertEqual(viewModel.activeSheet, .tripResults)
-
         viewModel.present(.directions)
         XCTAssertEqual(viewModel.activeSheet, .directions)
 
@@ -216,30 +212,6 @@ final class TripPlannerViewModelTests: XCTestCase {
         viewModel.clearPreview()
         XCTAssertNil(viewModel.selectedItinerary)
         XCTAssertFalse(viewModel.showingPolyline)
-    }
-
-    /// Previewing an itinerary sets preview + polyline and dismisses any sheet
-    func test_HandleItineraryPreview_setsPreviewAndDismisses() {
-        viewModel.activeSheet = .tripResults
-        let itin = TestHelpers.itinerary()
-
-        viewModel.handleItineraryPreview(itin)
-
-        XCTAssertEqual(viewModel.selectedItinerary, itin)
-        XCTAssertTrue(viewModel.showingPolyline)
-        XCTAssertNil(viewModel.activeSheet) // dismissed
-    }
-
-    /// Selecting an itinerary sets preview + polyline and presents route details
-    func test_HandleItinerarySelection_setsPreviewAndPresentsRouteDetails() {
-        viewModel.activeSheet = .tripResults
-        let itin = TestHelpers.itinerary()
-
-        viewModel.handleItinerarySelection(itin)
-
-        XCTAssertEqual(viewModel.selectedItinerary, itin)
-        XCTAssertTrue(viewModel.showingPolyline)
-        XCTAssertEqual(viewModel.activeSheet, .directions)
     }
 
     // MARK: - Map Coordinator

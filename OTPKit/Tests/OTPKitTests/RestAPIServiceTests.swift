@@ -29,6 +29,18 @@ class RestAPIServiceTests: OTPTestCase {
         mockDataLoader = (restAPIService.dataLoader as? MockDataLoader)!
     }
 
+    /// Some regions in the OBA regions directory ("https://regions.onebusaway.org/regions-v3.json") are missing
+    /// some required parts of their URL path. I don't understand why, exactly. It seems to be a behavior carried over from older
+    /// versions of OTP, and then never corrected in the regions directory. {shrug}
+    ///
+    /// In any case, by default the OBA Android app munges "routers/default" onto its URLs when making requests to the OTP server.
+    /// If it gets a 500 error back from the server, it removes the munged "routers/default" from subsequent API calls. Yuck.
+    func testSDMTSURLMunging() {
+        let sdmtsService = buildRestAPIService(baseURLString: "https://realtime.sdmts.com:9091/otp")
+        let urlString = sdmtsService.buildURL(endpoint: "plan").absoluteString
+        XCTAssertEqual(urlString, "https://realtime.sdmts.com:9091/otp/routers/default/plan")
+    }
+
     func testFetchPlanWithTripPlanRequest() async throws {
         // Arrange
         let request = createTripPlanRequest(transportModes: [.transit, .walk], maxWalkDistance: 800)

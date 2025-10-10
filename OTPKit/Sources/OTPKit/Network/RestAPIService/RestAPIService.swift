@@ -21,7 +21,7 @@ import OSLog
 
 /// Actor-based REST API client for OTP trip planning
 public actor RestAPIService: APIService {
-    public let baseURL: URL
+    public nonisolated let baseURL: URL
     public nonisolated let dataLoader: URLDataLoader
 
     /// Creates a REST API client
@@ -32,7 +32,7 @@ public actor RestAPIService: APIService {
         baseURL: URL,
         dataLoader: URLDataLoader = URLSession.shared
     ) {
-        self.baseURL = baseURL
+        self.baseURL = Self.normalizeBaseURL(baseURL)
         self.dataLoader = dataLoader
     }
 
@@ -98,8 +98,25 @@ public actor RestAPIService: APIService {
     }
 
     /// Builds a URL for the given endpoint
-    private func buildURL(endpoint: String) -> URL {
+    nonisolated func buildURL(endpoint: String) -> URL {
         baseURL.appending(path: endpoint)
+    }
+
+    /// Normalizes the base URL by appending `/routers/default` if it doesn't already end with `/routers/<something>`
+    /// - Parameter url: The base URL to normalize
+    /// - Returns: Normalized URL with router path included
+    private static func normalizeBaseURL(_ url: URL) -> URL {
+        let path = url.path()
+
+        // Check if the path already ends with /routers/<something>
+        let routerPattern = #/routers/[^/]+/?$/#
+        let hasRouterPath = path.contains(routerPattern)
+
+        if hasRouterPath {
+            return url
+        } else {
+            return url.appending(path: "routers/default")
+        }
     }
 
     private lazy var logger = Logger(subsystem: "org.onebusaway.otpkit", category: "RESTAPIService")

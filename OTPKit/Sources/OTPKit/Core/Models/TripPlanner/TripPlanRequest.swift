@@ -126,7 +126,9 @@ public struct TripPlanRequest: Codable, Hashable {
 
 // MARK: - CLLocationCoordinate2D Codable Extension
 
-extension CLLocationCoordinate2D: Codable {
+extension CLLocationCoordinate2D: @retroactive Decodable {}
+extension CLLocationCoordinate2D: @retroactive Encodable {}
+extension CLLocationCoordinate2D {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let latitude = try container.decode(Double.self, forKey: .latitude)
