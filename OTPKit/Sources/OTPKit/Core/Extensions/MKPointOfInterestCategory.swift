@@ -1,0 +1,91 @@
+//
+//  MKPointOfInterestCategory.swift
+//  
+//
+//  Created by Aaron Brethorst on 10/21/25.
+//
+
+import MapKit
+
+public extension MKPointOfInterestCategory {
+
+    /// Returns the SF Symbol name that best represents this POI category.
+    var symbolName: String {
+        switch self {
+        case .airport: return "airplane"
+        case .amusementPark: return "ferriswheel"
+        case .animalService: return "pawprint.fill"
+        case .aquarium: return "fish.fill"
+        case .atm: return "banknote"
+        case .automotiveRepair: return "wrench.and.screwdriver"
+        case .bakery: return "birthday.cake"
+        case .bank: return "building.columns"
+        case .baseball: return "baseball.fill"
+        case .basketball: return "basketball.fill"
+        case .beach: return "beach.umbrella"
+        case .beauty: return "scissors"
+        case .bowling: return "bowling.ball"
+        case .brewery: return "beer.mug"
+        case .cafe: return "cup.and.saucer"
+        case .campground: return "tent"
+        case .carRental: return "car"
+        case .castle: return "building.2"
+        case .conventionCenter: return "building"
+        case .distillery: return "wineglass"
+        case .evCharger: return "bolt.car"
+        case .fairground: return "balloon.2"
+        case .fireStation: return "flame"
+        case .fishing: return "fish"
+        case .fitnessCenter: return "figure.run"
+        case .foodMarket: return "cart"
+        case .fortress: return "building.2.crop.circle"
+        case .gasStation: return "fuelpump"
+        case .golf: return "figure.golf"
+        case .goKart: return "car.race"
+        case .hiking: return "figure.hiking"
+        case .hospital: return "cross.case"
+        case .hotel: return "bed.double"
+        case .kayaking: return "figure.outdoor.cycle"
+        case .landmark: return "mappin.and.ellipse"
+        case .laundry: return "washer"
+        case .library: return "books.vertical"
+        case .mailbox: return "mail.stack"
+        case .marina: return "ferry"
+        case .miniGolf: return "figure.golf"
+        case .movieTheater: return "film"
+        case .museum: return "building.columns"
+        case .musicVenue: return "music.note"
+        case .nationalMonument: return "building.columns.circle"
+        case .nationalPark: return "leaf"
+        case .nightlife: return "moon.stars"
+        case .park: return "tree"
+        case .parking: return "parkingsign"
+        case .pharmacy: return "cross.vial"
+        case .planetarium: return "moon.stars.circle"
+        case .police: return "shield"
+        case .postOffice: return "envelope"
+        case .publicTransport: return "bus"
+        case .restaurant: return "fork.knife"
+        case .restroom: return "figure.wave"
+        case .rockClimbing: return "figure.climbing"
+        case .rvPark: return "car.ferry"
+        case .school: return "graduationcap"
+        case .skatePark: return "figure.skateboarding"
+        case .skating: return "figure.skating"
+        case .skiing: return "figure.skiing.downhill"
+        case .soccer: return "soccerball"
+        case .spa: return "sparkles"
+        case .stadium: return "sportscourt"
+        case .store: return "bag"
+        case .surfing: return "figure.surfing"
+        case .swimming: return "figure.pool.swim"
+        case .tennis: return "tennis.racket"
+        case .theater: return "theatermasks"
+        case .university: return "book"
+        case .volleyball: return "volleyball.fill"
+        case .winery: return "wineglass"
+        case .zoo: return "pawprint"
+        default: return "mappin"
+        }
+    }
+}
