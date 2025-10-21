@@ -223,7 +223,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         mapCoordinator.clearRoute()
 
         // Notify that route preview ended - bottom sheet should restore position
-        NotificationCenter.default.post(name: Notifications.endRoutePreview, object: nil)
+        NotificationCenter.default.post(name: Notifications.restoreSheetPosition, object: nil)
     }
 
     /// Show route preview on the map for a specific itinerary
@@ -235,7 +235,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         mapCoordinator.showItinerary(itinerary)
 
         // Notify that route preview started - bottom sheet should move to tip position
-        NotificationCenter.default.post(name: Notifications.startRoutePreview, object: nil)
+        NotificationCenter.default.post(name: Notifications.moveSheetToTip, object: nil)
     }
 
     // MARK: - Action Handlers
@@ -279,7 +279,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         present(.directions)
 
         // Keep bottom sheet at tip position for directions (Apple Maps style)
-        NotificationCenter.default.post(name: Notifications.startRoutePreview, object: nil)
+        NotificationCenter.default.post(name: Notifications.moveSheetToTip, object: nil)
     }
 
     /// Handle itinerary preview (user wants to see route on map)
@@ -309,7 +309,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         mapCoordinator.clearLocations()
 
         // Notify that route preview ended - bottom sheet should restore position
-        NotificationCenter.default.post(name: Notifications.endRoutePreview, object: nil)
+        NotificationCenter.default.post(name: Notifications.restoreSheetPosition, object: nil)
 
         // Clear error states
         errorMessage = nil

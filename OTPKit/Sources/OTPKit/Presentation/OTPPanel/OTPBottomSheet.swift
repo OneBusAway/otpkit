@@ -219,22 +219,22 @@ public class OTPBottomSheet {
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleStartRoutePreview),
-            name: Notifications.startRoutePreview,
+            selector: #selector(handleMoveSheetToTip),
+            name: Notifications.moveSheetToTip,
             object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleEndRoutePreview),
-            name: Notifications.endRoutePreview,
+            selector: #selector(handleRestoreSheetPosition),
+            name: Notifications.restoreSheetPosition,
             object: nil
         )
 
     }
 
     /// Handles start route preview notification
-    @objc private func handleStartRoutePreview() {
+    @objc private func handleMoveSheetToTip() {
         guard isPresented else { return }
 
         // Store current position for restoration
@@ -245,7 +245,7 @@ public class OTPBottomSheet {
     }
 
     /// Handles end route preview notification
-    @objc private func handleEndRoutePreview() {
+    @objc private func handleRestoreSheetPosition() {
         guard isPresented else { return }
 
         // Restore to previous position or default to half
