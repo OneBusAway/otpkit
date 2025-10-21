@@ -230,7 +230,12 @@ public class OTPBottomSheet {
             name: Notifications.restoreSheetPosition,
             object: nil
         )
-
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMoveSheetToFull),
+            name: Notifications.moveSheetToFull,
+            object: nil
+        )
     }
 
     /// Handles start route preview notification
@@ -254,6 +259,16 @@ public class OTPBottomSheet {
 
         // Clear stored position
         positionBeforePreview = nil
+    }
+
+    @objc private func handleMoveSheetToFull() {
+        guard isPresented else { return }
+
+        // Store current position for restoration
+        positionBeforePreview = getCurrentPosition()
+
+        // Move to full position for better sheet visibility
+        moveToPosition(.full, animated: true)
     }
 
 

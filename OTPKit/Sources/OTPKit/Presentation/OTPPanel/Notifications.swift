@@ -14,4 +14,7 @@ public enum Notifications {
 
     /// Posted when route preview ends - bottom sheet should restore position
     public static let restoreSheetPosition = Notification.Name("OTPKit.restoreSheetPosition")
+
+    /// Make the sheet take up the full screen
+    public static let moveSheetToFull = Notification.Name("OTPKit.moveSheetToFull")
 }

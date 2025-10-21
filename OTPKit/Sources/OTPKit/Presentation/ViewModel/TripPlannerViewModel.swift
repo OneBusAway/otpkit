@@ -198,6 +198,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         tripPlanResponse = response
         isLoading = false
         HapticManager.shared.success()
+        NotificationCenter.default.post(name: Notifications.moveSheetToFull, object: nil)
     }
 
     private func handleError(_ error: Error) {
