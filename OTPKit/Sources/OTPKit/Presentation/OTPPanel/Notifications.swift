@@ -1,5 +1,5 @@
 //
-//  BottomSheetNotifications.swift
+//  Notifications.swift
 //  OTPKit
 //
 //  Created by Manu on 2025-09-18.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Notifications for bottom sheet coordination during route preview
-public enum BottomSheetNotifications {
+public enum Notifications {
     /// Posted when route preview starts - bottom sheet should move to tip position
     public static let startRoutePreview = Notification.Name("OTPKit.StartRoutePreview")
 

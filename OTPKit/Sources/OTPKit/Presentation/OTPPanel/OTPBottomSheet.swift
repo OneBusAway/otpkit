@@ -220,14 +220,14 @@ public class OTPBottomSheet {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleStartRoutePreview),
-            name: BottomSheetNotifications.startRoutePreview,
+            name: Notifications.startRoutePreview,
             object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleEndRoutePreview),
-            name: BottomSheetNotifications.endRoutePreview,
+            name: Notifications.endRoutePreview,
             object: nil
         )
 
