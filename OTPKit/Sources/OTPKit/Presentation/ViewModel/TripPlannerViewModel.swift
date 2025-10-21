@@ -43,7 +43,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
     /// Loading state for API calls
     @Published var isLoading = false
     /// Response from the OTP API containing trip plans
-    @Published var triPlanResponse: OTPResponse?
+    @Published var tripPlanResponse: OTPResponse?
     /// Error message to display to user
     @Published var errorMessage: String?
 
@@ -112,7 +112,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
 
     /// All available itineraries from the current trip plan response
     var itineraries: [Itinerary] {
-        triPlanResponse?.plan?.itineraries ?? []
+        tripPlanResponse?.plan?.itineraries ?? []
     }
 
     // MARK: - Transport & Time Management
@@ -195,7 +195,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
     }
 
     private func handleSuccess(_ response: OTPResponse) {
-        triPlanResponse = response
+        tripPlanResponse = response
         isLoading = false
         HapticManager.shared.success()
     }
@@ -299,7 +299,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
         selectedDestination = nil
 
         // Clear trip planning results
-        triPlanResponse = nil
+        tripPlanResponse = nil
         selectedItinerary = nil
 
         // Reset map state
