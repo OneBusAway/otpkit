@@ -219,22 +219,27 @@ public class OTPBottomSheet {
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleStartRoutePreview),
-            name: BottomSheetNotifications.startRoutePreview,
+            selector: #selector(handleMoveSheetToTip),
+            name: Notifications.moveSheetToTip,
             object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleEndRoutePreview),
-            name: BottomSheetNotifications.endRoutePreview,
+            selector: #selector(handleRestoreSheetPosition),
+            name: Notifications.restoreSheetPosition,
             object: nil
         )
-
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMoveSheetToFull),
+            name: Notifications.moveSheetToFull,
+            object: nil
+        )
     }
 
     /// Handles start route preview notification
-    @objc private func handleStartRoutePreview() {
+    @objc private func handleMoveSheetToTip() {
         guard isPresented else { return }
 
         // Store current position for restoration
@@ -245,7 +250,7 @@ public class OTPBottomSheet {
     }
 
     /// Handles end route preview notification
-    @objc private func handleEndRoutePreview() {
+    @objc private func handleRestoreSheetPosition() {
         guard isPresented else { return }
 
         // Restore to previous position or default to half
@@ -256,6 +261,15 @@ public class OTPBottomSheet {
         positionBeforePreview = nil
     }
 
+    @objc private func handleMoveSheetToFull() {
+        guard isPresented else { return }
+
+        // Store current position for restoration
+        positionBeforePreview = getCurrentPosition()
+
+        // Move to full position for better sheet visibility
+        moveToPosition(.full, animated: true)
+    }
 
     /// Cleans up resources when the sheet is dismissed
     private func cleanup() {

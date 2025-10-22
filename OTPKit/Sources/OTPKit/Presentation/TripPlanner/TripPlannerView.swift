@@ -90,36 +90,13 @@ struct TripPlannerView: View {
     // MARK: - Trip Results Section
 
     private var tripResultsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Section header with improved spacing
-            HStack {
-                Text("Route Options")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary)
-                Spacer()
-
-                // Results count badge
-                Text("\(tripPlannerVM.itineraries.count)")
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.quaternary, in: Capsule())
-            }
-            .padding(.horizontal, 16)
-
-            // Results with proper spacing
-            TripPlannerResultsView(
-                availableItineraries: tripPlannerVM.itineraries,
-                onItinerarySelected: tripPlannerVM.handleItinerarySelection,
-                onItineraryPreview: tripPlannerVM.handleItineraryPreview
-            )
-        }
+        TripPlannerResultsView(
+            availableItineraries: tripPlannerVM.itineraries,
+            onItinerarySelected: tripPlannerVM.handleItinerarySelection,
+            onItineraryPreview: tripPlannerVM.handleItineraryPreview
+        )
     }
 }
-
 
 // MARK: - Sheet Content
 private extension TripPlannerView {

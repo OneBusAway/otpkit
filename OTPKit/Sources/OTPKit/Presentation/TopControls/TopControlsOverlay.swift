@@ -140,7 +140,6 @@ struct TopControlsOverlay: View {
             .controlSize(.regular)
             .tint(.secondary)
 
-            // Go button with improved styling
             Button(action: tripPlannerVM.planTrip) {
                 HStack(spacing: 8) {
                     if tripPlannerVM.isLoading {
@@ -168,9 +167,11 @@ struct TopControlsOverlay: View {
 
 #Preview {
     VStack {
-        TopControlsOverlay(selectedMode: .constant(.destination))
-            .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
         Spacer()
+        TopControlsOverlay(selectedMode: .constant(.destination))
+            .padding(8)
+            .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
     }
     .background(Color(.systemGroupedBackground))
+    .frame(height: 50)
 }

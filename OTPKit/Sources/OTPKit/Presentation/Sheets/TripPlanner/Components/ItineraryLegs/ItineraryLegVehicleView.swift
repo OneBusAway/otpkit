@@ -20,7 +20,8 @@ struct ItineraryLegVehicleView: View {
                 .padding(.vertical, 1)
                 .background(backgroundColor)
                 .foregroundStyle(textColor)
-                .font(.caption)
+                .font(.footnote)
+                .fontWeight(.semibold)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Image(systemName: imageName)

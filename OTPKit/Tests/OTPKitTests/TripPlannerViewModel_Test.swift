@@ -51,12 +51,12 @@ final class TripPlannerViewModelTests: XCTestCase {
             enabledTransportModes: [.transit, .walk, .bike]
         )
         mockAPIService = MockAPIService()
-        
+
         // Create mock map components
         let mapView = MKMapView()
         mockMapProvider = MKMapViewAdapter(mapView: mapView)
         mockMapCoordinator = MapCoordinator(mapProvider: mockMapProvider)
-        
+
         viewModel = TripPlannerViewModel(config: mockConfig, apiService: mockAPIService, mapCoordinator: mockMapCoordinator)
     }
 

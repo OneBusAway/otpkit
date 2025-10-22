@@ -50,8 +50,11 @@ class PreviewHelpers {
     static func buildItin(legsCount: Int = 1) -> Itinerary {
         var legs: [Leg] = []
         for _ in 0..<legsCount {
+            legs.append(buildWalkLeg())
             legs.append(buildLeg())
         }
+
+        legs.append(buildWalkLeg())
 
         return Itinerary(
             duration: 1800,
@@ -67,6 +70,10 @@ class PreviewHelpers {
             transfers: 1,
             legs: legs
         )
+    }
+
+    static func buildWalkLeg() -> Leg {
+        Leg(startTime: Date(), endTime: Date(), mode: "WALK", routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil, from: Place(name: "foo", lon: 47, lat: -122, vertexType: ""), to: Place(name: "foo", lon: 47, lat: -122, vertexType: ""), legGeometry: LegGeometry(points: "AA@@", length: 4), distance: 100, transitLeg: false, duration: 60, realTime: true, streetNames: nil, pathway: nil, steps: nil, headsign: nil)
     }
 
     static func buildLeg(route: String? = nil, agencyName: String? = nil) -> Leg {

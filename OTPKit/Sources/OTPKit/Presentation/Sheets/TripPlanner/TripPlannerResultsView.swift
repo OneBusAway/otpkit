@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Flow
 
 public struct TripPlannerResultsView: View {
     @Environment(\.otpTheme) private var theme
@@ -46,96 +45,24 @@ public struct TripPlannerResultsView: View {
 
     // MARK: - View Components
     private func itinerariesScrollView() -> some View {
-        LazyVStack(spacing: 16) {
+        LazyVStack(spacing: 8) {
             ForEach(availableItineraries, id: \.self) { itinerary in
                 Button(action: {
                     onItineraryPreview(itinerary)
                 }, label: {
-                    itineraryRow(itinerary: itinerary)
+                    ItineraryPreviewView(itinerary: itinerary, onItinerarySelected: onItinerarySelected)
                 })
                 .foregroundStyle(.foreground)
                 .background(
-                    RoundedRectangle(cornerRadius: 14)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(.regularMaterial)
-                        .shadow(color: .black.opacity(0.05), radius: 6, y: 3)
+                        .shadow(radius: 2) // ok now i made it ugly :(
                 )
                 .scaleEffect(1.0)
                 .animation(.easeInOut(duration: 0.15), value: itinerary)
             }
         }
         .padding(.horizontal, 16)
-    }
-
-    private func itineraryRow(itinerary: Itinerary) -> some View {
-        HStack(spacing: 16) {
-            // Route info
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 8) {
-                    Text(formatDuration(itinerary))
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.primary)
-
-                    Spacer()
-
-                    Text(formatStartTime(itinerary))
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.secondary)
-                }
-
-                // Transport modes with improved layout
-                legsFlow(itinerary: itinerary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            // Go button
-            goButton(itinerary: itinerary)
-        }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 16)
-        .contentShape(Rectangle())
-    }
-
-    private func goButton(itinerary: Itinerary) -> some View {
-        Button(action: {
-            onItinerarySelected(itinerary)
-        }, label: {
-            VStack(spacing: 2) {
-                Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                Text("Go")
-                    .font(.system(size: 12, weight: .bold))
-            }
-            .foregroundStyle(.white)
-            .frame(width: 50, height: 50)
-            .background(theme.primaryColor)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        })
-        .buttonStyle(.plain)
-    }
-
-    private func legsFlow(itinerary: Itinerary) -> some View {
-        HFlow(alignment: .center, spacing: 4) {
-            ForEach(Array(zip(itinerary.legs.indices, itinerary.legs)), id: \.1) { index, leg in
-                legView(for: leg)
-                if index < itinerary.legs.count - 1 {
-                    Image(systemName: "arrowtriangle.right.fill")
-                        .font(.system(size: 8))
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func legView(for leg: Leg) -> some View {
-        if leg.routeType == nil {
-            ItineraryLegUnknownView(leg: leg)
-        } else {
-            if leg.routeType! == .nonTransit {
-                ItineraryLegWalkView(leg: leg)
-            } else {
-                ItineraryLegVehicleView(leg: leg)
-            }
-        }
     }
 
     private func noItinerariesView() -> some View {
@@ -161,23 +88,12 @@ public struct TripPlannerResultsView: View {
             return .unknown
         }
     }
-
-    private func formatDuration(_ itinerary: Itinerary) -> String {
-        let duration = Int(itinerary.duration / 60) // Convert seconds to minutes
-        return "\(duration) min"
-    }
-
-    private func formatStartTime(_ itinerary: Itinerary) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        return dateFormatter.string(from: itinerary.startTime)
-    }
 }
 
 #Preview {
     let itineraries = [
         PreviewHelpers.buildItin(legsCount: 3),
-        PreviewHelpers.buildItin(legsCount: 4),
+        PreviewHelpers.buildItin(legsCount: 4)
     ]
     TripPlannerResultsView(availableItineraries: itineraries) { _ in
         //

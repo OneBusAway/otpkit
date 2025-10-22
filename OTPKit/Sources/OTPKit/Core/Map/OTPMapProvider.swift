@@ -14,9 +14,9 @@ import SwiftUI
 /// Implementers of this protocol can provide their own map view (MKMapView, custom map, etc.)
 /// while allowing OTPKit to control map content and interactions.
 public protocol OTPMapProvider: AnyObject {
-    
+
     // MARK: - Route Display
-    
+
     /// Adds a route polyline to the map with specified styling
     /// - Parameters:
     ///   - coordinates: Array of coordinates forming the route
@@ -29,16 +29,16 @@ public protocol OTPMapProvider: AnyObject {
         lineWidth: CGFloat,
         identifier: String
     )
-    
+
     /// Removes a specific route from the map
     /// - Parameter identifier: Identifier of the route to remove
     func removeRoute(identifier: String)
-    
+
     /// Removes all routes from the map
     func clearAllRoutes()
-    
+
     // MARK: - Annotations
-    
+
     /// Adds an annotation (marker) to the map
     /// - Parameters:
     ///   - coordinate: Location for the annotation
@@ -53,22 +53,22 @@ public protocol OTPMapProvider: AnyObject {
         identifier: String,
         type: OTPAnnotationType
     )
-    
+
     /// Removes a specific annotation from the map
     /// - Parameter identifier: Identifier of the annotation to remove
     func removeAnnotation(identifier: String)
-    
+
     /// Removes all annotations from the map
     func clearAllAnnotations()
-    
+
     // MARK: - Camera Control
-    
+
     /// Sets the map camera to show a specific region
     /// - Parameters:
     ///   - region: The region to display
     ///   - animated: Whether to animate the camera movement
     func setRegion(_ region: MKCoordinateRegion, animated: Bool)
-    
+
     /// Sets the map camera to fit a bounding rectangle
     /// - Parameters:
     ///   - mapRect: The rectangle to fit in view
@@ -79,41 +79,41 @@ public protocol OTPMapProvider: AnyObject {
         edgePadding: UIEdgeInsets,
         animated: Bool
     )
-    
+
     /// Gets the current visible region of the map
     /// - Returns: The current map region
     func getCurrentRegion() -> MKCoordinateRegion
-    
+
     // MARK: - User Interaction
-    
+
     /// Registers a handler for tap gestures on the map
     /// - Parameter handler: Closure called when user taps on the map
     func onMapTap(_ handler: @escaping (CLLocationCoordinate2D) -> Void)
-    
+
     /// Registers a handler for annotation selection
     /// - Parameter handler: Closure called when user selects an annotation
     func onAnnotationSelected(_ handler: @escaping (String) -> Void)
-    
+
     // MARK: - User Location
-    
+
     /// Shows or hides the user's current location on the map
     /// - Parameter show: Whether to show the user location
     func showUserLocation(_ show: Bool)
-    
+
     /// Centers the map on the user's current location
     /// - Parameter animated: Whether to animate the camera movement
     func centerOnUserLocation(animated: Bool)
-    
+
     // MARK: - Map Configuration
-    
+
     /// Sets the map type (standard, satellite, hybrid, etc.)
     /// - Parameter mapType: The map type to display
     func setMapType(_ mapType: MKMapType)
-    
+
     /// Enables or disables user interaction with the map
     /// - Parameter enabled: Whether interaction is enabled
     func setUserInteractionEnabled(_ enabled: Bool)
-    
+
     /// Shows or hides map controls (compass, scale, etc.)
     /// - Parameter visible: Whether controls are visible
     func setControlsVisible(_ visible: Bool)
@@ -128,7 +128,7 @@ public enum OTPAnnotationType {
     case waypoint
     case currentLocation
     case searchResult
-    
+
     /// Returns the appropriate color for this annotation type
     public var color: Color {
         switch self {
@@ -146,7 +146,7 @@ public enum OTPAnnotationType {
             return .gray
         }
     }
-    
+
     /// Returns the appropriate system image name for this annotation type
     public var systemImageName: String {
         switch self {
@@ -173,7 +173,7 @@ public extension OTPMapProvider {
     func setControlsVisible(_ visible: Bool) {
         // Default implementation - can be overridden
     }
-    
+
     func setMapType(_ mapType: MKMapType) {
         // Default implementation - can be overridden
     }

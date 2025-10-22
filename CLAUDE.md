@@ -7,35 +7,50 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 OTPKit is an OpenTripPlanner client library for iOS, supporting OTP 1.x (REST API) and 2.x (GraphQL API). A OneBusAway Project from the Open Transit Software Foundation.
 
 ### Project Structure
-- **OTPKit**: Swift Package containing the core library (iOS 17+, Swift 5.9+)
-- **OTPKitDemo**: Demo iOS app showcasing OTPKit functionality
+- **OTPKit**: Swift Package containing the core library (iOS 18+, Swift 6.0)
+- **OTPKitDemo**: Demo iOS app (Xcode project) showcasing OTPKit functionality
 - **OTPKitDemoTests**: Test suite for the demo app using Swift Testing framework
+- **Tests/**: Package-level tests using XCTest
+
+The repository contains both a Swift Package (Package.swift) and an Xcode project (OTPKitDemo.xcodeproj). The Xcode project depends on the local Swift Package.
 
 ### API Support Status
 - **OTP 1.x REST API**: ✅ Fully implemented via `RestAPIService`
-- **OTP 2.x GraphQL API**: ⚠️ Not yet implemented (placeholder in `GraphQLAPIService`)
+- **OTP 2.x GraphQL API**: ❌ Not yet implemented
 
 ## Build Commands
+
+### Build the Swift Package
+```bash
+# Build the OTPKit package
+swift build
+
+# Build for testing
+swift build --build-tests
+```
 
 ### Build the Demo App
 ```bash
 # Build for iOS Simulator
 xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator build
 
-# Build and run on a specific simulator
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' build
+# Build on a specific simulator
+xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build
 ```
 
 ### Run Tests
 ```bash
-# Run all tests
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' test
+# Run OTPKit package tests (XCTest)
+swift test
 
-# Run specific test (XCTest framework in OTPKit package)
+# Run specific package test
 swift test --filter OTPKitTests.RestAPIServiceTests/testFetchPlan
 
-# Run Swift Testing tests (OTPKitDemoTests)
+# Run all tests via Xcode project (includes OTPKitDemoTests with Swift Testing)
 xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+
+# Run only demo app tests
+xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:OTPKitDemoTests
 ```
 
 ### Linting & Code Quality
@@ -83,8 +98,7 @@ brew install swiftlint
     - `MKMapViewAdapter` - MapKit implementation of OTPMapProvider
 - `Network/` - API communication layer
   - `APIService` - Protocol defining trip planning interface
-  - `RestAPIService` - OTP 1.x REST API implementation (actor-based)
-  - `GraphQLAPIService` - OTP 2.x GraphQL placeholder (not implemented)
+  - `RestAPIService/RestAPIService` - OTP 1.x REST API implementation (actor-based)
   - `URLDataLoader` - Network request handling
 - `Presentation/` - SwiftUI views and ViewModels
   - `OTPView` - Main entry point view that sets up the environment
@@ -113,8 +127,9 @@ brew install swiftlint
 
 ## Development Notes
 
-- Minimum iOS version: 17.0
-- Swift version: 5.9+
+- Minimum iOS version: 18.0
+- Swift version: 6.0
+- Swift language mode: Swift 5 (set in Package.swift via `swiftLanguageModes: [.v5]`)
 - The package uses SwiftUI and requires iOS platform features (not buildable for macOS due to iOS-specific APIs)
 - Location permissions are handled automatically by LocationManager
 - The demo app includes an onboarding flow for server configuration
@@ -241,12 +256,12 @@ LocationManager.shared.$currentLocation
 ## Code Style & Conventions
 
 ### Swift Conventions
-- Use Swift 5.9+ features (async/await, actors, etc.)
+- Use Swift 6.0 features (async/await, actors, etc.)
 - Follow Swift API Design Guidelines
 - Use meaningful variable names (avoid abbreviations)
 - Prefer `let` over `var` when possible
 - Use trailing closure syntax for single closure parameters
-- SwiftLint configuration in `.swiftlint.yml` (disabled rules: identifier_name, todo)
+- SwiftLint configuration in `.swiftlint.yml` (disabled rules: `identifier_name`, `todo`; excluded: `OTPKit/.build`)
 
 ### SwiftUI Best Practices
 - Keep views small and focused (extract subviews)

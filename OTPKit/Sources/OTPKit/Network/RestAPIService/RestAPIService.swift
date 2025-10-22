@@ -81,7 +81,6 @@ public actor RestAPIService: APIService {
 
         logger.info("Fetching trip plan: \(String(describing: request.url))")
 
-
         let (data, response) = try await dataLoader.data(for: request)
 
         guard
