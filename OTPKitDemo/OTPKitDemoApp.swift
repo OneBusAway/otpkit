@@ -28,12 +28,12 @@ struct OTPRegionInfo: Codable {
     let icon: String
     let url: URL
     let center: CLLocationCoordinate2D
-    
+
     enum CodingKeys: String, CodingKey {
         case name, description, icon, url
         case latitude, longitude
     }
-    
+
     init(name: String, description: String, icon: String, url: URL, center: CLLocationCoordinate2D) {
         self.name = name
         self.description = description
@@ -41,7 +41,7 @@ struct OTPRegionInfo: Codable {
         self.url = url
         self.center = center
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
@@ -52,7 +52,7 @@ struct OTPRegionInfo: Codable {
         let longitude = try container.decode(Double.self, forKey: .longitude)
         center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
@@ -128,34 +128,34 @@ class OTPDemoViewController: UIViewController {
     private var apiService: RestAPIService!
     private var otpBottomSheet: OTPBottomSheet?
     private var isTripPlannerPresented = false
-    
+
     // MARK: - Initialization
-    
+
     init(serverURL: URL, regionInfo: OTPRegionInfo) {
         self.serverURL = serverURL
         self.regionInfo = regionInfo
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupMapView()
         setupOTPKit()
         setupUI()
-        
+
         // Request location permission
         LocationManager.shared.requestLocationPermission()
     }
-    
+
     // MARK: - Setup
-    
+
     private func setupMapView() {
         mapView = MKMapView()
         mapView.mapType = .mutedStandard
@@ -163,7 +163,7 @@ class OTPDemoViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.showsCompass = true
         mapView.showsScale = true
-        
+
         // Set initial region
         let region = MKCoordinateRegion(
             center: regionInfo.center,
@@ -171,20 +171,20 @@ class OTPDemoViewController: UIViewController {
             longitudinalMeters: 50000
         )
         mapView.setRegion(region, animated: false)
-        
+
         view.addSubview(mapView)
-        
+
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
+
         // Create the map adapter for OTPKit
         mapProvider = MKMapViewAdapter(mapView: mapView)
     }
-    
+
     private func setupUI() {
         title = "OTPKit Demo"
 
@@ -208,7 +208,7 @@ class OTPDemoViewController: UIViewController {
         // Create API service
         apiService = RestAPIService(baseURL: serverURL)
     }
-    
+
     // MARK: - Actions
 
     @objc private func showTripPlannerTapped() {
@@ -267,12 +267,12 @@ extension OTPDemoViewController: OTPBottomSheetDelegate {
 // MARK: - Onboarding View Controller
 
 class OnboardingViewController: UIViewController {
-    
+
     var onboardingCompleteHandler: ((URL, OTPRegionInfo) -> Void)?
 
     private var regionPicker: UIPickerView!
     private var continueButton: UIButton!
-    
+
     private let regions = [
         OTPRegionInfo(
             name: "Seattle",
@@ -282,18 +282,18 @@ class OnboardingViewController: UIViewController {
             center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
         )
     ]
-    
+
     private var selectedRegion: OTPRegionInfo?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .systemBackground
         setupUI()
-        
+
         selectedRegion = regions.first
     }
-    
+
     private func setupUI() {
         let titleLabel = UILabel()
         titleLabel.text = "OTPKit Demo Setup"
@@ -305,12 +305,12 @@ class OnboardingViewController: UIViewController {
         regionLabel.text = "Select Region:"
         regionLabel.font = .systemFont(ofSize: 16)
         regionLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+
         regionPicker = UIPickerView()
         regionPicker.delegate = self
         regionPicker.dataSource = self
         regionPicker.translatesAutoresizingMaskIntoConstraints = false
-        
+
         continueButton = UIButton(type: .system)
         continueButton.setTitle("Continue", for: .normal)
         continueButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -319,12 +319,12 @@ class OnboardingViewController: UIViewController {
         continueButton.layer.cornerRadius = 8
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
-        
+
         view.addSubview(titleLabel)
         view.addSubview(regionLabel)
         view.addSubview(regionPicker)
         view.addSubview(continueButton)
-        
+
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -332,19 +332,19 @@ class OnboardingViewController: UIViewController {
 
             regionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
             regionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            
+
             regionPicker.topAnchor.constraint(equalTo: regionLabel.bottomAnchor, constant: 10),
             regionPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             regionPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             regionPicker.heightAnchor.constraint(equalToConstant: 150),
-            
+
             continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
             continueButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             continueButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-    
+
     @objc private func continueTapped() {
         guard let region = selectedRegion else {
             let alert = UIAlertController(title: "Invalid Input", message: "Please select a region", preferredStyle: .alert)
@@ -360,7 +360,7 @@ class OnboardingViewController: UIViewController {
         if let regionData = try? JSONEncoder().encode(region) {
             UserDefaults.standard.set(regionData, forKey: "selectedRegion")
         }
-        
+
         onboardingCompleteHandler?(region.url, region)
     }
 }
@@ -371,15 +371,15 @@ extension OnboardingViewController: UIPickerViewDataSource, UIPickerViewDelegate
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return regions.count
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return regions[row].name
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedRegion = regions[row]
     }

@@ -54,7 +54,7 @@ struct SearchSheetView: View {
     private func buildDefaultView() -> some View {
         // Default state
         VStack(spacing: 24) {
-            CurrentLocationButton() { location in
+            CurrentLocationButton { location in
                 onLocationSelected(location, selectedMode)
             }
 

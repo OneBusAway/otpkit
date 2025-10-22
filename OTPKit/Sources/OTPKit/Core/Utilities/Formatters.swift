@@ -64,8 +64,7 @@ class Formatters {
             if feet < 528.0 {
                 let measurement = Measurement(value: feet, unit: UnitLength.feet)
                 return shared.feetFormatter.string(from: measurement)
-            }
-            else {
+            } else {
                 let miles = meters * 0.000621371
                 let measurement = Measurement(value: miles, unit: UnitLength.miles)
                 return shared.milesFormatter.string(from: measurement)

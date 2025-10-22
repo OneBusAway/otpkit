@@ -42,7 +42,7 @@ public struct Leg: Codable, Hashable {
 
     /// Mode of transportation used in this leg (e.g., "BUS", "TRAIN").
     public let mode: String
-    
+
     /// true if this Leg represents a walking step.
     public var walkMode: Bool {
         mode.lowercased() == "walk"
@@ -96,15 +96,15 @@ public struct Leg: Codable, Hashable {
 
     /// Optional head sign of the transit legs, bus and trams
     public let headsign: String?
-    
+
     // MARK: - Computed Properties
-    
+
     /// Returns a SwiftUI Color from the routeColor hex string if valid
     public var routeUIColor: Color? {
         guard let routeColor = routeColor else { return nil }
         return Color(hex: routeColor)
     }
-    
+
     /// Returns a SwiftUI Color from the routeTextColor hex string if valid
     public var routeTextUIColor: Color? {
         guard let routeTextColor = routeTextColor else { return nil }
@@ -118,14 +118,14 @@ private extension Color {
     init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-        
+
         var rgb: UInt64 = 0
-        
+
         guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
-        
+
         let length = hexSanitized.count
         var r, g, b: Double
-        
+
         if length == 6 {
             r = Double((rgb & 0xFF0000) >> 16) / 255.0
             g = Double((rgb & 0x00FF00) >> 8) / 255.0
@@ -137,7 +137,7 @@ private extension Color {
         } else {
             return nil
         }
-        
+
         self.init(red: r, green: g, blue: b)
     }
 }

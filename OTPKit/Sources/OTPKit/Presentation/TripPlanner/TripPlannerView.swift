@@ -98,7 +98,6 @@ struct TripPlannerView: View {
     }
 }
 
-
 // MARK: - Sheet Content
 private extension TripPlannerView {
     /// Returns the appropriate sheet view for the given sheet type

@@ -256,7 +256,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
             selectedDestination = location
             mapCoordinator.setDestination(location)
         }
-        
+
         // Center map on the new location
         mapCoordinator.centerOn(coordinate: location.coordinate)
 

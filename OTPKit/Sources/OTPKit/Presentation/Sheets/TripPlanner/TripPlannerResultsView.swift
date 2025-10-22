@@ -93,7 +93,7 @@ public struct TripPlannerResultsView: View {
 #Preview {
     let itineraries = [
         PreviewHelpers.buildItin(legsCount: 3),
-        PreviewHelpers.buildItin(legsCount: 4),
+        PreviewHelpers.buildItin(legsCount: 4)
     ]
     TripPlannerResultsView(availableItineraries: itineraries) { _ in
         //

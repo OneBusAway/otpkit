@@ -271,7 +271,6 @@ public class OTPBottomSheet {
         moveToPosition(.full, animated: true)
     }
 
-
     /// Cleans up resources when the sheet is dismissed
     private func cleanup() {
         // Remove notification observers

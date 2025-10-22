@@ -83,7 +83,7 @@ struct ItineraryPreviewView: View {
             }
         }
     }
-    
+
     private func formatStartTime(_ itinerary: Itinerary) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"

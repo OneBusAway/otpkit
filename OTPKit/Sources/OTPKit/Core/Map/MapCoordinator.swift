@@ -14,65 +14,65 @@ import SwiftUI
 /// This class manages routes, annotations, and user interactions with the map
 @MainActor
 public class MapCoordinator: ObservableObject {
-    
+
     // MARK: - Properties
-    
+
     private let mapProvider: OTPMapProvider
     private let locationManager = LocationManager.shared
-    
+
     /// Currently displayed itinerary on the map
     @Published public var displayedItinerary: Itinerary?
-    
+
     /// Whether a route is currently being displayed
     @Published public var isShowingRoute: Bool = false
-    
+
     /// Current map region
     @Published public var currentRegion: MKCoordinateRegion?
-    
+
     // MARK: - Constants
-    
+
     private enum Constants {
         static let routeLineWidth: CGFloat = 4.0
         static let routeHaloWidth: CGFloat = 6.0
         static let mapPadding: CGFloat = 50.0
     }
-    
+
     // MARK: - Initialization
-    
+
     /// Creates a new map coordinator with the provided map provider
     /// - Parameter mapProvider: The map provider to coordinate
     public init(mapProvider: OTPMapProvider) {
         self.mapProvider = mapProvider
         setupMapInteractions()
     }
-    
+
     private func setupMapInteractions() {
         // Set up tap handler for location selection
         mapProvider.onMapTap { [weak self] coordinate in
             self?.handleMapTap(at: coordinate)
         }
-        
+
         // Set up annotation selection handler
         mapProvider.onAnnotationSelected { [weak self] identifier in
             self?.handleAnnotationSelected(identifier: identifier)
         }
     }
-    
+
     // MARK: - Route Display
-    
+
     /// Displays an itinerary route on the map
     /// - Parameter itinerary: The itinerary to display
     public func showItinerary(_ itinerary: Itinerary) {
         clearRoute()
-        
+
         displayedItinerary = itinerary
         isShowingRoute = true
-        
+
         // Add route segments for each leg
         for (index, leg) in itinerary.legs.enumerated() {
             if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
                 let legColor = colorForTransportMode(leg.mode)
-                
+
                 // Add white halo for better visibility
                 mapProvider.addRoute(
                     coordinates: coordinates,
@@ -80,7 +80,7 @@ public class MapCoordinator: ObservableObject {
                     lineWidth: Constants.routeHaloWidth,
                     identifier: "halo_leg_\(index)"
                 )
-                
+
                 // Add colored route
                 mapProvider.addRoute(
                     coordinates: coordinates,
@@ -88,19 +88,19 @@ public class MapCoordinator: ObservableObject {
                     lineWidth: Constants.routeLineWidth,
                     identifier: "leg_\(index)"
                 )
-                
+
                 // Add mode icon at midpoint
                 addTransportModeAnnotation(for: leg, index: index, coordinates: coordinates)
-                
+
                 // Add station annotations
                 addStationAnnotations(for: leg, index: index, totalLegs: itinerary.legs.count)
             }
         }
-        
+
         // Fit all routes in view
         fitRoutesInView(itinerary: itinerary)
     }
-    
+
     /// Clears the currently displayed route from the map
     public func clearRoute() {
         mapProvider.clearAllRoutes()
@@ -108,9 +108,9 @@ public class MapCoordinator: ObservableObject {
         displayedItinerary = nil
         isShowingRoute = false
     }
-    
+
     // MARK: - Location Management
-    
+
     /// Sets an origin location on the map
     /// - Parameter location: The origin location
     public func setOrigin(_ location: Location) {
@@ -122,7 +122,7 @@ public class MapCoordinator: ObservableObject {
             type: .origin
         )
     }
-    
+
     /// Sets a destination location on the map
     /// - Parameter location: The destination location
     public func setDestination(_ location: Location) {
@@ -134,15 +134,15 @@ public class MapCoordinator: ObservableObject {
             type: .destination
         )
     }
-    
+
     /// Clears origin and destination from the map
     public func clearLocations() {
         mapProvider.removeAnnotation(identifier: "origin")
         mapProvider.removeAnnotation(identifier: "destination")
     }
-    
+
     // MARK: - Camera Control
-    
+
     /// Centers the map on a specific coordinate
     /// - Parameters:
     ///   - coordinate: The coordinate to center on
@@ -155,23 +155,23 @@ public class MapCoordinator: ObservableObject {
         )
         mapProvider.setRegion(region, animated: animated)
     }
-    
+
     /// Centers the map on the user's current location
     /// - Parameter animated: Whether to animate the movement
     public func centerOnUserLocation(animated: Bool = true) {
         mapProvider.centerOnUserLocation(animated: animated)
     }
-    
+
     // MARK: - User Location
-    
+
     /// Shows or hides the user location on the map
     /// - Parameter show: Whether to show the user location
     public func showUserLocation(_ show: Bool) {
         mapProvider.showUserLocation(show)
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func colorForTransportMode(_ mode: String) -> Color {
         switch mode.uppercased() {
         case "WALK":
@@ -184,7 +184,7 @@ public class MapCoordinator: ObservableObject {
             return .gray
         }
     }
-    
+
     private func iconForTransportMode(_ mode: String) -> String {
         switch mode.uppercased() {
         case "WALK":
@@ -205,7 +205,7 @@ public class MapCoordinator: ObservableObject {
             return "questionmark"
         }
     }
-    
+
     private func addTransportModeAnnotation(for leg: Leg, index: Int, coordinates: [CLLocationCoordinate2D]) {
 //        let midIndex = coordinates.count / 2
 //        let position = coordinates[midIndex]
@@ -213,7 +213,7 @@ public class MapCoordinator: ObservableObject {
         // For now, we'll skip mode annotations as they require custom rendering
         // This can be enhanced later with custom annotation views
     }
-    
+
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
         // Add station annotation for "from" location if it's a transit stop
         if shouldShowStation(for: leg.from) {
@@ -225,7 +225,7 @@ public class MapCoordinator: ObservableObject {
                 type: .transitStop
             )
         }
-        
+
         // Add "to" location only for the last leg
         if index == totalLegs - 1 && shouldShowStation(for: leg.to) {
             mapProvider.addAnnotation(
@@ -237,59 +237,59 @@ public class MapCoordinator: ObservableObject {
             )
         }
     }
-    
+
     private func shouldShowStation(for place: Place) -> Bool {
-        return place.vertexType == "STOP" || 
-               place.vertexType == "STATION" || 
+        return place.vertexType == "STOP" ||
+               place.vertexType == "STATION" ||
                place.stopId != nil
     }
-    
+
     private func fitRoutesInView(itinerary: Itinerary) {
         let coordinates = itinerary.legs.flatMap { leg in
             leg.decodePolyline() ?? []
         }
-        
+
         guard !coordinates.isEmpty else { return }
-        
+
         // Calculate bounding rect
         var minLat = coordinates[0].latitude
         var maxLat = coordinates[0].latitude
         var minLon = coordinates[0].longitude
         var maxLon = coordinates[0].longitude
-        
+
         for coordinate in coordinates {
             minLat = min(minLat, coordinate.latitude)
             maxLat = max(maxLat, coordinate.latitude)
             minLon = min(minLon, coordinate.longitude)
             maxLon = max(maxLon, coordinate.longitude)
         }
-        
+
         let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
         let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
-        
+
         let mapRect = MKMapRect(
             MKMapPoint(southwest),
             MKMapPoint(northeast)
         )
-        
+
         let padding = UIEdgeInsets(
             top: Constants.mapPadding,
             left: Constants.mapPadding,
             bottom: Constants.mapPadding,
             right: Constants.mapPadding
         )
-        
+
         mapProvider.setVisibleMapRect(mapRect, edgePadding: padding, animated: true)
     }
-    
+
     // MARK: - Event Handlers
-    
+
     private func handleMapTap(at coordinate: CLLocationCoordinate2D) {
         // This will be connected to the view model for location selection
         // For now, we'll just update the current region
         currentRegion = mapProvider.getCurrentRegion()
     }
-    
+
     private func handleAnnotationSelected(identifier: String) {
         // Handle annotation selection if needed
         print("Annotation selected: \(identifier)")
@@ -304,7 +304,7 @@ extension MKMapRect {
         let minY = min(point1.y, point2.y)
         let maxX = max(point1.x, point2.x)
         let maxY = max(point1.y, point2.y)
-        
+
         self.init(
             x: minX,
             y: minY,
