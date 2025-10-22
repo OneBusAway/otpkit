@@ -14,6 +14,7 @@ struct ItineraryLegUnknownView: View {
     var body: some View {
         HStack(spacing: 4) {
             Text("\(leg.mode): \(Formatters.formatTimeDuration(leg.duration))")
+                .font(.caption)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

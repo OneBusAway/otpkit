@@ -14,7 +14,9 @@ struct ItineraryLegWalkView: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: "figure.walk")
+                .font(.caption)
             Text(Formatters.formatTimeDuration(leg.duration))
+                .font(.caption)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
