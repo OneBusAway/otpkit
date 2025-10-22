@@ -90,3 +90,7 @@ struct ItineraryPreviewView: View {
         return dateFormatter.string(from: itinerary.startTime)
     }
 }
+
+#Preview {
+    ItineraryPreviewView(itinerary: PreviewHelpers.buildItin(legsCount: 3)) { _ in }
+}
