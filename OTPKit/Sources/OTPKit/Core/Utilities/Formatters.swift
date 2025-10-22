@@ -9,25 +9,20 @@ import SwiftUI
 
 /// Reusable, commonly-used formatters for dates, durations, and distance.
 class Formatters {
+    private static let shared = Formatters()
+
+    private lazy var durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.zeroFormattingBehavior = .dropAll
+        return formatter
+    }()
+
+
     static func formatTimeDuration(_ duration: Int) -> String {
-        if duration < 60 {
-            return "\(duration) second\(duration > 1 ? "s" : "")"
-        }
-
-        let (hours, minutes) = hoursAndMinutesFrom(seconds: duration)
-
-        if hours == 0 {
-            return String(format: "%d min", minutes)
-        }
-
-        return String(format: "%d hr %d min", hours, minutes)
-    }
-
-    static func hoursAndMinutesFrom(seconds: Int) -> (hours: Int, minutes: Int) {
-        let hours = seconds / 3600
-        let remainingSeconds = seconds % 3600
-        let minutes = remainingSeconds / 60
-        return (hours, minutes)
+        let components = DateComponents(second: duration)
+        return shared.durationFormatter.string(from: components) ?? "?"
     }
 
     static func formatDistance(_ distance: Int) -> String {

@@ -20,7 +20,7 @@ struct ItineraryPreviewView: View {
             // Route info
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 0) {
-                    Text(formatDuration(itinerary))
+                    Text(Formatters.formatTimeDuration(itinerary.duration))
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.primary)
 
@@ -83,12 +83,7 @@ struct ItineraryPreviewView: View {
             }
         }
     }
-
-    private func formatDuration(_ itinerary: Itinerary) -> String {
-        let duration = Int(itinerary.duration / 60) // Convert seconds to minutes
-        return "\(duration) min"
-    }
-
+    
     private func formatStartTime(_ itinerary: Itinerary) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
