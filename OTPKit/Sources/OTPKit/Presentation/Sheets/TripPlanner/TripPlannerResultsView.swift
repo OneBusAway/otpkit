@@ -46,7 +46,7 @@ public struct TripPlannerResultsView: View {
 
     // MARK: - View Components
     private func itinerariesScrollView() -> some View {
-        LazyVStack(spacing: 16) {
+        LazyVStack(spacing: 8) {
             ForEach(availableItineraries, id: \.self) { itinerary in
                 Button(action: {
                     onItineraryPreview(itinerary)
@@ -55,9 +55,9 @@ public struct TripPlannerResultsView: View {
                 })
                 .foregroundStyle(.foreground)
                 .background(
-                    RoundedRectangle(cornerRadius: 14)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(.regularMaterial)
-                        .shadow(color: .black.opacity(0.05), radius: 6, y: 3)
+                        .shadow(radius: 2) // ok now i made it ugly :(
                 )
                 .scaleEffect(1.0)
                 .animation(.easeInOut(duration: 0.15), value: itinerary)
@@ -67,10 +67,10 @@ public struct TripPlannerResultsView: View {
     }
 
     private func itineraryRow(itinerary: Itinerary) -> some View {
-        HStack(spacing: 16) {
+        HStack {
             // Route info
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
                     Text(formatDuration(itinerary))
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.primary)
@@ -90,9 +90,8 @@ public struct TripPlannerResultsView: View {
             // Go button
             goButton(itinerary: itinerary)
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 16)
-        .contentShape(Rectangle())
+        .padding(8)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func goButton(itinerary: Itinerary) -> some View {
