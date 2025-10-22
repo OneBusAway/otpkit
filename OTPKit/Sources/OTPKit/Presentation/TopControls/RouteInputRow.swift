@@ -34,7 +34,7 @@ struct RouteInputRow: View {
 
                     Text(subtitle)
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(hasLocation ? .primary : theme.primaryColor)
+                        .foregroundColor(.accentColor)
                         .lineLimit(2)
                 }
 

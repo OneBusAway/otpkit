@@ -79,7 +79,7 @@ public actor RestAPIService: APIService {
 
         let request = URLRequest(url: components.url!)
 
-        logger.info("Fetching trip plan: \(String(describing: request.url))")
+        Logger.main.info("Fetching trip plan: \(request.url!.absoluteString)")
 
         let (data, response) = try await dataLoader.data(for: request)
 
@@ -117,8 +117,6 @@ public actor RestAPIService: APIService {
             return url.appending(path: "routers/default")
         }
     }
-
-    private lazy var logger = Logger(subsystem: "org.onebusaway.otpkit", category: "RESTAPIService")
 }
 
 // swiftlint:enable function_parameter_count

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 /// Represents an itinerary leg that uses a vehicular method of conveyance.
 struct ItineraryLegVehicleView: View {
@@ -46,7 +47,7 @@ struct ItineraryLegVehicleView: View {
 
     private var textColor: Color {
         if let color = leg.routeTextUIColor {
-            print("Using color \(String(describing: leg.routeTextColor)) for text")
+            Logger.main.debug("Using color \(String(describing: leg.routeTextColor)) for text")
             return color
         }
 

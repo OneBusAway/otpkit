@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import SwiftUI
 import UIKit
+import OSLog
 
 /// Adapter that allows an MKMapView to be used as an OTPMapProvider
 public class MKMapViewAdapter: NSObject, OTPMapProvider {
@@ -61,7 +62,7 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         lineWidth: CGFloat,
         identifier: String
     ) {
-        print("Adding Route")
+        Logger.main.debug("Adding Route")
         guard let mapView = mapView else { return }
 
         // Remove existing route with same identifier if present

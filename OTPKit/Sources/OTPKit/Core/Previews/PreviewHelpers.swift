@@ -18,14 +18,21 @@ class PreviewHelpers {
     }
 
     @MainActor
-    static func mockTripPlannerViewModel() -> TripPlannerViewModel {
+    static func mockTripPlannerViewModel(canPlanTrip: Bool = true) -> TripPlannerViewModel {
         let config = OTPConfiguration(
             otpServerURL: URL(string: "https://example.com")!
         )
         let mapView = MKMapView()
         let mapProvider = MKMapViewAdapter(mapView: mapView)
         let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
-        return TripPlannerViewModel(config: config, apiService: MockAPIService(), mapCoordinator: mapCoordinator)
+        let vm = TripPlannerViewModel(config: config, apiService: MockAPIService(), mapCoordinator: mapCoordinator)
+
+        if canPlanTrip {
+            vm.selectedOrigin = Location(title: "From", subTitle: "Fake Origin", latitude: 47, longitude: -122)
+            vm.selectedDestination = Location(title: "To", subTitle: "Fake Destination", latitude: 47, longitude: -122)
+        }
+
+        return vm
     }
 
     public class MockAPIService: APIService {

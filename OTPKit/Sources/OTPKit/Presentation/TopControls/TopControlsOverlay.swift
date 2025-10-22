@@ -81,12 +81,12 @@ struct TopControlsOverlay: View {
                 HStack(spacing: 8) {
                     Image(systemName: "slider.horizontal.3")
                     Text("Options")
+                        .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(minHeight: 44)
             }
             .buttonStyle(.bordered)
-            .tint(.secondary)
 
             Button(action: tripPlannerVM.planTrip) {
                 HStack(spacing: 8) {
@@ -98,6 +98,7 @@ struct TopControlsOverlay: View {
                         Image(systemName: "arrow.right")
                     }
                     Text("Find Routes")
+                        .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(minHeight: 44)
@@ -112,6 +113,10 @@ struct TopControlsOverlay: View {
 
 #Preview {
     VStack {
+        TopControlsOverlay(selectedMode: .constant(.destination))
+            .padding(8)
+            .environmentObject(PreviewHelpers.mockTripPlannerViewModel(canPlanTrip: false))
+
         Spacer()
         TopControlsOverlay(selectedMode: .constant(.destination))
             .padding(8)

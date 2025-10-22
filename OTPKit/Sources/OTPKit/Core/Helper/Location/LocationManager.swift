@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import Combine
+import OSLog
 
 // Singleton manager to handle CoreLocation tasks across the app
 public class LocationManager: NSObject, ObservableObject {
@@ -68,7 +69,7 @@ public class LocationManager: NSObject, ObservableObject {
                 longitude: coordinate.longitude
             )
         } catch {
-            print("Geocoding failed: \(error.localizedDescription)")
+            Logger.main.warning("Geocoding failed: \(error.localizedDescription)")
             return nil
         }
     }
