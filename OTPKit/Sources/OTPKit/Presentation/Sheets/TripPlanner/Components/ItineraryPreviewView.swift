@@ -63,14 +63,12 @@ struct ItineraryPreviewView: View {
 
     @ViewBuilder
     private func legView(for leg: Leg) -> some View {
-        if leg.routeType == nil {
-            ItineraryLegUnknownView(leg: leg)
+        if leg.walkMode {
+            ItineraryLegWalkView(leg: leg)
+        } else if let routeType = leg.routeType, routeType != .nonTransit {
+            ItineraryLegVehicleView(leg: leg)
         } else {
-            if leg.routeType! == .nonTransit {
-                ItineraryLegWalkView(leg: leg)
-            } else {
-                ItineraryLegVehicleView(leg: leg)
-            }
+            ItineraryLegUnknownView(leg: leg)
         }
     }
 

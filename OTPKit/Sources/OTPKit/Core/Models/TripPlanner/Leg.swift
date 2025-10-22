@@ -42,6 +42,11 @@ public struct Leg: Codable, Hashable {
 
     /// Mode of transportation used in this leg (e.g., "BUS", "TRAIN").
     public let mode: String
+    
+    /// true if this Leg represents a walking step.
+    public var walkMode: Bool {
+        mode.lowercased() == "walk"
+    }
 
     public let routeType: RouteType?
 
