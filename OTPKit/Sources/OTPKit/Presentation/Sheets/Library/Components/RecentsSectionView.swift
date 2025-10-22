@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 /// A section that displays user's recent locations in a native List format
 /// Shows loading state, empty state, and a "More" button in the header
@@ -177,7 +178,7 @@ struct RecentsSectionView: View {
         case .success:
             break
         case .failure(let error):
-            print("Failed to delete recent location: \(error.localizedDescription)")
+            Logger.main.error("Failed to delete recent location: \(error.localizedDescription)")
             loadRecentLocations()
         }
     }

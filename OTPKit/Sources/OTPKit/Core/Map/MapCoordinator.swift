@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import MapKit
 import SwiftUI
+import OSLog
 
 /// Coordinates all map operations between OTPKit and the external map provider
 /// This class manages routes, annotations, and user interactions with the map
@@ -292,7 +293,7 @@ public class MapCoordinator: ObservableObject {
 
     private func handleAnnotationSelected(identifier: String) {
         // Handle annotation selection if needed
-        print("Annotation selected: \(identifier)")
+        Logger.main.info("Annotation selected: \(identifier)")
     }
 }
 

@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import MapKit
 import SwiftUI
+import OSLog
 
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
@@ -69,7 +70,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
 
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
-
+    
     /// Initialize with OTP configuration, API service, and map coordinator
     init(config: OTPConfiguration, apiService: APIService, mapCoordinator: MapCoordinator) {
         self.config = config

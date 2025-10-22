@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreLocation
+import OSLog
 
 /// A bottom sheet that presents options to set a location:
 /// - Use current GPS location
@@ -75,16 +76,19 @@ struct LocationOptionsSheet: View {
 
     private func requestCurrentLocation() {
         locationManager.requestWhenInUseAuthorization()
-        if let location = locationManager.location {
-            let currentLocation = Location(
-                title: "Current Location",
-                subTitle: "Your current GPS location",
-                latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
-            )
-            onLocationSelected(currentLocation, selectedMode)
-        } else {
-            print("Current location not available")
+
+        guard let location = locationManager.location else {
+            Logger.main.error("Current location not available")
+            return
         }
+
+        let currentLocation = Location(
+            title: "Current Location",
+            subTitle: "Your current GPS location",
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+        
+        onLocationSelected(currentLocation, selectedMode)
     }
 }

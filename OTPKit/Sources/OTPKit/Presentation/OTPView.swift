@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import OSLog
 
 /// Root view that provides TripPlannerViewModel as environment object to all child views
 public struct OTPView: View {

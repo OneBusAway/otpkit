@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import MapKit
+import OSLog
 
 /// Manages location search functionality using MapKit's search completer
 /// Handles search suggestions, detailed location lookups, and favorites management
@@ -43,7 +44,7 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         DispatchQueue.main.async {
-            print("Search completer error: \(error.localizedDescription)")
+            Logger.main.warning("Search completer error: \(error.localizedDescription)")
             self.searchCompletions = []
         }
     }
@@ -62,7 +63,7 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
 
                 guard let response = response,
                       let item = response.mapItems.first else {
-                    print("Search error: \(error?.localizedDescription ?? "Unknown error")")
+                    Logger.main.error("Search error: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
 
@@ -89,7 +90,7 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
             DispatchQueue.main.async {
                 guard let response = response,
                       let item = response.mapItems.first else {
-                    print("Failed to get location details for favorites: \(error?.localizedDescription ?? "Unknown error")")
+                    Logger.main.error("Failed to get location details for favorites: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
 
@@ -103,10 +104,10 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
                 let result = UserDefaultsServices.shared.saveFavoriteLocationData(data: location)
                 switch result {
                 case .success:
-                    print("Successfully added to favorites: \(location.title)")
+                    Logger.main.info("Successfully added to favorites: \(location.title)")
                     HapticManager.shared.success()
                 case .failure(let error):
-                    print("Failed to add to favorites: \(error.localizedDescription)")
+                    Logger.main.error("Failed to add to favorites: \(error.localizedDescription)")
                 }
             }
         }
