@@ -58,7 +58,7 @@ public struct Itinerary: Codable, Hashable {
     public var relevantLegs: [Leg] {
         legs.filter { leg in
             if leg.walkMode {
-                return leg.duration < 60
+                return leg.duration > 60
             } else {
                 return true
             }
