@@ -53,6 +53,17 @@ public struct Itinerary: Codable, Hashable {
 
     /// Array of `Leg` objects representing individual segments of the itinerary.
     public let legs: [Leg]
+    
+    /// Array of `Leg` objects with walk less than 1 minute in duration removed.
+    public var relevantLegs: [Leg] {
+        legs.filter { leg in
+            if leg.walkMode {
+                return leg.duration < 60
+            } else {
+                return true
+            }
+        }
+    }
 
     public var summary: String {
         // TODO: localize this!

@@ -17,23 +17,21 @@ struct ItineraryPreviewView: View {
 
     var body: some View {
         HStack {
-            // Route info
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 0) {
-                    Text(Formatters.formatTimeDuration(itinerary.duration))
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.primary)
+                Text(Formatters.formatTimeDuration(itinerary.duration))
+                    .font(.title)
+                    .fontWeight(.semibold)
 
-                    Spacer()
-
-                    Text(formatStartTime(itinerary))
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.secondary)
+                HStack(spacing: 2) {
+                    Text("ETA:")
+                    Text(Formatters.formatDateToTime(itinerary.endTime))
                 }
 
-                // Transport modes with improved layout
                 legsFlow(itinerary: itinerary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
             }
 
             // Go button
@@ -72,22 +70,17 @@ struct ItineraryPreviewView: View {
         }
     }
 
+    @ViewBuilder
     private func legsFlow(itinerary: Itinerary) -> some View {
         HFlow(alignment: .center, spacing: 4) {
-            ForEach(Array(zip(itinerary.legs.indices, itinerary.legs)), id: \.1) { index, leg in
+            ForEach(Array(zip(itinerary.relevantLegs.indices, itinerary.relevantLegs)), id: \.1) { index, leg in
                 legView(for: leg)
-                if index < itinerary.legs.count - 1 {
+                if index < itinerary.relevantLegs.count - 1 {
                     Image(systemName: "arrowtriangle.right.fill")
                         .font(.system(size: 8))
                 }
             }
         }
-    }
-
-    private func formatStartTime(_ itinerary: Itinerary) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a"
-        return dateFormatter.string(from: itinerary.startTime)
     }
 }
 
