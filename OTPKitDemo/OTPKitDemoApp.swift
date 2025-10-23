@@ -127,7 +127,6 @@ class OTPDemoViewController: UIViewController {
     private var mapProvider: OTPMapProvider?
     private var apiService: RestAPIService!
     private var otpBottomSheet: OTPBottomSheet?
-    private var isTripPlannerPresented = false
 
     // MARK: - Initialization
 
@@ -222,9 +221,12 @@ class OTPDemoViewController: UIViewController {
     }
 
     private func presentTripPlanner() {
-        guard let provider = mapProvider else { return }
-
-        isTripPlannerPresented = true
+        guard
+            otpBottomSheet == nil,
+            let provider = mapProvider
+        else {
+            return
+        }
 
         // Create OTP configuration
         let config = OTPConfiguration(
@@ -242,7 +244,6 @@ class OTPDemoViewController: UIViewController {
     }
 
     @objc private func tripPlannerDismissed() {
-        isTripPlannerPresented = false
         otpBottomSheet?.dismiss()
         otpBottomSheet = nil
     }

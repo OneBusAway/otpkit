@@ -65,13 +65,6 @@ struct TripPlannerView: View {
                     }
                 }
             }
-            .onDisappear {
-                // Notify when the view disappears to restore navigation UI
-                NotificationCenter.default.post(
-                    name: Notification.Name("TripPlannerDismissed"),
-                    object: nil
-                )
-            }
             .overlay {
                 // Loading overlay
                 if tripPlannerVM.isLoading {
