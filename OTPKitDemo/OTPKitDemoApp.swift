@@ -231,7 +231,7 @@ class OTPDemoViewController: UIViewController {
             otpServerURL: serverURL
         )
 
-        // Create bottom sheet and present OTPView
+        // Create bottom sheet and present it
         otpBottomSheet = OTPBottomSheet(
             otpConfig: config,
             apiService: apiService,

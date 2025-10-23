@@ -104,7 +104,10 @@ public class OTPBottomSheet {
         setupFloatingPanel(with: configuration)
 
         // Create the OTP content
-        let otpView = createOTPView(
+        let otpView = OTPView(
+            otpConfig: otpConfig,
+            apiService: apiService,
+            mapProvider: mapProvider,
             origin: origin,
             destination: destination
         )
@@ -189,20 +192,6 @@ public class OTPBottomSheet {
         }
 
         panel.surfaceView.layer.cornerRadius = configuration.cornerRadius
-    }
-
-    /// Creates the OTPView with the provided parameters
-    private func createOTPView(
-        origin: Location?,
-        destination: Location?
-    ) -> OTPView {
-        return OTPView(
-            otpConfig: otpConfig,
-            apiService: apiService,
-            mapProvider: mapProvider,
-            origin: origin,
-            destination: destination
-        )
     }
 
     /// Sets up the UIHostingController with the OTPView
