@@ -26,8 +26,8 @@ struct ItineraryLegVehicleView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Image(systemName: imageName)
-                .foregroundStyle(.foreground)
-        }.frame(height: 40)
+                .foregroundStyle(.secondary)
+        }.frame(minHeight: 40)
     }
 
     private var imageName: String {
