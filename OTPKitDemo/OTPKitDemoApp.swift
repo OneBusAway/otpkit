@@ -126,7 +126,7 @@ class OTPDemoViewController: UIViewController {
     private var mapView: MKMapView!
     private var mapProvider: OTPMapProvider?
     private var apiService: RestAPIService!
-    private var otpBottomSheet: OTPBottomSheet?
+    private var tripPlanner: TripPlanner?
 
     // MARK: - Initialization
 
@@ -222,7 +222,7 @@ class OTPDemoViewController: UIViewController {
 
     private func presentTripPlanner() {
         guard
-            otpBottomSheet == nil,
+            tripPlanner == nil,
             let provider = mapProvider
         else {
             return
@@ -234,18 +234,18 @@ class OTPDemoViewController: UIViewController {
         )
 
         // Create bottom sheet and present it
-        otpBottomSheet = OTPBottomSheet(
+        tripPlanner = TripPlanner(
             otpConfig: config,
             apiService: apiService,
             mapProvider: provider
         )
-        otpBottomSheet?.delegate = self
-        otpBottomSheet?.present(on: self)
+        tripPlanner?.delegate = self
+        tripPlanner?.present(on: self)
     }
 
     @objc private func tripPlannerDismissed() {
-        otpBottomSheet?.dismiss()
-        otpBottomSheet = nil
+        tripPlanner?.dismiss()
+        tripPlanner = nil
     }
 
     // MARK: - Helper Methods

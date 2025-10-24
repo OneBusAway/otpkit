@@ -15,25 +15,25 @@ public protocol OTPBottomSheetDelegate: AnyObject {
 
     /// Called when the bottom sheet is about to be presented
     /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetWillPresent(_ bottomSheet: OTPBottomSheet)
+    func bottomSheetWillPresent(_ bottomSheet: TripPlanner)
 
     /// Called when the bottom sheet has been presented
     /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetDidPresent(_ bottomSheet: OTPBottomSheet)
+    func bottomSheetDidPresent(_ bottomSheet: TripPlanner)
 
     /// Called when the bottom sheet is about to be dismissed
     /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetWillDismiss(_ bottomSheet: OTPBottomSheet)
+    func bottomSheetWillDismiss(_ bottomSheet: TripPlanner)
 
     /// Called when the bottom sheet has been dismissed
     /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetDidDismiss(_ bottomSheet: OTPBottomSheet)
+    func bottomSheetDidDismiss(_ bottomSheet: TripPlanner)
 }
 
 // MARK: - Default Implementations
 public extension OTPBottomSheetDelegate {
-    func bottomSheetWillPresent(_ bottomSheet: OTPBottomSheet) {}
-    func bottomSheetDidPresent(_ bottomSheet: OTPBottomSheet) {}
-    func bottomSheetWillDismiss(_ bottomSheet: OTPBottomSheet) {}
-    func bottomSheetDidDismiss(_ bottomSheet: OTPBottomSheet) {}
+    func bottomSheetWillPresent(_ bottomSheet: TripPlanner) {}
+    func bottomSheetDidPresent(_ bottomSheet: TripPlanner) {}
+    func bottomSheetWillDismiss(_ bottomSheet: TripPlanner) {}
+    func bottomSheetDidDismiss(_ bottomSheet: TripPlanner) {}
 }

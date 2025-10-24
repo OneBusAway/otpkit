@@ -9,25 +9,24 @@ import UIKit
 import SwiftUI
 import FloatingPanel
 
-/// A bottom sheet implementation specifically designed for presenting OTPKit's trip planning interface
+/// A container object that wraps all of the OTPKit trip planning functionality.
 ///
-/// This class provides a convenient way to present the OTPView as a floating bottom sheet
-/// with configurable appearance and behavior. It handles the creation of the OTPView internally
-/// and manages the FloatingPanel presentation. It automatically responds to route preview
+/// This class provides a convenient way to present `OTPView` as a floating bottom sheet
+/// with configurable appearance and behavior. It handles the creation of the `OTPView` internally
+/// and manages the `FloatingPanel` presentation. It automatically responds to route preview
 /// notifications to provide Apple Maps-style behavior.
 ///
 /// ## Usage
 /// ```swift
-/// let bottomSheet = OTPBottomSheet(
+/// let planner = TripPlanner(
 ///     otpConfig: config,
 ///     apiService: apiService,
 ///     mapProvider: mapProvider
 /// )
-/// bottomSheet.delegate = self
-/// bottomSheet.present(on: viewController)
+/// planner.delegate = self
+/// planner.present(on: viewController)
 /// ```
-public class OTPBottomSheet {
-
+public class TripPlanner {
     // MARK: - Properties
 
     /// The underlying FloatingPanel controller managing the presentation
@@ -39,7 +38,7 @@ public class OTPBottomSheet {
     /// Current configuration used for the sheet
     private var currentConfiguration: BottomSheetConfiguration?
 
-    /// Delegate for receiving sheet state change notifications
+    /// Delegate that will receive sheet state change notifications
     public weak var delegate: OTPBottomSheetDelegate?
 
     /// Position before preview started (for restoration)
@@ -274,7 +273,7 @@ public class OTPBottomSheet {
 
 // MARK: - FloatingPanelControllerDelegate
 
-extension OTPBottomSheet: FloatingPanelControllerDelegate {
+extension TripPlanner: FloatingPanelControllerDelegate {
     public func floatingPanelDidChangeState(_ fpc: FloatingPanelController) {
         let position = BottomSheetPosition(from: fpc.state)
         delegate?.bottomSheetDidChangePosition(position)
