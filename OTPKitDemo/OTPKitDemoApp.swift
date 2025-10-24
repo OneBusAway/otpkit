@@ -20,6 +20,10 @@ import MapKit
 import SwiftUI
 import OTPKit
 
+extension UISheetPresentationController.Detent.Identifier {
+    static let tip = UISheetPresentationController.Detent.Identifier("tip")
+}
+
 // MARK: - OTPRegionInfo
 
 struct OTPRegionInfo: Codable {
@@ -127,6 +131,7 @@ class OTPDemoViewController: UIViewController {
     private var mapProvider: OTPMapProvider?
     private var apiService: RestAPIService!
     private var tripPlanner: TripPlanner?
+    private var hostingController: UIViewController?
 
     // MARK: - Initialization
 
@@ -229,25 +234,41 @@ class OTPDemoViewController: UIViewController {
             return
         }
 
-        // Create OTP configuration
-        let config = OTPConfiguration(
-            otpServerURL: serverURL
-        )
-
         // Create bottom sheet and present it
         let tripPlanner = TripPlanner(
-            otpConfig: config,
+            otpConfig: OTPConfiguration(otpServerURL: serverURL),
             apiService: apiService,
             mapProvider: provider
         )
-        tripPlanner.delegate = self
 
-        let view = tripPlanner.createTripPlannerView()
+        let view = tripPlanner.createTripPlannerView() { [weak self] in
+            guard let self else { return }
+            self.removeTripPlanner()
+        }
         let hostingController = UIHostingController(rootView: view)
 
-        self.present(hostingController, animated: true)
+        hostingController.isModalInPresentation = true
+        hostingController.modalPresentationStyle = .pageSheet
 
+        if let sheet = hostingController.sheetPresentationController {
+            sheet.detents = [
+                .custom(identifier: .tip) { _ in 250 },
+                .medium(),
+                .large()
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 20
+        }
+        present(hostingController, animated: true)
+
+        self.hostingController = hostingController
         self.tripPlanner = tripPlanner
+    }
+
+    private func removeTripPlanner() {
+        hostingController?.dismiss(animated: true)
+        self.hostingController = nil
+        self.tripPlanner = nil
     }
 
     // MARK: - Helper Methods
@@ -256,31 +277,6 @@ class OTPDemoViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
-    }
-}
-
-// MARK: - OTPBottomSheetDelegate
-extension OTPDemoViewController: OTPBottomSheetDelegate {
-    public func bottomSheetDidChangePosition(_ position: BottomSheetPosition) {
-        // Handle position changes if needed
-        print("Bottom sheet moved to position: \(position)")
-    }
-
-    /// Called when the bottom sheet is about to be dismissed
-    /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetWillDismiss(_ bottomSheet: TripPlanner) {
-        print("bottomSheetWillDismiss()")
-    }
-
-    /// Called when the bottom sheet has been dismissed
-    /// - Parameter bottomSheet: The bottom sheet instance
-    func bottomSheetDidDismiss(_ bottomSheet: TripPlanner) {
-        print("bottomSheetDidDismiss()")
-        tripPlanner = nil
-    }
-
-    func presentTripPlannerView(_ tripPlanner: TripPlanner, view: some View) {
-        print("bonk: \(view)")
     }
 }
 

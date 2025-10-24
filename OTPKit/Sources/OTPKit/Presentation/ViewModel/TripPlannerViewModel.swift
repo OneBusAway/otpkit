@@ -199,7 +199,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         tripPlanResponse = response
         isLoading = false
         HapticManager.shared.success()
-        NotificationCenter.default.post(name: Notifications.moveSheetToFull, object: nil)
+        // TODO: notify that the trip plans were loaded and that itineraries are ready to be displayed.
     }
 
     private func handleError(_ error: Error) {
@@ -213,8 +213,6 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         isLoading = false
     }
 
-    // MARK: - Sheet Presentation
-
     // MARK: - Preview Management
 
     /// Clear the current route preview from the map
@@ -224,8 +222,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         isPreviewingRoute = false
         mapCoordinator.clearRoute()
 
-        // Notify that route preview ended - bottom sheet should restore position
-        NotificationCenter.default.post(name: Notifications.restoreSheetPosition, object: nil)
+        // TODO: Notify that route preview ended
     }
 
     /// Show route preview on the map for a specific itinerary
@@ -236,8 +233,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         isPreviewingRoute = true
         mapCoordinator.showItinerary(itinerary)
 
-        // Notify that route preview started - bottom sheet should move to tip position
-        NotificationCenter.default.post(name: Notifications.moveSheetToTip, object: nil)
+        // TODO: Notify that route preview started
     }
 
     // MARK: - Action Handlers
@@ -280,8 +276,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         dismiss()
         present(.directions)
 
-        // Keep bottom sheet at tip position for directions (Apple Maps style)
-        NotificationCenter.default.post(name: Notifications.moveSheetToTip, object: nil)
+        // TODO: Notify that an itinerary has been selected.
     }
 
     /// Handle itinerary preview (user wants to see route on map)
@@ -310,8 +305,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         mapCoordinator.clearRoute()
         mapCoordinator.clearLocations()
 
-        // Notify that route preview ended - bottom sheet should restore position
-        NotificationCenter.default.post(name: Notifications.restoreSheetPosition, object: nil)
+        // TODO: Notify that route preview ended
 
         // Clear error states
         errorMessage = nil
