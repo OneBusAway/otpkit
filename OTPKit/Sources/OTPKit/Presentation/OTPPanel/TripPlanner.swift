@@ -26,6 +26,7 @@ import FloatingPanel
 /// planner.delegate = self
 /// planner.present(on: viewController)
 /// ```
+@MainActor
 public class TripPlanner {
     // MARK: - Properties
 
@@ -53,9 +54,13 @@ public class TripPlanner {
     /// Map provider for operations
     private let mapProvider: OTPMapProvider
 
+    private let mapCoordinator: MapCoordinator
+
+    private let viewModel: TripPlannerViewModel
+
     // MARK: - Initialization
 
-    /// Creates a new OTPBottomSheet instance
+    /// Creates a new TripPlanner instance
     /// - Parameters:
     ///   - otpConfig: Configuration for the OTP system
     ///   - apiService: Service for making API requests
@@ -68,6 +73,8 @@ public class TripPlanner {
         self.otpConfig = otpConfig
         self.apiService = apiService
         self.mapProvider = mapProvider
+        self.mapCoordinator = MapCoordinator(mapProvider: mapProvider)
+        self.viewModel = TripPlannerViewModel(config: otpConfig, apiService: apiService, mapCoordinator: mapCoordinator)
     }
 
     // MARK: - Presentation & Dismissal
@@ -103,27 +110,36 @@ public class TripPlanner {
         setupFloatingPanel(with: configuration)
 
         // Create the OTP content
-        let tripPlannerView = TripPlannerView(
-            otpConfig: otpConfig,
-            apiService: apiService,
-            mapProvider: mapProvider,
+        let tripPlannerView = createTripPlannerView()
+
+        // Set up the hosting controller
+        let hostingController = UIHostingController(rootView: tripPlannerView)
+        hostingController.view.backgroundColor = .clear
+
+
+        // Set up notification observers for route preview coordination
+        setupNotificationObservers()
+
+        delegate?.presentTripPlannerView(self, view: tripPlannerView)
+
+        delegate?.bottomSheetDidPresent(self)
+        completion?()
+    }
+
+    public func createTripPlannerView(origin: Location? = nil, destination: Location? = nil) -> some View {
+        let view = TripPlannerView(
+            viewModel: viewModel,
+            mapCoordinator: mapCoordinator,
             origin: origin,
             destination: destination) { [weak self] in
                 guard let self else { return }
                 self.dismiss()
             }
 
-        // Set up the hosting controller
-        setupHostingController(with: tripPlannerView)
-
-        // Set up notification observers for route preview coordination
-        setupNotificationObservers()
-
-        // Present the panel
-        viewController.present(floatingPanelController!, animated: true) { [weak self] in
-            self?.delegate?.bottomSheetDidPresent(self!)
-            completion?()
-        }
+        return view
+            .environment(\.otpTheme, viewModel.config.themeConfiguration)
+            .environmentObject(mapCoordinator)
+            .environmentObject(viewModel)
     }
 
     /// Dismisses the bottom sheet

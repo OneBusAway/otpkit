@@ -225,6 +225,7 @@ class OTPDemoViewController: UIViewController {
             tripPlanner == nil,
             let provider = mapProvider
         else {
+            showAlert(title: "Trip planner already exists", message: "")
             return
         }
 
@@ -234,13 +235,19 @@ class OTPDemoViewController: UIViewController {
         )
 
         // Create bottom sheet and present it
-        tripPlanner = TripPlanner(
+        let tripPlanner = TripPlanner(
             otpConfig: config,
             apiService: apiService,
             mapProvider: provider
         )
-        tripPlanner?.delegate = self
-        tripPlanner?.present(on: self)
+        tripPlanner.delegate = self
+
+        let view = tripPlanner.createTripPlannerView()
+        let hostingController = UIHostingController(rootView: view)
+
+        self.present(hostingController, animated: true)
+
+        self.tripPlanner = tripPlanner
     }
 
     // MARK: - Helper Methods
@@ -270,6 +277,10 @@ extension OTPDemoViewController: OTPBottomSheetDelegate {
     func bottomSheetDidDismiss(_ bottomSheet: TripPlanner) {
         print("bottomSheetDidDismiss()")
         tripPlanner = nil
+    }
+
+    func presentTripPlannerView(_ tripPlanner: TripPlanner, view: some View) {
+        print("bonk: \(view)")
     }
 }
 

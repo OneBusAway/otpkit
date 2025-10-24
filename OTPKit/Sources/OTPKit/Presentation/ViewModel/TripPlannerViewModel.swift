@@ -14,7 +14,7 @@ import OSLog
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
-class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
+public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
     // MARK: - Published Properties
 
     /// Currently active sheet being presented
@@ -63,7 +63,7 @@ class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
     // MARK: - Configuration
 
     /// OTP configuration containing server URL and enabled transport modes
-    private let config: OTPConfiguration
+    let config: OTPConfiguration
 
     /// API service for making trip planning requests
     private let apiService: APIService

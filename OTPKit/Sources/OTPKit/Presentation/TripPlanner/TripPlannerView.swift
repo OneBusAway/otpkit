@@ -10,15 +10,12 @@ import MapKit
 
 /// Main view for planning trips, showing controls and results.
 /// Full-screen interface with navigation bar, top controls, and inline results.
-struct TripPlannerView: View {
+public struct TripPlannerView: View {
     /// ViewModel managing trip planning state and logic
     @StateObject private var tripPlannerVM: TripPlannerViewModel
 
     /// Map coordinator for managing map operations
     @StateObject private var mapCoordinator: MapCoordinator
-
-    /// OTP configuration for the planner
-    private let otpConfig: OTPConfiguration
 
     /// Currently selected location mode (origin or destination)
     @State private var selectedMode: LocationMode = .origin
@@ -27,35 +24,26 @@ struct TripPlannerView: View {
 
     private let onClose: VoidBlock
 
-
     /// Initializes the TripPlannerView with a map provider, configuration, and optional locations
     /// This is the main entry point for using OTPKit
     /// - Parameters:
-    ///   - otpConfig: Configuration containing server URL and theme
-    ///   - apiService: Service for making API requests
-    ///   - mapProvider: External map provider that OTPKit will control
+    ///   - viewModel: The TripPlannerViewModel
+    ///   - mapCoordinator: The MapCoordinator object
     ///   - origin: Optional starting location (if nil, current location will be used)
     ///   - destination: Optional destination location
+    ///   - onClose: A callback invoked when the close button is tapped.
     public init(
-        otpConfig: OTPConfiguration,
-        apiService: APIService,
-        mapProvider: OTPMapProvider,
+        viewModel: TripPlannerViewModel,
+        mapCoordinator: MapCoordinator,
         origin: Location? = nil,
         destination: Location? = nil,
         onClose: @escaping VoidBlock
     ) {
-        let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
-        let tripPlannerVM = TripPlannerViewModel(
-            config: otpConfig,
-            apiService: apiService,
-            mapCoordinator: mapCoordinator
-        )
-        tripPlannerVM.selectedOrigin = origin
-        tripPlannerVM.selectedDestination = destination
+        viewModel.selectedOrigin = origin
+        viewModel.selectedDestination = destination
 
-        self._tripPlannerVM = StateObject(wrappedValue: tripPlannerVM)
+        self._tripPlannerVM = StateObject(wrappedValue: viewModel)
         self._mapCoordinator = StateObject(wrappedValue: mapCoordinator)
-        self.otpConfig = otpConfig
         self.onClose = onClose
     }
 
@@ -99,9 +87,6 @@ struct TripPlannerView: View {
                 }
             }
         }
-        .environmentObject(tripPlannerVM)
-        .environmentObject(mapCoordinator)
-        .environment(\.otpTheme, otpConfig.themeConfiguration)
         .task {
             // Auto-set current location as origin if no origin is provided
             if tripPlannerVM.selectedOrigin == nil {
@@ -179,13 +164,15 @@ private extension TripPlannerView {
 }
 
 #Preview {
+    let otpConfig = OTPConfiguration(otpServerURL: URL(string: "https://example.com")!)
     let mapView = MKMapView()
     let mapProvider = MKMapViewAdapter(mapView: mapView)
+    let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
+    let viewModel = TripPlannerViewModel(config: otpConfig, apiService: PreviewHelpers.MockAPIService(), mapCoordinator: mapCoordinator)
 
     TripPlannerView(
-        otpConfig: .init(otpServerURL: URL(string: "https://example.com")!),
-        apiService: PreviewHelpers.MockAPIService(),
-        mapProvider: mapProvider
+        viewModel: viewModel,
+        mapCoordinator: mapCoordinator
     ) {
         print("Close me!")
     }

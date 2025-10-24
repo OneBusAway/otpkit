@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import UIKit
 
 /// Delegate protocol for bottom sheet state changes and interactions
 public protocol OTPBottomSheetDelegate: AnyObject {
@@ -28,6 +30,8 @@ public protocol OTPBottomSheetDelegate: AnyObject {
     /// Called when the bottom sheet has been dismissed
     /// - Parameter bottomSheet: The bottom sheet instance
     func bottomSheetDidDismiss(_ bottomSheet: TripPlanner)
+
+    func presentTripPlannerView(_ tripPlanner: TripPlanner, view: some View)
 }
 
 // MARK: - Default Implementations
