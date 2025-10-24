@@ -25,8 +25,8 @@ struct TripPlannerView: View {
 
     @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
 
-    /// Environment dismiss action
-    @Environment(\.dismiss) private var dismiss
+    private let onClose: VoidBlock
+
 
     /// Initializes the TripPlannerView with a map provider, configuration, and optional locations
     /// This is the main entry point for using OTPKit
@@ -41,7 +41,8 @@ struct TripPlannerView: View {
         apiService: APIService,
         mapProvider: OTPMapProvider,
         origin: Location? = nil,
-        destination: Location? = nil
+        destination: Location? = nil,
+        onClose: @escaping VoidBlock
     ) {
         let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
         let tripPlannerVM = TripPlannerViewModel(
@@ -55,6 +56,7 @@ struct TripPlannerView: View {
         self._tripPlannerVM = StateObject(wrappedValue: tripPlannerVM)
         self._mapCoordinator = StateObject(wrappedValue: mapCoordinator)
         self.otpConfig = otpConfig
+        self.onClose = onClose
     }
 
     public var body: some View {
@@ -86,7 +88,7 @@ struct TripPlannerView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Close", systemImage: "xmark") {
                         tripPlannerVM.resetTripPlanner()
-                        dismiss()
+                        self.onClose()
                     }
                 }
             }
@@ -184,6 +186,8 @@ private extension TripPlannerView {
         otpConfig: .init(otpServerURL: URL(string: "https://example.com")!),
         apiService: PreviewHelpers.MockAPIService(),
         mapProvider: mapProvider
-    )
+    ) {
+        print("Close me!")
+    }
     .frame(height: 320)
 }

@@ -146,7 +146,7 @@ class OTPDemoViewController: UIViewController {
         super.viewDidLoad()
 
         setupMapView()
-        setupOTPKit()
+        setupAPIService()
         setupUI()
 
         // Request location permission
@@ -203,7 +203,7 @@ class OTPDemoViewController: UIViewController {
         )
     }
 
-    private func setupOTPKit() {
+    private func setupAPIService() {
         // Create API service
         apiService = RestAPIService(baseURL: serverURL)
     }
@@ -243,11 +243,6 @@ class OTPDemoViewController: UIViewController {
         tripPlanner?.present(on: self)
     }
 
-    @objc private func tripPlannerDismissed() {
-        tripPlanner?.dismiss()
-        tripPlanner = nil
-    }
-
     // MARK: - Helper Methods
 
     private func showAlert(title: String, message: String) {
@@ -262,6 +257,19 @@ extension OTPDemoViewController: OTPBottomSheetDelegate {
     public func bottomSheetDidChangePosition(_ position: BottomSheetPosition) {
         // Handle position changes if needed
         print("Bottom sheet moved to position: \(position)")
+    }
+
+    /// Called when the bottom sheet is about to be dismissed
+    /// - Parameter bottomSheet: The bottom sheet instance
+    func bottomSheetWillDismiss(_ bottomSheet: TripPlanner) {
+        print("bottomSheetWillDismiss()")
+    }
+
+    /// Called when the bottom sheet has been dismissed
+    /// - Parameter bottomSheet: The bottom sheet instance
+    func bottomSheetDidDismiss(_ bottomSheet: TripPlanner) {
+        print("bottomSheetDidDismiss()")
+        tripPlanner = nil
     }
 }
 

@@ -108,8 +108,10 @@ public class TripPlanner {
             apiService: apiService,
             mapProvider: mapProvider,
             origin: origin,
-            destination: destination
-        )
+            destination: destination) { [weak self] in
+                guard let self else { return }
+                self.dismiss()
+            }
 
         // Set up the hosting controller
         setupHostingController(with: tripPlannerView)
