@@ -7,25 +7,11 @@
 
 import UIKit
 import SwiftUI
-import FloatingPanel
 
 /// A container object that wraps all of the OTPKit trip planning functionality.
 ///
-/// This class provides a convenient way to present `TripPlannerView` as a floating bottom sheet
-/// with configurable appearance and behavior. It handles the creation of the `TripPlannerView` internally
-/// and manages the `FloatingPanel` presentation. It automatically responds to route preview
-/// notifications to provide Apple Maps-style behavior.
-///
-/// ## Usage
-/// ```swift
-/// let planner = TripPlanner(
-///     otpConfig: config,
-///     apiService: apiService,
-///     mapProvider: mapProvider
-/// )
-/// planner.delegate = self
-/// planner.present(on: viewController)
-/// ```
+/// This class provides a convenient way to display a `TripPlannerView` with configurable
+/// appearance and behavior.
 @MainActor
 public class TripPlanner {
     // MARK: - Properties
