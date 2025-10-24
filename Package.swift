@@ -16,8 +16,7 @@ let package = Package(
             targets: ["OTPKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/tevelee/SwiftUI-Flow.git", from: "3.1.0"),
-        .package(url: "https://github.com/scenee/FloatingPanel.git", from: "3.0.0")
+        .package(url: "https://github.com/tevelee/SwiftUI-Flow.git", from: "3.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,8 +24,7 @@ let package = Package(
         .target(
             name: "OTPKit",
             dependencies: [
-                .product(name: "Flow", package: "SwiftUI-Flow"),
-                .product(name: "FloatingPanel", package: "FloatingPanel")
+                .product(name: "Flow", package: "SwiftUI-Flow")
             ],
             path: "OTPKit/Sources/OTPKit"
         ),

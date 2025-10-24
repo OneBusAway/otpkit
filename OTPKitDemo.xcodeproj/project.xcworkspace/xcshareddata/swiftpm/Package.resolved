@@ -2,15 +2,6 @@
   "originHash" : "5acb6b0bcde78d5d5b7260f1b512c81ca1fae41c7862f8bdeb67597afb098a6a",
   "pins" : [
     {
-      "identity" : "floatingpanel",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scenee/FloatingPanel.git",
-      "state" : {
-        "revision" : "a2646dd2704656fa5a679af68953249a70c77f40",
-        "version" : "3.0.1"
-      }
-    },
-    {
       "identity" : "swiftui-flow",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tevelee/SwiftUI-Flow.git",

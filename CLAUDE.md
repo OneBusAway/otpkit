@@ -70,7 +70,6 @@ brew install swiftlint
 ### Package Dependencies
 - **External**:
   - `SwiftUI-Flow` (from tevelee/SwiftUI-Flow.git, 3.1.0+) - Flow layout for SwiftUI
-  - `FloatingPanel` (from scenee/FloatingPanel.git, 3.0.0+) - Bottom sheet panel UI
 - **System Frameworks**:
   - SwiftUI (UI components)
   - MapKit (Map display and interactions)
@@ -107,7 +106,7 @@ brew install swiftlint
   - `Sheets/` - Bottom sheet UI components (search, directions, options)
   - `BottomControls/` - Controls for location selection and planning
   - `TopControls/` - Top UI controls
-  - `OTPPanel/` - Bottom sheet implementation using FloatingPanel
+  - `OTPPanel/` - Bottom sheet implementation
 
 ### Key Integration Points
 
@@ -251,7 +250,6 @@ LocationManager.shared.$currentLocation
 - Uses `PresentationManager` generic class for type-safe sheet management
 - Sheets are defined in the `Sheet` enum: `.locationOptions`, `.directions`, `.search`, `.advancedOptions`
 - Each sheet view is self-contained with its own state
-- Bottom sheet uses `FloatingPanel` library for iOS native behavior
 
 ## Code Style & Conventions
 
