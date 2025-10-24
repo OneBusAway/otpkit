@@ -11,8 +11,8 @@ import FloatingPanel
 
 /// A container object that wraps all of the OTPKit trip planning functionality.
 ///
-/// This class provides a convenient way to present `OTPView` as a floating bottom sheet
-/// with configurable appearance and behavior. It handles the creation of the `OTPView` internally
+/// This class provides a convenient way to present `TripPlannerView` as a floating bottom sheet
+/// with configurable appearance and behavior. It handles the creation of the `TripPlannerView` internally
 /// and manages the `FloatingPanel` presentation. It automatically responds to route preview
 /// notifications to provide Apple Maps-style behavior.
 ///
@@ -72,7 +72,7 @@ public class TripPlanner {
 
     // MARK: - Presentation & Dismissal
 
-    /// Presents the OTPView as a bottom sheet
+    /// Presents the `TripPlannerView` as a bottom sheet
     /// - Parameters:
     ///   - origin: Optional starting location
     ///   - destination: Optional destination location
@@ -103,7 +103,7 @@ public class TripPlanner {
         setupFloatingPanel(with: configuration)
 
         // Create the OTP content
-        let otpView = OTPView(
+        let tripPlannerView = TripPlannerView(
             otpConfig: otpConfig,
             apiService: apiService,
             mapProvider: mapProvider,
@@ -112,7 +112,7 @@ public class TripPlanner {
         )
 
         // Set up the hosting controller
-        setupHostingController(with: otpView)
+        setupHostingController(with: tripPlannerView)
 
         // Set up notification observers for route preview coordination
         setupNotificationObservers()
@@ -193,11 +193,11 @@ public class TripPlanner {
         panel.surfaceView.layer.cornerRadius = configuration.cornerRadius
     }
 
-    /// Sets up the UIHostingController with the OTPView
-    private func setupHostingController(with otpView: OTPView) {
+    /// Sets up the `UIHostingController` with the `TripPlannerView`
+    private func setupHostingController(with tripPlannerView: TripPlannerView) {
         guard let panel = floatingPanelController else { return }
 
-        let hostingController = UIHostingController(rootView: otpView)
+        let hostingController = UIHostingController(rootView: tripPlannerView)
         hostingController.view.backgroundColor = .clear
 
         panel.set(contentViewController: hostingController)
