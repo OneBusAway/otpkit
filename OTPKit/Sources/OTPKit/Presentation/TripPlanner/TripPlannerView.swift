@@ -58,7 +58,7 @@ struct TripPlannerView: View {
     }
 
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(spacing: 0, pinnedViews: []) {
                     // Top controls for location selection and trip planning
@@ -81,11 +81,10 @@ struct TripPlannerView: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Trip Planning")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Close") {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", systemImage: "xmark") {
                         tripPlannerVM.resetTripPlanner()
                         dismiss()
                     }
@@ -182,10 +181,9 @@ private extension TripPlannerView {
     let mapProvider = MKMapViewAdapter(mapView: mapView)
 
     TripPlannerView(
-        otpConfig: .init(otpServerURL: URL(string: "example")!),
+        otpConfig: .init(otpServerURL: URL(string: "https://example.com")!),
         apiService: PreviewHelpers.MockAPIService(),
         mapProvider: mapProvider
     )
-    .environmentObject(MapCoordinator(mapProvider: MKMapViewAdapter(mapView: MKMapView())))
     .frame(height: 320)
 }
