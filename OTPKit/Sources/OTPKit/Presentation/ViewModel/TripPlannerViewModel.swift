@@ -71,17 +71,26 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
     
+    /// NotificationCenter object for sending notifications.
+    private let notificationCenter: NotificationCenter
+
     /// Initialize with OTP configuration, API service, and map coordinator
-    init(config: OTPConfiguration, apiService: APIService, mapCoordinator: MapCoordinator) {
+    init(
+        config: OTPConfiguration,
+        apiService: APIService,
+        mapCoordinator: MapCoordinator,
+        notificationCenter: NotificationCenter = NotificationCenter.default
+    ) {
         self.config = config
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
+        self.notificationCenter = notificationCenter
+        
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
     }
 
     /// Sets the current location as the origin for trip planning
-    @MainActor
     func setCurrentLocationAsOrigin() async {
         if let currentLocation = await LocationManager.shared.getCurrentLocation() {
             selectedOrigin = currentLocation
@@ -135,7 +144,6 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
     /// Plan a trip using the current origin, destination,
     /// Plans a trip using the current origin, destination, and transport mode settings.
     /// Makes an API call to the OTP server and updates the UI state accordingly.
-    @MainActor
     func planTrip() {
         // Validate that we have required locations
         guard let origin = selectedOrigin, let destination = selectedDestination else {
@@ -199,7 +207,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         tripPlanResponse = response
         isLoading = false
         HapticManager.shared.success()
-        // TODO: notify that the trip plans were loaded and that itineraries are ready to be displayed.
+        notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
     }
 
     private func handleError(_ error: Error) {
@@ -221,8 +229,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         showingPolyline = false
         isPreviewingRoute = false
         mapCoordinator.clearRoute()
-
-        // TODO: Notify that route preview ended
+        notificationCenter.post(name: Notifications.itineraryPreviewEnded, object: nil)
     }
 
     /// Show route preview on the map for a specific itinerary
@@ -232,8 +239,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         showingPolyline = true
         isPreviewingRoute = true
         mapCoordinator.showItinerary(itinerary)
-
-        // TODO: Notify that route preview started
+        notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
     }
 
     // MARK: - Action Handlers
