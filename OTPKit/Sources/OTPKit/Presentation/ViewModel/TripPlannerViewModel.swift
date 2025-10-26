@@ -14,7 +14,7 @@ import OSLog
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
-public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
+public class TripPlannerViewModel: @preconcurrency ObservableObject {
     // MARK: - Published Properties
 
     /// Currently active sheet being presented
@@ -185,6 +185,19 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         }
     }
 
+    // MARK: - Sheet Presentation
+
+    /// Show a new sheet by assigning it
+    /// - Parameter sheet: The enum value of the sheet to present
+    func presentSheet(_ sheet: Sheet) {
+        activeSheet = sheet
+    }
+
+    /// Close any currently shown sheet
+    func dismissSheet() {
+        activeSheet = nil
+    }
+
     // MARK: - Private Helpers
 
     /// Determines the appropriate date and time for the trip request based on time preference
@@ -264,7 +277,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         mapCoordinator.centerOn(coordinate: location.coordinate)
 
         // Dismiss the current sheet
-        dismiss()
+        dismissSheet()
     }
 
     /// Handle itinerary selection (user wants to use this route)
@@ -279,8 +292,8 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         if let origin = selectedOrigin {
             mapCoordinator.centerOn(coordinate: origin.coordinate)
         }
-        dismiss()
-        present(.directions)
+        dismissSheet()
+        presentSheet(.directions)
 
         // TODO: Notify that an itinerary has been selected.
     }
