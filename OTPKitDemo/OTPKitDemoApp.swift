@@ -20,10 +20,6 @@ import MapKit
 import SwiftUI
 import OTPKit
 
-extension UISheetPresentationController.Detent.Identifier {
-    static let tip = UISheetPresentationController.Detent.Identifier("tip")
-}
-
 // MARK: - OTPRegionInfo
 
 struct OTPRegionInfo: Codable {
@@ -252,20 +248,8 @@ class OTPDemoViewController: UIViewController {
             guard let self else { return }
             self.removeTripPlanner()
         }
-        let hostingController = UIHostingController(rootView: view)
+        let hostingController = PanelHostingController(rootView: view)
 
-        hostingController.isModalInPresentation = true
-        hostingController.modalPresentationStyle = .pageSheet
-
-        if let sheet = hostingController.sheetPresentationController {
-            sheet.detents = [
-                .custom(identifier: .tip) { _ in 250 },
-                .medium(),
-                .large()
-            ]
-            sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = 20
-        }
         present(hostingController, animated: true)
 
         self.hostingController = hostingController
@@ -293,19 +277,18 @@ class OTPDemoViewController: UIViewController {
     }
 
     @objc private func itinerariesUpdated(_ note: NSNotification) {
-        guard let sheet = hostingController?.sheetPresentationController else { return }
-
-        sheet.animateChanges {
-            sheet.selectedDetentIdentifier = .large
-        }
+        print(#function)
+        hostingController?.animateToDetentIdentifier(.large)
     }
 
     @objc private func itineraryPreviewStarted(_ note: NSNotification) {
-        //
+        print(#function)
+        hostingController?.animateToDetentIdentifier(.tip)
     }
 
     @objc private func itineraryPreviewEnded(_ note: NSNotification) {
-        //
+        print(#function)
+    }
     }
 
 
