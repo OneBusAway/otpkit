@@ -15,6 +15,7 @@ enum Sheet: Identifiable, Hashable {
     case directions
     case search(LocationMode)
     case advancedOptions
+    case preview(Itinerary, Location?, Location?)
 
     var id: Int {
         var hasher = Hasher()

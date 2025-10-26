@@ -245,16 +245,6 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         notificationCenter.post(name: Notifications.itineraryPreviewEnded, object: nil)
     }
 
-    /// Show route preview on the map for a specific itinerary
-    /// - Parameter itinerary: The itinerary to preview
-    private func showPreview(for itinerary: Itinerary) {
-        selectedItinerary = itinerary
-        showingPolyline = true
-        isPreviewingRoute = true
-        mapCoordinator.showItinerary(itinerary)
-        notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
-    }
-
     // MARK: - Action Handlers
 
     /// Handle location selection from various UI components
@@ -302,7 +292,8 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// Shows preview on map
     /// - Parameter itinerary: The itinerary to preview
     func handleItineraryPreview(_ itinerary: Itinerary) {
-        showPreview(for: itinerary)
+        presentSheet(.preview(itinerary, selectedOrigin, selectedDestination))
+        notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
     }
 
     // MARK: - Reset Functionality

@@ -283,7 +283,7 @@ class OTPDemoViewController: UIViewController {
 
     @objc private func itineraryPreviewStarted(_ note: NSNotification) {
         print(#function)
-        hostingController?.animateToDetentIdentifier(.tip)
+        // nop
     }
 
     @objc private func itineraryPreviewEnded(_ note: NSNotification) {
