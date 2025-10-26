@@ -139,6 +139,12 @@ class OTPDemoViewController: UIViewController {
         self.serverURL = serverURL
         self.regionInfo = regionInfo
         super.init(nibName: nil, bundle: nil)
+
+        subscribeToTripPlannerNotifications()
+    }
+
+    deinit {
+        unsubscribeFromTripPlannerNotifications()
     }
 
     required init?(coder: NSCoder) {
@@ -238,7 +244,8 @@ class OTPDemoViewController: UIViewController {
         let tripPlanner = TripPlanner(
             otpConfig: OTPConfiguration(otpServerURL: serverURL),
             apiService: apiService,
-            mapProvider: provider
+            mapProvider: provider,
+            notificationCenter: NotificationCenter.default
         )
 
         let view = tripPlanner.createTripPlannerView() { [weak self] in
@@ -270,6 +277,37 @@ class OTPDemoViewController: UIViewController {
         self.hostingController = nil
         self.tripPlanner = nil
     }
+
+    // MARK: - Notifications
+
+    private func subscribeToTripPlannerNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(itinerariesUpdated), name: Notifications.itinerariesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewStarted), name: Notifications.itineraryPreviewStarted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewEnded), name: Notifications.itineraryPreviewEnded, object: nil)
+    }
+
+    private func unsubscribeFromTripPlannerNotifications() {
+        NotificationCenter.default.removeObserver(self, name: Notifications.itinerariesUpdated, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewStarted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewEnded, object: nil)
+    }
+
+    @objc private func itinerariesUpdated(_ note: NSNotification) {
+        guard let sheet = hostingController?.sheetPresentationController else { return }
+
+        sheet.animateChanges {
+            sheet.selectedDetentIdentifier = .large
+        }
+    }
+
+    @objc private func itineraryPreviewStarted(_ note: NSNotification) {
+        //
+    }
+
+    @objc private func itineraryPreviewEnded(_ note: NSNotification) {
+        //
+    }
+
 
     // MARK: - Helper Methods
 
