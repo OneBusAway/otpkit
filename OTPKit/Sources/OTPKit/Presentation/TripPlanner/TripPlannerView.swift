@@ -109,7 +109,7 @@ public struct TripPlannerView: View {
     private var tripResultsSection: some View {
         TripPlannerResultsView(
             availableItineraries: tripPlannerVM.itineraries,
-            onItinerarySelected: tripPlannerVM.handleItinerarySelection,
+            onItinerarySelected: tripPlannerVM.handleTripStarted,
             onItineraryPreview: tripPlannerVM.handleItineraryPreview
         )
     }

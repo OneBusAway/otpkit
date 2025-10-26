@@ -268,12 +268,17 @@ class OTPDemoViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(itinerariesUpdated), name: Notifications.itinerariesUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewStarted), name: Notifications.itineraryPreviewStarted, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewEnded), name: Notifications.itineraryPreviewEnded, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(tripStarted), name: Notifications.tripStarted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(tripEnded), name: Notifications.tripEnded, object: nil)
     }
 
     private func unsubscribeFromTripPlannerNotifications() {
         NotificationCenter.default.removeObserver(self, name: Notifications.itinerariesUpdated, object: nil)
         NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewStarted, object: nil)
         NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewEnded, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.tripStarted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.tripEnded, object: nil)
     }
 
     @objc private func itinerariesUpdated(_ note: NSNotification) {
@@ -286,9 +291,19 @@ class OTPDemoViewController: UIViewController {
         // nop
     }
 
+    // TODO: wire this up! the notification doesn't get triggered yet.
     @objc private func itineraryPreviewEnded(_ note: NSNotification) {
         print(#function)
     }
+
+    @objc private func tripStarted(_ note: NSNotification) {
+        print(#function)
+        hostingController?.animateToDetentIdentifier(.tip)
+    }
+
+    // TODO: wire this up! the notification doesn't get triggered yet.
+    @objc private func tripEnded(_ note: NSNotification) {
+        print(#function)
     }
 
 

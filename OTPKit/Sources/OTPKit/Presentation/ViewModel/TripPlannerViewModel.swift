@@ -273,7 +273,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// Handle itinerary selection (user wants to use this route)
     /// Shows preview on map, dismisses current sheet, and opens route details
     /// - Parameter itinerary: The selected itinerary
-    func handleItinerarySelection(_ itinerary: Itinerary) {
+    func handleTripStarted(_ itinerary: Itinerary) {
         selectedItinerary = itinerary
         showingPolyline = true
         mapCoordinator.showItinerary(itinerary)
@@ -285,7 +285,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         dismissSheet()
         presentSheet(.directions)
 
-        // TODO: Notify that an itinerary has been selected.
+        notificationCenter.post(name: Notifications.tripStarted, object: nil)
     }
 
     /// Handle itinerary preview (user wants to see route on map)

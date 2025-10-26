@@ -14,4 +14,6 @@ public struct Notifications {
     public static let itinerariesUpdated = NSNotification.Name("org.onebusaway.otpkit.itinerariesUpdated")
     public static let itineraryPreviewStarted = NSNotification.Name("org.onebusaway.otpkit.itineraryPreviewStarted")
     public static let itineraryPreviewEnded = NSNotification.Name("org.onebusaway.otpkit.itineraryPreviewEnded")
+    public static let tripStarted = NSNotification.Name("org.onebusaway.otpkit.tripStarted")
+    public static let tripEnded = NSNotification.Name("org.onebusaway.otpkit.tripEnded")
 }
