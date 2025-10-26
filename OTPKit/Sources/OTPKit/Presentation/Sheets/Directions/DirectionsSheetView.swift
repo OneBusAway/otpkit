@@ -41,7 +41,11 @@ struct DirectionsSheetView: View {
                 if let itinerary = tripPlannerVM.selectedItinerary {
                     Section {
                         createOriginView(itinerary: itinerary)
-                        createLegsView(itinerary: itinerary)
+                        ItineraryLegsView(itinerary: itinerary) { leg, index in
+                            print("Leg tapped: \(leg) - index: \(index)")
+                            let coordinate = CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)
+                            handleTap(coordinate: coordinate, itemId: index)
+                        }
                         createDestinationView(itinerary: itinerary)
                     }
                     .listRowBackground(Color.clear)
@@ -52,12 +56,12 @@ struct DirectionsSheetView: View {
             .listStyle(PlainListStyle())
             .scrollIndicators(.hidden)
             .onChange(of: scrollToItem) {
-                if let itemId = scrollToItem {
+                if let scrollToItem {
                     withAnimation {
-                        proxy.scrollTo(itemId, anchor: .top)
+                        proxy.scrollTo(scrollToItem, anchor: .top)
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        scrollToItem = nil
+                        self.scrollToItem = nil
                     }
                 }
             }
@@ -70,40 +74,16 @@ struct DirectionsSheetView: View {
         sheetDetent = .fraction(0.2)
     }
 
-    private func generateLegView(leg: Leg) -> some View {
-        Group {
-            switch leg.mode {
-            case "BUS", "TRAM":
-                DirectionLegVehicleView(leg: leg)
-            case "WALK":
-                DirectionLegWalkView(leg: leg)
-            default:
-                DirectionLegUnknownView(leg: leg)
-            }
-        }
-    }
-
     private func createOriginView(itinerary _: Itinerary) -> some View {
         DirectionLegOriginDestinationView(
             title: "Start",
             description: tripPlannerVM.selectedOrigin?.title ?? "Unknown"
         )
-        .id("item-0")
+        .id("start")
         .onTapGesture {
             if let originCoordinate = tripPlannerVM.selectedOrigin?.coordinate {
-                handleTap(coordinate: originCoordinate, itemId: "item-0")
+                handleTap(coordinate: originCoordinate, itemId: "start")
             }
-        }
-    }
-
-    private func createLegsView(itinerary: Itinerary) -> some View {
-        ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
-            generateLegView(leg: leg)
-                .id("item-\(index + 1)")
-                .onTapGesture {
-                    let coordinate = CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)
-                    handleTap(coordinate: coordinate, itemId: "item-\(index + 1)")
-                }
         }
     }
 
@@ -112,10 +92,10 @@ struct DirectionsSheetView: View {
             title: "Destination",
             description: tripPlannerVM.selectedDestination?.title ?? "Unknown"
         )
-        .id("item-\(itinerary.legs.count + 1)")
+        .id("destination")
         .onTapGesture {
             if let destinationCoordinate = tripPlannerVM.selectedDestination?.coordinate {
-                handleTap(coordinate: destinationCoordinate, itemId: "item-\(itinerary.legs.count + 1)")
+                handleTap(coordinate: destinationCoordinate, itemId: "destination")
             }
         }
     }
