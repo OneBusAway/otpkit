@@ -34,7 +34,7 @@ struct TopControlsOverlay: View {
                 subtitle: tripPlannerVM.selectedOriginTitle,
                 hasLocation: tripPlannerVM.selectedOrigin != nil
             ) {
-                tripPlannerVM.present(.search(.origin))
+                tripPlannerVM.presentSheet(.search(.origin))
             }
 
             // Divider with connecting line
@@ -48,7 +48,7 @@ struct TopControlsOverlay: View {
                 subtitle: tripPlannerVM.selectedDestinationTitle,
                 hasLocation: tripPlannerVM.selectedDestination != nil
             ) {
-                tripPlannerVM.present(.search(.destination))
+                tripPlannerVM.presentSheet(.search(.destination))
             }
         }
         .background(
@@ -76,8 +76,8 @@ struct TopControlsOverlay: View {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: 14) {
-            Button(action: { tripPlannerVM.present(.advancedOptions) }) {
+        HStack(spacing: 16) {
+            Button(action: { tripPlannerVM.presentSheet(.advancedOptions) }) {
                 HStack(spacing: 8) {
                     Image(systemName: "slider.horizontal.3")
                     Text("Options")

@@ -34,7 +34,6 @@ struct ItineraryPreviewView: View {
                     )
             }
 
-            // Go button
             goButton(itinerary: itinerary)
         }
         .padding(8)

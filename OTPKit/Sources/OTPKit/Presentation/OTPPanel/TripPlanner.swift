@@ -27,6 +27,8 @@ public class TripPlanner {
 
     private let mapCoordinator: MapCoordinator
 
+    private let notificationCenter: NotificationCenter
+
     private let viewModel: TripPlannerViewModel
 
     // MARK: - Initialization
@@ -36,16 +38,27 @@ public class TripPlanner {
     ///   - otpConfig: Configuration for the OTP system
     ///   - apiService: Service for making API requests
     ///   - mapProvider: Provider for map operations
+    ///   - notificationCenter: Notification Center for receiving notifications. Defaults to `NotificationCenter.default`
     public init(
         otpConfig: OTPConfiguration,
         apiService: APIService,
-        mapProvider: OTPMapProvider
+        mapProvider: OTPMapProvider,
+        notificationCenter: NotificationCenter = .default
     ) {
         self.otpConfig = otpConfig
         self.apiService = apiService
         self.mapProvider = mapProvider
         self.mapCoordinator = MapCoordinator(mapProvider: mapProvider)
-        self.viewModel = TripPlannerViewModel(config: otpConfig, apiService: apiService, mapCoordinator: mapCoordinator)
+        self.notificationCenter = notificationCenter
+        self.viewModel = TripPlannerViewModel(
+            config: otpConfig,
+            apiService: apiService,
+            mapCoordinator: mapCoordinator,
+            notificationCenter: notificationCenter
+        )
+
+        // TODO: this class should be the one that owns notification sending so that
+        // it can be used as the object to remove observers later if needed
     }
 
     // MARK: - Presentation & Dismissal

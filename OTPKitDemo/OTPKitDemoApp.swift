@@ -20,10 +20,6 @@ import MapKit
 import SwiftUI
 import OTPKit
 
-extension UISheetPresentationController.Detent.Identifier {
-    static let tip = UISheetPresentationController.Detent.Identifier("tip")
-}
-
 // MARK: - OTPRegionInfo
 
 struct OTPRegionInfo: Codable {
@@ -139,6 +135,12 @@ class OTPDemoViewController: UIViewController {
         self.serverURL = serverURL
         self.regionInfo = regionInfo
         super.init(nibName: nil, bundle: nil)
+
+        subscribeToTripPlannerNotifications()
+    }
+
+    deinit {
+        unsubscribeFromTripPlannerNotifications()
     }
 
     required init?(coder: NSCoder) {
@@ -238,27 +240,16 @@ class OTPDemoViewController: UIViewController {
         let tripPlanner = TripPlanner(
             otpConfig: OTPConfiguration(otpServerURL: serverURL),
             apiService: apiService,
-            mapProvider: provider
+            mapProvider: provider,
+            notificationCenter: NotificationCenter.default
         )
 
         let view = tripPlanner.createTripPlannerView() { [weak self] in
             guard let self else { return }
             self.removeTripPlanner()
         }
-        let hostingController = UIHostingController(rootView: view)
+        let hostingController = PanelHostingController(rootView: view)
 
-        hostingController.isModalInPresentation = true
-        hostingController.modalPresentationStyle = .pageSheet
-
-        if let sheet = hostingController.sheetPresentationController {
-            sheet.detents = [
-                .custom(identifier: .tip) { _ in 250 },
-                .medium(),
-                .large()
-            ]
-            sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = 20
-        }
         present(hostingController, animated: true)
 
         self.hostingController = hostingController
@@ -270,6 +261,51 @@ class OTPDemoViewController: UIViewController {
         self.hostingController = nil
         self.tripPlanner = nil
     }
+
+    // MARK: - Notifications
+
+    private func subscribeToTripPlannerNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(itinerariesUpdated), name: Notifications.itinerariesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewStarted), name: Notifications.itineraryPreviewStarted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(itineraryPreviewEnded), name: Notifications.itineraryPreviewEnded, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(tripStarted), name: Notifications.tripStarted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(tripEnded), name: Notifications.tripEnded, object: nil)
+    }
+
+    private func unsubscribeFromTripPlannerNotifications() {
+        NotificationCenter.default.removeObserver(self, name: Notifications.itinerariesUpdated, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewStarted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.itineraryPreviewEnded, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.tripStarted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notifications.tripEnded, object: nil)
+    }
+
+    @objc private func itinerariesUpdated(_ note: NSNotification) {
+        print(#function)
+        hostingController?.animateToDetentIdentifier(.large)
+    }
+
+    @objc private func itineraryPreviewStarted(_ note: NSNotification) {
+        print(#function)
+        // nop
+    }
+
+    // TODO: wire this up! the notification doesn't get triggered yet.
+    @objc private func itineraryPreviewEnded(_ note: NSNotification) {
+        print(#function)
+    }
+
+    @objc private func tripStarted(_ note: NSNotification) {
+        print(#function)
+        hostingController?.animateToDetentIdentifier(.tip)
+    }
+
+    // TODO: wire this up! the notification doesn't get triggered yet.
+    @objc private func tripEnded(_ note: NSNotification) {
+        print(#function)
+    }
+
 
     // MARK: - Helper Methods
 

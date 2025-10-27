@@ -109,7 +109,7 @@ public struct TripPlannerView: View {
     private var tripResultsSection: some View {
         TripPlannerResultsView(
             availableItineraries: tripPlannerVM.itineraries,
-            onItinerarySelected: tripPlannerVM.handleItinerarySelection,
+            onItinerarySelected: tripPlannerVM.handleTripStarted,
             onItineraryPreview: tripPlannerVM.handleItineraryPreview
         )
     }
@@ -132,6 +132,13 @@ private extension TripPlannerView {
             SearchSheetView(
                 selectedMode: mode,
                 onLocationSelected: handleLocationSelection
+            )
+
+        case .preview(let itinerary, let origin, let destination):
+            ItineraryDetailsView(
+                origin: origin,
+                destination: destination,
+                itinerary: itinerary
             )
 
         case .directions:

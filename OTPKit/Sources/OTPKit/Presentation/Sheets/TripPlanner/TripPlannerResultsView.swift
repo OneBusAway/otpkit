@@ -38,7 +38,9 @@ public struct TripPlannerResultsView: View {
             if hasItineraries {
                 itinerariesScrollView()
             } else {
-                noItinerariesView()
+                Text("No trips found")
+                    .foregroundStyle(theme.secondaryColor)
+                    .padding()
             }
         }
     }
@@ -58,19 +60,9 @@ public struct TripPlannerResultsView: View {
                         .fill(.regularMaterial)
                         .shadow(radius: 2) // ok now i made it ugly :(
                 )
-                .scaleEffect(1.0)
-                .animation(.easeInOut(duration: 0.15), value: itinerary)
             }
         }
         .padding(.horizontal, 16)
-    }
-
-    private func noItinerariesView() -> some View {
-        VStack {
-            Text("No trips found")
-                .foregroundStyle(theme.secondaryColor)
-                .padding()
-        }
     }
 
     // MARK: - Helper Methods
@@ -96,6 +88,14 @@ public struct TripPlannerResultsView: View {
         PreviewHelpers.buildItin(legsCount: 4)
     ]
     TripPlannerResultsView(availableItineraries: itineraries) { _ in
+        //
+    } onItineraryPreview: { _ in
+        //
+    }
+}
+
+#Preview {
+    TripPlannerResultsView(availableItineraries: []) { _ in
         //
     } onItineraryPreview: { _ in
         //

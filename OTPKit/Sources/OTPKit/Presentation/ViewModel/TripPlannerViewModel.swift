@@ -14,7 +14,7 @@ import OSLog
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
-public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObject {
+public class TripPlannerViewModel: @preconcurrency ObservableObject {
     // MARK: - Published Properties
 
     /// Currently active sheet being presented
@@ -71,17 +71,26 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
     
+    /// NotificationCenter object for sending notifications.
+    private let notificationCenter: NotificationCenter
+
     /// Initialize with OTP configuration, API service, and map coordinator
-    init(config: OTPConfiguration, apiService: APIService, mapCoordinator: MapCoordinator) {
+    init(
+        config: OTPConfiguration,
+        apiService: APIService,
+        mapCoordinator: MapCoordinator,
+        notificationCenter: NotificationCenter = NotificationCenter.default
+    ) {
         self.config = config
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
+        self.notificationCenter = notificationCenter
+        
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
     }
 
     /// Sets the current location as the origin for trip planning
-    @MainActor
     func setCurrentLocationAsOrigin() async {
         if let currentLocation = await LocationManager.shared.getCurrentLocation() {
             selectedOrigin = currentLocation
@@ -135,7 +144,6 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
     /// Plan a trip using the current origin, destination,
     /// Plans a trip using the current origin, destination, and transport mode settings.
     /// Makes an API call to the OTP server and updates the UI state accordingly.
-    @MainActor
     func planTrip() {
         // Validate that we have required locations
         guard let origin = selectedOrigin, let destination = selectedDestination else {
@@ -177,6 +185,19 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         }
     }
 
+    // MARK: - Sheet Presentation
+
+    /// Show a new sheet by assigning it
+    /// - Parameter sheet: The enum value of the sheet to present
+    func presentSheet(_ sheet: Sheet) {
+        activeSheet = sheet
+    }
+
+    /// Close any currently shown sheet
+    func dismissSheet() {
+        activeSheet = nil
+    }
+
     // MARK: - Private Helpers
 
     /// Determines the appropriate date and time for the trip request based on time preference
@@ -199,7 +220,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         tripPlanResponse = response
         isLoading = false
         HapticManager.shared.success()
-        // TODO: notify that the trip plans were loaded and that itineraries are ready to be displayed.
+        notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
     }
 
     private func handleError(_ error: Error) {
@@ -221,19 +242,7 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         showingPolyline = false
         isPreviewingRoute = false
         mapCoordinator.clearRoute()
-
-        // TODO: Notify that route preview ended
-    }
-
-    /// Show route preview on the map for a specific itinerary
-    /// - Parameter itinerary: The itinerary to preview
-    private func showPreview(for itinerary: Itinerary) {
-        selectedItinerary = itinerary
-        showingPolyline = true
-        isPreviewingRoute = true
-        mapCoordinator.showItinerary(itinerary)
-
-        // TODO: Notify that route preview started
+        notificationCenter.post(name: Notifications.itineraryPreviewEnded, object: nil)
     }
 
     // MARK: - Action Handlers
@@ -258,13 +267,13 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         mapCoordinator.centerOn(coordinate: location.coordinate)
 
         // Dismiss the current sheet
-        dismiss()
+        dismissSheet()
     }
 
     /// Handle itinerary selection (user wants to use this route)
     /// Shows preview on map, dismisses current sheet, and opens route details
     /// - Parameter itinerary: The selected itinerary
-    func handleItinerarySelection(_ itinerary: Itinerary) {
+    func handleTripStarted(_ itinerary: Itinerary) {
         selectedItinerary = itinerary
         showingPolyline = true
         mapCoordinator.showItinerary(itinerary)
@@ -273,17 +282,18 @@ public class TripPlannerViewModel: @preconcurrency SheetPresenter, ObservableObj
         if let origin = selectedOrigin {
             mapCoordinator.centerOn(coordinate: origin.coordinate)
         }
-        dismiss()
-        present(.directions)
+        dismissSheet()
+        presentSheet(.directions)
 
-        // TODO: Notify that an itinerary has been selected.
+        notificationCenter.post(name: Notifications.tripStarted, object: nil)
     }
 
     /// Handle itinerary preview (user wants to see route on map)
     /// Shows preview on map
     /// - Parameter itinerary: The itinerary to preview
     func handleItineraryPreview(_ itinerary: Itinerary) {
-        showPreview(for: itinerary)
+        presentSheet(.preview(itinerary, selectedOrigin, selectedDestination))
+        notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
     }
 
     // MARK: - Reset Functionality
