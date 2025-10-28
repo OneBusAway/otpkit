@@ -76,13 +76,15 @@ public class MapCoordinator: ObservableObject {
         for (index, leg) in itinerary.legs.enumerated() {
             if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
                 let legColor = colorForTransportMode(leg.mode)
+                let dashPattern = dashPatternForTransportMode(leg.mode)
 
                 // Add white halo for better visibility
                 mapProvider.addRoute(
                     coordinates: coordinates,
                     color: .white.opacity(0.8),
                     lineWidth: Constants.routeHaloWidth,
-                    identifier: "halo_leg_\(index)"
+                    identifier: "halo_leg_\(index)",
+                    lineDashPattern: dashPattern
                 )
 
                 // Add colored route
@@ -90,7 +92,8 @@ public class MapCoordinator: ObservableObject {
                     coordinates: coordinates,
                     color: legColor,
                     lineWidth: Constants.routeLineWidth,
-                    identifier: "leg_\(index)"
+                    identifier: "leg_\(index)",
+                    lineDashPattern: dashPattern
                 )
 
                 // Add mode icon at midpoint
@@ -186,6 +189,17 @@ public class MapCoordinator: ObservableObject {
             return .orange
         default:
             return .gray
+        }
+    }
+
+    private func dashPatternForTransportMode(_ mode: String) -> [NSNumber]? {
+        switch mode.uppercased() {
+        case "WALK":
+            // Apple Maps style dotted line for walking
+            return [3, 10]
+        default:
+            // Solid line for all other transport modes
+            return nil
         }
     }
 

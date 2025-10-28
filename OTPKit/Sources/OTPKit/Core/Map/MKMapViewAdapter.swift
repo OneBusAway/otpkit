@@ -60,7 +60,8 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         coordinates: [CLLocationCoordinate2D],
         color: Color,
         lineWidth: CGFloat,
-        identifier: String
+        identifier: String,
+        lineDashPattern: [NSNumber]? = nil
     ) {
         Logger.main.debug("Adding Route")
         guard let mapView = mapView else { return }
@@ -73,6 +74,7 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         polyline.color = UIColor(color)
         polyline.lineWidth = lineWidth
         polyline.identifier = identifier
+        polyline.lineDashPattern = lineDashPattern
 
         // Store and add to map
         routeOverlays[identifier] = polyline
@@ -219,6 +221,9 @@ extension MKMapViewAdapter: MKMapViewDelegate {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = polyline.color
             renderer.lineWidth = polyline.lineWidth
+            renderer.lineDashPattern = polyline.lineDashPattern
+            renderer.lineCap = .square
+
             return renderer
         }
 
@@ -273,6 +278,7 @@ class ColoredPolyline: MKPolyline {
     var color: UIColor = .blue
     var lineWidth: CGFloat = 3.0
     var identifier: String = ""
+    var lineDashPattern: [NSNumber]?
 }
 
 /// Custom MKPointAnnotation subclass that stores type and identifier information

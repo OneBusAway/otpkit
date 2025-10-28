@@ -23,11 +23,13 @@ public protocol OTPMapProvider: AnyObject {
     ///   - color: Color for the route line
     ///   - lineWidth: Width of the route line
     ///   - identifier: Unique identifier for this route segment
+    ///   - lineDashPattern: Optional dash pattern for the line (e.g., [0, 8] for dotted line)
     func addRoute(
         coordinates: [CLLocationCoordinate2D],
         color: Color,
         lineWidth: CGFloat,
-        identifier: String
+        identifier: String,
+        lineDashPattern: [NSNumber]?
     )
 
     /// Removes a specific route from the map
