@@ -127,7 +127,10 @@ public class MapCoordinator: ObservableObject {
             title: location.title,
             subtitle: location.subTitle,
             identifier: originIdentifier,
-            type: .origin
+            type: .origin,
+            routeName: nil,
+            routeBackgroundColor: nil,
+            routeTextColor: nil
         )
     }
 
@@ -139,7 +142,10 @@ public class MapCoordinator: ObservableObject {
             title: location.title,
             subtitle: location.subTitle,
             identifier: destinationIdentifier,
-            type: .destination
+            type: .destination,
+            routeName: nil,
+            routeBackgroundColor: nil,
+            routeTextColor: nil
         )
     }
 
@@ -226,11 +232,48 @@ public class MapCoordinator: ObservableObject {
     }
 
     private func addTransportModeAnnotation(for leg: Leg, index: Int, coordinates: [CLLocationCoordinate2D]) {
-//        let midIndex = coordinates.count / 2
-//        let position = coordinates[midIndex]
+        // Only add route legends for transit legs with route names
+        guard leg.transitLeg == true,
+              let routeName = leg.route,
+              !routeName.isEmpty,
+              coordinates.count >= 4 else {
+            return
+        }
 
-        // For now, we'll skip mode annotations as they require custom rendering
-        // This can be enhanced later with custom annotation views
+        // Calculate positions at 25% and 75% along the route
+        let firstIndex = coordinates.count / 4
+        let secondIndex = (coordinates.count * 3) / 4
+
+        let firstPosition = coordinates[firstIndex]
+        let secondPosition = coordinates[secondIndex]
+
+        // Convert route colors from hex to UIColor
+        let backgroundColor = leg.routeColor.flatMap { UIColor(hex: $0) }
+        let textColor = leg.routeTextColor.flatMap { UIColor(hex: $0) }
+
+        // Add first route legend annotation
+        mapProvider.addAnnotation(
+            coordinate: firstPosition,
+            title: routeName,
+            subtitle: nil,
+            identifier: "route_legend_\(index)_1",
+            type: .routeLegend,
+            routeName: routeName,
+            routeBackgroundColor: backgroundColor,
+            routeTextColor: textColor
+        )
+
+        // Add second route legend annotation
+        mapProvider.addAnnotation(
+            coordinate: secondPosition,
+            title: routeName,
+            subtitle: nil,
+            identifier: "route_legend_\(index)_2",
+            type: .routeLegend,
+            routeName: routeName,
+            routeBackgroundColor: backgroundColor,
+            routeTextColor: textColor
+        )
     }
 
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
@@ -241,7 +284,10 @@ public class MapCoordinator: ObservableObject {
                 title: leg.from.name,
                 subtitle: nil,
                 identifier: "station_from_\(index)",
-                type: .transitStop
+                type: .transitStop,
+                routeName: nil,
+                routeBackgroundColor: nil,
+                routeTextColor: nil
             )
         }
 
@@ -252,7 +298,10 @@ public class MapCoordinator: ObservableObject {
                 title: leg.to.name,
                 subtitle: nil,
                 identifier: "station_to_\(index)",
-                type: .transitStop
+                type: .transitStop,
+                routeName: nil,
+                routeBackgroundColor: nil,
+                routeTextColor: nil
             )
         }
     }
