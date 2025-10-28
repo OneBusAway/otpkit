@@ -75,7 +75,8 @@ public class MapCoordinator: ObservableObject {
         // Add route segments for each leg
         for (index, leg) in itinerary.legs.enumerated() {
             if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
-                let legColor = colorForTransportMode(leg.mode)
+                // Use route-specific color if available, otherwise fall back to mode color
+                let legColor = leg.routeUIColor ?? colorForTransportMode(leg.mode)
                 let dashPattern = dashPatternForTransportMode(leg.mode)
 
                 // Add white halo for better visibility
