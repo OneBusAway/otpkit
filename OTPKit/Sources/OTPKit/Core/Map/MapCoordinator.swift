@@ -249,32 +249,14 @@ public class MapCoordinator: ObservableObject {
     }
 
     private func fitRoutesInView(itinerary: Itinerary) {
-        let coordinates = itinerary.legs.flatMap { leg in
-            leg.decodePolyline() ?? []
+        Logger.main.debug("fitRoutesInView: Attempting to fit \(itinerary.legs.count) legs")
+
+        guard let mapRect = itinerary.boundingBox else {
+            Logger.main.warning("fitRoutesInView: No bounding box available")
+            return
         }
 
-        guard !coordinates.isEmpty else { return }
-
-        // Calculate bounding rect
-        var minLat = coordinates[0].latitude
-        var maxLat = coordinates[0].latitude
-        var minLon = coordinates[0].longitude
-        var maxLon = coordinates[0].longitude
-
-        for coordinate in coordinates {
-            minLat = min(minLat, coordinate.latitude)
-            maxLat = max(maxLat, coordinate.latitude)
-            minLon = min(minLon, coordinate.longitude)
-            maxLon = max(maxLon, coordinate.longitude)
-        }
-
-        let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
-        let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
-
-        let mapRect = MKMapRect(
-            MKMapPoint(southwest),
-            MKMapPoint(northeast)
-        )
+        Logger.main.debug("fitRoutesInView: Setting visible rect - (\(mapRect.origin.x), \(mapRect.origin.y)), size: (\(mapRect.size.width), \(mapRect.size.height))")
 
         let padding = UIEdgeInsets(
             top: Constants.mapPadding,
@@ -297,23 +279,5 @@ public class MapCoordinator: ObservableObject {
     private func handleAnnotationSelected(identifier: String) {
         // Handle annotation selection if needed
         Logger.main.info("Annotation selected: \(identifier)")
-    }
-}
-
-// MARK: - MKMapRect Extension
-
-extension MKMapRect {
-    init(_ point1: MKMapPoint, _ point2: MKMapPoint) {
-        let minX = min(point1.x, point2.x)
-        let minY = min(point1.y, point2.y)
-        let maxX = max(point1.x, point2.x)
-        let maxY = max(point1.y, point2.y)
-
-        self.init(
-            x: minX,
-            y: minY,
-            width: maxX - minX,
-            height: maxY - minY
-        )
     }
 }

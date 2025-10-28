@@ -15,6 +15,8 @@
  */
 
 import Foundation
+import MapKit
+import OSLog
 
 /// Represents a travel itinerary with detailed segments and timings.
 public struct Itinerary: Codable, Hashable {
@@ -53,7 +55,7 @@ public struct Itinerary: Codable, Hashable {
 
     /// Array of `Leg` objects representing individual segments of the itinerary.
     public let legs: [Leg]
-    
+
     /// Array of `Leg` objects with walk less than 1 minute in duration removed.
     public var relevantLegs: [Leg] {
         legs.filter { leg in
@@ -71,5 +73,35 @@ public struct Itinerary: Codable, Hashable {
         let formattedDuration = Formatters.formatTimeDuration(duration)
         // return something like "43 minutes, departs at X:YY PM"
         return "Departs at \(time); duration: \(formattedDuration)"
+    }
+    
+    /// Calculates a bounding box for the coordinates represented by this Itinerary's `Leg`s.
+    public var boundingBox: MKMapRect? {
+        let coordinates = legs.flatMap { leg in
+            leg.decodePolyline() ?? []
+        }
+
+        guard let firstCoordinate = coordinates.first else {
+            Logger.main.warning("boundingBox: No coordinates found, returning nil")
+            return nil
+        }
+
+        // Initialize with first coordinate to avoid infinity issues
+        var minPoint = MKMapPoint(firstCoordinate)
+        var maxPoint = minPoint
+
+        // Find the bounding box by comparing all map points
+        for coordinate in coordinates.dropFirst() {
+            let point = MKMapPoint(coordinate)
+            minPoint.x = min(minPoint.x, point.x)
+            minPoint.y = min(minPoint.y, point.y)
+            maxPoint.x = max(maxPoint.x, point.x)
+            maxPoint.y = max(maxPoint.y, point.y)
+        }
+
+        return MKMapRect(
+            origin: minPoint,
+            size: MKMapSize(width: maxPoint.x - minPoint.x, height: maxPoint.y - minPoint.y)
+        )
     }
 }

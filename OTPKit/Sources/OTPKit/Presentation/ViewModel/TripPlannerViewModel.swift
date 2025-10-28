@@ -274,10 +274,6 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         selectedItinerary = itinerary
         mapCoordinator.showItinerary(itinerary)
 
-        // Zoom to origin for turn-by-turn directions like Apple Maps
-        if let origin = selectedOrigin {
-            mapCoordinator.centerOn(coordinate: origin.coordinate)
-        }
         dismissSheet()
         presentSheet(.directions)
 

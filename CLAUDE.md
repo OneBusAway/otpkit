@@ -35,22 +35,13 @@ swift build --build-tests
 xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator build
 
 # Build on a specific simulator
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build
+xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 ```
 
 ### Run Tests
 ```bash
-# Run OTPKit package tests (XCTest)
-swift test
-
-# Run specific package test
-swift test --filter OTPKitTests.RestAPIServiceTests/testFetchPlan
-
-# Run all tests via Xcode project (includes OTPKitDemoTests with Swift Testing)
-xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
-
-# Run only demo app tests
-xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:OTPKitDemoTests
+# Run all tests via Xcode project
+xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 ### Linting & Code Quality
@@ -142,7 +133,7 @@ brew install swiftlint
 ### Testing Framework
 - **OTPKit Package Tests**: Uses XCTest with async/await patterns
 - **Demo App Tests**: Uses Swift Testing framework (`@Test` attribute)
-- **Test Helpers**: Located in `OTPKit/Tests/OTPKitTests/Helpers/`
+- **Test Helpers**: Located in `OTPKitDemoTests/Helpers/`
   - `MockDataLoader` - Mock network responses
   - `Fixtures` - Test data and JSON responses
   - `OTPTestCase` - Base test class with common setup
@@ -232,7 +223,6 @@ class CustomMapProvider: OTPMapProvider {
 - `TripPlannerViewModel` is marked with `@MainActor` for UI thread safety
 - Uses `@Published` properties for reactive UI updates
 - Async/await for API calls with proper error handling
-- Implements `SheetPresenter` protocol for managing bottom sheet presentations
 
 ### Location State Management
 ```swift
@@ -247,7 +237,6 @@ LocationManager.shared.$currentLocation
 ```
 
 ### Sheet Presentation Pattern
-- Uses `PresentationManager` generic class for type-safe sheet management
 - Sheets are defined in the `Sheet` enum: `.locationOptions`, `.directions`, `.search`, `.advancedOptions`
 - Each sheet view is self-contained with its own state
 
