@@ -245,6 +245,370 @@ struct ItineraryTests {
         }
     }
 
+    // MARK: - relevantLegs Tests
+
+    @Test("relevantLegs filters out short walks")
+    func testRelevantLegsFiltersShortWalks() {
+        let shortWalk = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(30),
+            mode: "WALK",
+            routeType: nil,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: nil,
+            agencyName: nil,
+            from: Place(name: "A", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "B", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 50,
+            transitLeg: false,
+            duration: 30, // Less than 60 seconds
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let longWalk = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(120),
+            mode: "WALK",
+            routeType: nil,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: nil,
+            agencyName: nil,
+            from: Place(name: "C", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "D", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 100,
+            transitLeg: false,
+            duration: 120, // More than 60 seconds
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let itinerary = Itinerary(
+            duration: 150,
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(150),
+            walkTime: 2,
+            transitTime: 0,
+            waitingTime: 0,
+            walkDistance: 150,
+            walkLimitExceeded: false,
+            elevationLost: 0,
+            elevationGained: 0,
+            transfers: 0,
+            legs: [shortWalk, longWalk]
+        )
+
+        let relevant = itinerary.relevantLegs
+        #expect(relevant.count == 1)
+        #expect(relevant[0].duration == 120)
+    }
+
+    @Test("relevantLegs merges consecutive legs with same route")
+    func testRelevantLegsMergesConsecutiveSameRoute() {
+        let busLeg1 = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(300),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: "FF0000",
+            routeTextColor: "FFFFFF",
+            route: "12",
+            agencyName: "Metro",
+            from: Place(name: "Stop A", lon: -122.3, lat: 47.6, vertexType: "NORMAL", stopId: "123", stopCode: "A"),
+            to: Place(name: "Stop B", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: "124", stopCode: "B"),
+            legGeometry: LegGeometry(points: "polyline1", length: 100),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: true,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: "Downtown"
+        )
+
+        let busLeg2 = Leg(
+            startTime: Date().addingTimeInterval(300),
+            endTime: Date().addingTimeInterval(600),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: "FF0000",
+            routeTextColor: "FFFFFF",
+            route: "12", // Same route
+            agencyName: "Metro",
+            from: Place(name: "Stop B", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: "124", stopCode: "B"),
+            to: Place(name: "Stop C", lon: -122.32, lat: 47.62, vertexType: "NORMAL", stopId: "125", stopCode: "C"),
+            legGeometry: LegGeometry(points: "polyline2", length: 100),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: true,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: "Downtown"
+        )
+
+        let itinerary = Itinerary(
+            duration: 600,
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(600),
+            walkTime: 0,
+            transitTime: 10,
+            waitingTime: 0,
+            walkDistance: 0,
+            walkLimitExceeded: false,
+            elevationLost: 0,
+            elevationGained: 0,
+            transfers: 0,
+            legs: [busLeg1, busLeg2]
+        )
+
+        let relevant = itinerary.relevantLegs
+        #expect(relevant.count == 1, "Should merge two consecutive legs with same route")
+
+        let mergedLeg = relevant[0]
+        #expect(mergedLeg.route == "12")
+        #expect(mergedLeg.from.name == "Stop A", "Should keep first leg's start point")
+        #expect(mergedLeg.to.name == "Stop C", "Should keep last leg's end point")
+        #expect(mergedLeg.duration == 600, "Should combine durations")
+        #expect(mergedLeg.distance == 2000, "Should combine distances")
+        #expect(mergedLeg.startTime == busLeg1.startTime, "Should keep first leg's start time")
+        #expect(mergedLeg.endTime == busLeg2.endTime, "Should keep last leg's end time")
+    }
+
+    @Test("relevantLegs does not merge different routes")
+    func testRelevantLegsDoesNotMergeDifferentRoutes() {
+        let busLeg1 = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(300),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: "12",
+            agencyName: "Metro",
+            from: Place(name: "Stop A", lon: -122.3, lat: 47.6, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "Stop B", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let busLeg2 = Leg(
+            startTime: Date().addingTimeInterval(300),
+            endTime: Date().addingTimeInterval(600),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: "10", // Different route
+            agencyName: "Metro",
+            from: Place(name: "Stop B", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "Stop C", lon: -122.32, lat: 47.62, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let itinerary = Itinerary(
+            duration: 600,
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(600),
+            walkTime: 0,
+            transitTime: 10,
+            waitingTime: 0,
+            walkDistance: 0,
+            walkLimitExceeded: false,
+            elevationLost: 0,
+            elevationGained: 0,
+            transfers: 0,
+            legs: [busLeg1, busLeg2]
+        )
+
+        let relevant = itinerary.relevantLegs
+        #expect(relevant.count == 2, "Should not merge legs with different routes")
+        #expect(relevant[0].route == "12")
+        #expect(relevant[1].route == "10")
+    }
+
+    @Test("relevantLegs handles mixed walk and transit legs correctly")
+    func testRelevantLegsHandlesMixedLegs() {
+        let walk = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(120),
+            mode: "WALK",
+            routeType: nil,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: nil,
+            agencyName: nil,
+            from: Place(name: "Start", lon: -122.3, lat: 47.6, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "Stop A", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 100,
+            transitLeg: false,
+            duration: 120,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let bus1 = Leg(
+            startTime: Date().addingTimeInterval(120),
+            endTime: Date().addingTimeInterval(420),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: "12",
+            agencyName: "Metro",
+            from: Place(name: "Stop A", lon: -122.31, lat: 47.61, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "Stop B", lon: -122.32, lat: 47.62, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let bus2 = Leg(
+            startTime: Date().addingTimeInterval(420),
+            endTime: Date().addingTimeInterval(720),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: "12", // Same route as bus1
+            agencyName: "Metro",
+            from: Place(name: "Stop B", lon: -122.32, lat: 47.62, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "Stop C", lon: -122.33, lat: 47.63, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let itinerary = Itinerary(
+            duration: 720,
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(720),
+            walkTime: 2,
+            transitTime: 10,
+            waitingTime: 0,
+            walkDistance: 100,
+            walkLimitExceeded: false,
+            elevationLost: 0,
+            elevationGained: 0,
+            transfers: 0,
+            legs: [walk, bus1, bus2]
+        )
+
+        let relevant = itinerary.relevantLegs
+        #expect(relevant.count == 2, "Should have walk leg and merged bus leg")
+        #expect(relevant[0].mode == "WALK")
+        #expect(relevant[1].route == "12")
+        #expect(relevant[1].duration == 600, "Bus legs should be merged")
+    }
+
+    @Test("relevantLegs does not merge legs with nil route")
+    func testRelevantLegsDoesNotMergeNilRoutes() {
+        let leg1 = Leg(
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(300),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: nil, // No route
+            agencyName: nil,
+            from: Place(name: "A", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "B", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let leg2 = Leg(
+            startTime: Date().addingTimeInterval(300),
+            endTime: Date().addingTimeInterval(600),
+            mode: "BUS",
+            routeType: .bus,
+            routeColor: nil,
+            routeTextColor: nil,
+            route: nil, // No route
+            agencyName: nil,
+            from: Place(name: "B", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            to: Place(name: "C", lon: 0, lat: 0, vertexType: "NORMAL", stopId: nil, stopCode: nil),
+            legGeometry: LegGeometry(points: "", length: 0),
+            distance: 1000,
+            transitLeg: true,
+            duration: 300,
+            realTime: false,
+            streetNames: nil,
+            pathway: false,
+            steps: nil,
+            headsign: nil
+        )
+
+        let itinerary = Itinerary(
+            duration: 600,
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(600),
+            walkTime: 0,
+            transitTime: 10,
+            waitingTime: 0,
+            walkDistance: 0,
+            walkLimitExceeded: false,
+            elevationLost: 0,
+            elevationGained: 0,
+            transfers: 0,
+            legs: [leg1, leg2]
+        )
+
+        let relevant = itinerary.relevantLegs
+        #expect(relevant.count == 2, "Should not merge legs with nil routes")
+    }
+
     // MARK: - Helper Methods
 
     /// Simple polyline encoder for test purposes
