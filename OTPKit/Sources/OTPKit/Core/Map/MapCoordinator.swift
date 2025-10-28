@@ -16,6 +16,9 @@ import OSLog
 @MainActor
 public class MapCoordinator: ObservableObject {
 
+    let originIdentifier = "origin"
+    let destinationIdentifier = "destination"
+
     // MARK: - Properties
 
     private let mapProvider: OTPMapProvider
@@ -119,7 +122,7 @@ public class MapCoordinator: ObservableObject {
             coordinate: location.coordinate,
             title: location.title,
             subtitle: location.subTitle,
-            identifier: "origin",
+            identifier: originIdentifier,
             type: .origin
         )
     }
@@ -131,15 +134,15 @@ public class MapCoordinator: ObservableObject {
             coordinate: location.coordinate,
             title: location.title,
             subtitle: location.subTitle,
-            identifier: "destination",
+            identifier: destinationIdentifier,
             type: .destination
         )
     }
 
     /// Clears origin and destination from the map
     public func clearLocations() {
-        mapProvider.removeAnnotation(identifier: "origin")
-        mapProvider.removeAnnotation(identifier: "destination")
+        mapProvider.removeAnnotation(identifier: originIdentifier)
+        mapProvider.removeAnnotation(identifier: destinationIdentifier)
     }
 
     // MARK: - Camera Control
