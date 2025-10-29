@@ -69,7 +69,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
 
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
-    
+
     /// NotificationCenter object for sending notifications.
     private let notificationCenter: NotificationCenter
 
@@ -84,7 +84,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
         self.notificationCenter = notificationCenter
-        
+
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
     }

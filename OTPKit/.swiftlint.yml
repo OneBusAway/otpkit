@@ -1,0 +1,6 @@
+disabled_rules:
+  - function_parameter_count
+  - identifier_name
+  - line_length
+  - multiple_closures_with_trailing_closure
+  - todo

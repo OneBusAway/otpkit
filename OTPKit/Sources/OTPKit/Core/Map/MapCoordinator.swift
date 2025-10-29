@@ -320,7 +320,9 @@ public class MapCoordinator: ObservableObject {
             return
         }
 
+        // swiftlint:disable line_length
         Logger.main.debug("fitRoutesInView: Setting visible rect - (\(mapRect.origin.x), \(mapRect.origin.y)), size: (\(mapRect.size.width), \(mapRect.size.height))")
+        // swiftlint:enable line_length
 
         let padding = UIEdgeInsets(
             top: Constants.mapPadding,

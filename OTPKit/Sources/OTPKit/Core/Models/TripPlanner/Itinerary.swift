@@ -103,7 +103,7 @@ public struct Itinerary: Codable, Hashable {
         // return something like "43 minutes, departs at X:YY PM"
         return "Departs at \(time); duration: \(formattedDuration)"
     }
-    
+
     /// Calculates a bounding box for the coordinates represented by this Itinerary's `Leg`s.
     public var boundingBox: MKMapRect? {
         let coordinates = legs.flatMap { leg in

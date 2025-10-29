@@ -36,10 +36,8 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         // Clean up to prevent retain cycles
         mapView?.delegate = nil
         if let gestureRecognizers = mapView?.gestureRecognizers {
-            for recognizer in gestureRecognizers {
-                if recognizer.delegate === self {
-                    mapView?.removeGestureRecognizer(recognizer)
-                }
+            for recognizer in gestureRecognizers where recognizer.delegate === self {
+                mapView?.removeGestureRecognizer(recognizer)
             }
         }
     }
@@ -70,7 +68,7 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         removeRoute(identifier: identifier)
 
         // Create polyline
-        let polyline = ColoredPolyline(coordinates: coordinates, count: coordinates.count)
+        let polyline = LegPolyline(coordinates: coordinates, count: coordinates.count)
         polyline.color = UIColor(color)
         polyline.lineWidth = lineWidth
         polyline.identifier = identifier
@@ -223,7 +221,7 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
 extension MKMapViewAdapter: MKMapViewDelegate {
 
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let polyline = overlay as? ColoredPolyline {
+        if let polyline = overlay as? LegPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = polyline.color
             renderer.lineWidth = polyline.lineWidth
@@ -297,112 +295,5 @@ extension MKMapViewAdapter: MKMapViewDelegate {
 extension MKMapViewAdapter: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
-    }
-}
-
-// MARK: - Custom Classes
-
-/// Custom MKPolyline subclass that stores color and identifier information
-class ColoredPolyline: MKPolyline {
-    var color: UIColor = .blue
-    var lineWidth: CGFloat = 3.0
-    var identifier: String = ""
-    var lineDashPattern: [NSNumber]?
-}
-
-/// Custom annotation view for displaying route names/numbers
-class RouteNameAnnotationView: MKAnnotationView {
-    private let label = UILabel()
-    private let badgeView = UIView()
-
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        setupView()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupView()
-    }
-
-    private func setupView() {
-        // Disable callout
-        canShowCallout = false
-
-        // Setup badge container view
-        badgeView.layer.cornerRadius = 6
-        badgeView.layer.masksToBounds = true
-        addSubview(badgeView)
-
-        // Setup label
-        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
-        label.textAlignment = .center
-        badgeView.addSubview(label)
-
-        // Set a default frame size
-        frame = CGRect(x: 0, y: 0, width: 40, height: 24)
-    }
-
-    func configure(routeName: String, backgroundColor: UIColor?, textColor: UIColor?) {
-        label.text = routeName
-
-        // Use provided colors or defaults
-        badgeView.backgroundColor = backgroundColor ?? .systemBlue
-        label.textColor = textColor ?? .white
-
-        // Size to fit the text with padding
-        label.sizeToFit()
-        let padding: CGFloat = 8
-        let width = max(label.frame.width + padding * 2, 24) // Minimum width of 24
-        let height: CGFloat = 20
-
-        badgeView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        label.frame = CGRect(x: padding, y: 0, width: width - padding * 2, height: height)
-
-        // Center the badge in the annotation view
-        frame = CGRect(x: 0, y: 0, width: width, height: height)
-        centerOffset = CGPoint(x: 0, y: 0)
-    }
-}
-
-/// Custom MKPointAnnotation subclass that stores type and identifier information
-class OTPPointAnnotation: MKPointAnnotation {
-    var identifier: String = ""
-    var annotationType: OTPAnnotationType = .searchResult
-
-    // Properties for route legend annotations
-    var routeName: String?
-    var routeBackgroundColor: UIColor?
-    var routeTextColor: UIColor?
-}
-
-// MARK: - UIColor Extension
-
-extension UIColor {
-    /// Creates a UIColor from a hex string (e.g., "FF0000" or "#FF0000")
-    convenience init?(hex: String) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-
-        var rgb: UInt64 = 0
-
-        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
-
-        let length = hexSanitized.count
-        let r, g, b: CGFloat
-
-        if length == 6 {
-            r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-            g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-            b = CGFloat(rgb & 0x0000FF) / 255.0
-        } else if length == 3 {
-            r = CGFloat((rgb & 0xF00) >> 8) / 15.0
-            g = CGFloat((rgb & 0x0F0) >> 4) / 15.0
-            b = CGFloat(rgb & 0x00F) / 15.0
-        } else {
-            return nil
-        }
-
-        self.init(red: r, green: g, blue: b, alpha: 1.0)
     }
 }

@@ -96,7 +96,7 @@ public struct Leg: Codable, Hashable {
 
     /// Optional head sign of the transit legs, bus and trams
     public let headsign: String?
-    
+
     /// Merges `Itinerary` `Leg`s that are part of the same route on the same vehicle.
     /// - Parameters:
     ///   - leg1: The earlier leg
@@ -125,7 +125,7 @@ public struct Leg: Codable, Hashable {
             headsign: leg1.headsign
         )
     }
-    
+
     /// Returns true if the two legs should be merged (with mergeLegs) and false otherwise.
     /// - Parameters:
     ///   - leg1: The earlier leg
