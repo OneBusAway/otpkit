@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 public extension UIViewController {
-    
+
     /// Sets the receiver's adaptive sheet presentation controller's `selectedDetentIdentifier` to `identifier`. tl;dr: make the sheet change size.
     /// - Parameter identifier: The detent identifier, e.g. `.large`, `.medium`, `.tip`.
     ///
@@ -34,7 +34,7 @@ public extension UISheetPresentationController.Detent.Identifier {
 
 /// A `UIHostingController` subclass that is meant to host `TripPlannerView` and offers SwiftUI-style sheet
 /// support, complete with a semi-modal experience and a `.tip`-sized detent.
-public final class PanelHostingController<Content: View> : UIHostingController<Content> {
+public final class PanelHostingController<Content: View>: UIHostingController<Content> {
     public override init(rootView: Content) {
         super.init(rootView: rootView)
 
@@ -52,7 +52,7 @@ public final class PanelHostingController<Content: View> : UIHostingController<C
             sheet.prefersEdgeAttachedInCompactHeight = true
         }
     }
-    
+
     @MainActor @preconcurrency required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

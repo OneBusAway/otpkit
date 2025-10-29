@@ -15,6 +15,8 @@
  */
 
 import Foundation
+import MapKit
+import OSLog
 
 /// Represents a travel itinerary with detailed segments and timings.
 public struct Itinerary: Codable, Hashable {
@@ -53,16 +55,45 @@ public struct Itinerary: Codable, Hashable {
 
     /// Array of `Leg` objects representing individual segments of the itinerary.
     public let legs: [Leg]
-    
-    /// Array of `Leg` objects with walk less than 1 minute in duration removed.
+
+    /// Array of `Leg` objects with walk less than 1 minute in duration removed
+    /// and consecutive legs with the same route merged.
     public var relevantLegs: [Leg] {
-        legs.filter { leg in
+        // First, filter out short walks
+        let filteredLegs = legs.filter { leg in
             if leg.walkMode {
                 return leg.duration > 60
             } else {
                 return true
             }
         }
+
+        // Then, merge consecutive legs with the same route
+        var mergedLegs: [Leg] = []
+        var currentLeg: Leg?
+
+        for leg in filteredLegs {
+            guard let current = currentLeg else {
+                currentLeg = leg
+                continue
+            }
+
+            if Leg.shouldMergeLegs(leg1: current, leg2: leg) {
+                // Merge by creating a new leg with combined properties
+                currentLeg = Leg.mergeLegs(leg1: current, leg2: leg)
+            } else {
+                // Add the current leg to results and start a new one
+                mergedLegs.append(current)
+                currentLeg = leg
+            }
+        }
+
+        // Don't forget to add the last leg
+        if let last = currentLeg {
+            mergedLegs.append(last)
+        }
+
+        return mergedLegs
     }
 
     public var summary: String {
@@ -71,5 +102,35 @@ public struct Itinerary: Codable, Hashable {
         let formattedDuration = Formatters.formatTimeDuration(duration)
         // return something like "43 minutes, departs at X:YY PM"
         return "Departs at \(time); duration: \(formattedDuration)"
+    }
+
+    /// Calculates a bounding box for the coordinates represented by this Itinerary's `Leg`s.
+    public var boundingBox: MKMapRect? {
+        let coordinates = legs.flatMap { leg in
+            leg.decodePolyline() ?? []
+        }
+
+        guard let firstCoordinate = coordinates.first else {
+            Logger.main.warning("boundingBox: No coordinates found, returning nil")
+            return nil
+        }
+
+        // Initialize with first coordinate to avoid infinity issues
+        var minPoint = MKMapPoint(firstCoordinate)
+        var maxPoint = minPoint
+
+        // Find the bounding box by comparing all map points
+        for coordinate in coordinates.dropFirst() {
+            let point = MKMapPoint(coordinate)
+            minPoint.x = min(minPoint.x, point.x)
+            minPoint.y = min(minPoint.y, point.y)
+            maxPoint.x = max(maxPoint.x, point.x)
+            maxPoint.y = max(maxPoint.y, point.y)
+        }
+
+        return MKMapRect(
+            origin: minPoint,
+            size: MKMapSize(width: maxPoint.x - minPoint.x, height: maxPoint.y - minPoint.y)
+        )
     }
 }

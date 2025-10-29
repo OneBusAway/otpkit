@@ -24,7 +24,6 @@
 		9399D5EC2E638C12007D2E0D /* OTPKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9399D5FA2E638C13007D2E0D /* OTPKitDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTPKitDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9399D6172E638C31007D2E0D /* OTPKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OTPKit; sourceTree = "<group>"; };
-		9399D6212E638E0E007D2E0D /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = TestPlan.xctestplan; path = OTPKit/Tests/TestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -69,7 +68,6 @@
 		9399D5E32E638C12007D2E0D = {
 			isa = PBXGroup;
 			children = (
-				9399D6212E638E0E007D2E0D /* TestPlan.xctestplan */,
 				9399D6172E638C31007D2E0D /* OTPKit */,
 				9399D5EE2E638C12007D2E0D /* OTPKitDemo */,
 				9399D5FD2E638C13007D2E0D /* OTPKitDemoTests */,

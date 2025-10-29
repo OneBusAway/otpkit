@@ -97,6 +97,48 @@ public struct Leg: Codable, Hashable {
     /// Optional head sign of the transit legs, bus and trams
     public let headsign: String?
 
+    /// Merges `Itinerary` `Leg`s that are part of the same route on the same vehicle.
+    /// - Parameters:
+    ///   - leg1: The earlier leg
+    ///   - leg2: The later leg
+    /// - Returns: A merged Leg object
+    public static func mergeLegs(leg1: Leg, leg2: Leg) -> Leg {
+        return Leg(
+            startTime: leg1.startTime,
+            endTime: leg2.endTime,
+            mode: leg1.mode,
+            routeType: leg1.routeType,
+            routeColor: leg1.routeColor,
+            routeTextColor: leg1.routeTextColor,
+            route: leg1.route,
+            agencyName: leg1.agencyName,
+            from: leg1.from,
+            to: leg2.to,
+            legGeometry: leg1.legGeometry,
+            distance: leg1.distance + leg2.distance,
+            transitLeg: leg1.transitLeg,
+            duration: leg1.duration + leg2.duration,
+            realTime: leg1.realTime,
+            streetNames: leg1.streetNames,
+            pathway: leg1.pathway,
+            steps: leg1.steps,
+            headsign: leg1.headsign
+        )
+    }
+
+    /// Returns true if the two legs should be merged (with mergeLegs) and false otherwise.
+    /// - Parameters:
+    ///   - leg1: The earlier leg
+    ///   - leg2: The later leg
+    /// - Returns: Whether or not to merge the legs.
+    public static func shouldMergeLegs(leg1: Leg, leg2: Leg) -> Bool {
+        return leg1.route != nil &&
+        leg2.route != nil &&
+        leg1.route == leg2.route &&
+        leg1.transitLeg == true &&
+        leg2.transitLeg == true
+    }
+
     // MARK: - Computed Properties
 
     /// Returns a SwiftUI Color from the routeColor hex string if valid

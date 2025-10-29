@@ -88,7 +88,7 @@ struct LocationOptionsSheet: View {
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude
         )
-        
+
         onLocationSelected(currentLocation, selectedMode)
     }
 }

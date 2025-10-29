@@ -1,0 +1,55 @@
+name: OTPKitTests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# GitHub macOS Runner images are documented at:
+# https://github.com/actions/runner-images?tab=readme-ov-file
+# Installed versions of Xcode on macOS 15 are documented at:
+# https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Switch Xcode
+      run: sudo xcode-select -switch /Applications/Xcode_26.0.app
+
+    # Build
+    - name: Build OTPKit
+      run: xcodebuild clean build-for-testing
+        -scheme 'OTPKitDemo'
+        -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+        -quiet
+
+    # Unit Test
+    - name: OTPKit Unit Test
+      run: xcodebuild test-without-building
+        -only-testing:OTPKitDemoTests
+        -project 'OTPKitDemo.xcodeproj'
+        -scheme 'OTPKitDemo'
+        -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+        -resultBundlePath OTPKitDemoTests.xcresult
+        -quiet
+
+    # Upload results
+    - uses: kishikawakatsumi/xcresulttool@v1.7.0
+      continue-on-error: true
+      with:
+        show-passed-tests: false    # Avoid truncation of annotations by GitHub by omitting succeeding tests.
+        path: |
+          OTPKitDemoTests.xcresult
+      if: success() || failure()

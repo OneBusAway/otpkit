@@ -16,6 +16,9 @@ import OSLog
 @MainActor
 public class MapCoordinator: ObservableObject {
 
+    let originIdentifier = "origin"
+    let destinationIdentifier = "destination"
+
     // MARK: - Properties
 
     private let mapProvider: OTPMapProvider
@@ -72,14 +75,17 @@ public class MapCoordinator: ObservableObject {
         // Add route segments for each leg
         for (index, leg) in itinerary.legs.enumerated() {
             if let coordinates = leg.decodePolyline(), !coordinates.isEmpty {
-                let legColor = colorForTransportMode(leg.mode)
+                // Use route-specific color if available, otherwise fall back to mode color
+                let legColor = leg.routeUIColor ?? colorForTransportMode(leg.mode)
+                let dashPattern = dashPatternForTransportMode(leg.mode)
 
                 // Add white halo for better visibility
                 mapProvider.addRoute(
                     coordinates: coordinates,
                     color: .white.opacity(0.8),
                     lineWidth: Constants.routeHaloWidth,
-                    identifier: "halo_leg_\(index)"
+                    identifier: "halo_leg_\(index)",
+                    lineDashPattern: dashPattern
                 )
 
                 // Add colored route
@@ -87,7 +93,8 @@ public class MapCoordinator: ObservableObject {
                     coordinates: coordinates,
                     color: legColor,
                     lineWidth: Constants.routeLineWidth,
-                    identifier: "leg_\(index)"
+                    identifier: "leg_\(index)",
+                    lineDashPattern: dashPattern
                 )
 
                 // Add mode icon at midpoint
@@ -119,8 +126,11 @@ public class MapCoordinator: ObservableObject {
             coordinate: location.coordinate,
             title: location.title,
             subtitle: location.subTitle,
-            identifier: "origin",
-            type: .origin
+            identifier: originIdentifier,
+            type: .origin,
+            routeName: nil,
+            routeBackgroundColor: nil,
+            routeTextColor: nil
         )
     }
 
@@ -131,15 +141,18 @@ public class MapCoordinator: ObservableObject {
             coordinate: location.coordinate,
             title: location.title,
             subtitle: location.subTitle,
-            identifier: "destination",
-            type: .destination
+            identifier: destinationIdentifier,
+            type: .destination,
+            routeName: nil,
+            routeBackgroundColor: nil,
+            routeTextColor: nil
         )
     }
 
     /// Clears origin and destination from the map
     public func clearLocations() {
-        mapProvider.removeAnnotation(identifier: "origin")
-        mapProvider.removeAnnotation(identifier: "destination")
+        mapProvider.removeAnnotation(identifier: originIdentifier)
+        mapProvider.removeAnnotation(identifier: destinationIdentifier)
     }
 
     // MARK: - Camera Control
@@ -186,6 +199,17 @@ public class MapCoordinator: ObservableObject {
         }
     }
 
+    private func dashPatternForTransportMode(_ mode: String) -> [NSNumber]? {
+        switch mode.uppercased() {
+        case "WALK":
+            // Apple Maps style dotted line for walking
+            return [3, 10]
+        default:
+            // Solid line for all other transport modes
+            return nil
+        }
+    }
+
     private func iconForTransportMode(_ mode: String) -> String {
         switch mode.uppercased() {
         case "WALK":
@@ -208,11 +232,48 @@ public class MapCoordinator: ObservableObject {
     }
 
     private func addTransportModeAnnotation(for leg: Leg, index: Int, coordinates: [CLLocationCoordinate2D]) {
-//        let midIndex = coordinates.count / 2
-//        let position = coordinates[midIndex]
+        // Only add route legends for transit legs with route names
+        guard leg.transitLeg == true,
+              let routeName = leg.route,
+              !routeName.isEmpty,
+              coordinates.count >= 4 else {
+            return
+        }
 
-        // For now, we'll skip mode annotations as they require custom rendering
-        // This can be enhanced later with custom annotation views
+        // Calculate positions at 25% and 75% along the route
+        let firstIndex = coordinates.count / 4
+        let secondIndex = (coordinates.count * 3) / 4
+
+        let firstPosition = coordinates[firstIndex]
+        let secondPosition = coordinates[secondIndex]
+
+        // Convert route colors from hex to UIColor
+        let backgroundColor = leg.routeColor.flatMap { UIColor(hex: $0) }
+        let textColor = leg.routeTextColor.flatMap { UIColor(hex: $0) }
+
+        // Add first route legend annotation
+        mapProvider.addAnnotation(
+            coordinate: firstPosition,
+            title: routeName,
+            subtitle: nil,
+            identifier: "route_legend_\(index)_1",
+            type: .routeLegend,
+            routeName: routeName,
+            routeBackgroundColor: backgroundColor,
+            routeTextColor: textColor
+        )
+
+        // Add second route legend annotation
+        mapProvider.addAnnotation(
+            coordinate: secondPosition,
+            title: routeName,
+            subtitle: nil,
+            identifier: "route_legend_\(index)_2",
+            type: .routeLegend,
+            routeName: routeName,
+            routeBackgroundColor: backgroundColor,
+            routeTextColor: textColor
+        )
     }
 
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
@@ -223,7 +284,10 @@ public class MapCoordinator: ObservableObject {
                 title: leg.from.name,
                 subtitle: nil,
                 identifier: "station_from_\(index)",
-                type: .transitStop
+                type: .transitStop,
+                routeName: nil,
+                routeBackgroundColor: nil,
+                routeTextColor: nil
             )
         }
 
@@ -234,7 +298,10 @@ public class MapCoordinator: ObservableObject {
                 title: leg.to.name,
                 subtitle: nil,
                 identifier: "station_to_\(index)",
-                type: .transitStop
+                type: .transitStop,
+                routeName: nil,
+                routeBackgroundColor: nil,
+                routeTextColor: nil
             )
         }
     }
@@ -246,32 +313,16 @@ public class MapCoordinator: ObservableObject {
     }
 
     private func fitRoutesInView(itinerary: Itinerary) {
-        let coordinates = itinerary.legs.flatMap { leg in
-            leg.decodePolyline() ?? []
+        Logger.main.debug("fitRoutesInView: Attempting to fit \(itinerary.legs.count) legs")
+
+        guard let mapRect = itinerary.boundingBox else {
+            Logger.main.warning("fitRoutesInView: No bounding box available")
+            return
         }
 
-        guard !coordinates.isEmpty else { return }
-
-        // Calculate bounding rect
-        var minLat = coordinates[0].latitude
-        var maxLat = coordinates[0].latitude
-        var minLon = coordinates[0].longitude
-        var maxLon = coordinates[0].longitude
-
-        for coordinate in coordinates {
-            minLat = min(minLat, coordinate.latitude)
-            maxLat = max(maxLat, coordinate.latitude)
-            minLon = min(minLon, coordinate.longitude)
-            maxLon = max(maxLon, coordinate.longitude)
-        }
-
-        let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
-        let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
-
-        let mapRect = MKMapRect(
-            MKMapPoint(southwest),
-            MKMapPoint(northeast)
-        )
+        // swiftlint:disable line_length
+        Logger.main.debug("fitRoutesInView: Setting visible rect - (\(mapRect.origin.x), \(mapRect.origin.y)), size: (\(mapRect.size.width), \(mapRect.size.height))")
+        // swiftlint:enable line_length
 
         let padding = UIEdgeInsets(
             top: Constants.mapPadding,
@@ -294,23 +345,5 @@ public class MapCoordinator: ObservableObject {
     private func handleAnnotationSelected(identifier: String) {
         // Handle annotation selection if needed
         Logger.main.info("Annotation selected: \(identifier)")
-    }
-}
-
-// MARK: - MKMapRect Extension
-
-extension MKMapRect {
-    init(_ point1: MKMapPoint, _ point2: MKMapPoint) {
-        let minX = min(point1.x, point2.x)
-        let minY = min(point1.y, point2.y)
-        let maxX = max(point1.x, point2.x)
-        let maxY = max(point1.y, point2.y)
-
-        self.init(
-            x: minX,
-            y: minY,
-            width: maxX - minX,
-            height: maxY - minY
-        )
     }
 }

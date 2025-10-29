@@ -23,11 +23,13 @@ public protocol OTPMapProvider: AnyObject {
     ///   - color: Color for the route line
     ///   - lineWidth: Width of the route line
     ///   - identifier: Unique identifier for this route segment
+    ///   - lineDashPattern: Optional dash pattern for the line (e.g., [0, 8] for dotted line)
     func addRoute(
         coordinates: [CLLocationCoordinate2D],
         color: Color,
         lineWidth: CGFloat,
-        identifier: String
+        identifier: String,
+        lineDashPattern: [NSNumber]?
     )
 
     /// Removes a specific route from the map
@@ -46,12 +48,18 @@ public protocol OTPMapProvider: AnyObject {
     ///   - subtitle: Optional subtitle
     ///   - identifier: Unique identifier for this annotation
     ///   - type: Type of annotation (origin, destination, station, etc.)
+    ///   - routeName: Optional route name for route legend annotations
+    ///   - routeBackgroundColor: Optional background color for route legend badge
+    ///   - routeTextColor: Optional text color for route legend badge
     func addAnnotation(
         coordinate: CLLocationCoordinate2D,
         title: String,
         subtitle: String?,
         identifier: String,
-        type: OTPAnnotationType
+        type: OTPAnnotationType,
+        routeName: String?,
+        routeBackgroundColor: UIColor?,
+        routeTextColor: UIColor?
     )
 
     /// Removes a specific annotation from the map
@@ -128,6 +136,7 @@ public enum OTPAnnotationType {
     case waypoint
     case currentLocation
     case searchResult
+    case routeLegend
 
     /// Returns the appropriate color for this annotation type
     public var color: Color {
@@ -144,6 +153,8 @@ public enum OTPAnnotationType {
             return .blue
         case .searchResult:
             return .gray
+        case .routeLegend:
+            return .clear // Custom view will handle coloring
         }
     }
 
@@ -164,6 +175,8 @@ public enum OTPAnnotationType {
             return "location.fill"
         case .searchResult:
             return "magnifyingglass"
+        case .routeLegend:
+            return "" // Custom view will handle display
         }
     }
 }

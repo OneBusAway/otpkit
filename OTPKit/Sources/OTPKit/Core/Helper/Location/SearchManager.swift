@@ -51,7 +51,10 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
 
     // MARK: - Business Logic Methods
 
-    func performDetailedSearch(for completion: MKLocalSearchCompletion, onLocationSelected: @escaping (Location) -> Void) {
+    func performDetailedSearch(
+        for completion: MKLocalSearchCompletion,
+        onLocationSelected: @escaping (Location) -> Void
+    ) {
         isSearching = true
 
         let request = MKLocalSearch.Request(completion: completion)

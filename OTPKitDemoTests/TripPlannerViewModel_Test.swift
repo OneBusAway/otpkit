@@ -79,7 +79,7 @@ final class TripPlannerViewModelTests: XCTestCase {
             (viewModel.selectedDestination as Any?, "selectedDestination"),
             (viewModel.departureTime as Any?, "departureTime"),
             (viewModel.departureDate as Any?, "departureDate"),
-            (viewModel.triPlanResponse as Any?, "triPlanResponse"),
+            (viewModel.tripPlanResponse as Any?, "triPlanResponse"),
             (viewModel.errorMessage as Any?, "errorMessage"),
             (viewModel.selectedItinerary as Any?, "previewItinerary")
         ] {
@@ -90,7 +90,6 @@ final class TripPlannerViewModelTests: XCTestCase {
         for (value, name) in [
             (viewModel.isLoading, "isLoading"),
             (viewModel.showingError, "showingError"),
-            (viewModel.showingPolyline, "showingPolyline")
         ] {
             XCTAssertFalse(value, "\(name) should be false initially")
         }
@@ -174,14 +173,14 @@ final class TripPlannerViewModelTests: XCTestCase {
 
     /// Itineraries empty when there is no response
     func test_Itineraries_emptyWithoutResponse() {
-        viewModel.triPlanResponse = nil
+        viewModel.tripPlanResponse = nil
         XCTAssertTrue(viewModel.itineraries.isEmpty)
     }
 
     /// Itineraries mirror those in the response plan
     func test_Itineraries_returnsPlanItineraries() {
         let itin = TestHelpers.itinerary()
-        viewModel.triPlanResponse = TestHelpers.response(with: [itin])
+        viewModel.tripPlanResponse = TestHelpers.response(with: [itin])
         XCTAssertEqual(viewModel.itineraries.count, 1)
         XCTAssertEqual(viewModel.itineraries.first?.duration, itin.duration)
     }
@@ -190,13 +189,13 @@ final class TripPlannerViewModelTests: XCTestCase {
 
     /// Each sheet presenter should set the expected `activeSheet`
     func test_ShowSheets_setsActiveSheet() {
-        viewModel.present(.locationOptions(.origin))
+        viewModel.presentSheet(.locationOptions(.origin))
         XCTAssertEqual(viewModel.activeSheet, .locationOptions(.origin))
 
-        viewModel.present(.directions)
+        viewModel.presentSheet(.directions)
         XCTAssertEqual(viewModel.activeSheet, .directions)
 
-        viewModel.present(.search(.origin))
+        viewModel.presentSheet(.search(.origin))
         XCTAssertEqual(viewModel.activeSheet, .search(.origin))
     }
 
@@ -205,13 +204,8 @@ final class TripPlannerViewModelTests: XCTestCase {
     /// Clearing preview should reset both `previewItinerary` and `showingPolyline`
     func test_ClearPreview_resetsState() {
         let itin = TestHelpers.itinerary()
-        viewModel.handleItineraryPreview(itin) // sets preview + polyline + dismiss
-        XCTAssertNotNil(viewModel.selectedItinerary)
-        XCTAssertTrue(viewModel.showingPolyline)
-
-        viewModel.clearPreview()
+        viewModel.handleItineraryPreview(itin) // presents a modal with the itinerary steps
         XCTAssertNil(viewModel.selectedItinerary)
-        XCTAssertFalse(viewModel.showingPolyline)
     }
 
     // MARK: - Map Coordinator

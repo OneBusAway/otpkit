@@ -36,10 +36,8 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         // Clean up to prevent retain cycles
         mapView?.delegate = nil
         if let gestureRecognizers = mapView?.gestureRecognizers {
-            for recognizer in gestureRecognizers {
-                if recognizer.delegate === self {
-                    mapView?.removeGestureRecognizer(recognizer)
-                }
+            for recognizer in gestureRecognizers where recognizer.delegate === self {
+                mapView?.removeGestureRecognizer(recognizer)
             }
         }
     }
@@ -60,7 +58,8 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         coordinates: [CLLocationCoordinate2D],
         color: Color,
         lineWidth: CGFloat,
-        identifier: String
+        identifier: String,
+        lineDashPattern: [NSNumber]? = nil
     ) {
         Logger.main.debug("Adding Route")
         guard let mapView = mapView else { return }
@@ -69,10 +68,11 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         removeRoute(identifier: identifier)
 
         // Create polyline
-        let polyline = ColoredPolyline(coordinates: coordinates, count: coordinates.count)
+        let polyline = LegPolyline(coordinates: coordinates, count: coordinates.count)
         polyline.color = UIColor(color)
         polyline.lineWidth = lineWidth
         polyline.identifier = identifier
+        polyline.lineDashPattern = lineDashPattern
 
         // Store and add to map
         routeOverlays[identifier] = polyline
@@ -102,7 +102,10 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         title: String,
         subtitle: String?,
         identifier: String,
-        type: OTPAnnotationType
+        type: OTPAnnotationType,
+        routeName: String? = nil,
+        routeBackgroundColor: UIColor? = nil,
+        routeTextColor: UIColor? = nil
     ) {
         guard let mapView = mapView else { return }
 
@@ -116,6 +119,9 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
         annotation.subtitle = subtitle
         annotation.identifier = identifier
         annotation.annotationType = type
+        annotation.routeName = routeName
+        annotation.routeBackgroundColor = routeBackgroundColor
+        annotation.routeTextColor = routeTextColor
 
         // Store and add to map
         annotations[identifier] = annotation
@@ -215,10 +221,13 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
 extension MKMapViewAdapter: MKMapViewDelegate {
 
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let polyline = overlay as? ColoredPolyline {
+        if let polyline = overlay as? LegPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.strokeColor = polyline.color
             renderer.lineWidth = polyline.lineWidth
+            renderer.lineDashPattern = polyline.lineDashPattern
+            renderer.lineCap = .square
+
             return renderer
         }
 
@@ -235,6 +244,29 @@ extension MKMapViewAdapter: MKMapViewDelegate {
             return nil
         }
 
+        // Use custom view for route legend annotations
+        if otpAnnotation.annotationType == .routeLegend {
+            let identifier = "RouteNameAnnotation"
+            var routeView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? RouteNameAnnotationView
+
+            if routeView == nil {
+                routeView = RouteNameAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            } else {
+                routeView?.annotation = annotation
+            }
+
+            if let routeName = otpAnnotation.routeName {
+                routeView?.configure(
+                    routeName: routeName,
+                    backgroundColor: otpAnnotation.routeBackgroundColor,
+                    textColor: otpAnnotation.routeTextColor
+                )
+            }
+
+            return routeView
+        }
+
+        // Use standard marker view for other annotation types
         let identifier = "OTPAnnotation"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
 
@@ -264,19 +296,4 @@ extension MKMapViewAdapter: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-}
-
-// MARK: - Custom Classes
-
-/// Custom MKPolyline subclass that stores color and identifier information
-class ColoredPolyline: MKPolyline {
-    var color: UIColor = .blue
-    var lineWidth: CGFloat = 3.0
-    var identifier: String = ""
-}
-
-/// Custom MKPointAnnotation subclass that stores type and identifier information
-class OTPPointAnnotation: MKPointAnnotation {
-    var identifier: String = ""
-    var annotationType: OTPAnnotationType = .searchResult
 }

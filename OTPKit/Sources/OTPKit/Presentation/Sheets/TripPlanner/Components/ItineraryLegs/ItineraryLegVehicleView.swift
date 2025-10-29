@@ -39,8 +39,8 @@ struct ItineraryLegVehicleView: View {
         case .bus: return "bus.fill"
         case .ferry: return "ferry.fill"
         case .cableCar: return "cablecar.fill"
-        case .gondola: fallthrough
-        case .funicular: fallthrough
+        case .gondola: return ""
+        case .funicular: return ""
         default: return ""
         }
     }

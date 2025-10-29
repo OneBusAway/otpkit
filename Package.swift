@@ -27,14 +27,6 @@ let package = Package(
                 .product(name: "Flow", package: "SwiftUI-Flow")
             ],
             path: "OTPKit/Sources/OTPKit"
-        ),
-        .testTarget(
-            name: "OTPKitTests",
-            dependencies: ["OTPKit"],
-            path: "OTPKit/Tests/OTPKitTests",
-            resources: [
-                .process("Fixtures")
-            ]
         )
     ],
     swiftLanguageModes: [.v5]

@@ -37,14 +37,19 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
 
     /// Maximum walking distance preference
     @Published var maxWalkingDistance: WalkingDistance = .oneMile
+
     /// Time preference (leave now, depart at, arrive by)
     @Published var timePreference: TimePreference = .leaveNow
+
     /// Route optimization preference
     @Published var routePreference: RoutePreference = .fastestTrip
+
     /// Loading state for API calls
     @Published var isLoading = false
+
     /// Response from the OTP API containing trip plans
     @Published var tripPlanResponse: OTPResponse?
+
     /// Error message to display to user
     @Published var errorMessage: String?
 
@@ -53,12 +58,6 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
 
     /// Currently previewed itinerary for map display
     @Published var selectedItinerary: Itinerary?
-
-    /// Whether to show the route polyline on map
-    @Published var showingPolyline = false
-
-    /// Whether currently previewing a route (for UI state)
-    @Published var isPreviewingRoute = false
 
     // MARK: - Configuration
 
@@ -70,7 +69,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
 
     /// Map coordinator for managing map operations
     private let mapCoordinator: MapCoordinator
-    
+
     /// NotificationCenter object for sending notifications.
     private let notificationCenter: NotificationCenter
 
@@ -85,7 +84,7 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
         self.notificationCenter = notificationCenter
-        
+
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
     }
@@ -239,8 +238,6 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// Clear the current route preview from the map
     func clearPreview() {
         selectedItinerary = nil
-        showingPolyline = false
-        isPreviewingRoute = false
         mapCoordinator.clearRoute()
         notificationCenter.post(name: Notifications.itineraryPreviewEnded, object: nil)
     }
@@ -275,13 +272,8 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// - Parameter itinerary: The selected itinerary
     func handleTripStarted(_ itinerary: Itinerary) {
         selectedItinerary = itinerary
-        showingPolyline = true
         mapCoordinator.showItinerary(itinerary)
 
-        // Zoom to origin for turn-by-turn directions like Apple Maps
-        if let origin = selectedOrigin {
-            mapCoordinator.centerOn(coordinate: origin.coordinate)
-        }
         dismissSheet()
         presentSheet(.directions)
 
@@ -310,8 +302,6 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
         selectedItinerary = nil
 
         // Reset map state
-        showingPolyline = false
-        isPreviewingRoute = false
         mapCoordinator.clearRoute()
         mapCoordinator.clearLocations()
 
