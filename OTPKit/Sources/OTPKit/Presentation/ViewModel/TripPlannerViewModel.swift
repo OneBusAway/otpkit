@@ -281,7 +281,8 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
 
         dismissSheet()
 
-        presentSheet(.directions(Trip(origin: selectedOrigin, destination: selectedDestination, itinerary: itinerary)))
+        let trip = Trip(origin: selectedOrigin, destination: selectedDestination, itinerary: itinerary)
+        presentSheet(.directions(trip))
 
         notificationCenter.post(name: Notifications.tripStarted, object: nil)
     }
