@@ -12,10 +12,10 @@ public enum LocationMode {
 
 enum Sheet: Identifiable, Hashable {
     case locationOptions(LocationMode)
-    case directions
+    case directions(Trip)
     case search(LocationMode)
     case advancedOptions
-    case preview(Itinerary, Location?, Location?)
+    case preview(Trip)
 
     var id: Int {
         var hasher = Hasher()

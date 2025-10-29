@@ -13,17 +13,36 @@ struct DirectionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @EnvironmentObject private var mapCoordinator: MapCoordinator
-
     @Environment(\.otpTheme) private var theme
 
+    private let useNewUI = true
+
+    let trip: Trip
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
 
-    public init(sheetDetent: Binding<PresentationDetent>) {
+    public init(trip: Trip, sheetDetent: Binding<PresentationDetent>) {
+        self.trip = trip
         _sheetDetent = sheetDetent
     }
 
     public var body: some View {
+        if useNewUI {
+            newUI()
+        } else {
+            oldUI()
+        }
+    }
+
+    @ViewBuilder
+    private func newUI() -> some View {
+        PagedDirectionsView(itinerary: trip.itinerary) { leg, id in
+            print("Leg tapped with id: \(id)")
+        }
+    }
+
+    @ViewBuilder
+    private func oldUI() -> some View {
         ScrollViewReader { proxy in
             List {
                 Section {
@@ -102,8 +121,9 @@ struct DirectionsSheetView: View {
 }
 
 #Preview {
+    let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
     DirectionsSheetView(
-        sheetDetent: .constant(.fraction(0.2))
+        trip: trip, sheetDetent: .constant(.fraction(0.2))
     )
     .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
 }

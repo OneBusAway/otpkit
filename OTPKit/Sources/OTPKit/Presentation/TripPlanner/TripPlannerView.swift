@@ -134,15 +134,16 @@ private extension TripPlannerView {
                 onLocationSelected: handleLocationSelection
             )
 
-        case .preview(let itinerary, let origin, let destination):
+        case .preview(let trip):
             ItineraryDetailsView(
-                origin: origin,
-                destination: destination,
-                itinerary: itinerary
+                origin: trip.origin,
+                destination: trip.destination,
+                itinerary: trip.itinerary
             )
 
-        case .directions:
+        case .directions(let trip):
             DirectionsSheetView(
+                trip: trip,
                 sheetDetent: $directionSheetDetent
             )
             .presentationDragIndicator(.visible)
