@@ -20,22 +20,24 @@ struct ItineraryLegsView: View {
 
     var body: some View {
         ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
-            Group {
-                switch leg.mode {
-                case "BUS", "TRAM":
-                    DirectionLegVehicleView(leg: leg).onTapGesture {
-                        onTap?(leg, "leg-\(index+1)")
-                    }
-                case "WALK":
-                    DirectionLegWalkView(leg: leg).onTapGesture {
-                        onTap?(leg, "leg-\(index+1)")
-                    }
-                default:
-                    DirectionLegUnknownView(leg: leg).onTapGesture {
-                        onTap?(leg, "leg-\(index+1)")
-                    }
+            switch leg.mode {
+            case "BUS", "TRAM":
+                DirectionLegVehicleView(leg: leg).onTapGesture {
+                    onTap?(leg, "leg-\(index+1)")
+                }
+            case "WALK":
+                DirectionLegWalkView(leg: leg).onTapGesture {
+                    onTap?(leg, "leg-\(index+1)")
+                }
+            default:
+                DirectionLegUnknownView(leg: leg).onTapGesture {
+                    onTap?(leg, "leg-\(index+1)")
                 }
             }
         }
     }
+}
+
+#Preview {
+    ItineraryLegsView(itinerary: PreviewHelpers.buildItin(legsCount: 3))
 }

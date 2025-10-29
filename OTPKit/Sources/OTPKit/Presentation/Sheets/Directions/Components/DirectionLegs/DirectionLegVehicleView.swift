@@ -13,7 +13,7 @@ struct DirectionLegVehicleView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             // Boarding section
-            HStack(alignment: .top, spacing: 16) {
+            DirectionLegContainerView {
                 // Route number badge
                 Text(leg.route ?? "")
                     .padding(.horizontal, 8)
@@ -22,8 +22,7 @@ struct DirectionLegVehicleView: View {
                     .foregroundStyle(.white)
                     .font(.caption)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
-                    .frame(width: 40, height: 40)
-
+            } rightContent: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(boardingText)
                         .font(.headline)
@@ -48,11 +47,10 @@ struct DirectionLegVehicleView: View {
             .padding(.bottom, 4)
 
             // Alighting section
-            HStack(alignment: .top, spacing: 16) {
+            DirectionLegContainerView {
                 // Empty space to align with the route badge
-                Spacer()
-                    .frame(width: 40, height: 40)
-
+                Color.clear
+            } rightContent: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Deboard at")
                         .font(.headline)

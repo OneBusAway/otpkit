@@ -13,36 +13,37 @@ struct DirectionLegWalkView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 16) {
+            DirectionLegContainerView {
                 Image(systemName: "figure.walk")
                     .font(.system(size: 24))
-                    .frame(width: 40, height: 40)
+            } rightContent: {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Walk to \(leg.to.name)")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .fixedSize(horizontal: false, vertical: true)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Walk to \(leg.to.name)")
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        Text(
+                            Formatters.formatDistance(Int(leg.distance)) +
+                            ", about " +
+                            Formatters.formatTimeDuration(leg.duration)
+                        )
+                        .foregroundStyle(.gray)
                         .fixedSize(horizontal: false, vertical: true)
+                    }
 
-                    Text(
-                        Formatters.formatDistance(Int(leg.distance)) +
-                        ", about " +
-                        Formatters.formatTimeDuration(leg.duration)
-                    )
-                    .foregroundStyle(.gray)
-                    .fixedSize(horizontal: false, vertical: true)
-                }
+                    Spacer()
 
-                Spacer()
-
-                // Toggle Button
-                if let steps = leg.steps, !steps.isEmpty {
-                    Button(action: { showSteps.toggle() }, label: {
-                        Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.blue)
-                    })
-                    .buttonStyle(PlainButtonStyle())
+                    // Toggle Button
+                    if let steps = leg.steps, !steps.isEmpty {
+                        Button(action: { showSteps.toggle() }, label: {
+                            Image(systemName: showSteps ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.blue)
+                        })
+                        .buttonStyle(PlainButtonStyle())
+                    }
                 }
             }
 
