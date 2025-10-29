@@ -14,6 +14,7 @@ struct DirectionsSheetView: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @EnvironmentObject private var mapCoordinator: MapCoordinator
     @Environment(\.otpTheme) private var theme
+    @State private var showEndConfirmation = false
 
     private let useNewUI = true
 
@@ -36,8 +37,28 @@ struct DirectionsSheetView: View {
 
     @ViewBuilder
     private func newUI() -> some View {
-        PagedDirectionsView(itinerary: trip.itinerary) { leg, id in
-            print("Leg tapped with id: \(id)")
+        VStack {
+            HStack {
+                Spacer()
+                Button("Close", systemImage: "xmark") {
+                    showEndConfirmation = true
+                }
+            }
+            PagedDirectionsView(itinerary: trip.itinerary) { leg, id in
+                print("Leg tapped with id: \(id)")
+            }
+        }
+        .confirmationDialog(
+            "End Trip?",
+            isPresented: $showEndConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("End Trip", role: .destructive) {
+                tripPlannerVM.resetTripPlanner()
+            }
+            Button("No", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to end this trip?")
         }
     }
 
