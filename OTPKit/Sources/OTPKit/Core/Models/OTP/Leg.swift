@@ -17,6 +17,7 @@
 import CoreLocation
 import Foundation
 import SwiftUI
+import MapKit
 
 // swiftlint:disable identifier_name
 
@@ -67,11 +68,6 @@ public struct Leg: Codable, Hashable {
 
     /// A container for the polyline of this leg.
     public let legGeometry: LegGeometry
-
-    /// Returns an array of `CLLocationCoordinate2D`s representing the geometry of this `Leg`.
-    public func decodePolyline() -> [CLLocationCoordinate2D]? {
-        OTPKit.decodePolyline(legGeometry.points)
-    }
 
     /// Distance covered in this leg, in meters.
     public let distance: Double
@@ -137,6 +133,47 @@ public struct Leg: Codable, Hashable {
         leg1.route == leg2.route &&
         leg1.transitLeg == true &&
         leg2.transitLeg == true
+    }
+
+    // MARK: - Polyline
+
+    /// Returns an array of `CLLocationCoordinate2D`s representing the geometry of this `Leg`.
+    public func decodePolyline() -> [CLLocationCoordinate2D]? {
+        OTPKit.decodePolyline(legGeometry.points)
+    }
+
+    /// Creates an `MKMapRect` from the Leg's encoded polyline.
+    /// - Returns: The `MKMapRect` from the polyline or `MKMapRect.null` if the polyilne is empty or invalid.
+    public var polylineMapRect: MKMapRect {
+        guard let coordinates = decodePolyline(), !coordinates.isEmpty else {
+            return MKMapRect.null
+        }
+
+        // Calculate bounding box for the leg
+        var minLat = coordinates[0].latitude
+        var maxLat = coordinates[0].latitude
+        var minLon = coordinates[0].longitude
+        var maxLon = coordinates[0].longitude
+
+        for coordinate in coordinates {
+            minLat = min(minLat, coordinate.latitude)
+            maxLat = max(maxLat, coordinate.latitude)
+            minLon = min(minLon, coordinate.longitude)
+            maxLon = max(maxLon, coordinate.longitude)
+        }
+
+        // Convert to MKMapRect
+        let topLeft = MKMapPoint(CLLocationCoordinate2D(latitude: maxLat, longitude: minLon))
+        let bottomRight = MKMapPoint(CLLocationCoordinate2D(latitude: minLat, longitude: maxLon))
+
+        let mapRect = MKMapRect(
+            x: min(topLeft.x, bottomRight.x),
+            y: min(topLeft.y, bottomRight.y),
+            width: abs(topLeft.x - bottomRight.x),
+            height: abs(topLeft.y - bottomRight.y)
+        )
+
+        return mapRect
     }
 
     // MARK: - Computed Properties
