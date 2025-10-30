@@ -4,3 +4,4 @@ disabled_rules:
 
 excluded:
   - OTPKit/.build
+  - .build
