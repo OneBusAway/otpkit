@@ -27,18 +27,18 @@ struct DirectionLegVehicleView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(boardingText)
                             .font(.headline)
-                        
+
                         Text(leg.headsign ?? "")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        
+
                         HStack {
                             if let stopCode = leg.to.stopCode {
                                 Text("Stop ID: \(stopCode)")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-                            
+
                             Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
@@ -46,7 +46,7 @@ struct DirectionLegVehicleView: View {
                     }
                 }
                 .padding(.bottom, 4)
-                
+
                 // Alighting section
                 DirectionLegContainerView {
                     // Empty space to align with the route badge
@@ -55,18 +55,18 @@ struct DirectionLegVehicleView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Deboard at")
                             .font(.headline)
-                        
+
                         Text(leg.to.name)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        
+
                         HStack {
                             if let stopCode = leg.to.stopCode {
                                 Text("Stop ID: \(stopCode)")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-                            
+
                             Text("Arrives at \(Formatters.formatDateToTime(leg.endTime))")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)

@@ -30,7 +30,7 @@ struct ItineraryDetailsView: View {
 
                             Divider()
 
-                            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { index, leg in
+                            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { _, leg in
                                 DirectionLegView(leg: leg).onTapGesture {
                                     print("boop")
                                 }

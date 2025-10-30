@@ -45,7 +45,7 @@ struct DirectionsSheetView: View {
     public var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                PagedDirectionsView(trip: trip, onTap: { leg, id in
+                PagedDirectionsView(trip: trip, onTap: { _, id in
                     print("Leg tapped with id: \(id)")
                 }, onPageChange: handlePageChange)
             }

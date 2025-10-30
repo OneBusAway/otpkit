@@ -27,7 +27,7 @@ struct PagedDirectionsView: View {
                                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 1.0)))
                                 .foregroundStyle(LinearGradient(stops: [
                                     .init(color: .accentColor.mix(with: .white, by: 0.2), location: 0.5),
-                                    .init(color: .accentColor, location: 0.5),
+                                    .init(color: .accentColor, location: 0.5)
                                 ], startPoint: .top, endPoint: .bottom))
                             Text("Swipe to view each step")
                                 .padding(.vertical, 8)

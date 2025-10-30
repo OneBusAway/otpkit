@@ -89,7 +89,7 @@ final class TripPlannerViewModelTests: XCTestCase {
         // Bools start false
         for (value, name) in [
             (viewModel.isLoading, "isLoading"),
-            (viewModel.showingError, "showingError"),
+            (viewModel.showingError, "showingError")
         ] {
             XCTAssertFalse(value, "\(name) should be false initially")
         }

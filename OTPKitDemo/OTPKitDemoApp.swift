@@ -244,7 +244,7 @@ class OTPDemoViewController: UIViewController {
             notificationCenter: NotificationCenter.default
         )
 
-        let view = tripPlanner.createTripPlannerView() { [weak self] in
+        let view = tripPlanner.createTripPlannerView { [weak self] in
             guard let self else { return }
             self.removeTripPlanner()
         }
@@ -305,7 +305,6 @@ class OTPDemoViewController: UIViewController {
     @objc private func tripEnded(_ note: NSNotification) {
         print(#function)
     }
-
 
     // MARK: - Helper Methods
 
