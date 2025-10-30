@@ -176,6 +176,31 @@ public class MapCoordinator: ObservableObject {
         mapProvider.centerOnUserLocation(animated: animated)
     }
 
+    /// Focuses the map on a specific leg, showing the entire leg route
+    /// - Parameters:
+    ///   - leg: The leg to focus on
+    ///   - bottomPadding: Additional bottom padding to account for overlays like sheets (default: 0)
+    ///   - animated: Whether to animate the movement (default: true)
+    public func focusOnLeg(_ leg: Leg, bottomPadding: CGFloat = 0, animated: Bool = true) {
+        let mapRect = leg.polylineMapRect
+
+        guard !mapRect.isNull, !mapRect.isEmpty else {
+            Logger.main.warning("focusOnLeg: No coordinates available for leg")
+            return
+        }
+
+        // Add padding to ensure route is fully visible
+        // Use additional bottom padding to account for sheets or other UI overlays
+        let padding = UIEdgeInsets(
+            top: Constants.mapPadding * 2,
+            left: Constants.mapPadding * 2,
+            bottom: Constants.mapPadding * 2 + bottomPadding,
+            right: Constants.mapPadding * 2
+        )
+
+        mapProvider.setVisibleMapRect(mapRect, edgePadding: padding, animated: animated)
+    }
+
     // MARK: - User Location
 
     /// Shows or hides the user location on the map

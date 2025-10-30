@@ -13,57 +13,82 @@ struct DirectionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @EnvironmentObject private var mapCoordinator: MapCoordinator
-
     @Environment(\.otpTheme) private var theme
+    @State private var showEndConfirmation = false
 
+    let trip: Trip
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
 
-    public init(sheetDetent: Binding<PresentationDetent>) {
+    static let tipDetent: PresentationDetent = .fraction(0.3)
+
+    /// Calculates the approximate height of the sheet based on the current detent
+    private var currentSheetHeight: CGFloat {
+        let screenHeight = UIScreen.main.bounds.height
+        switch sheetDetent {
+        case DirectionsSheetView.tipDetent: // .fraction(0.3)
+            return screenHeight * 0.3
+        case .medium:
+            return screenHeight * 0.5
+        case .large:
+            return screenHeight * 0.9 // Approximate, accounting for safe areas
+        default:
+            return screenHeight * 0.3 // Default to tip height
+        }
+    }
+
+    public init(trip: Trip, sheetDetent: Binding<PresentationDetent>) {
+        self.trip = trip
         _sheetDetent = sheetDetent
     }
 
     public var body: some View {
-        ScrollViewReader { proxy in
-            List {
-                Section {
-                    PageHeaderView(
-                        text: tripPlannerVM.selectedDestination?.title ?? "Destination"
-                    ) {
-                        tripPlannerVM.resetTripPlanner()
-                        dismiss()
+        NavigationStack {
+            VStack(alignment: .leading) {
+                PagedDirectionsView(trip: trip, onTap: { _, id in
+                    print("Leg tapped with id: \(id)")
+                }, onPageChange: handlePageChange)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", systemImage: "xmark") {
+                        showEndConfirmation = true
                     }
-                    .frame(height: 50)
-                    .listRowInsets(EdgeInsets())
-                }
-                .listRowBackground(Color.clear)
-
-                if let itinerary = tripPlannerVM.selectedItinerary {
-                    Section {
-                        createOriginView(itinerary: itinerary)
-                        ItineraryLegsView(itinerary: itinerary) { leg, index in
-                            print("Leg tapped: \(leg) - index: \(index)")
-                            let coordinate = CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)
-                            handleTap(coordinate: coordinate, itemId: index)
-                        }
-                        createDestinationView(itinerary: itinerary)
-                    }
-                    .listRowBackground(Color.clear)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 16)
-            .listStyle(PlainListStyle())
-            .scrollIndicators(.hidden)
-            .onChange(of: scrollToItem) {
-                if let scrollToItem {
-                    withAnimation {
-                        proxy.scrollTo(scrollToItem, anchor: .top)
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.scrollToItem = nil
-                    }
+            .confirmationDialog(
+                "End Trip?",
+                isPresented: $showEndConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("End Trip", role: .destructive) {
+                    tripPlannerVM.resetTripPlanner()
                 }
+                Button("No", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to end this trip?")
+            }
+        }
+        .presentationDragIndicator(.visible)
+        .presentationDetents(
+            [DirectionsSheetView.tipDetent, .medium, .large], selection: $sheetDetent
+        )
+        .interactiveDismissDisabled()
+        .presentationBackgroundInteraction(.enabled(upThrough: .large))
+    }
+
+    private func handlePageChange(_ pageId: String) {
+        if pageId == "origin" || pageId == "destination" {
+            // Show entire trip for origin and destination pages
+            mapCoordinator.showItinerary(trip.itinerary)
+        } else if pageId.hasPrefix("leg-") {
+            // Extract leg index from page ID (format: "leg-0", "leg-1", etc.)
+            if let indexString = pageId.split(separator: "-").last,
+               let legIndex = Int(indexString),
+               legIndex < trip.itinerary.legs.count {
+                let leg = trip.itinerary.legs[legIndex]
+                // Pass the current sheet height as bottom padding to ensure the leg is fully visible
+                mapCoordinator.focusOnLeg(leg, bottomPadding: currentSheetHeight)
             }
         }
     }
@@ -71,39 +96,30 @@ struct DirectionsSheetView: View {
     private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {
         mapCoordinator.centerOn(coordinate: coordinate)
         scrollToItem = itemId
-        sheetDetent = .fraction(0.2)
-    }
-
-    private func createOriginView(itinerary _: Itinerary) -> some View {
-        DirectionLegOriginDestinationView(
-            title: "Start",
-            description: tripPlannerVM.selectedOrigin?.title ?? "Unknown"
-        )
-        .id("start")
-        .onTapGesture {
-            if let originCoordinate = tripPlannerVM.selectedOrigin?.coordinate {
-                handleTap(coordinate: originCoordinate, itemId: "start")
-            }
-        }
-    }
-
-    private func createDestinationView(itinerary: Itinerary) -> some View {
-        DirectionLegOriginDestinationView(
-            title: "Destination",
-            description: tripPlannerVM.selectedDestination?.title ?? "Unknown"
-        )
-        .id("destination")
-        .onTapGesture {
-            if let destinationCoordinate = tripPlannerVM.selectedDestination?.coordinate {
-                handleTap(coordinate: destinationCoordinate, itemId: "destination")
-            }
-        }
+        sheetDetent = DirectionsSheetView.tipDetent
     }
 }
 
 #Preview {
+    @State var sheetVisible = true
+    @State var directionSheetDetent = DirectionsSheetView.tipDetent
+    let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
+
+    VStack {
+        Text("HI")
+    }
+    .sheet(isPresented: $sheetVisible) {
+        DirectionsSheetView(
+            trip: trip, sheetDetent: $directionSheetDetent
+        )
+        .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
+    }
+}
+
+#Preview {
+    @State var directionSheetDetent = DirectionsSheetView.tipDetent
+    let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
     DirectionsSheetView(
-        sheetDetent: .constant(.fraction(0.2))
+        trip: trip, sheetDetent: $directionSheetDetent
     )
-    .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
 }

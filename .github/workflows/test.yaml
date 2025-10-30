@@ -12,8 +12,21 @@ on:
 # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
 
 jobs:
+  lint:
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install SwiftLint
+      run: brew install swiftlint
+
+    - name: Run SwiftLint
+      run: swiftlint --strict
+
   build:
     runs-on: macos-15
+    needs: lint
 
     steps:
     - uses: actions/checkout@v4

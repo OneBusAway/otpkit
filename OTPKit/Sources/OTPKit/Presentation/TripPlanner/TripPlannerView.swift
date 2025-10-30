@@ -20,7 +20,7 @@ public struct TripPlannerView: View {
     /// Currently selected location mode (origin or destination)
     @State private var selectedMode: LocationMode = .origin
 
-    @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
+    @State private var directionSheetDetent: PresentationDetent = DirectionsSheetView.tipDetent
 
     private let onClose: VoidBlock
 
@@ -102,6 +102,7 @@ public struct TripPlannerView: View {
             onDismiss: clearError
         )
         .sheet(item: $tripPlannerVM.activeSheet, content: sheetView)
+        .environmentObject(tripPlannerVM)
     }
 
     // MARK: - Trip Results Section
@@ -134,21 +135,18 @@ private extension TripPlannerView {
                 onLocationSelected: handleLocationSelection
             )
 
-        case .preview(let itinerary, let origin, let destination):
+        case .preview(let trip):
             ItineraryDetailsView(
-                origin: origin,
-                destination: destination,
-                itinerary: itinerary
+                origin: trip.origin,
+                destination: trip.destination,
+                itinerary: trip.itinerary
             )
 
-        case .directions:
+        case .directions(let trip):
             DirectionsSheetView(
+                trip: trip,
                 sheetDetent: $directionSheetDetent
             )
-            .presentationDragIndicator(.visible)
-            .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
-            .interactiveDismissDisabled()
-            .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
 
         case .advancedOptions:
             AdvancedOptionsSheet()

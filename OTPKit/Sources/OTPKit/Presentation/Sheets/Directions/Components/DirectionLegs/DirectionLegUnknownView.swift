@@ -11,21 +11,22 @@ struct DirectionLegUnknownView: View {
     let leg: Leg
 
     var body: some View {
-        HStack(spacing: 16) {
+        DirectionLegContainerView {
             Image(systemName: "questionmark.circle.fill")
                 .font(.system(size: 24))
                 .foregroundColor(.gray)
-                .frame(width: 40, height: 40)
+        } rightContent: {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Unknown Transit Mode")
+                        .font(.headline)
+                    Text(leg.mode)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Unknown Transit Mode")
-                    .font(.headline)
-                Text(leg.mode)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                Spacer()
             }
-
-            Spacer()
         }
         .padding(.vertical, 12)
     }

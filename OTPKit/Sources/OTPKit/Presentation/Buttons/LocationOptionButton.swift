@@ -48,3 +48,14 @@ struct LocationOptionButton: View {
         .buttonStyle(.plain)
     }
 }
+
+#Preview {
+    LocationOptionButton(
+        icon: "location.fill",
+        title: "Current Location",
+        subtitle: "Use your current GPS location",
+        color: .green
+    ) {
+        print("Action tapped")
+    }
+}

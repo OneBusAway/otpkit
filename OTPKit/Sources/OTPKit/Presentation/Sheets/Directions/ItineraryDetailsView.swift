@@ -13,34 +13,70 @@ struct ItineraryDetailsView: View {
     let destination: Location?
     let itinerary: Itinerary
 
+    @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @Environment(\.dismiss) var dismiss
 
     public var body: some View {
-        List {
-            Section {
-                PageHeaderView(text: destination?.title ?? "Destination") {
-                    dismiss()
+        NavigationStack {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 8.0, pinnedViews: [.sectionFooters]) {
+                    Section {
+                        Group {
+                            DirectionLegOriginDestinationView(
+                                title: "Start",
+                                description: origin?.title ?? "Unknown"
+                            )
+                            .padding(.horizontal, 20)
+
+                            Divider()
+
+                            ForEach(Array(itinerary.legs.enumerated()), id: \.offset) { _, leg in
+                                DirectionLegView(leg: leg).onTapGesture {
+                                    print("boop")
+                                }
+                                .padding(.horizontal, 20)
+                                Divider()
+                            }
+
+                            DirectionLegOriginDestinationView(
+                                title: "Destination",
+                                description: destination?.title ?? "Unknown"
+                            )
+                            .padding(.horizontal, 20)
+                        }
+                        .padding(2)
+                    } footer: {
+                        ZStack {
+                            Rectangle()
+                                .fill(.thinMaterial)
+
+                            Button("Start Navigation") {
+                                tripPlannerVM.handleTripStarted(itinerary)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .padding()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 80)
+                    }
                 }
             }
-            .listRowBackground(Color.clear)
-
-            Section {
-                DirectionLegOriginDestinationView(
-                    title: "Start",
-                    description: origin?.title ?? "Unknown"
-                )
-
-                ItineraryLegsView(itinerary: itinerary)
-
-                DirectionLegOriginDestinationView(
-                    title: "Destination",
-                    description: destination?.title ?? "Unknown"
-                )
+            .ignoresSafeArea(edges: .bottom)
+            .scrollDismissesKeyboard(.interactively)
+            .navigationTitle(destination?.title ?? "Destination")
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", systemImage: "xmark") {
+                        dismiss()
+                    }
+                }
             }
-            .listRowBackground(Color.clear)
         }
-        .padding(.horizontal, 12)
-        .padding(.top, 16)
-        .listStyle(PlainListStyle())
     }
+}
+
+#Preview {
+    ItineraryDetailsView(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 3))
+        .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
 }

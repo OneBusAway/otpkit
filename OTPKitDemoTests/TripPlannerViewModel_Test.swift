@@ -89,7 +89,7 @@ final class TripPlannerViewModelTests: XCTestCase {
         // Bools start false
         for (value, name) in [
             (viewModel.isLoading, "isLoading"),
-            (viewModel.showingError, "showingError"),
+            (viewModel.showingError, "showingError")
         ] {
             XCTAssertFalse(value, "\(name) should be false initially")
         }
@@ -192,8 +192,10 @@ final class TripPlannerViewModelTests: XCTestCase {
         viewModel.presentSheet(.locationOptions(.origin))
         XCTAssertEqual(viewModel.activeSheet, .locationOptions(.origin))
 
-        viewModel.presentSheet(.directions)
-        XCTAssertEqual(viewModel.activeSheet, .directions)
+        let trip = Trip(origin: TestHelpers.location(), destination: TestHelpers.location(), itinerary: TestHelpers.itinerary())
+
+        viewModel.presentSheet(.directions(trip))
+        XCTAssertEqual(viewModel.activeSheet, .directions(trip))
 
         viewModel.presentSheet(.search(.origin))
         XCTAssertEqual(viewModel.activeSheet, .search(.origin))

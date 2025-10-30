@@ -271,11 +271,18 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// Shows preview on map, dismisses current sheet, and opens route details
     /// - Parameter itinerary: The selected itinerary
     func handleTripStarted(_ itinerary: Itinerary) {
+        guard let selectedOrigin, let selectedDestination else {
+            // TODO: consider whether we should raise an error.
+            return
+        }
+
         selectedItinerary = itinerary
         mapCoordinator.showItinerary(itinerary)
 
         dismissSheet()
-        presentSheet(.directions)
+
+        let trip = Trip(origin: selectedOrigin, destination: selectedDestination, itinerary: itinerary)
+        presentSheet(.directions(trip))
 
         notificationCenter.post(name: Notifications.tripStarted, object: nil)
     }
@@ -284,7 +291,12 @@ public class TripPlannerViewModel: @preconcurrency ObservableObject {
     /// Shows preview on map
     /// - Parameter itinerary: The itinerary to preview
     func handleItineraryPreview(_ itinerary: Itinerary) {
-        presentSheet(.preview(itinerary, selectedOrigin, selectedDestination))
+        guard let selectedOrigin, let selectedDestination else {
+            // TODO: consider whether we should raise an error.
+            return
+        }
+
+        presentSheet(.preview(Trip(origin: selectedOrigin, destination: selectedDestination, itinerary: itinerary)))
         notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
     }
 

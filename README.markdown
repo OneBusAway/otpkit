@@ -12,7 +12,7 @@
 OpenTripPlanner library for iOS, written in Swift.
 **OTPKit** is a reusable library that powers trip planning in the [OneBusAway iOS app](https://github.com/OneBusAway/onebusaway-ios) and can be integrated into any iOS application.
 
-- Compatible with **iOS 17+**
+- Compatible with **iOS 18+**
 - Works with **OpenTripPlanner 1.5.x and higher**
 - Licensed under **Apache 2.0**
 - Provides networking, models, and APIs for building a complete trip planning experience
@@ -72,6 +72,8 @@ view.addSubview(hostingController.view)
 
 ```
 
+## Development
+
 ### SwiftLint
 
 OTPKit uses [SwiftLint](https://github.com/realm/SwiftLint) to enforce consistent code style and Swift best practices.
@@ -81,8 +83,28 @@ Install it locally using Homebrew:
 brew install swiftlint
 ```
 
-<hr>
+### Pre-commit Hooks
 
+The project uses [pre-commit](https://pre-commit.com) to automatically run SwiftLint and tests before pushing to GitHub.
+
+```bash
+# Install pre-commit (first time setup)
+brew install pre-commit
+
+# Install the git hook scripts for pre-push
+pre-commit install --hook-type pre-push
+
+# (Optional) Run against all files manually
+pre-commit run --all-files --hook-stage pre-push
+```
+
+Once installed, the following checks will run automatically before each push:
+1. **SwiftLint** - Code style and best practices validation
+2. **Xcode Tests** - Full test suite must pass
+
+If either linting or tests fail, the push will be blocked until issues are fixed.
+
+<hr>
 
 ## About the project
 

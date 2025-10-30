@@ -1,0 +1,19 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: local
+    hooks:
+      - id: swiftlint
+        name: SwiftLint
+        entry: bash -c 'swiftlint lint --strict --force-exclude --quiet'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+      - id: xcode-tests
+        name: Run Xcode Tests
+        entry: bash -c 'xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination "platform=iOS Simulator,name=iPhone 17 Pro" -quiet'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
