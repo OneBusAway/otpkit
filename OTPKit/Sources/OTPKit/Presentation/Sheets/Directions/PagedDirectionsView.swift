@@ -15,8 +15,24 @@ struct PagedDirectionsView: View {
         GeometryReader { proxy in
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
-                    DirectionLegOriginDestinationView(title: "Start", description: trip.origin.title)
-                        .frame(width: proxy.size.width)
+                    VStack {
+                        DirectionLegOriginDestinationView(title: "Start", description: trip.origin.title)
+                            .frame(width: proxy.size.width)
+
+                        HStack {
+                            Image(systemName: "lessthan.circle.fill")
+                                .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 1.0)))
+                                .foregroundStyle(LinearGradient(stops: [
+                                    .init(color: .accentColor.mix(with: .white, by: 0.2), location: 0.5),
+                                    .init(color: .accentColor, location: 0.5),
+                                ], startPoint: .top, endPoint: .bottom))
+                            Text("Swipe to view each step")
+                                .padding(.vertical, 8)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
                     ForEach(Array(trip.itinerary.legs.enumerated()), id: \.offset) { index, leg in
                         DirectionLegView(leg: leg)
                             .padding(.horizontal, 16)

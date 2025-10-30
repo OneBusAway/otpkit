@@ -20,7 +20,7 @@ public struct TripPlannerView: View {
     /// Currently selected location mode (origin or destination)
     @State private var selectedMode: LocationMode = .origin
 
-    @State private var directionSheetDetent: PresentationDetent = .fraction(0.2)
+    @State private var directionSheetDetent: PresentationDetent = DirectionsSheetView.tipDetent
 
     private let onClose: VoidBlock
 
@@ -102,6 +102,7 @@ public struct TripPlannerView: View {
             onDismiss: clearError
         )
         .sheet(item: $tripPlannerVM.activeSheet, content: sheetView)
+        .environmentObject(tripPlannerVM)
     }
 
     // MARK: - Trip Results Section
