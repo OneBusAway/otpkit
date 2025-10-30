@@ -72,6 +72,8 @@ view.addSubview(hostingController.view)
 
 ```
 
+## Development
+
 ### SwiftLint
 
 OTPKit uses [SwiftLint](https://github.com/realm/SwiftLint) to enforce consistent code style and Swift best practices.
@@ -80,6 +82,23 @@ Install it locally using Homebrew:
 ```bash
 brew install swiftlint
 ```
+
+### Pre-commit Hooks
+
+The project uses [pre-commit](https://pre-commit.com) to automatically run SwiftLint before pushing to GitHub.
+
+```bash
+# Install pre-commit (first time setup)
+brew install pre-commit
+
+# Install the git hook scripts for pre-push
+pre-commit install --hook-type pre-push
+
+# (Optional) Run against all files manually
+pre-commit run --all-files
+```
+
+Once installed, SwiftLint will automatically run on changed files before each push. If linting fails, the push will be blocked until issues are fixed.
 
 <hr>
 
