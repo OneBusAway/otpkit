@@ -52,6 +52,10 @@ struct DirectionsSheetView: View {
                 Text("Are you sure you want to end this trip?")
             }
         }
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.fraction(0.2), .medium, .large], selection: $sheetDetent)
+        .interactiveDismissDisabled()
+        .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
     }
 
     private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {
@@ -73,10 +77,6 @@ struct DirectionsSheetView: View {
         DirectionsSheetView(
             trip: trip, sheetDetent: $directionSheetDetent
         )
-        .presentationDragIndicator(.visible)
-        .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
-        .interactiveDismissDisabled()
-        .presentationBackgroundInteraction(.enabled(upThrough: .large))
         .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
     }
 }

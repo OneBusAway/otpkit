@@ -146,10 +146,6 @@ private extension TripPlannerView {
                 trip: trip,
                 sheetDetent: $directionSheetDetent
             )
-            .presentationDragIndicator(.visible)
-            .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
-            .interactiveDismissDisabled()
-            .presentationBackgroundInteraction(.enabled(upThrough: .fraction(0.2)))
 
         case .advancedOptions:
             AdvancedOptionsSheet()
