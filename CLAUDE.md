@@ -57,7 +57,7 @@ brew install swiftlint
 ```
 
 #### Pre-commit Hooks
-The project uses [pre-commit](https://pre-commit.com) to automatically run SwiftLint before pushing to GitHub.
+The project uses [pre-commit](https://pre-commit.com) to automatically run SwiftLint and tests before pushing to GitHub.
 
 ```bash
 # Install pre-commit (first time setup)
@@ -70,7 +70,11 @@ pre-commit install --hook-type pre-push
 pre-commit run --all-files
 ```
 
-Once installed, SwiftLint will automatically run on changed files before each push. If linting fails, the push will be blocked until issues are fixed.
+Once installed, the following checks will run automatically before each push:
+1. **SwiftLint** - Code style and best practices validation
+2. **Xcode Tests** - Full test suite must pass
+
+If either linting or tests fail, the push will be blocked until issues are fixed.
 
 ## Architecture
 
