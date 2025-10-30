@@ -5,7 +5,7 @@ repos:
     hooks:
       - id: swiftlint
         name: SwiftLint
-        entry: bash -c 'swiftlint lint --strict --force-exclude'
+        entry: bash -c 'swiftlint lint --strict --force-exclude --quiet'
         language: system
         pass_filenames: false
         always_run: true
