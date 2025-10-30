@@ -22,6 +22,21 @@ struct DirectionsSheetView: View {
 
     static let tipDetent: PresentationDetent = .fraction(0.3)
 
+    /// Calculates the approximate height of the sheet based on the current detent
+    private var currentSheetHeight: CGFloat {
+        let screenHeight = UIScreen.main.bounds.height
+        switch sheetDetent {
+        case DirectionsSheetView.tipDetent: // .fraction(0.3)
+            return screenHeight * 0.3
+        case .medium:
+            return screenHeight * 0.5
+        case .large:
+            return screenHeight * 0.9 // Approximate, accounting for safe areas
+        default:
+            return screenHeight * 0.3 // Default to tip height
+        }
+    }
+
     public init(trip: Trip, sheetDetent: Binding<PresentationDetent>) {
         self.trip = trip
         _sheetDetent = sheetDetent
@@ -30,9 +45,9 @@ struct DirectionsSheetView: View {
     public var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                PagedDirectionsView(trip: trip) { leg, id in
+                PagedDirectionsView(trip: trip, onTap: { leg, id in
                     print("Leg tapped with id: \(id)")
-                }
+                }, onPageChange: handlePageChange)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -60,6 +75,22 @@ struct DirectionsSheetView: View {
         )
         .interactiveDismissDisabled()
         .presentationBackgroundInteraction(.enabled(upThrough: .large))
+    }
+
+    private func handlePageChange(_ pageId: String) {
+        if pageId == "origin" || pageId == "destination" {
+            // Show entire trip for origin and destination pages
+            mapCoordinator.showItinerary(trip.itinerary)
+        } else if pageId.hasPrefix("leg-") {
+            // Extract leg index from page ID (format: "leg-0", "leg-1", etc.)
+            if let indexString = pageId.split(separator: "-").last,
+               let legIndex = Int(indexString),
+               legIndex < trip.itinerary.legs.count {
+                let leg = trip.itinerary.legs[legIndex]
+                // Pass the current sheet height as bottom padding to ensure the leg is fully visible
+                mapCoordinator.focusOnLeg(leg, bottomPadding: currentSheetHeight)
+            }
+        }
     }
 
     private func handleTap(coordinate: CLLocationCoordinate2D, itemId: String) {

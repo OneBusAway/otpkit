@@ -10,6 +10,9 @@ import SwiftUI
 struct PagedDirectionsView: View {
     let trip: Trip
     let onTap: LegIDTapHandler?
+    let onPageChange: ((String) -> Void)?
+
+    @State private var currentPageId: String? = "origin"
 
     var body: some View {
         GeometryReader { proxy in
@@ -32,6 +35,7 @@ struct PagedDirectionsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .id("origin")
 
                     ForEach(Array(trip.itinerary.legs.enumerated()), id: \.offset) { index, leg in
                         DirectionLegView(leg: leg)
@@ -40,14 +44,22 @@ struct PagedDirectionsView: View {
                             .onTapGesture {
                                 onTap?(leg, "leg-\(index+1)")
                             }
+                            .id("leg-\(index)")
                     }
                     DirectionLegOriginDestinationView(title: "End", description: trip.destination.title)
                         .frame(width: proxy.size.width)
+                        .id("destination")
 
                 }
                 .scrollTargetLayout()
             }
             .scrollTargetBehavior(.paging)
+            .scrollPosition(id: $currentPageId)
+            .onChange(of: currentPageId) { _, newPageId in
+                if let pageId = newPageId {
+                    onPageChange?(pageId)
+                }
+            }
         }
     }
 }
@@ -59,7 +71,9 @@ struct PagedDirectionsView: View {
         itinerary: PreviewHelpers.buildItin(legsCount: 3)
     )
 
-    PagedDirectionsView(trip: trip) { leg, _ in
+    PagedDirectionsView(trip: trip, onTap: { leg, _ in
         print("Leg tapped: \(leg)")
-    }
+    }, onPageChange: { pageId in
+        print("Page changed to: \(pageId)")
+    })
 }

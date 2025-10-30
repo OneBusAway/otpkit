@@ -176,6 +176,53 @@ public class MapCoordinator: ObservableObject {
         mapProvider.centerOnUserLocation(animated: animated)
     }
 
+    /// Focuses the map on a specific leg, showing the entire leg route
+    /// - Parameters:
+    ///   - leg: The leg to focus on
+    ///   - bottomPadding: Additional bottom padding to account for overlays like sheets (default: 0)
+    ///   - animated: Whether to animate the movement (default: true)
+    public func focusOnLeg(_ leg: Leg, bottomPadding: CGFloat = 0, animated: Bool = true) {
+        guard let coordinates = leg.decodePolyline(), !coordinates.isEmpty else {
+            Logger.main.warning("focusOnLeg: No coordinates available for leg")
+            return
+        }
+
+        // Calculate bounding box for the leg
+        var minLat = coordinates[0].latitude
+        var maxLat = coordinates[0].latitude
+        var minLon = coordinates[0].longitude
+        var maxLon = coordinates[0].longitude
+
+        for coordinate in coordinates {
+            minLat = min(minLat, coordinate.latitude)
+            maxLat = max(maxLat, coordinate.latitude)
+            minLon = min(minLon, coordinate.longitude)
+            maxLon = max(maxLon, coordinate.longitude)
+        }
+
+        // Convert to MKMapRect
+        let topLeft = MKMapPoint(CLLocationCoordinate2D(latitude: maxLat, longitude: minLon))
+        let bottomRight = MKMapPoint(CLLocationCoordinate2D(latitude: minLat, longitude: maxLon))
+
+        let mapRect = MKMapRect(
+            x: min(topLeft.x, bottomRight.x),
+            y: min(topLeft.y, bottomRight.y),
+            width: abs(topLeft.x - bottomRight.x),
+            height: abs(topLeft.y - bottomRight.y)
+        )
+
+        // Add padding to ensure route is fully visible
+        // Use additional bottom padding to account for sheets or other UI overlays
+        let padding = UIEdgeInsets(
+            top: Constants.mapPadding * 2,
+            left: Constants.mapPadding * 2,
+            bottom: Constants.mapPadding * 2 + bottomPadding,
+            right: Constants.mapPadding * 2
+        )
+
+        mapProvider.setVisibleMapRect(mapRect, edgePadding: padding, animated: animated)
+    }
+
     // MARK: - User Location
 
     /// Shows or hides the user location on the map
