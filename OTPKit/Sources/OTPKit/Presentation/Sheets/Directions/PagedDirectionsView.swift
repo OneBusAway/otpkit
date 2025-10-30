@@ -8,15 +8,26 @@
 import SwiftUI
 
 struct PagedDirectionsView: View {
-    let itinerary: Itinerary
+    let trip: Trip
     let onTap: LegIDTapHandler?
 
     var body: some View {
         GeometryReader { proxy in
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
-                    ItineraryLegsView(itinerary: itinerary, onTap: onTap)
-                    .frame(width: proxy.size.width)
+                    DirectionLegOriginDestinationView(title: "Start", description: trip.origin.title)
+                        .frame(width: proxy.size.width)
+                    ForEach(Array(trip.itinerary.legs.enumerated()), id: \.offset) { index, leg in
+                        DirectionLegView(leg: leg)
+                            .padding(.horizontal, 16)
+                            .frame(width: proxy.size.width)
+                            .onTapGesture {
+                                onTap?(leg, "leg-\(index+1)")
+                            }
+                    }
+                    DirectionLegOriginDestinationView(title: "End", description: trip.destination.title)
+                        .frame(width: proxy.size.width)
+
                 }
                 .scrollTargetLayout()
             }
@@ -26,9 +37,13 @@ struct PagedDirectionsView: View {
 }
 
 #Preview {
-    PagedDirectionsView(
+    let trip = Trip(
+        origin: PreviewHelpers.createOrigin(),
+        destination: PreviewHelpers.createDestination(),
         itinerary: PreviewHelpers.buildItin(legsCount: 3)
-    ) { leg, _ in
+    )
+
+    PagedDirectionsView(trip: trip) { leg, _ in
         print("Leg tapped: \(leg)")
     }
 }

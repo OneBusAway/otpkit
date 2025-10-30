@@ -16,8 +16,6 @@ struct DirectionsSheetView: View {
     @Environment(\.otpTheme) private var theme
     @State private var showEndConfirmation = false
 
-    private let useNewUI = true
-
     let trip: Trip
     @Binding var sheetDetent: PresentationDetent
     @State private var scrollToItem: String?
@@ -28,82 +26,30 @@ struct DirectionsSheetView: View {
     }
 
     public var body: some View {
-        if useNewUI {
-            newUI()
-        } else {
-            oldUI()
-        }
-    }
-
-    @ViewBuilder
-    private func newUI() -> some View {
-        VStack {
-            HStack {
-                Spacer()
-                Button("Close", systemImage: "xmark") {
-                    showEndConfirmation = true
+        NavigationStack {
+            VStack(alignment: .leading) {
+                PagedDirectionsView(trip: trip) { leg, id in
+                    print("Leg tapped with id: \(id)")
                 }
             }
-            PagedDirectionsView(itinerary: trip.itinerary) { leg, id in
-                print("Leg tapped with id: \(id)")
-            }
-        }
-        .confirmationDialog(
-            "End Trip?",
-            isPresented: $showEndConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("End Trip", role: .destructive) {
-                tripPlannerVM.resetTripPlanner()
-            }
-            Button("No", role: .cancel) {}
-        } message: {
-            Text("Are you sure you want to end this trip?")
-        }
-    }
-
-    @ViewBuilder
-    private func oldUI() -> some View {
-        ScrollViewReader { proxy in
-            List {
-                Section {
-                    PageHeaderView(
-                        text: tripPlannerVM.selectedDestination?.title ?? "Destination"
-                    ) {
-                        tripPlannerVM.resetTripPlanner()
-                        dismiss()
-                    }
-                    .frame(height: 50)
-                    .listRowInsets(EdgeInsets())
-                }
-                .listRowBackground(Color.clear)
-
-                if let itinerary = tripPlannerVM.selectedItinerary {
-                    Section {
-                        createOriginView(itinerary: itinerary)
-                        ItineraryLegsView(itinerary: itinerary) { leg, index in
-                            print("Leg tapped: \(leg) - index: \(index)")
-                            let coordinate = CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon)
-                            handleTap(coordinate: coordinate, itemId: index)
-                        }
-                        createDestinationView(itinerary: itinerary)
-                    }
-                    .listRowBackground(Color.clear)
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.top, 16)
-            .listStyle(PlainListStyle())
-            .scrollIndicators(.hidden)
-            .onChange(of: scrollToItem) {
-                if let scrollToItem {
-                    withAnimation {
-                        proxy.scrollTo(scrollToItem, anchor: .top)
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.scrollToItem = nil
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", systemImage: "xmark") {
+                        showEndConfirmation = true
                     }
                 }
+            }
+            .confirmationDialog(
+                "End Trip?",
+                isPresented: $showEndConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("End Trip", role: .destructive) {
+                    tripPlannerVM.resetTripPlanner()
+                }
+                Button("No", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to end this trip?")
             }
         }
     }
@@ -113,38 +59,32 @@ struct DirectionsSheetView: View {
         scrollToItem = itemId
         sheetDetent = .fraction(0.2)
     }
+}
 
-    private func createOriginView(itinerary _: Itinerary) -> some View {
-        DirectionLegOriginDestinationView(
-            title: "Start",
-            description: tripPlannerVM.selectedOrigin?.title ?? "Unknown"
-        )
-        .id("start")
-        .onTapGesture {
-            if let originCoordinate = tripPlannerVM.selectedOrigin?.coordinate {
-                handleTap(coordinate: originCoordinate, itemId: "start")
-            }
-        }
+#Preview {
+    @State var sheetVisible = true
+    @State var directionSheetDetent: PresentationDetent = .fraction(0.2)
+    let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
+
+    VStack {
+        Text("HI")
     }
-
-    private func createDestinationView(itinerary: Itinerary) -> some View {
-        DirectionLegOriginDestinationView(
-            title: "Destination",
-            description: tripPlannerVM.selectedDestination?.title ?? "Unknown"
+    .sheet(isPresented: $sheetVisible) {
+        DirectionsSheetView(
+            trip: trip, sheetDetent: $directionSheetDetent
         )
-        .id("destination")
-        .onTapGesture {
-            if let destinationCoordinate = tripPlannerVM.selectedDestination?.coordinate {
-                handleTap(coordinate: destinationCoordinate, itemId: "destination")
-            }
-        }
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.fraction(0.2), .medium, .large], selection: $directionSheetDetent)
+        .interactiveDismissDisabled()
+        .presentationBackgroundInteraction(.enabled(upThrough: .large))
+        .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
     }
 }
 
 #Preview {
+    @State var directionSheetDetent: PresentationDetent = .fraction(0.2)
     let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
     DirectionsSheetView(
-        trip: trip, sheetDetent: .constant(.fraction(0.2))
+        trip: trip, sheetDetent: $directionSheetDetent
     )
-    .environmentObject(PreviewHelpers.mockTripPlannerViewModel())
 }
