@@ -1,0 +1,151 @@
+{
+  "requestParameters": {
+    "fromPlace": "47.6097,-122.3331",
+    "toPlace": "47.6154,-122.3208",
+    "time": "08:00:00",
+    "date": "2024-05-10",
+    "mode": "TRANSIT,WALK",
+    "arriveBy": "false",
+    "maxWalkDistance": "800",
+    "wheelchair": "false"
+  },
+  "plan": {
+    "date": 1715335200000,
+    "from": {
+      "name": "Seattle Center",
+      "lon": -122.3331,
+      "lat": 47.6097,
+      "vertexType": "NORMAL"
+    },
+    "to": {
+      "name": "Space Needle",
+      "lon": -122.3208,
+      "lat": 47.6154,
+      "vertexType": "NORMAL"
+    },
+    "itineraries": [
+      {
+        "duration": 1200,
+        "startTime": 1715335200000,
+        "endTime": 1715336400000,
+        "walkTime": 600,
+        "transitTime": 480,
+        "waitingTime": 120,
+        "walkDistance": 500.0,
+        "walkLimitExceeded": false,
+        "elevationLost": 10.0,
+        "elevationGained": 5.0,
+        "transfers": 1,
+        "legs": [
+          {
+            "startTime": 1715335200000,
+            "endTime": 1715335500000,
+            "mode": "WALK",
+            "routeType": null,
+            "routeColor": null,
+            "routeTextColor": null,
+            "route": null,
+            "agencyName": null,
+            "from": {
+              "name": "Seattle Center",
+              "lon": -122.3331,
+              "lat": 47.6097,
+              "vertexType": "NORMAL"
+            },
+            "to": {
+              "name": "Bus Stop A",
+              "lon": -122.3320,
+              "lat": 47.6100,
+              "vertexType": "TRANSIT"
+            },
+            "legGeometry": {
+              "points": "_p~iF~ps|U",
+              "length": 2
+            },
+            "distance": 250.0,
+            "transitLeg": false,
+            "duration": 300,
+            "realTime": false,
+            "streetNames": null,
+            "pathway": false,
+            "steps": null,
+            "headsign": null
+          },
+          {
+            "startTime": 1715335500000,
+            "endTime": 1715335980000,
+            "mode": "BUS",
+            "routeType": 3,
+            "routeColor": "FF0000",
+            "routeTextColor": "FFFFFF",
+            "route": "62",
+            "agencyName": "King County Metro",
+            "from": {
+              "name": "Bus Stop A",
+              "lon": -122.3320,
+              "lat": 47.6100,
+              "vertexType": "TRANSIT",
+              "stopId": "1_12345",
+              "stopCode": "12345"
+            },
+            "to": {
+              "name": "Bus Stop B",
+              "lon": -122.3210,
+              "lat": 47.6150,
+              "vertexType": "TRANSIT",
+              "stopId": "1_67890",
+              "stopCode": "67890"
+            },
+            "legGeometry": {
+              "points": "qp~iF_qs|U~ps|U",
+              "length": 10
+            },
+            "distance": 2000.0,
+            "transitLeg": true,
+            "duration": 480,
+            "realTime": true,
+            "streetNames": null,
+            "pathway": false,
+            "steps": null,
+            "headsign": "University District"
+          },
+          {
+            "startTime": 1715335980000,
+            "endTime": 1715336400000,
+            "mode": "WALK",
+            "routeType": null,
+            "routeColor": null,
+            "routeTextColor": null,
+            "route": null,
+            "agencyName": null,
+            "from": {
+              "name": "Bus Stop B",
+              "lon": -122.3210,
+              "lat": 47.6150,
+              "vertexType": "TRANSIT"
+            },
+            "to": {
+              "name": "Space Needle",
+              "lon": -122.3208,
+              "lat": 47.6154,
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "points": "rp~iF`rs|U",
+              "length": 2
+            },
+            "distance": 250.0,
+            "transitLeg": false,
+            "duration": 420,
+            "realTime": false,
+            "streetNames": ["Broad Street"],
+            "pathway": false,
+            "steps": null,
+            "headsign": null
+          }
+        ]
+      }
+    ]
+  },
+  "error": null
+}

@@ -52,10 +52,11 @@ class MockTask: URLSessionDataTask, @unchecked Sendable {
 
 class MockDataLoader: NSObject, URLDataLoader {
     var mockResponses = [MockDataResponse]()
+    var lastRequest: URLRequest?
 
     let testName: String
 
-    init(testName: String) {
+    init(testName: String = "MockDataLoader") {
         self.testName = testName
     }
 
@@ -71,6 +72,8 @@ class MockDataLoader: NSObject, URLDataLoader {
     }
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        lastRequest = request
+
         guard let response = matchResponse(to: request) else {
             fatalError("\(testName): Missing response to URL: \(request.url!)")
         }
@@ -125,6 +128,15 @@ class MockDataLoader: NSObject, URLDataLoader {
 
     func removeMappedResponses() {
         mockResponses.removeAll()
+    }
+
+    func mockResponse(data: Data, statusCode: Int = 200) {
+        let mockResponse = MockDataResponse(
+            data: data,
+            urlResponse: buildURLResponse(URL: URL(string: "https://mock.example.com")!, statusCode: statusCode),
+            error: nil
+        ) { _ in true }  // Match all requests
+        mock(response: mockResponse)
     }
 
     // MARK: - URL Response

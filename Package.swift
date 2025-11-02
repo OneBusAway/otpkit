@@ -16,7 +16,8 @@ let package = Package(
             targets: ["OTPKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/tevelee/SwiftUI-Flow.git", from: "3.1.0")
+        .package(url: "https://github.com/tevelee/SwiftUI-Flow.git", from: "3.1.0"),
+        .package(url: "https://github.com/nalexn/ViewInspector.git", from: "0.10.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -27,6 +28,13 @@ let package = Package(
                 .product(name: "Flow", package: "SwiftUI-Flow")
             ],
             path: "OTPKit/Sources/OTPKit"
+        ),
+        .testTarget(
+            name: "OTPKitTests",
+            dependencies: [
+                "OTPKit",
+                .product(name: "ViewInspector", package: "ViewInspector")
+            ]
         )
     ],
     swiftLanguageModes: [.v5]

@@ -1,0 +1,29 @@
+{
+  "requestParameters": {
+    "fromPlace": "47.6097,-122.3331",
+    "toPlace": "47.6154,-122.3208",
+    "time": "08:00:00",
+    "date": "2024-05-10",
+    "mode": "TRANSIT,WALK",
+    "arriveBy": "false",
+    "maxWalkDistance": "800",
+    "wheelchair": "false"
+  },
+  "plan": {
+    "date": 1715335200000,
+    "from": {
+      "name": "Seattle Center",
+      "lon": -122.3331,
+      "lat": 47.6097,
+      "vertexType": "NORMAL"
+    },
+    "to": {
+      "name": "Space Needle",
+      "lon": -122.3208,
+      "lat": 47.6154,
+      "vertexType": "NORMAL"
+    },
+    "itineraries": []
+  },
+  "error": null
+}

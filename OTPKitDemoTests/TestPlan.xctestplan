@@ -14,13 +14,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:OTPKit",
-        "identifier" : "OTPKitTests",
-        "name" : "OTPKitTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:OTPKitDemo.xcodeproj",
         "identifier" : "9399D5F92E638C13007D2E0D",
         "name" : "OTPKitDemoTests"

@@ -10,3 +10,4 @@ xcuserdata
 .build
 
 *.xcresult
+coverage-report.json

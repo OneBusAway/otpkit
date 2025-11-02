@@ -1,5 +1,5 @@
 {
-  "originHash" : "754127ca16ed50565f9bb366f5176fc52a591ba2fdb27727ed8e526a67d189a7",
+  "originHash" : "8d09679aef46beb1c689e25c91c152b0616e0a0d3018bfc1a26323d5a3d0b237",
   "pins" : [
     {
       "identity" : "swiftui-flow",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "d227f999b2894ab737ef5786d9b14d02d3e5362e",
         "version" : "3.1.1"
+      }
+    },
+    {
+      "identity" : "viewinspector",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nalexn/ViewInspector.git",
+      "state" : {
+        "revision" : "e9a06346499a3a889165647e3f23f8a7b2609a1c",
+        "version" : "0.10.3"
       }
     }
   ],
