@@ -153,7 +153,7 @@ class OTPDemoViewController: UIViewController {
             guard let self else { return }
             self.removeTripPlanner()
         }
-        let hostingController = PanelHostingController(rootView: view)
+        let hostingController = PanelHostingController(rootView: view, sourceView: self.view)
 
         present(hostingController, animated: true)
 
