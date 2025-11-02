@@ -35,11 +35,14 @@ public extension UISheetPresentationController.Detent.Identifier {
 /// A `UIHostingController` subclass that is meant to host `TripPlannerView` and offers SwiftUI-style sheet
 /// support, complete with a semi-modal experience and a `.tip`-sized detent.
 public final class PanelHostingController<Content: View>: UIHostingController<Content> {
-    public override init(rootView: Content) {
+    public init(rootView: Content, sourceView: UIView) {
         super.init(rootView: rootView)
 
         modalPresentationStyle = .popover
         if let popover = popoverPresentationController {
+            popover.sourceView = sourceView
+            popover.sourceRect = sourceView.frame
+
             let sheet = popover.adaptiveSheetPresentationController
             sheet.detents = [
                 UISheetPresentationController.Detent.custom(identifier: .tip) { _ in 250 },
