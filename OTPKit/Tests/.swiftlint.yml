@@ -1,0 +1,7 @@
+disabled_rules:
+  - file_length
+  - function_body_length
+  - large_tuple
+  - non_optional_string_data_conversion
+  - type_body_length
+
