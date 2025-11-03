@@ -14,7 +14,7 @@ import OSLog
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
-public class TripPlannerViewModel: @preconcurrency ObservableObject {
+public class TripPlannerViewModel: ObservableObject {
     // MARK: - Published Properties
 
     /// Currently active sheet being presented

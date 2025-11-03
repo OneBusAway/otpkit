@@ -101,8 +101,8 @@ struct DirectionsSheetView: View {
 }
 
 #Preview {
-    @State var sheetVisible = true
-    @State var directionSheetDetent = DirectionsSheetView.tipDetent
+    @Previewable @State var sheetVisible = true
+    @Previewable @State var directionSheetDetent = DirectionsSheetView.tipDetent
     let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
 
     VStack {
@@ -117,7 +117,7 @@ struct DirectionsSheetView: View {
 }
 
 #Preview {
-    @State var directionSheetDetent = DirectionsSheetView.tipDetent
+    @Previewable @State var directionSheetDetent = DirectionsSheetView.tipDetent
     let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
     DirectionsSheetView(
         trip: trip, sheetDetent: $directionSheetDetent
