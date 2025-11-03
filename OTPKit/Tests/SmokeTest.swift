@@ -23,7 +23,8 @@ func testFixturesCreateConfiguration() {
 func testFixturesCreatePlace() {
     let place = TestFixtures.makePlace(name: "Test")
     #expect(place.name == "Test")
-    #expect(place.lat == 37.7749)
+    #expect(place.lat == 47.0)
+    #expect(place.lon == -122.0)
 }
 
 @Test("MockMapProvider - tracks addRoute calls")

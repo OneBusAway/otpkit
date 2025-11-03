@@ -18,30 +18,12 @@ The repository contains both a Swift Package (Package.swift) and an Xcode projec
 - **OTP 1.x REST API**: ✅ Fully implemented via `RestAPIService`
 - **OTP 2.x GraphQL API**: ❌ Not yet implemented
 
-## Build Commands
-
-### Build the Swift Package
-```bash
-# Build the OTPKit package
-swift build
-
-# Build for testing
-swift build --build-tests
-```
-
-### Build the Demo App
-```bash
-# Build for iOS Simulator
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator build
-
-# Build on a specific simulator
-xcodebuild -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
-```
+## Tests and Quality
 
 ### Run Tests
 ```bash
-# Run all tests via Xcode project
-xcodebuild test -project OTPKitDemo.xcodeproj -scheme OTPKitDemo -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+# Run all tests via Xcode
+xcodebuild test -scheme OTPKit -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 ### Linting & Code Quality

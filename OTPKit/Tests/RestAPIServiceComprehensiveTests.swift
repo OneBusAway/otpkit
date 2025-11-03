@@ -84,7 +84,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with TripPlanRequest succeeds")
     func fetchPlanWithTripPlanRequestSucceeds() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -108,7 +108,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan includes all query parameters")
     func fetchPlanIncludesAllQueryParameters() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -141,7 +141,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with wheelchair accessible parameter")
     func fetchPlanWithWheelchairAccessible() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -166,7 +166,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with arriveBy parameter")
     func fetchPlanWithArriveBy() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -191,7 +191,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with bike transport mode")
     func fetchPlanWithBikeTransportMode() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -216,7 +216,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with multiple transport modes")
     func fetchPlanWithMultipleTransportModes() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -241,7 +241,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with custom maxWalkDistance")
     func fetchPlanWithCustomMaxWalkDistance() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -268,7 +268,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with empty itineraries")
     func fetchPlanWithEmptyItineraries() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_empty")
+        let fixtureData = Fixtures.loadData(file: "otp_response_empty.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -294,7 +294,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan with OTP error response")
     func fetchPlanWithOTPErrorResponse() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_error")
+        let fixtureData = Fixtures.loadData(file: "otp_response_error.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -409,7 +409,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan succeeds on HTTP 200")
     func fetchPlanSucceedsOnHTTP200() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData, statusCode: 200)
 
         let service = RestAPIService(
@@ -480,7 +480,7 @@ struct RestAPIServiceComprehensiveTests {
     @Test("fetchPlan direct method constructs correct URL")
     func fetchPlanDirectMethodConstructsCorrectURL() async throws {
         let mockLoader = MockDataLoader()
-        let fixtureData = try loadFixture(named: "otp_response_success")
+        let fixtureData = Fixtures.loadData(file: "otp_response_success.json")
         mockLoader.mockResponse(data: fixtureData)
 
         let service = RestAPIService(
@@ -510,13 +510,4 @@ struct RestAPIServiceComprehensiveTests {
         #expect(urlString.contains("wheelchair=false"))
     }
 
-    // MARK: - Helper Methods
-
-    private func loadFixture(named name: String) throws -> Data {
-        let bundle = Bundle(for: Fixtures.self)
-        guard let path = bundle.path(forResource: name, ofType: "json") else {
-            throw NSError(domain: "test", code: -1, userInfo: [NSLocalizedDescriptionKey: "Fixture \(name).json not found"])
-        }
-        return try Data(contentsOf: URL(fileURLWithPath: path))
-    }
 }

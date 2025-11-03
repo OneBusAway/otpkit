@@ -64,6 +64,10 @@ enum TestFixtures {
 
     // MARK: - Simple Fixture Builders
 
+    static func makePlace(name: String = "Test") -> Place {
+        return Place(name: name, lon: -122, lat: 47, vertexType: "TRANSIT")
+    }
+
     static func makeOTPConfiguration(
         serverURL: URL = URL(string: "https://otp.example.com")!,
         enabledModes: [TransportMode] = [.transit, .walk],
