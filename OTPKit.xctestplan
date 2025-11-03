@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "C926FE59-5F29-462E-A77C-D31B9E03AA0A",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPKitTests",
+        "name" : "OTPKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}

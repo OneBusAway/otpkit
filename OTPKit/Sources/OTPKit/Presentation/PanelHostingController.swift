@@ -14,7 +14,7 @@ public extension UIViewController {
     /// - Parameter identifier: The detent identifier, e.g. `.large`, `.medium`, `.tip`.
     ///
     /// This method is only meant to be called on instances of `PanelHostingController`.
-    public func animateToDetentIdentifier(_ identifier: UISheetPresentationController.Detent.Identifier) {
+    func animateToDetentIdentifier(_ identifier: UISheetPresentationController.Detent.Identifier) {
         guard let popover = popoverPresentationController else {
             return
         }

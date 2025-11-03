@@ -35,7 +35,12 @@ class Fixtures {
     /// Returns the path to the specified file in the test bundle.
     /// - Parameter fileName: The file name, e.g. "regions.json"
     class func path(to fileName: String) -> String {
-        testBundle.path(forResource: fileName, ofType: nil)!
+        // First try to find the file in the Fixtures subdirectory
+        if let path = testBundle.path(forResource: fileName, ofType: nil, inDirectory: "Fixtures") {
+            return path
+        }
+        // Fall back to root of bundle for backwards compatibility
+        return testBundle.path(forResource: fileName, ofType: nil)!
     }
 
     /// Encodes and decodes the provided `Codable` object. Useful for testing roundtripping.

@@ -1,0 +1,20 @@
+{
+  "requestParameters": {
+    "fromPlace": "47.6097,-122.3331",
+    "toPlace": "47.6154,-122.3208",
+    "time": "08:00:00",
+    "date": "2024-05-10",
+    "mode": "TRANSIT,WALK",
+    "arriveBy": "false",
+    "maxWalkDistance": "800",
+    "wheelchair": "false"
+  },
+  "plan": null,
+  "error": {
+    "id": 404,
+    "msg": "Trip not found",
+    "message": "No trip found that satisfies the requested parameters.",
+    "missing": [],
+    "noPath": true
+  }
+}

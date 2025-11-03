@@ -44,18 +44,16 @@ jobs:
     # Build
     - name: Build OTPKit
       run: xcodebuild clean build-for-testing
-        -scheme 'OTPKitDemo'
+        -scheme OTPKit
         -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
         -quiet
 
     # Unit Test
     - name: OTPKit Unit Test
       run: xcodebuild test-without-building
-        -only-testing:OTPKitDemoTests
-        -project 'OTPKitDemo.xcodeproj'
-        -scheme 'OTPKitDemo'
+        -scheme OTPKit
         -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-        -resultBundlePath OTPKitDemoTests.xcresult
+        -resultBundlePath OTPKitTests.xcresult
         -quiet
 
     # Upload results

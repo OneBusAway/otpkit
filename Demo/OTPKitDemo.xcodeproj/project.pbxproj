@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		938180AC2E63A52B001B363B /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938180AB2E63A52B001B363B /* OTPKit */; };
+		938B155A2EB85A7100A134B0 /* OTPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938B15592EB85A7100A134B0 /* OTPKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,18 +23,12 @@
 /* Begin PBXFileReference section */
 		9399D5EC2E638C12007D2E0D /* OTPKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9399D5FA2E638C13007D2E0D /* OTPKitDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTPKitDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9399D6172E638C31007D2E0D /* OTPKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OTPKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9399D5EE2E638C12007D2E0D /* OTPKitDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = OTPKitDemo;
-			sourceTree = "<group>";
-		};
-		9399D5FD2E638C13007D2E0D /* OTPKitDemoTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = OTPKitDemoTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -44,7 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				938180AC2E63A52B001B363B /* OTPKit in Frameworks */,
+				938B155A2EB85A7100A134B0 /* OTPKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,9 +62,7 @@
 		9399D5E32E638C12007D2E0D = {
 			isa = PBXGroup;
 			children = (
-				9399D6172E638C31007D2E0D /* OTPKit */,
 				9399D5EE2E638C12007D2E0D /* OTPKitDemo */,
-				9399D5FD2E638C13007D2E0D /* OTPKitDemoTests */,
 				938180AA2E63A52B001B363B /* Frameworks */,
 				9399D5ED2E638C12007D2E0D /* Products */,
 			);
@@ -105,7 +97,7 @@
 			);
 			name = OTPKitDemo;
 			packageProductDependencies = (
-				938180AB2E63A52B001B363B /* OTPKit */,
+				938B15592EB85A7100A134B0 /* OTPKit */,
 			);
 			productName = OTPKitDemo;
 			productReference = 9399D5EC2E638C12007D2E0D /* OTPKitDemo.app */;
@@ -123,9 +115,6 @@
 			);
 			dependencies = (
 				9399D5FC2E638C13007D2E0D /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				9399D5FD2E638C13007D2E0D /* OTPKitDemoTests */,
 			);
 			name = OTPKitDemoTests;
 			packageProductDependencies = (
@@ -163,7 +152,7 @@
 			mainGroup = 9399D5E32E638C12007D2E0D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				9399D61A2E638F00007D2E0D /* XCLocalSwiftPackageReference "." */,
+				938B15582EB85A7100A134B0 /* XCLocalSwiftPackageReference "../../otpkit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9399D5ED2E638C12007D2E0D /* Products */;
@@ -494,16 +483,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		9399D61A2E638F00007D2E0D /* XCLocalSwiftPackageReference "." */ = {
+		938B15582EB85A7100A134B0 /* XCLocalSwiftPackageReference "../../otpkit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = .;
+			relativePath = ../../otpkit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		938180AB2E63A52B001B363B /* OTPKit */ = {
+		938B15592EB85A7100A134B0 /* OTPKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9399D61A2E638F00007D2E0D /* XCLocalSwiftPackageReference "." */;
 			productName = OTPKit;
 		};
 /* End XCSwiftPackageProductDependency section */
