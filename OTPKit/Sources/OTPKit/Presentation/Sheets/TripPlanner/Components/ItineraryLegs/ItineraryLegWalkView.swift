@@ -21,7 +21,7 @@ struct ItineraryLegWalkView: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(Color.gray.opacity(0.2))
-        .foregroundStyle(.gray)
+        .foregroundStyle(.primary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .frame(height: 40)
     }

@@ -26,7 +26,7 @@ struct ItineraryLegVehicleView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Image(systemName: imageName)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
         }.frame(minHeight: 40)
     }
 
@@ -59,7 +59,7 @@ struct ItineraryLegVehicleView: View {
             return color
         }
 
-        return Color(.systemFill)
+        return Color(.darkGray)
     }
 }
 
