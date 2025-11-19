@@ -302,28 +302,30 @@ public class MapCoordinator: ObservableObject {
     }
 
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
-        // Add station annotation for "from" location if it's a transit stop
+        // Only add embark/debark markers for transit legs
+        guard leg.transitLeg == true else { return }
+        // Add annotation for "from" location (embark point)
         if shouldShowStation(for: leg.from) {
             mapProvider.addAnnotation(
                 coordinate: CLLocationCoordinate2D(latitude: leg.from.lat, longitude: leg.from.lon),
                 title: leg.from.name,
                 subtitle: nil,
                 identifier: "station_from_\(index)",
-                type: .transitStop,
+                type: .embark,
                 routeName: nil,
                 routeBackgroundColor: nil,
                 routeTextColor: nil
             )
         }
 
-        // Add "to" location only for the last leg
-        if index == totalLegs - 1 && shouldShowStation(for: leg.to) {
+        // Add annotation for "to" location (debark point)
+        if shouldShowStation(for: leg.to) {
             mapProvider.addAnnotation(
                 coordinate: CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon),
                 title: leg.to.name,
                 subtitle: nil,
                 identifier: "station_to_\(index)",
-                type: .transitStop,
+                type: .debark,
                 routeName: nil,
                 routeBackgroundColor: nil,
                 routeTextColor: nil
