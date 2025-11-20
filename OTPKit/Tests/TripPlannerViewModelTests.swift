@@ -29,6 +29,12 @@ struct TripPlannerViewModelTests {
         enabledModes: [TransportMode] = [.transit, .walk, .bike],
         mockAPIService: TestFixtures.MockAPIService? = nil
     ) -> TripPlannerViewModel {
+        // Clear UserDefaults before each test to ensure clean state
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "OTPKit.TripOptions.wheelchairAccessible")
+        defaults.removeObject(forKey: "OTPKit.TripOptions.maxWalkingDistance")
+        defaults.removeObject(forKey: "OTPKit.TripOptions.routePreference")
+
         let config = OTPConfiguration(
             otpServerURL: URL(string: "https://otp.example.com")!,
             enabledTransportModes: enabledModes

@@ -33,16 +33,34 @@ public class TripPlannerViewModel: ObservableObject {
     // MARK: - Advanced Options
 
     /// Whether the route should be wheelchair accessible
-    @Published var isWheelchairAccessible: Bool = false
+    @Published var isWheelchairAccessible: Bool = false {
+        didSet {
+            if isInitializationComplete {
+                saveTripOptions()
+            }
+        }
+    }
 
     /// Maximum walking distance preference
-    @Published var maxWalkingDistance: WalkingDistance = .oneMile
+    @Published var maxWalkingDistance: WalkingDistance = .oneMile {
+        didSet {
+            if isInitializationComplete {
+                saveTripOptions()
+            }
+        }
+    }
 
     /// Time preference (leave now, depart at, arrive by)
     @Published var timePreference: TimePreference = .leaveNow
 
     /// Route optimization preference
-    @Published var routePreference: RoutePreference = .fastestTrip
+    @Published var routePreference: RoutePreference = .fastestTrip {
+        didSet {
+            if isInitializationComplete {
+                saveTripOptions()
+            }
+        }
+    }
 
     /// Loading state for API calls
     @Published var isLoading = false
@@ -73,6 +91,9 @@ public class TripPlannerViewModel: ObservableObject {
     /// NotificationCenter object for sending notifications.
     private let notificationCenter: NotificationCenter
 
+    /// Flag to prevent saving during initialization
+    private var isInitializationComplete = false
+
     /// Initialize with OTP configuration, API service, and map coordinator
     init(
         config: OTPConfiguration,
@@ -87,6 +108,16 @@ public class TripPlannerViewModel: ObservableObject {
 
         // Set the first enabled transport mode as default, fallback to transit
         self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
+
+        // Load saved trip options from UserDefaults
+        if let savedOptions = UserDefaultsServices.shared.loadTripOptions() {
+            self.isWheelchairAccessible = savedOptions.isWheelchairAccessible
+            self.maxWalkingDistance = savedOptions.maxWalkingDistance
+            self.routePreference = savedOptions.routePreference
+        }
+
+        // Mark initialization as complete to enable saving
+        self.isInitializationComplete = true
     }
 
     /// Sets the current location as the origin for trip planning
@@ -300,6 +331,22 @@ public class TripPlannerViewModel: ObservableObject {
         notificationCenter.post(name: Notifications.itineraryPreviewStarted, object: nil)
     }
 
+    // MARK: - Persistence
+
+    /// Saves current trip options to UserDefaults
+    /// Uses background task to avoid blocking the main thread
+    private func saveTripOptions() {
+        let options = TripOptions(
+            isWheelchairAccessible: isWheelchairAccessible,
+            maxWalkingDistance: maxWalkingDistance,
+            routePreference: routePreference
+        )
+        // UserDefaults is thread-safe, use background task to avoid blocking main thread
+        Task.detached(priority: .background) {
+            UserDefaultsServices.shared.saveTripOptions(options)
+        }
+    }
+
     // MARK: - Reset Functionality
 
     /// Reset all trip planner state to initial values
@@ -327,13 +374,22 @@ public class TripPlannerViewModel: ObservableObject {
         // Reset to default transport mode
         selectedTransportMode = config.enabledTransportModes.first ?? .transit
 
-        // Reset advanced options to defaults
-        isWheelchairAccessible = false
-        maxWalkingDistance = .oneMile
+        // Reset time preferences (not persisted)
         timePreference = .leaveNow
-        routePreference = .fastestTrip
         departureTime = nil
         departureDate = nil
+
+        // Reload persisted options from UserDefaults (or use factory defaults if none saved)
+        if let savedOptions = UserDefaultsServices.shared.loadTripOptions() {
+            isWheelchairAccessible = savedOptions.isWheelchairAccessible
+            maxWalkingDistance = savedOptions.maxWalkingDistance
+            routePreference = savedOptions.routePreference
+        } else {
+            // No saved options, use factory defaults
+            isWheelchairAccessible = false
+            maxWalkingDistance = .oneMile
+            routePreference = .fastestTrip
+        }
 
         // Dismiss any active sheets
         activeSheet = nil
