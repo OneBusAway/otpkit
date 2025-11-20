@@ -177,10 +177,77 @@ public final class UserDefaultsServices {
         }
     }
 
+    // MARK: - Trip Options Data
+
+    private let wheelchairAccessibleKey = "OTPKit.TripOptions.wheelchairAccessible"
+    private let maxWalkingDistanceKey = "OTPKit.TripOptions.maxWalkingDistance"
+    private let routePreferenceKey = "OTPKit.TripOptions.routePreference"
+
+    /// Loads saved trip options from UserDefaults
+    /// Returns nil if no saved options exist
+    func loadTripOptions() -> TripOptions? {
+        // Check if any key exists, if not, return nil (first launch)
+        guard userDefaults.object(forKey: wheelchairAccessibleKey) != nil ||
+              userDefaults.object(forKey: maxWalkingDistanceKey) != nil ||
+              userDefaults.object(forKey: routePreferenceKey) != nil else {
+            return nil
+        }
+
+        let wheelchairAccessible = userDefaults.bool(forKey: wheelchairAccessibleKey)
+
+        let walkingDistanceRawValue = userDefaults.integer(forKey: maxWalkingDistanceKey)
+        let walkingDistance = WalkingDistance(rawValue: walkingDistanceRawValue) ?? .oneMile
+
+        let routePreferenceRawValue = userDefaults.string(forKey: routePreferenceKey) ?? RoutePreference.fastestTrip.rawValue
+        let routePreference = RoutePreference(rawValue: routePreferenceRawValue) ?? .fastestTrip
+
+        return TripOptions(
+            isWheelchairAccessible: wheelchairAccessible,
+            maxWalkingDistance: walkingDistance,
+            routePreference: routePreference
+        )
+    }
+
+    /// Saves trip options to UserDefaults
+    func saveTripOptions(_ options: TripOptions) {
+        userDefaults.set(options.isWheelchairAccessible, forKey: wheelchairAccessibleKey)
+        userDefaults.set(options.maxWalkingDistance.rawValue, forKey: maxWalkingDistanceKey)
+        userDefaults.set(options.routePreference.rawValue, forKey: routePreferenceKey)
+    }
+
     // MARK: - User Defaults Utils
 
     func deleteAllObjects() {
         userDefaults.removeObject(forKey: savedLocationsKey)
         userDefaults.removeObject(forKey: recentLocationsKey)
+        userDefaults.removeObject(forKey: wheelchairAccessibleKey)
+        userDefaults.removeObject(forKey: maxWalkingDistanceKey)
+        userDefaults.removeObject(forKey: routePreferenceKey)
+    }
+}
+
+// MARK: - Trip Options Model
+
+/// Represents the persisted trip planning options.
+/// These options are saved to UserDefaults and restored on app launch.
+/// Time/date preferences are intentionally not persisted.
+public struct TripOptions: Sendable {
+    /// Whether routes should be wheelchair accessible
+    public let isWheelchairAccessible: Bool
+
+    /// Maximum walking distance for trip segments
+    public let maxWalkingDistance: WalkingDistance
+
+    /// Route optimization preference (fastest vs fewest transfers)
+    public let routePreference: RoutePreference
+
+    public init(
+        isWheelchairAccessible: Bool,
+        maxWalkingDistance: WalkingDistance,
+        routePreference: RoutePreference
+    ) {
+        self.isWheelchairAccessible = isWheelchairAccessible
+        self.maxWalkingDistance = maxWalkingDistance
+        self.routePreference = routePreference
     }
 }

@@ -17,6 +17,11 @@ struct TopControlsOverlay: View {
     var body: some View {
         VStack(spacing: 20) {
             routeInputCard
+
+            TripOptionsSummaryView {
+                tripPlannerVM.presentSheet(.advancedOptions)
+            }
+
             actionButtons
         }
         .padding(.horizontal, 16)
