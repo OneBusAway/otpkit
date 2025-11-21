@@ -93,6 +93,9 @@ public struct Leg: Codable, Hashable {
     /// Optional head sign of the transit legs, bus and trams
     public let headsign: String?
 
+    /// Optional list of intermediate stops along this transit leg
+    public let intermediateStops: [Place]?
+
     /// Merges `Itinerary` `Leg`s that are part of the same route on the same vehicle.
     /// - Parameters:
     ///   - leg1: The earlier leg
@@ -118,7 +121,8 @@ public struct Leg: Codable, Hashable {
             streetNames: leg1.streetNames,
             pathway: leg1.pathway,
             steps: leg1.steps,
-            headsign: leg1.headsign
+            headsign: leg1.headsign,
+            intermediateStops: leg1.intermediateStops
         )
     }
 

@@ -74,7 +74,8 @@ public actor RestAPIService: APIService {
             .init(name: "mode", value: mode),
             .init(name: "arriveBy", value: arriveBy ? "true" : "false"),
             .init(name: "maxWalkDistance", value: String(maxWalkDistance)),
-            .init(name: "wheelchair", value: wheelchair ? "true" : "false")
+            .init(name: "wheelchair", value: wheelchair ? "true" : "false"),
+            .init(name: "showIntermediateStops", value: "true")
         ]
 
         let request = URLRequest(url: components.url!)

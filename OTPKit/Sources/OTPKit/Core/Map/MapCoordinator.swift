@@ -14,19 +14,14 @@ import OSLog
 /// Coordinates all map operations between OTPKit and the external map provider
 /// This class manages routes, annotations, and user interactions with the map
 @MainActor
-public class MapCoordinator: ObservableObject {
-
+public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_body_length
     let originIdentifier = "origin"
     let destinationIdentifier = "destination"
-
     // MARK: - Properties
-
     private let mapProvider: OTPMapProvider
     private let locationManager = LocationManager.shared
-
     /// Currently displayed itinerary on the map
     @Published public var displayedItinerary: Itinerary?
-
     /// Whether a route is currently being displayed
     @Published public var isShowingRoute: Bool = false
 
@@ -331,14 +326,26 @@ public class MapCoordinator: ObservableObject {
                 routeTextColor: nil
             )
         }
+        // Add intermediate stop markers
+            addIntermediateStopAnnotations(for: leg, index: index)
     }
-
+    private func addIntermediateStopAnnotations(for leg: Leg, index: Int) {
+        guard leg.transitLeg == true, let stops = leg.intermediateStops, !stops.isEmpty else { return }
+        let routeColor = leg.routeColor.flatMap { UIColor(hex: $0) }
+        for (stopIndex, stop) in stops.enumerated() {
+            mapProvider.addAnnotation(
+                coordinate: CLLocationCoordinate2D(latitude: stop.lat, longitude: stop.lon),
+                title: stop.name, subtitle: nil,
+                identifier: "intermediate_\(index)_\(stopIndex)",
+                type: .intermediateStop, routeName: nil,
+                routeBackgroundColor: routeColor, routeTextColor: nil)
+        }
+    }
     private func shouldShowStation(for place: Place) -> Bool {
         return place.vertexType == "STOP" ||
                place.vertexType == "STATION" ||
                place.stopId != nil
     }
-
     private func fitRoutesInView(itinerary: Itinerary) {
         Logger.main.debug("fitRoutesInView: Attempting to fit \(itinerary.legs.count) legs")
 
@@ -346,11 +353,9 @@ public class MapCoordinator: ObservableObject {
             Logger.main.warning("fitRoutesInView: No bounding box available")
             return
         }
-
         // swiftlint:disable line_length
         Logger.main.debug("fitRoutesInView: Setting visible rect - (\(mapRect.origin.x), \(mapRect.origin.y)), size: (\(mapRect.size.width), \(mapRect.size.height))")
         // swiftlint:enable line_length
-
         let padding = UIEdgeInsets(
             top: Constants.mapPadding,
             left: Constants.mapPadding,
@@ -362,13 +367,11 @@ public class MapCoordinator: ObservableObject {
     }
 
     // MARK: - Event Handlers
-
     private func handleMapTap(at coordinate: CLLocationCoordinate2D) {
         // This will be connected to the view model for location selection
         // For now, we'll just update the current region
         currentRegion = mapProvider.getCurrentRegion()
     }
-
     private func handleAnnotationSelected(identifier: String) {
         // Handle annotation selection if needed
         Logger.main.info("Annotation selected: \(identifier)")
