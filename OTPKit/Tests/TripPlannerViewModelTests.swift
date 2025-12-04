@@ -450,7 +450,7 @@ struct TripPlannerViewModelTests {
     func resetTripPlannerClearsAllState() {
         let viewModel = createViewModel()
 
-        // Set up some state
+        // Set up some state (trip-specific, not persisted preferences)
         viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
         viewModel.selectedDestination = TestHelpers.location(title: "Destination")
         viewModel.tripPlanResponse = TestHelpers.response(with: [])
@@ -459,11 +459,19 @@ struct TripPlannerViewModelTests {
         viewModel.showingError = true
         viewModel.isLoading = true
         viewModel.selectedTransportMode = .bike
-        viewModel.isWheelchairAccessible = true
-        viewModel.maxWalkingDistance = .halfMile
         viewModel.timePreference = .arriveBy
         viewModel.departureTime = Date()
         viewModel.departureDate = Date()
+        // Note: Not modifying isWheelchairAccessible/maxWalkingDistance/routePreference
+        // as these are persisted to UserDefaults asynchronously, which would create
+        // a race condition with resetTripPlanner()'s reload from UserDefaults
+
+        // Clear UserDefaults again right before reset to avoid race conditions
+        // with async saves from other tests
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "OTPKit.TripOptions.wheelchairAccessible")
+        defaults.removeObject(forKey: "OTPKit.TripOptions.maxWalkingDistance")
+        defaults.removeObject(forKey: "OTPKit.TripOptions.routePreference")
 
         // Reset
         viewModel.resetTripPlanner()
