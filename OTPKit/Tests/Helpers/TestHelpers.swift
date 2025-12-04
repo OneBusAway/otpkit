@@ -47,7 +47,8 @@ enum TestHelpers {
             streetNames: nil,
             pathway: nil,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         return Itinerary(

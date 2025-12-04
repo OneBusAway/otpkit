@@ -50,7 +50,8 @@ struct ItineraryTests {
                 streetNames: nil,
                 pathway: false,
                 steps: nil,
-                headsign: nil
+                headsign: nil,
+                intermediateStops: nil
             )
         }
 
@@ -268,7 +269,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let longWalk = Leg(
@@ -290,7 +292,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let itinerary = Itinerary(
@@ -334,7 +337,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: "Downtown"
+            headsign: "Downtown",
+            intermediateStops: nil
         )
 
         let busLeg2 = Leg(
@@ -356,7 +360,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: "Downtown"
+            headsign: "Downtown",
+            intermediateStops: nil
         )
 
         let itinerary = Itinerary(
@@ -408,7 +413,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let busLeg2 = Leg(
@@ -430,7 +436,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let itinerary = Itinerary(
@@ -475,7 +482,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let bus1 = Leg(
@@ -497,7 +505,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let bus2 = Leg(
@@ -519,7 +528,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let itinerary = Itinerary(
@@ -565,7 +575,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let leg2 = Leg(
@@ -587,7 +598,8 @@ struct ItineraryTests {
             streetNames: nil,
             pathway: false,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
 
         let itinerary = Itinerary(

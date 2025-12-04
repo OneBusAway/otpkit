@@ -278,7 +278,12 @@ extension MKMapViewAdapter: MKMapViewDelegate {
         }
 
         // Customize based on type
-        annotationView?.markerTintColor = UIColor(otpAnnotation.annotationType.color)
+        if let routeColor = otpAnnotation.routeBackgroundColor {
+            annotationView?.markerTintColor = routeColor
+        } else {
+            annotationView?.markerTintColor = UIColor(otpAnnotation.annotationType.color)
+        }
+
         annotationView?.glyphImage = UIImage(systemName: otpAnnotation.annotationType.systemImageName)
 
         return annotationView

@@ -137,8 +137,9 @@ public enum OTPAnnotationType {
     case currentLocation
     case searchResult
     case routeLegend
-    case embark        // NEW: Where to board transit
-    case debark        // NEW: Where to get off transit
+    case embark
+    case debark
+    case intermediateStop
 
     /// Returns the appropriate color for this annotation type
     public var color: Color {
@@ -156,9 +157,11 @@ public enum OTPAnnotationType {
         case .searchResult:
             return .gray
         case .embark:
-            return .blue      // NEW: Blue for boarding (like Apple Maps)
+            return .blue
         case .debark:
-            return .orange    // NEW: Orange for exit (like Apple Maps)
+            return .orange
+        case .intermediateStop:
+            return .gray
         case .routeLegend:
             return .clear // Custom view will handle coloring
         }
@@ -176,15 +179,17 @@ public enum OTPAnnotationType {
         case .transitStation:
             return "tram.fill"
         case .embark:
-            return "arrow.up.circle.fill"        // NEW: Upward arrow for boarding
+            return "arrow.up.circle.fill"
         case .debark:
-            return "arrow.down.circle.fill"      // NEW: Downward arrow for exiting
+            return "arrow.down.circle.fill"
         case .waypoint:
             return "flag.fill"
         case .currentLocation:
             return "location.fill"
         case .searchResult:
             return "magnifyingglass"
+        case .intermediateStop:
+            return "circle.fill"
         case .routeLegend:
             return "" // Custom view will handle display
         }

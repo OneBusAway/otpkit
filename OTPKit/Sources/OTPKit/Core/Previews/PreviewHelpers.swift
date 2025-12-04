@@ -106,7 +106,8 @@ class PreviewHelpers {
             streetNames: nil,
             pathway: nil,
             steps: nil,
-            headsign: nil
+            headsign: nil,
+            intermediateStops: nil
         )
     }
 
@@ -130,7 +131,8 @@ class PreviewHelpers {
             streetNames: nil,
             pathway: nil,
             steps: nil,
-            headsign: "woot"
+            headsign: "woot",
+            intermediateStops: nil
         )
     }
 
