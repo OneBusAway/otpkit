@@ -241,13 +241,13 @@ extension MKMapViewAdapter: MKMapViewDelegate {
     fileprivate func buildRouteLegendAnnotationView(_ mapView: MKMapView, _ annotation: any MKAnnotation, _ otpAnnotation: OTPPointAnnotation) -> MKAnnotationView? {
         let identifier = "RouteNameAnnotation"
         var routeView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? RouteNameAnnotationView
-        
+
         if routeView == nil {
             routeView = RouteNameAnnotationView(annotation: annotation, reuseIdentifier: identifier)
         } else {
             routeView?.annotation = annotation
         }
-        
+
         if let routeName = otpAnnotation.routeName {
             routeView?.configure(
                 routeName: routeName,
@@ -255,32 +255,32 @@ extension MKMapViewAdapter: MKMapViewDelegate {
                 textColor: otpAnnotation.routeTextColor
             )
         }
-        
+
         return routeView
     }
-    
+
     fileprivate func buildIntermediateStopAnnotationView(_ mapView: MKMapView, _ annotation: any MKAnnotation, _ otpAnnotation: OTPPointAnnotation) -> MKAnnotationView? {
         let identifier = "IntermediateStopAnnotation"
         var dotView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
         as? IntermediateStopAnnotationView
-        
+
         if dotView == nil {
             dotView = IntermediateStopAnnotationView(annotation: annotation,
                                                      reuseIdentifier: identifier)
         } else {
             dotView?.annotation = annotation
         }
-        
+
         dotView?.configure(title: otpAnnotation.title,
                            borderColor: otpAnnotation.routeBackgroundColor)
-        
+
         // Set initial label visibility based on current zoom level
         let showLabels = mapView.region.span.latitudeDelta < intermediateStopLabelZoomThreshold
         dotView?.updateLabelVisibility(showLabel: showLabels)
-        
+
         return dotView
     }
-    
+
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // Don't customize user location
         if annotation is MKUserLocation {
