@@ -13,6 +13,8 @@ class IntermediateStopAnnotationView: MKAnnotationView {
     private let dotView = UIView()
     private let label = UILabel()
     private let dotSize: CGFloat = 10
+    private var currentTitle: String?
+    private var currentBorderColor: UIColor?
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
@@ -27,24 +29,45 @@ class IntermediateStopAnnotationView: MKAnnotationView {
     private func setupView() {
         canShowCallout = false
 
-        // Setup dot
         dotView.backgroundColor = .white
         dotView.layer.cornerRadius = dotSize / 2
         dotView.layer.borderWidth = 2
         dotView.layer.borderColor = UIColor.gray.cgColor
         addSubview(dotView)
 
-        // Setup label - dark gray on white shadow (Apple Maps style)
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .darkGray
-        label.shadowColor = .white
-        label.shadowOffset = CGSize(width: 1, height: 1)
         addSubview(label)
     }
 
+    private func updateLabelColors() {
+        guard let title = currentTitle else { return }
+
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+        let foregroundColor = isDarkMode
+            ? UIColor.white.withAlphaComponent(0.9)
+            : UIColor.black.withAlphaComponent(0.9)
+        let strokeColor = isDarkMode ? UIColor.black : UIColor.white
+
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont(name: "HelveticaNeue-CondensedBold", size: 15) as Any,
+            .foregroundColor: foregroundColor,
+            .strokeColor: strokeColor,
+            .strokeWidth: -4.0  // Negative = fill + stroke
+        ]
+        label.attributedText = NSAttributedString(string: title, attributes: attributes)
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateLabelColors()
+        }
+    }
+
     func configure(title: String?, borderColor: UIColor?) {
+        currentTitle = title
+        currentBorderColor = borderColor
         dotView.layer.borderColor = (borderColor ?? .gray).cgColor
-        label.text = title
+        updateLabelColors()
         label.sizeToFit()
 
         // Layout: dot on left, label to the right with spacing
@@ -77,4 +100,54 @@ class IntermediateStopAnnotationView: MKAnnotationView {
             centerOffset = CGPoint(x: 0, y: 0)
         }
     }
+}
+
+// MARK: - Preview
+
+import SwiftUI
+
+#Preview("Light Mode") {
+    IntermediateStopAnnotationPreview(
+        title: "24th Ave E & E McGraw St",
+        borderColor: .orange
+    )
+    .preferredColorScheme(.light)
+}
+
+#Preview("Dark Mode") {
+    IntermediateStopAnnotationPreview(
+        title: "24th Ave E & E McGraw St",
+        borderColor: .orange
+    )
+    .preferredColorScheme(.dark)
+}
+
+#Preview("Dot Only") {
+    IntermediateStopAnnotationPreview(
+        title: "24th Ave E & E McGraw St",
+        borderColor: .blue,
+        showLabel: false
+    )
+}
+
+private struct IntermediateStopAnnotationPreview: UIViewRepresentable {
+    let title: String
+    let borderColor: UIColor
+    var showLabel: Bool = true
+
+    func makeUIView(context: Context) -> UIView {
+        let container = UIView()
+        container.backgroundColor = .systemBackground
+
+        let annotationView = IntermediateStopAnnotationView(annotation: nil, reuseIdentifier: nil)
+        annotationView.configure(title: title, borderColor: borderColor)
+        annotationView.updateLabelVisibility(showLabel: showLabel)
+
+        container.addSubview(annotationView)
+        annotationView.center = CGPoint(x: 150, y: 30)
+
+        return container
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
 }
