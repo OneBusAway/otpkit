@@ -22,6 +22,10 @@ public class MKMapViewAdapter: NSObject, OTPMapProvider {
     private var tapHandler: ((CLLocationCoordinate2D) -> Void)?
     private var annotationSelectedHandler: ((String) -> Void)?
 
+    /// Zoom threshold for showing intermediate stop labels (latitudeDelta)
+    /// Labels are shown when zoomed in closer than this value
+    private let intermediateStopLabelZoomThreshold: Double = 0.02
+
     // MARK: - Initialization
 
     /// Creates an adapter for the provided MKMapView
@@ -234,6 +238,49 @@ extension MKMapViewAdapter: MKMapViewDelegate {
         return MKOverlayRenderer(overlay: overlay)
     }
 
+    fileprivate func buildRouteLegendAnnotationView(_ mapView: MKMapView, _ annotation: any MKAnnotation, _ otpAnnotation: OTPPointAnnotation) -> MKAnnotationView? {
+        let identifier = "RouteNameAnnotation"
+        var routeView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? RouteNameAnnotationView
+
+        if routeView == nil {
+            routeView = RouteNameAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+        } else {
+            routeView?.annotation = annotation
+        }
+
+        if let routeName = otpAnnotation.routeName {
+            routeView?.configure(
+                routeName: routeName,
+                backgroundColor: otpAnnotation.routeBackgroundColor,
+                textColor: otpAnnotation.routeTextColor
+            )
+        }
+
+        return routeView
+    }
+
+    fileprivate func buildIntermediateStopAnnotationView(_ mapView: MKMapView, _ annotation: any MKAnnotation, _ otpAnnotation: OTPPointAnnotation) -> MKAnnotationView? {
+        let identifier = "IntermediateStopAnnotation"
+        var dotView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        as? IntermediateStopAnnotationView
+
+        if dotView == nil {
+            dotView = IntermediateStopAnnotationView(annotation: annotation,
+                                                     reuseIdentifier: identifier)
+        } else {
+            dotView?.annotation = annotation
+        }
+
+        dotView?.configure(title: otpAnnotation.title,
+                           borderColor: otpAnnotation.routeBackgroundColor)
+
+        // Set initial label visibility based on current zoom level
+        let showLabels = mapView.region.span.latitudeDelta < intermediateStopLabelZoomThreshold
+        dotView?.updateLabelVisibility(showLabel: showLabels)
+
+        return dotView
+    }
+
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // Don't customize user location
         if annotation is MKUserLocation {
@@ -246,24 +293,12 @@ extension MKMapViewAdapter: MKMapViewDelegate {
 
         // Use custom view for route legend annotations
         if otpAnnotation.annotationType == .routeLegend {
-            let identifier = "RouteNameAnnotation"
-            var routeView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? RouteNameAnnotationView
+            return buildRouteLegendAnnotationView(mapView, annotation, otpAnnotation)
+        }
 
-            if routeView == nil {
-                routeView = RouteNameAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            } else {
-                routeView?.annotation = annotation
-            }
-
-            if let routeName = otpAnnotation.routeName {
-                routeView?.configure(
-                    routeName: routeName,
-                    backgroundColor: otpAnnotation.routeBackgroundColor,
-                    textColor: otpAnnotation.routeTextColor
-                )
-            }
-
-            return routeView
+        // Use small dot view for intermediate stop annotations
+        if otpAnnotation.annotationType == .intermediateStop {
+            return buildIntermediateStopAnnotationView(mapView, annotation, otpAnnotation)
         }
 
         // Use standard marker view for other annotation types
@@ -292,6 +327,16 @@ extension MKMapViewAdapter: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let otpAnnotation = view.annotation as? OTPPointAnnotation else { return }
         annotationSelectedHandler?(otpAnnotation.identifier)
+    }
+
+    public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let showLabels = mapView.region.span.latitudeDelta < intermediateStopLabelZoomThreshold
+
+        for annotation in mapView.annotations {
+            if let view = mapView.view(for: annotation) as? IntermediateStopAnnotationView {
+                view.updateLabelVisibility(showLabel: showLabels)
+            }
+        }
     }
 }
 
