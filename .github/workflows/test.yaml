@@ -39,7 +39,11 @@ jobs:
           ${{ runner.os }}-spm-
 
     - name: Switch Xcode
-      run: sudo xcode-select -switch /Applications/Xcode_26.0.app
+      run: sudo xcode-select -switch /Applications/Xcode_26.2.app
+
+    - name: List Available Simulators
+      run: |
+        xcrun simctl list devices
 
     # Build
     - name: Build OTPKit
@@ -54,7 +58,6 @@ jobs:
         -scheme OTPKit
         -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
         -resultBundlePath OTPKitTests.xcresult
-        -quiet
 
     # Upload results
     - uses: kishikawakatsumi/xcresulttool@v1.7.0
@@ -62,5 +65,5 @@ jobs:
       with:
         show-passed-tests: false    # Avoid truncation of annotations by GitHub by omitting succeeding tests.
         path: |
-          OTPKitDemoTests.xcresult
+          OTPKitTests.xcresult
       if: success() || failure()
