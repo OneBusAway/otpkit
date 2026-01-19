@@ -35,10 +35,7 @@ struct TripPlannerViewModelTests {
         defaults.removeObject(forKey: "OTPKit.TripOptions.maxWalkingDistance")
         defaults.removeObject(forKey: "OTPKit.TripOptions.routePreference")
 
-        let config = OTPConfiguration(
-            otpServerURL: URL(string: "https://otp.example.com")!,
-            enabledTransportModes: enabledModes
-        )
+        let config = TestFixtures.makeOTPConfiguration(enabledModes: enabledModes)
 
         let apiService = mockAPIService ?? TestFixtures.MockAPIService()
         let mapProvider = MockMapProvider()

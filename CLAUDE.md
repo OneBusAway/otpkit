@@ -156,22 +156,31 @@ func testFetchPlan() async throws {
 ### Basic Setup
 ```swift
 import OTPKit
+import MapKit
 
 // 1. Create your map view (OTPKit doesn't provide one)
 let mapView = MKMapView()
 let mapProvider = MKMapViewAdapter(mapView: mapView)
 
-// 2. Create configuration
+// 2. Define the search region for location suggestions
+let searchRegion = MKCoordinateRegion(
+    center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+    latitudinalMeters: 50000,
+    longitudinalMeters: 50000
+)
+
+// 3. Create configuration with required search region
 let config = OTPConfiguration(
     otpServerURL: URL(string: "https://otp.example.com")!,
     enabledTransportModes: [.transit, .walk, .bike],
-    themeConfiguration: OTPThemeConfiguration(primaryColor: .blue)
+    themeConfiguration: OTPThemeConfiguration(primaryColor: .blue),
+    searchRegion: searchRegion
 )
 
-// 3. Initialize API service
+// 4. Initialize API service
 let apiService = RestAPIService(baseURL: config.otpServerURL)
 
-// 4. Create and present OTP view
+// 5. Create and present OTP view
 let otpView = OTPView(
     otpConfig: config,
     apiService: apiService,
@@ -186,9 +195,15 @@ let themeConfig = OTPThemeConfiguration(
     secondaryColor: .green,
     backgroundColor: .systemBackground
 )
+let searchRegion = MKCoordinateRegion(
+    center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+    latitudinalMeters: 50000,
+    longitudinalMeters: 50000
+)
 let config = OTPConfiguration(
     otpServerURL: url,
-    themeConfiguration: themeConfig
+    themeConfiguration: themeConfig,
+    searchRegion: searchRegion
 )
 ```
 

@@ -18,6 +18,13 @@ class OnboardingViewController: UIViewController {
 
     private let regions = [
         OTPRegionInfo(
+            name: "San Diego",
+            description: "San Diego",
+            icon: "building.2.fill",
+            url: URL(string: "https://realtime.sdmts.com:9091/otp/")!,
+            center: CLLocationCoordinate2D(latitude: 32.8850078, longitude: -117.2393175)
+        ),
+        OTPRegionInfo(
             name: "Seattle",
             description: "Puget Sound region",
             icon: "building.2.fill",

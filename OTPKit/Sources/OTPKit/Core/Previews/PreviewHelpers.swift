@@ -11,16 +11,25 @@ import SwiftUI
 
 class PreviewHelpers {
 
+    /// Seattle region for previews (matches common test coordinates)
+    static let seattleRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+        latitudinalMeters: 50000,
+        longitudinalMeters: 50000
+    )
+
     static func mockOTPConfiguration() -> OTPConfiguration {
         return OTPConfiguration(
-            otpServerURL: URL(string: "https://example.com")!
+            otpServerURL: URL(string: "https://example.com")!,
+            searchRegion: seattleRegion
         )
     }
 
     @MainActor
     static func mockTripPlannerViewModel(canPlanTrip: Bool = true) -> TripPlannerViewModel {
         let config = OTPConfiguration(
-            otpServerURL: URL(string: "https://example.com")!
+            otpServerURL: URL(string: "https://example.com")!,
+            searchRegion: seattleRegion
         )
         let mapView = MKMapView()
         let mapProvider = MKMapViewAdapter(mapView: mapView)

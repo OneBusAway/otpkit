@@ -11,6 +11,7 @@ import MapKit
 /// Integrates with MapKit to fetch and display search suggestions and details.
 struct SearchSheetView: View {
     @Environment(\.otpTheme) private var theme
+    @Environment(\.otpSearchRegion) private var searchRegion
 
     let selectedMode: LocationMode
     let onLocationSelected: OnLocationSelectedHandler
@@ -18,35 +19,45 @@ struct SearchSheetView: View {
     @State private var searchText = ""
     @State private var searchResults: [Location] = []
 
-    // MapKit search
-    @State private var searchManager = SearchManager()
+    // MapKit search - initialized lazily with region from environment
+    @State private var searchManager: SearchManager?
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 SearchBar(searchText: $searchText) { newValue in
+                    guard let manager = searchManager else { return }
                     if newValue.isEmpty {
-                        searchManager.clear()
+                        manager.clear()
                     } else {
-                        searchManager.search(query: newValue)
+                        manager.search(query: newValue)
                     }
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
 
                 // Search Results
-                if searchManager.isSearching {
-                    buildSearchingView()
-                } else if searchManager.searchCompletions.isEmpty && !searchText.isEmpty {
-                    buildNoSearchResultsView()
-                } else if !searchManager.searchCompletions.isEmpty {
-                    buildSearchResultsView()
+                if let manager = searchManager {
+                    if manager.isSearching {
+                        buildSearchingView()
+                    } else if manager.searchCompletions.isEmpty && !searchText.isEmpty {
+                        buildNoSearchResultsView()
+                    } else if !manager.searchCompletions.isEmpty {
+                        buildSearchResultsView(manager: manager)
+                    } else {
+                        buildDefaultView()
+                    }
                 } else {
                     buildDefaultView()
                 }
             }
             .navigationTitle(buildNavigationTitle())
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            if searchManager == nil {
+                searchManager = SearchManager(region: searchRegion)
+            }
         }
     }
 
@@ -110,10 +121,10 @@ struct SearchSheetView: View {
     }
 
     @ViewBuilder
-    private func buildSearchResultsView() -> some View {
-        List(searchManager.searchCompletions, id: \.self) { completion in
+    private func buildSearchResultsView(manager: SearchManager) -> some View {
+        List(manager.searchCompletions, id: \.self) { completion in
             SearchCompletionRow(completion: completion) {
-                searchManager.performDetailedSearch(for: completion) { location in
+                manager.performDetailedSearch(for: completion) { location in
                     onLocationSelected(location, selectedMode)
                 }
             }
