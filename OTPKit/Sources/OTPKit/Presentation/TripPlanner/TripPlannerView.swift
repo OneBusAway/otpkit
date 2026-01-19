@@ -169,11 +169,15 @@ private extension TripPlannerView {
 }
 
 #Preview {
-    let otpConfig = OTPConfiguration(otpServerURL: URL(string: "https://example.com")!)
+    let otpConfig = PreviewHelpers.mockOTPConfiguration()
     let mapView = MKMapView()
     let mapProvider = MKMapViewAdapter(mapView: mapView)
     let mapCoordinator = MapCoordinator(mapProvider: mapProvider)
-    let viewModel = TripPlannerViewModel(config: otpConfig, apiService: PreviewHelpers.MockAPIService(), mapCoordinator: mapCoordinator)
+    let viewModel = TripPlannerViewModel(
+        config: otpConfig,
+        apiService: PreviewHelpers.MockAPIService(),
+        mapCoordinator: mapCoordinator
+    )
 
     TripPlannerView(
         viewModel: viewModel,

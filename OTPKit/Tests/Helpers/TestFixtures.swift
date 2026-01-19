@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import MapKit
 @testable import OTPKit
 
 /// Provides test fixtures for OTPKit tests
@@ -68,15 +69,24 @@ enum TestFixtures {
         return Place(name: name, lon: -122, lat: 47, vertexType: "TRANSIT")
     }
 
+    /// Seattle region for tests (matches common test coordinates)
+    static let seattleRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+        latitudinalMeters: 50000,
+        longitudinalMeters: 50000
+    )
+
     static func makeOTPConfiguration(
         serverURL: URL = URL(string: "https://otp.example.com")!,
         enabledModes: [TransportMode] = [.transit, .walk],
-        theme: OTPThemeConfiguration? = nil
+        theme: OTPThemeConfiguration? = nil,
+        searchRegion: MKCoordinateRegion? = nil
     ) -> OTPConfiguration {
         OTPConfiguration(
             otpServerURL: serverURL,
             enabledTransportModes: enabledModes,
-            themeConfiguration: theme ?? OTPThemeConfiguration()
+            themeConfiguration: theme ?? OTPThemeConfiguration(),
+            searchRegion: searchRegion ?? seattleRegion
         )
     }
 

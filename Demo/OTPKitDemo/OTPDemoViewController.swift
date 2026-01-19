@@ -141,9 +141,19 @@ class OTPDemoViewController: UIViewController {
             return
         }
 
+        // Create search region from the selected region info
+        let searchRegion = MKCoordinateRegion(
+            center: regionInfo.center,
+            latitudinalMeters: 50000,
+            longitudinalMeters: 50000
+        )
+
         // Create bottom sheet and present it
         let tripPlanner = TripPlanner(
-            otpConfig: OTPConfiguration(otpServerURL: serverURL),
+            otpConfig: OTPConfiguration(
+                otpServerURL: serverURL,
+                searchRegion: searchRegion
+            ),
             apiService: apiService,
             mapProvider: provider,
             notificationCenter: NotificationCenter.default

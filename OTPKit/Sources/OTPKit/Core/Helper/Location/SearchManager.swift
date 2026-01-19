@@ -19,11 +19,12 @@ class SearchManager: NSObject, MKLocalSearchCompleterDelegate {
 
     private let searchCompleter = MKLocalSearchCompleter()
 
-    override init() {
+    init(region: MKCoordinateRegion) {
         super.init()
         searchCompleter.delegate = self
         searchCompleter.resultTypes = [.address, .pointOfInterest]
-        searchCompleter.region = MKCoordinateRegion(.world)
+        searchCompleter.region = region
+        searchCompleter.regionPriority = .required  // iOS 18+ - strictly enforce region
     }
 
     func search(query: String) {

@@ -72,6 +72,7 @@ public class TripPlanner {
 
         return view
             .environment(\.otpTheme, viewModel.config.themeConfiguration)
+            .environment(\.otpSearchRegion, viewModel.config.searchRegion)
             .environmentObject(mapCoordinator)
             .environmentObject(viewModel)
     }

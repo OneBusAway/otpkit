@@ -31,21 +31,29 @@ dependencies: [
 ### SwiftUI Usage
 ```swift
 import OTPKit
+import MapKit
 
 struct ContentView: View {
    var body: some View {
-       // 1. Configure OTPKit with server URL and theme
-       let config = OTPConfiguration(
-           otpServerURL: URL(string: "https://your-otp-server.com")!,
-           region: .userLocation(fallback: .automatic),
-           themeConfiguration: OTPThemeConfiguration(primaryColor: .blue, secondaryColor: .gray)
+       // 1. Define the search region for location suggestions
+       let searchRegion = MKCoordinateRegion(
+           center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+           latitudinalMeters: 50000,
+           longitudinalMeters: 50000
        )
 
-       // 2. Create API service for OpenTripPlanner
+       // 2. Configure OTPKit with server URL, theme, and search region
+       let config = OTPConfiguration(
+           otpServerURL: URL(string: "https://your-otp-server.com")!,
+           themeConfiguration: OTPThemeConfiguration(primaryColor: .blue, secondaryColor: .gray),
+           searchRegion: searchRegion
+       )
+
+       // 3. Create API service for OpenTripPlanner
        let apiService = RestAPIService(baseURL: config.otpServerURL)
 
        VStack {
-           // 3. Add complete trip planner to your app
+           // 4. Add complete trip planner to your app
            OTPView(otpConfig: config, apiService: apiService)
        }
    }
@@ -56,10 +64,18 @@ struct ContentView: View {
 
 ```swift
 import OTPKit
+import MapKit
+
+// Define the search region for location suggestions
+let searchRegion = MKCoordinateRegion(
+    center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+    latitudinalMeters: 50000,
+    longitudinalMeters: 50000
+)
 
 let config = OTPConfiguration(
     otpServerURL: URL(string: "https://your-otp-server.com")!,
-    region: .userLocation(fallback: .automatic)
+    searchRegion: searchRegion
 )
 
 let apiService = RestAPIService(baseURL: config.otpServerURL)
@@ -69,7 +85,6 @@ let tripPlannerView = OTPView(otpConfig: config, apiService: apiService)
 let hostingController = UIHostingController(rootView: tripPlannerView)
 addChild(hostingController)
 view.addSubview(hostingController.view)
-
 ```
 
 ## Development
