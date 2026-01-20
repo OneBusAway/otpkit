@@ -12,6 +12,7 @@ import MapKit
 struct SearchSheetView: View {
     @Environment(\.otpTheme) private var theme
     @Environment(\.otpSearchRegion) private var searchRegion
+    @Environment(\.dismiss) private var dismiss
 
     let selectedMode: LocationMode
     let onLocationSelected: OnLocationSelectedHandler
@@ -25,34 +26,53 @@ struct SearchSheetView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                SearchBar(searchText: $searchText) { newValue in
-                    guard let manager = searchManager else { return }
-                    if newValue.isEmpty {
-                        manager.clear()
-                    } else {
-                        manager.search(query: newValue)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
+                VStack(spacing: 0) {
+                    ZStack(alignment: .trailing) {
+                        Text(buildNavigationTitle())
+                            .font(.headline)
+                            .accessibilityAddTraits(.isHeader)
+                            .frame(maxWidth: .infinity)
 
-                // Search Results
-                if let manager = searchManager {
-                    if manager.isSearching {
-                        buildSearchingView()
-                    } else if manager.searchCompletions.isEmpty && !searchText.isEmpty {
-                        buildNoSearchResultsView()
-                    } else if !manager.searchCompletions.isEmpty {
-                        buildSearchResultsView(manager: manager)
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 20)
+                    .padding(.bottom, 12)
+
+                    SearchBar(searchText: $searchText) { newValue in
+                        guard let manager = searchManager else { return }
+                        if newValue.isEmpty {
+                            manager.clear()
+                        } else {
+                            manager.search(query: newValue)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+
+                    Divider()
+                }
+                .background(Color(UIColor.systemBackground))
+                Group {
+                    if let manager = searchManager {
+                        if manager.isSearching {
+                            buildSearchingView()
+                        } else if manager.searchCompletions.isEmpty && !searchText.isEmpty {
+                            buildNoSearchResultsView()
+                        } else if !manager.searchCompletions.isEmpty {
+                            buildSearchResultsView(manager: manager)
+                        } else {
+                            buildDefaultView()
+                        }
                     } else {
                         buildDefaultView()
                     }
-                } else {
-                    buildDefaultView()
                 }
             }
-            .navigationTitle(buildNavigationTitle())
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
         }
         .onAppear {
             if searchManager == nil {
@@ -63,35 +83,28 @@ struct SearchSheetView: View {
 
     @ViewBuilder
     private func buildDefaultView() -> some View {
-        // Default state
-        VStack(spacing: 24) {
-            CurrentLocationButton { location in
-                onLocationSelected(location, selectedMode)
-            }
+        ScrollView {
+            VStack(spacing: 24) {
+                CurrentLocationButton { location in
+                    onLocationSelected(location, selectedMode)
+                }
 
-            FavoritesSectionView(selectedMode: selectedMode) { loc in
-                onLocationSelected(loc, selectedMode)
-            } onMoreTapped: {
-                // more tapped
-            }
+                FavoritesSectionView(selectedMode: selectedMode) { loc in
+                    onLocationSelected(loc, selectedMode)
+                } onMoreTapped: { }
 
-            RecentsSectionView(selectedMode: selectedMode) { loc in
-                onLocationSelected(loc, selectedMode)
-            } onMoreTapped: {
-                // more tapped
+                RecentsSectionView(selectedMode: selectedMode) { loc in
+                    onLocationSelected(loc, selectedMode)
+                } onMoreTapped: { }
             }
+            .padding(.top, 20)
         }
-        .padding(.top, 20)
-
-        Spacer()
     }
 
     @ViewBuilder
     private func buildSearchingView() -> some View {
-        // Loading state
         VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.2)
+            ProgressView().scaleEffect(1.2)
             Text("Searching...")
                 .font(.subheadline)
                 .foregroundColor(theme.secondaryColor)
@@ -132,7 +145,6 @@ struct SearchSheetView: View {
             .listRowSeparator(.hidden)
         }
         .listStyle(PlainListStyle())
-        .padding(.top, 16)
     }
 
     private func buildNavigationTitle() -> String {
