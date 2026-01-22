@@ -21,11 +21,19 @@ struct ItineraryPreviewView: View {
                 Text(Formatters.formatTimeDuration(itinerary.duration))
                     .font(.title)
                     .fontWeight(.semibold)
-
-                HStack(spacing: 2) {
-                    Text("ETA:")
+                HStack(spacing: 4) {
+                    Text("Leave at:")
+                        .foregroundStyle(.secondary)
+                    Text(Formatters.formatDateToTime(itinerary.startTime))
+                        .fontWeight(.medium)
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                    Text("Arrive:")
+                        .foregroundStyle(.secondary)
                     Text(Formatters.formatDateToTime(itinerary.endTime))
+                        .foregroundStyle(.secondary)
                 }
+                .font(.subheadline)
 
                 legsFlow(itinerary: itinerary)
                     .frame(
