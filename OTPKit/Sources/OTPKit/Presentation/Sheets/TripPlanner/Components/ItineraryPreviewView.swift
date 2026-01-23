@@ -22,15 +22,16 @@ struct ItineraryPreviewView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                 HStack(spacing: 4) {
-                    Text("Leave at:")
+                    Text(OTPLoc("trip_preview.depart_label"))
                         .foregroundStyle(.secondary)
                     Text(Formatters.formatDateToTime(itinerary.startTime))
                         .fontWeight(.medium)
                     Text("•")
                         .foregroundStyle(.secondary)
-                    Text("Arrive:")
+                    Text(OTPLoc("trip_preview.arrive_label"))
                         .foregroundStyle(.secondary)
                     Text(Formatters.formatDateToTime(itinerary.endTime))
+                        .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                 }
                 .font(.subheadline)

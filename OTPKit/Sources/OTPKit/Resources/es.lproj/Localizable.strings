@@ -58,6 +58,8 @@
 /* Trip Preview */
 "trip_preview.cancel_button" = "Cancelar";
 "trip_preview.start_button" = "Comenzar";
+"trip_preview.depart_label" = "Salida:";
+"trip_preview.arrive_label" = "Llegada:";
 
 /* Option Row */
 "option_row.selected_hint" = "Seleccionado";
