@@ -57,6 +57,8 @@
 /* Trip Preview */
 "trip_preview.cancel_button" = "取消";
 "trip_preview.start_button" = "开始";
+"trip_preview.depart_label" = "出发：";
+"trip_preview.arrive_label" = "到达：";
 
 /* Option Row */
 "option_row.selected_hint" = "已选择";
