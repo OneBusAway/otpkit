@@ -25,6 +25,18 @@ struct TripPlannerViewModelTests {
 
     // MARK: - Test Helpers
 
+    /// Waits for the ViewModel's isLoading to become false, with a timeout.
+    /// This replaces fixed `Task.sleep` calls that are flaky on slow CI machines.
+    func waitForLoadingComplete(
+        _ viewModel: TripPlannerViewModel,
+        timeout: TimeInterval = 5.0
+    ) async throws {
+        let start = Date()
+        while viewModel.isLoading && Date().timeIntervalSince(start) < timeout {
+            try await Task.sleep(nanoseconds: 50_000_000) // Poll every 0.05 seconds
+        }
+    }
+
     func createViewModel(
         enabledModes: [TransportMode] = [.transit, .walk, .bike],
         mockAPIService: TestFixtures.MockAPIService? = nil
@@ -193,8 +205,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.isLoading == false)
         #expect(viewModel.tripPlanResponse != nil)
@@ -216,8 +228,8 @@ struct TripPlannerViewModelTests {
         // Check that loading state was set
         // Note: isLoading may already be false by the time we check due to async completion
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.isLoading == false)
     }
@@ -234,8 +246,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == true)
         #expect(viewModel.errorMessage != nil)
@@ -257,8 +269,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == false)
         #expect(viewModel.errorMessage == nil)
@@ -276,8 +288,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.wheelchairAccessible == true)
     }
@@ -294,8 +306,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.maxWalkDistance == WalkingDistance.halfMile.meters)
     }
@@ -312,8 +324,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.arriveBy == true)
     }
@@ -330,8 +342,8 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        // Allow async operations to complete
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Wait for async operation to complete (polling instead of fixed sleep)
+        try await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.arriveBy == false)
     }
