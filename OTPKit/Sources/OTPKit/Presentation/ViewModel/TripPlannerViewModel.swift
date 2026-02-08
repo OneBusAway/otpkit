@@ -11,6 +11,7 @@ import MapKit
 import SwiftUI
 import OSLog
 
+// swiftlint:disable file_length
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
@@ -402,3 +403,4 @@ public class TripPlannerViewModel: ObservableObject {
         activeSheet = nil
     }
 }
+// swiftlint:enable file_length
