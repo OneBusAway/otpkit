@@ -62,6 +62,18 @@ public enum ErrorResponseCode: String, Codable, Hashable {
     /// Fallback for unknown or future OTP message keys
     case unknown
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+
+        self = ErrorResponseCode(rawValue: value) ?? .unknown
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+
     /// Localization key used to resolve a user-facing message
     public var displayMessage: String {
         switch self {
