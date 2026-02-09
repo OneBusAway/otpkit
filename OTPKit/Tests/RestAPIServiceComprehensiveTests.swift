@@ -313,7 +313,7 @@ struct RestAPIServiceComprehensiveTests {
 
         #expect(response.plan == nil)
         #expect(response.error != nil)
-        #expect(response.error?.message == "No trip found that satisfies the requested parameters.")
+        #expect(response.error?.message == "Trip not found")
     }
 
     // MARK: - HTTP Error Tests
