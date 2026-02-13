@@ -249,13 +249,15 @@ public class TripPlannerViewModel: ObservableObject {
 
     private func handlePlanResponse(_ response: OTPResponse) {
         isLoading = false
-        tripPlanResponse = response
 
         if let error = response.error {
             Logger.main.error("Planner Error: \(error.message)")
             Logger.main.error("Planner Error Code: \(error.messageCode.rawValue)")
+
+            tripPlanResponse = nil
             showError(error.messageCode.displayMessage)
         } else {
+            tripPlanResponse = response
             HapticManager.shared.success()
             notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
         }
@@ -263,13 +265,13 @@ public class TripPlannerViewModel: ObservableObject {
 
     private func handleError(_ error: Error) {
         let otpError = error as? OTPKitError ?? OTPKitError.tripPlanningFailed(error.localizedDescription)
+        isLoading = false
         showError(otpError.displayMessage)
     }
 
     private func showError(_ message: String) {
         errorMessage = message
         showingError = true
-        isLoading = false
     }
 
     // MARK: - Preview Management
