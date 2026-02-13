@@ -33,7 +33,7 @@ struct TripPlannerViewModelTests {
     ) async throws {
         let start = Date()
         while viewModel.isLoading && Date().timeIntervalSince(start) < timeout {
-            try await Task.sleep(nanoseconds: 50_000_000) // Poll every 0.05 seconds
+            try await Task.sleep(nanoseconds: 100_000_000) // Poll every 0.1 seconds
         }
     }
 
