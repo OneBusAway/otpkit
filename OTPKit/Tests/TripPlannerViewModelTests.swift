@@ -570,7 +570,6 @@ struct TripPlannerViewModelTests {
         #expect(otpErrorMessage != nil)
         #expect(viewModel.isLoading == false)
 
-
         #expect(networkErrorMessage != otpErrorMessage)
     }
 

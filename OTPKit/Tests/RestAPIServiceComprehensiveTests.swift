@@ -342,7 +342,7 @@ struct RestAPIServiceComprehensiveTests {
         #expect(response.error?.message == "Trip not found")
         #expect(response.error?.messageCode == .unknown)
     }
-    
+
     // MARK: - HTTP Error Tests
 
     @Test("fetchPlan throws on HTTP 404")
