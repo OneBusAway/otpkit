@@ -33,7 +33,7 @@ struct TripPlannerViewModelTests {
     ) async throws {
         let start = Date()
         while viewModel.isLoading && Date().timeIntervalSince(start) < timeout {
-            try await Task.sleep(nanoseconds: 50_000_000) // Poll every 0.05 seconds
+            try await Task.sleep(nanoseconds: 100_000_000) // Poll every 0.1 seconds
         }
     }
 
@@ -451,6 +451,126 @@ struct TripPlannerViewModelTests {
         viewModel.handleItineraryPreview(itinerary)
 
         #expect(viewModel.activeSheet != nil)
+    }
+
+    // MARK: - Plan Error Response Handling Test
+    @Test("planTrip handles OTP error in successful HTTP response")
+    func planTripHandlesOTPErrorInSuccessfulResponse() async throws {
+        let mockAPIService = TestFixtures.MockAPIService()
+
+        let errorResponse = TestHelpers.response(error: .init(id: 1, message: "Path not found", messageCode: .pathNotFound))
+        mockAPIService.mockResponse = errorResponse
+
+        let viewModel = createViewModel(mockAPIService: mockAPIService)
+        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
+        viewModel.selectedDestination = TestHelpers.location(title: "Destination")
+
+        viewModel.planTrip()
+
+        try await waitForLoadingComplete(viewModel)
+
+        #expect(viewModel.showingError == true)
+        #expect(viewModel.errorMessage != nil)
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.tripPlanResponse == nil)
+    }
+
+    @Test("planTrip error response clears previous successful trip plan")
+    func planTripErrorResponseClearsPreviousSuccessfulPlan() async throws {
+        let mockAPIService = TestFixtures.MockAPIService()
+
+        let viewModel = createViewModel(mockAPIService: mockAPIService)
+        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
+        viewModel.selectedDestination = TestHelpers.location(title: "Destination")
+
+        // First call: successful response with itineraries
+        let successResponse = TestHelpers.response(with: [TestHelpers.itinerary()])
+        mockAPIService.mockResponse = successResponse
+
+        viewModel.planTrip()
+        try await waitForLoadingComplete(viewModel)
+
+        #expect(viewModel.tripPlanResponse != nil)
+        #expect(viewModel.showingError == false)
+
+        // Second call: error response
+        let errorResponse = TestHelpers.response(
+            error: .init(
+                id: 1,
+                message: "Path not found",
+                messageCode: .pathNotFound
+            )
+        )
+
+        mockAPIService.mockResponse = errorResponse
+
+        viewModel.planTrip()
+        try await waitForLoadingComplete(viewModel)
+
+        // Verify previous response is cleared and error is shown
+        #expect(viewModel.tripPlanResponse == nil)
+        #expect(viewModel.showingError == true)
+        #expect(viewModel.errorMessage != nil)
+        #expect(viewModel.isLoading == false)
+    }
+
+    @Test("planTrip handles PATH_NOT_FOUND error code with correct message")
+    func planTripHandlesPathNotFoundError() async throws {
+        let mockAPIService = TestFixtures.MockAPIService()
+
+        let errorResponse = TestHelpers.response(error: .init(id: 1, message: "Path not found", messageCode: .pathNotFound))
+        mockAPIService.mockResponse = errorResponse
+
+        let viewModel = createViewModel(mockAPIService: mockAPIService)
+        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
+        viewModel.selectedDestination = TestHelpers.location(title: "Destination")
+
+        viewModel.planTrip()
+        try await waitForLoadingComplete(viewModel)
+
+        #expect(viewModel.showingError == true)
+        #expect(viewModel.errorMessage == errorResponse.error?.messageCode.displayMessage)
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.tripPlanResponse == nil)
+    }
+
+    @Test("planTrip differentiates between OTP errors and network errors")
+    func planTripDistinguishesBetweenOTPAndNetworkErrors() async throws {
+        let mockAPIService = TestFixtures.MockAPIService()
+        let viewModel = createViewModel(mockAPIService: mockAPIService)
+        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
+        viewModel.selectedDestination = TestHelpers.location(title: "Destination")
+
+        // Test 1: Network error
+        mockAPIService.shouldThrowError = true
+        mockAPIService.mockError = OTPKitError.apiError("Network timeout")
+
+        viewModel.planTrip()
+        try await waitForLoadingComplete(viewModel)
+
+        let networkErrorMessage = viewModel.errorMessage
+        #expect(viewModel.showingError == true)
+        #expect(networkErrorMessage != nil)
+        #expect(viewModel.isLoading == false)
+
+        // Reset error state
+        viewModel.errorMessage = nil
+        viewModel.showingError = false
+
+        // Test 2: OTP error
+        mockAPIService.shouldThrowError = false
+        let errorResponse = TestHelpers.response(error: .init(id: 1, message: "Path not found", messageCode: .pathNotFound))
+        mockAPIService.mockResponse = errorResponse
+
+        viewModel.planTrip()
+        try await waitForLoadingComplete(viewModel)
+
+        let otpErrorMessage = viewModel.errorMessage
+        #expect(viewModel.showingError == true)
+        #expect(otpErrorMessage != nil)
+        #expect(viewModel.isLoading == false)
+
+        #expect(networkErrorMessage != otpErrorMessage)
     }
 
     // MARK: - Reset Tests

@@ -68,7 +68,7 @@ enum TestHelpers {
     }
 
     /// Wrap itineraries into an `OTPResponse` the view model expects
-    static func response(with itineraries: [Itinerary]) -> OTPResponse {
+    static func response(with itineraries: [Itinerary] = [], error: ErrorResponse? = nil) -> OTPResponse {
         let plan = Plan(
             date: Date(),
             from: Place(name: "A", lon: -122.0, lat: 47.0, vertexType: "NORMAL"),
@@ -85,6 +85,6 @@ enum TestHelpers {
             maxWalkDistance: "1000",
             wheelchair: "false"
         )
-        return OTPResponse(requestParameters: params, plan: plan, error: nil)
+        return OTPResponse(requestParameters: params, plan: plan, error: error)
     }
 }

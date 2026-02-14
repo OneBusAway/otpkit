@@ -313,7 +313,34 @@ struct RestAPIServiceComprehensiveTests {
 
         #expect(response.plan == nil)
         #expect(response.error != nil)
-        #expect(response.error?.message == "No trip found that satisfies the requested parameters.")
+        #expect(response.error?.message == "Trip not found")
+        #expect(response.error?.messageCode == .pathNotFound)
+    }
+
+    @Test("fetchPlan with OTP unknown error response")
+    func fetchPlanWithOTPUnknownErrorResponse() async throws {
+        let mockLoader = MockDataLoader()
+        let fixtureData = Fixtures.loadData(file: "otp_response_unknown_error.json")
+        mockLoader.mockResponse(data: fixtureData)
+
+        let service = RestAPIService(
+            baseURL: URL(string: "https://otp.example.com")!,
+            dataLoader: mockLoader
+        )
+
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
+            destination: CLLocationCoordinate2D(latitude: 47.6154, longitude: -122.3208),
+            date: Date(),
+            time: Date()
+        )
+
+        let response = try await service.fetchPlan(request)
+
+        #expect(response.plan == nil)
+        #expect(response.error != nil)
+        #expect(response.error?.message == "Trip not found")
+        #expect(response.error?.messageCode == .unknown)
     }
 
     // MARK: - HTTP Error Tests

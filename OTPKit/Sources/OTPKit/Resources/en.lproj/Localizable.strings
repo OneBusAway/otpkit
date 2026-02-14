@@ -16,6 +16,33 @@
 "error.missing_locations.message" = "Please select both origin and destination locations.";
 "error.unknown" = "An unknown error occurred.";
 
+/* Planning */
+"error.system_error" = "We couldn’t plan your trip right now. Please try again.";
+"error.graph_unavailable" = "Trip planning is temporarily unavailable. Try again shortly.";
+"error.outside_bounds" = "This location isn’t supported yet.";
+"error.path_not_found" = "No route is available for this trip.";
+"error.no_transit_times" = "No transit options are available right now.";
+"error.request_timeout" = "This took longer than expected. Please try again.";
+"error.bogus_parameter" = "Something went wrong with the request. Please try again.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "We couldn’t find the starting location.";
+"error.geocode_to_not_found" = "We couldn’t find the destination.";
+"error.geocode_from_to_not_found" = "We couldn’t find either the starting point or the destination.";
+"error.geocode_from_ambiguous" = "The starting location isn’t clear. Try being more specific.";
+"error.geocode_to_ambiguous" = "The destination isn’t clear. Try being more specific.";
+"error.geocode_from_to_ambiguous" = "Both locations need more detail. Try refining them.";
+
+/* Validation */
+"error.too_close" = "The start and destination are too close.";
+"error.location_not_accessible" = "This route isn’t accessible with the selected option.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "Some route options are missing.";
+"error.triangle_not_affine" = "The selected route options don’t work together.";
+"error.triangle_optimize_type_not_set" = "Please choose a route preference.";
+"error.triangle_values_not_set" = "Please adjust the route preferences.";
+
 /* Map */
 "map.origin" = "Origin";
 "map.destination" = "Destination";

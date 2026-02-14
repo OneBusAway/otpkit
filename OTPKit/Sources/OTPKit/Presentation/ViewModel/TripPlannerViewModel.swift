@@ -11,6 +11,7 @@ import MapKit
 import SwiftUI
 import OSLog
 
+// swiftlint:disable file_length
 /// Main view model for handling trip planning functionality
 /// Manages location selection, transport modes, API calls, and UI state
 @MainActor
@@ -177,7 +178,7 @@ public class TripPlannerViewModel: ObservableObject {
     func planTrip() {
         // Validate that we have required locations
         guard let origin = selectedOrigin, let destination = selectedDestination else {
-            showError(OTPKitError.missingOriginOrDestination)
+            showError(OTPKitError.missingOriginOrDestination.displayMessage)
             return
         }
 
@@ -205,7 +206,7 @@ public class TripPlannerViewModel: ObservableObject {
             do {
                 let response = try await apiService.fetchPlan(request)
                 await MainActor.run {
-                    self.handleSuccess(response)
+                    self.handlePlanResponse(response)
                 }
             } catch {
                 await MainActor.run {
@@ -246,22 +247,31 @@ public class TripPlannerViewModel: ObservableObject {
         }
     }
 
-    private func handleSuccess(_ response: OTPResponse) {
-        tripPlanResponse = response
+    private func handlePlanResponse(_ response: OTPResponse) {
         isLoading = false
-        HapticManager.shared.success()
-        notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
+
+        if let error = response.error {
+            Logger.main.error("Planner Error: \(error.message)")
+            Logger.main.error("Planner Error Code: \(error.messageCode.rawValue)")
+
+            tripPlanResponse = nil
+            showError(error.messageCode.displayMessage)
+        } else {
+            tripPlanResponse = response
+            HapticManager.shared.success()
+            notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
+        }
     }
 
     private func handleError(_ error: Error) {
         let otpError = error as? OTPKitError ?? OTPKitError.tripPlanningFailed(error.localizedDescription)
-        showError(otpError)
+        isLoading = false
+        showError(otpError.displayMessage)
     }
 
-    private func showError(_ error: OTPKitError) {
-        errorMessage = error.displayMessage
+    private func showError(_ message: String) {
+        errorMessage = message
         showingError = true
-        isLoading = false
     }
 
     // MARK: - Preview Management
@@ -395,3 +405,4 @@ public class TripPlannerViewModel: ObservableObject {
         activeSheet = nil
     }
 }
+// swiftlint:enable file_length
