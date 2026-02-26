@@ -1,10 +1,10 @@
 # OTPKit
 
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
-[![iOS](https://img.shields.io/badge/iOS-17.0%2B-lightgrey.svg)](https://developer.apple.com/ios/)
+[![iOS](https://img.shields.io/badge/iOS-18.0%2B-lightgrey.svg)](https://developer.apple.com/ios/)
 [![SPM](https://img.shields.io/badge/SPM-Supported-brightgreen.svg)](https://swift.org/package-manager/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Build](https://github.com/OneBusAway/otpkit/actions/workflows/ci.yml/badge.svg)](https://github.com/OneBusAway/otpkit/actions)
+[![Build](https://github.com/OneBusAway/otpkit/actions/workflows/test.yaml/badge.svg)](https://github.com/OneBusAway/otpkit/actions/workflows/test.yaml)
 
 ![otpkit-showcase](https://github.com/user-attachments/assets/c5f819f0-4803-4a6e-86df-55f2677499c3)
 
@@ -31,32 +31,63 @@ dependencies: [
 ### SwiftUI Usage
 ```swift
 import OTPKit
+import SwiftUI
 import MapKit
 
-struct ContentView: View {
-   var body: some View {
-       // 1. Define the search region for location suggestions
-       let searchRegion = MKCoordinateRegion(
-           center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
-           latitudinalMeters: 50000,
-           longitudinalMeters: 50000
-       )
+struct OTPHostView: UIViewControllerRepresentable {
+    let otpServerURL: URL
 
-       // 2. Configure OTPKit with server URL, theme, and search region
-       let config = OTPConfiguration(
-           otpServerURL: URL(string: "https://your-otp-server.com")!,
-           themeConfiguration: OTPThemeConfiguration(primaryColor: .blue, secondaryColor: .gray),
-           searchRegion: searchRegion
-       )
+    func makeUIViewController(context: Context) -> OTPDemoViewController {
+        OTPDemoViewController(serverURL: otpServerURL)
+    }
 
-       // 3. Create API service for OpenTripPlanner
-       let apiService = RestAPIService(baseURL: config.otpServerURL)
+    func updateUIViewController(_ uiViewController: OTPDemoViewController, context: Context) {}
+}
 
-       VStack {
-           // 4. Add complete trip planner to your app
-           OTPView(otpConfig: config, apiService: apiService)
-       }
-   }
+final class OTPDemoViewController: UIViewController {
+    private let serverURL: URL
+    private var hostingController: UIHostingController<AnyView>?
+    private var mapView = MKMapView()
+
+    init(serverURL: URL) {
+        self.serverURL = serverURL
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let config = OTPConfiguration(
+            otpServerURL: serverURL,
+            searchRegion: MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+                latitudinalMeters: 50000,
+                longitudinalMeters: 50000
+            )
+        )
+
+        let apiService = RestAPIService(baseURL: config.otpServerURL)
+        let mapProvider = MKMapViewAdapter(mapView: mapView)
+        let tripPlanner = TripPlanner(
+            otpConfig: config,
+            apiService: apiService,
+            mapProvider: mapProvider
+        )
+
+        let plannerView = AnyView(tripPlanner.createTripPlannerView {
+            self.dismiss(animated: true)
+        })
+
+        let host = UIHostingController(rootView: plannerView)
+        addChild(host)
+        view.addSubview(host.view)
+        host.view.frame = view.bounds
+        host.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        host.didMove(toParent: self)
+        hostingController = host
+    }
 }
 ```
 
@@ -65,8 +96,8 @@ struct ContentView: View {
 ```swift
 import OTPKit
 import MapKit
+import SwiftUI
 
-// Define the search region for location suggestions
 let searchRegion = MKCoordinateRegion(
     center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
     latitudinalMeters: 50000,
@@ -79,12 +110,24 @@ let config = OTPConfiguration(
 )
 
 let apiService = RestAPIService(baseURL: config.otpServerURL)
-let tripPlannerView = OTPView(otpConfig: config, apiService: apiService)
+let mapView = MKMapView()
+let mapProvider = MKMapViewAdapter(mapView: mapView)
 
-// Embed in UIKit using UIHostingController
-let hostingController = UIHostingController(rootView: tripPlannerView)
+let tripPlanner = TripPlanner(
+    otpConfig: config,
+    apiService: apiService,
+    mapProvider: mapProvider
+)
+
+let plannerView = AnyView(tripPlanner.createTripPlannerView {
+    // Handle close
+})
+
+let hostingController = UIHostingController(rootView: plannerView)
 addChild(hostingController)
 view.addSubview(hostingController.view)
+hostingController.view.frame = view.bounds
+hostingController.didMove(toParent: self)
 ```
 
 ## Development

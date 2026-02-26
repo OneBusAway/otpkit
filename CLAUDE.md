@@ -93,7 +93,7 @@ If either linting or tests fail, the push will be blocked until issues are fixed
   - `RestAPIService/RestAPIService` - OTP 1.x REST API implementation (actor-based)
   - `URLDataLoader` - Network request handling
 - `Presentation/` - SwiftUI views and ViewModels
-  - `OTPView` - Main entry point view that sets up the environment
+  - `TripPlanner` - Main entry point object that creates and presents the trip planning view
   - `TripPlannerView` - Primary UI for trip planning
   - `ViewModel/TripPlannerViewModel` - Main state management (@MainActor)
   - `Sheets/` - Bottom sheet UI components (search, directions, options)
@@ -103,7 +103,7 @@ If either linting or tests fail, the push will be blocked until issues are fixed
 
 ### Key Integration Points
 
-1. **Initialization**: Host app provides an `OTPMapProvider` implementation, creates `OTPConfiguration` with server URL, then instantiates `OTPView`
+1. **Initialization**: Host app provides an `OTPMapProvider` implementation, creates `OTPConfiguration` with server URL, then instantiates `TripPlanner`
 2. **Map Provider**: OTPKit controls an external map view through the `OTPMapProvider` protocol - host app retains ownership of the actual map view
 3. **API Service**: Implement `APIService` protocol for custom networking or use provided `RestAPIService`
 4. **Location Services**: `LocationManager.shared` handles location permissions and current location updates
@@ -144,7 +144,7 @@ If either linting or tests fail, the push will be blocked until issues are fixed
 ```swift
 // Example test pattern for API service
 func testFetchPlan() async throws {
-    let service = RestAPIService(configuration: testConfig)
+    let service = RestAPIService(baseURL: URL(string: "https://otp.example.com")!)
     let request = TripPlanRequest(/* ... */)
     let response = try await service.fetchPlan(request)
     XCTAssertFalse(response.plan?.itineraries.isEmpty ?? true)
@@ -181,11 +181,16 @@ let config = OTPConfiguration(
 let apiService = RestAPIService(baseURL: config.otpServerURL)
 
 // 5. Create and present OTP view
-let otpView = OTPView(
+let tripPlanner = TripPlanner(
     otpConfig: config,
     apiService: apiService,
     mapProvider: mapProvider
 )
+
+let plannerView = tripPlanner.createTripPlannerView {
+    // Handle close
+}
+
 ```
 
 ### Custom Theme Configuration
