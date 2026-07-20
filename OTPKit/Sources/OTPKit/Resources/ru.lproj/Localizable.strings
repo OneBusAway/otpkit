@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Russian - ru)
+ */
+
+/* Test */
+"test_loc" = "Привет от OTPKit";
+
+
+/* Titles */
+"error.network.title" = "Ошибка сети";
+"error.trip_planning.title" = "Ошибка планирования маршрута";
+
+/* Messages */
+"error.api.message" = "Ошибка API: %@";
+"error.trip_planning.message" = "Не удалось спланировать маршрут: %@";
+"error.missing_locations.message" = "Выберите и пункт отправления, и пункт назначения.";
+"error.unknown" = "Произошла неизвестная ошибка.";
+
+/* Planning */
+"error.system_error" = "Сейчас не удалось спланировать маршрут. Повторите попытку.";
+"error.graph_unavailable" = "Планирование маршрутов временно недоступно. Повторите попытку чуть позже.";
+"error.outside_bounds" = "Это местоположение пока не поддерживается.";
+"error.path_not_found" = "Для этой поездки нет доступного маршрута.";
+"error.no_transit_times" = "Сейчас нет доступных вариантов транспорта.";
+"error.request_timeout" = "Это заняло больше времени, чем ожидалось. Повторите попытку.";
+"error.bogus_parameter" = "Что-то пошло не так с запросом. Повторите попытку.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "Не удалось найти пункт отправления.";
+"error.geocode_to_not_found" = "Не удалось найти пункт назначения.";
+"error.geocode_from_to_not_found" = "Не удалось найти ни пункт отправления, ни пункт назначения.";
+"error.geocode_from_ambiguous" = "Пункт отправления указан неточно. Попробуйте уточнить его.";
+"error.geocode_to_ambiguous" = "Пункт назначения указан неточно. Попробуйте уточнить его.";
+"error.geocode_from_to_ambiguous" = "Оба пункта нужно указать точнее. Попробуйте уточнить их.";
+
+/* Validation */
+"error.too_close" = "Пункты отправления и назначения слишком близко друг к другу.";
+"error.location_not_accessible" = "Этот маршрут недоступен с выбранным вариантом.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "Некоторые параметры маршрута отсутствуют.";
+"error.triangle_not_affine" = "Выбранные параметры маршрута несовместимы друг с другом.";
+"error.triangle_optimize_type_not_set" = "Выберите предпочтение для маршрута.";
+"error.triangle_values_not_set" = "Настройте предпочтения для маршрута.";
+
+/* Map */
+"map.origin" = "Пункт отправления";
+"map.destination" = "Пункт назначения";
+"map.finding" = "Поиск...";
+"map.searching_address" = "Поиск адреса";
+
+/* Loading */
+"loading.planning_trip" = "Планируем ваш маршрут...";
+
+/* Time Selection */
+"time_selection.title" = "Выбор времени";
+"time_selection.date" = "Дата";
+"time_selection.time" = "Время";
+"time_selection.select_date_accessibility" = "Выберите дату отправления";
+"time_selection.select_time_accessibility" = "Выберите время отправления";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "Выехать сейчас";
+"time_preference.depart_at_title" = "Отправление в";
+"time_preference.arrive_by_title" = "Прибытие к";
+"time_preference.leave_now_desc" = "Начать поездку немедленно";
+"time_preference.depart_at_desc" = "Выехать в определённое время";
+"time_preference.arrive_by_desc" = "Прибыть к определённому времени";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "Самый быстрый маршрут";
+"route_preference.fewest_transfers_title" = "Меньше пересадок";
+"route_preference.fastest_trip_desc" = "Приоритет наименьшему времени в пути";
+"route_preference.fewest_transfers_desc" = "Свести к минимуму число пересадок";
+
+/* Search Bar */
+"search_bar.placeholder" = "Поиск мест";
+
+/* Trip Results */
+"trip_results.preview_button" = "Предпросмотр";
+"trip_results.cancel_button" = "Отменить";
+"trip_results.no_trips_found" = "Маршруты не найдены";
+"trip_results.duration_format" = "%d мин";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "Отменить";
+"trip_preview.start_button" = "Начать";
+"trip_preview.depart_label" = "Отправление:";
+"trip_preview.arrive_label" = "Прибытие:";
+
+/* Option Row */
+"option_row.selected_hint" = "Выбрано";
+"option_row.tap_to_select_hint" = "Нажмите, чтобы выбрать";
+"option_row.preview_section" = "Предпросмотр";
+"option_row.fastest_trip_title" = "Самый быстрый маршрут";
+"option_row.fastest_trip_desc" = "Приоритет наименьшему времени в пути";
+"option_row.fewest_transfers_title" = "Меньше пересадок";
+"option_row.fewest_transfers_desc" = "Свести к минимуму число пересадок";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "Время отправления";
+"advanced_options.route_optimization_title" = "Оптимизация маршрута";
+"advanced_options.walking_distance_title" = "Расстояние пешком";
+"advanced_options.wheelchair_accessible" = "Доступно для инвалидных колясок";
+"advanced_options.wheelchair_accessible_label" = "Маршруты, доступные для инвалидных колясок";
+"advanced_options.wheelchair_toggle_hint" = "Включите, чтобы находить маршруты, подходящие для средств передвижения";
+"advanced_options.wheelchair_footer" = "Находите маршруты, подходящие для инвалидных колясок и других средств передвижения";
+"advanced_options.max_walking_distance" = "Максимальное расстояние пешком";
+"advanced_options.cancel" = "Отменить";
+"advanced_options.done" = "Готово";
+"advanced_options.cancel_accessibility" = "Отменить дополнительные параметры";
+"advanced_options.save_accessibility" = "Сохранить дополнительные параметры";
+
+/* Bottom Controls */
+"bottom.from" = "Откуда";
+"bottom.to" = "Куда";
+"bottom.current_location" = "Текущее местоположение";
+"bottom.choose_destination" = "Выберите пункт назначения";
+"bottom.search" = "Поиск";
+"bottom.options" = "Параметры";
+"bottom.directions" = "Маршрут";
+"bottom.advanced_options" = "Параметры поездки";
+
+// MARK: - Itinerary
+"itinerary.summary" = "Отправление в %@; продолжительность: %@";

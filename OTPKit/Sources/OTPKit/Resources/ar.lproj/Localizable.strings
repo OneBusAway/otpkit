@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Arabic - ar)
+ */
+
+/* Test */
+"test_loc" = "مرحبًا من OTPKit";
+
+
+/* Titles */
+"error.network.title" = "خطأ في الشبكة";
+"error.trip_planning.title" = "خطأ في تخطيط الرحلة";
+
+/* Messages */
+"error.api.message" = "خطأ في API: %@";
+"error.trip_planning.message" = "فشل تخطيط الرحلة: %@";
+"error.missing_locations.message" = "يُرجى تحديد موقعي الانطلاق والوجهة معًا.";
+"error.unknown" = "حدث خطأ غير معروف.";
+
+/* Planning */
+"error.system_error" = "تعذّر علينا تخطيط رحلتك الآن. يُرجى المحاولة مرة أخرى.";
+"error.graph_unavailable" = "تخطيط الرحلات غير متاح مؤقتًا. حاول مرة أخرى بعد قليل.";
+"error.outside_bounds" = "هذا الموقع غير مدعوم بعد.";
+"error.path_not_found" = "لا يتوفّر مسار لهذه الرحلة.";
+"error.no_transit_times" = "لا تتوفّر خيارات نقل في الوقت الحالي.";
+"error.request_timeout" = "استغرق هذا وقتًا أطول من المتوقع. يُرجى المحاولة مرة أخرى.";
+"error.bogus_parameter" = "حدث خطأ ما في الطلب. يُرجى المحاولة مرة أخرى.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "تعذّر علينا العثور على موقع الانطلاق.";
+"error.geocode_to_not_found" = "تعذّر علينا العثور على الوجهة.";
+"error.geocode_from_to_not_found" = "تعذّر علينا العثور على موقع الانطلاق أو الوجهة.";
+"error.geocode_from_ambiguous" = "موقع الانطلاق غير واضح. حاول أن تكون أكثر تحديدًا.";
+"error.geocode_to_ambiguous" = "الوجهة غير واضحة. حاول أن تكون أكثر تحديدًا.";
+"error.geocode_from_to_ambiguous" = "كلا الموقعين بحاجة إلى مزيد من التفاصيل. حاول تحسينهما.";
+
+/* Validation */
+"error.too_close" = "نقطة الانطلاق والوجهة قريبتان جدًا من بعضهما.";
+"error.location_not_accessible" = "هذا المسار غير متاح مع الخيار المحدد.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "بعض خيارات المسار مفقودة.";
+"error.triangle_not_affine" = "خيارات المسار المحددة غير متوافقة معًا.";
+"error.triangle_optimize_type_not_set" = "يُرجى اختيار تفضيل المسار.";
+"error.triangle_values_not_set" = "يُرجى ضبط تفضيلات المسار.";
+
+/* Map */
+"map.origin" = "نقطة الانطلاق";
+"map.destination" = "الوجهة";
+"map.finding" = "جارٍ البحث...";
+"map.searching_address" = "جارٍ البحث عن العنوان";
+
+/* Loading */
+"loading.planning_trip" = "جارٍ تخطيط رحلتك...";
+
+/* Time Selection */
+"time_selection.title" = "اختيار الوقت";
+"time_selection.date" = "التاريخ";
+"time_selection.time" = "الوقت";
+"time_selection.select_date_accessibility" = "اختر تاريخ المغادرة";
+"time_selection.select_time_accessibility" = "اختر وقت المغادرة";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "المغادرة الآن";
+"time_preference.depart_at_title" = "المغادرة في";
+"time_preference.arrive_by_title" = "الوصول بحلول";
+"time_preference.leave_now_desc" = "ابدأ رحلتك فورًا";
+"time_preference.depart_at_desc" = "غادر في وقت محدد";
+"time_preference.arrive_by_desc" = "صِل بحلول وقت محدد";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "أسرع رحلة";
+"route_preference.fewest_transfers_title" = "أقل عدد من التحويلات";
+"route_preference.fastest_trip_desc" = "إعطاء الأولوية لأقصر وقت سفر";
+"route_preference.fewest_transfers_desc" = "تقليل عدد التحويلات";
+
+/* Search Bar */
+"search_bar.placeholder" = "ابحث عن أماكن";
+
+/* Trip Results */
+"trip_results.preview_button" = "معاينة";
+"trip_results.cancel_button" = "إلغاء";
+"trip_results.no_trips_found" = "لم يتم العثور على رحلات";
+"trip_results.duration_format" = "%d دقيقة";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "إلغاء";
+"trip_preview.start_button" = "ابدأ";
+"trip_preview.depart_label" = "المغادرة:";
+"trip_preview.arrive_label" = "الوصول:";
+
+/* Option Row */
+"option_row.selected_hint" = "محدد";
+"option_row.tap_to_select_hint" = "اضغط للتحديد";
+"option_row.preview_section" = "معاينة";
+"option_row.fastest_trip_title" = "أسرع رحلة";
+"option_row.fastest_trip_desc" = "إعطاء الأولوية لأقصر وقت سفر";
+"option_row.fewest_transfers_title" = "أقل عدد من التحويلات";
+"option_row.fewest_transfers_desc" = "تقليل عدد التحويلات";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "وقت المغادرة";
+"advanced_options.route_optimization_title" = "تحسين المسار";
+"advanced_options.walking_distance_title" = "مسافة المشي";
+"advanced_options.wheelchair_accessible" = "مهيأ للكراسي المتحركة";
+"advanced_options.wheelchair_accessible_label" = "مسارات مهيأة للكراسي المتحركة";
+"advanced_options.wheelchair_toggle_hint" = "فعّل الخيار للعثور على مسارات مناسبة لأجهزة التنقل";
+"advanced_options.wheelchair_footer" = "ابحث عن مسارات مناسبة لأجهزة التنقل والكراسي المتحركة";
+"advanced_options.max_walking_distance" = "أقصى مسافة مشي";
+"advanced_options.cancel" = "إلغاء";
+"advanced_options.done" = "تم";
+"advanced_options.cancel_accessibility" = "إلغاء الخيارات المتقدمة";
+"advanced_options.save_accessibility" = "حفظ الخيارات المتقدمة";
+
+/* Bottom Controls */
+"bottom.from" = "من";
+"bottom.to" = "إلى";
+"bottom.current_location" = "الموقع الحالي";
+"bottom.choose_destination" = "اختر الوجهة";
+"bottom.search" = "بحث";
+"bottom.options" = "الخيارات";
+"bottom.directions" = "الاتجاهات";
+"bottom.advanced_options" = "خيارات الرحلة";
+
+// MARK: - Itinerary
+"itinerary.summary" = "المغادرة في %@؛ المدة: %@";

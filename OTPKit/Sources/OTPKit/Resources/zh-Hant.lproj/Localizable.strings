@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Traditional Chinese - zh-Hant)
+ */
+
+/* Test */
+"test_loc" = "來自 OTPKit 的問候";
+
+
+/* Titles */
+"error.network.title" = "網路錯誤";
+"error.trip_planning.title" = "行程規劃錯誤";
+
+/* Messages */
+"error.api.message" = "API 錯誤：%@";
+"error.trip_planning.message" = "行程規劃失敗：%@";
+"error.missing_locations.message" = "請同時選擇起點與終點。";
+"error.unknown" = "發生未知的錯誤。";
+
+/* Planning */
+"error.system_error" = "目前無法規劃您的行程，請再試一次。";
+"error.graph_unavailable" = "行程規劃功能暫時無法使用，請稍後再試。";
+"error.outside_bounds" = "尚未支援此地點。";
+"error.path_not_found" = "此行程沒有可用的路線。";
+"error.no_transit_times" = "目前沒有可用的大眾運輸選項。";
+"error.request_timeout" = "處理時間比預期還久，請再試一次。";
+"error.bogus_parameter" = "此請求發生問題，請再試一次。";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "找不到起點位置。";
+"error.geocode_to_not_found" = "找不到終點位置。";
+"error.geocode_from_to_not_found" = "找不到起點或終點位置。";
+"error.geocode_from_ambiguous" = "起點位置不夠明確，請提供更詳細的資訊。";
+"error.geocode_to_ambiguous" = "終點位置不夠明確，請提供更詳細的資訊。";
+"error.geocode_from_to_ambiguous" = "起點與終點都需要更詳細的資訊，請再修正。";
+
+/* Validation */
+"error.too_close" = "起點與終點距離太近。";
+"error.location_not_accessible" = "所選選項無法通行此路線。";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "缺少部分路線選項。";
+"error.triangle_not_affine" = "所選的路線選項無法搭配使用。";
+"error.triangle_optimize_type_not_set" = "請選擇路線偏好。";
+"error.triangle_values_not_set" = "請調整路線偏好。";
+
+/* Map */
+"map.origin" = "起點";
+"map.destination" = "終點";
+"map.finding" = "尋找中…";
+"map.searching_address" = "正在搜尋地址";
+
+/* Loading */
+"loading.planning_trip" = "正在規劃您的行程…";
+
+/* Time Selection */
+"time_selection.title" = "時間選擇";
+"time_selection.date" = "日期";
+"time_selection.time" = "時間";
+"time_selection.select_date_accessibility" = "選擇出發日期";
+"time_selection.select_time_accessibility" = "選擇出發時間";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "立即出發";
+"time_preference.depart_at_title" = "指定出發時間";
+"time_preference.arrive_by_title" = "指定到達時間";
+"time_preference.leave_now_desc" = "立即開始您的行程";
+"time_preference.depart_at_desc" = "在指定時間出發";
+"time_preference.arrive_by_desc" = "在指定時間到達";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "最快行程";
+"route_preference.fewest_transfers_title" = "最少轉乘";
+"route_preference.fastest_trip_desc" = "優先考量最短的行程時間";
+"route_preference.fewest_transfers_desc" = "盡量減少轉乘次數";
+
+/* Search Bar */
+"search_bar.placeholder" = "搜尋地點";
+
+/* Trip Results */
+"trip_results.preview_button" = "預覽";
+"trip_results.cancel_button" = "取消";
+"trip_results.no_trips_found" = "找不到行程";
+"trip_results.duration_format" = "%d 分鐘";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "取消";
+"trip_preview.start_button" = "開始";
+"trip_preview.depart_label" = "出發：";
+"trip_preview.arrive_label" = "到達：";
+
+/* Option Row */
+"option_row.selected_hint" = "已選擇";
+"option_row.tap_to_select_hint" = "點一下以選擇";
+"option_row.preview_section" = "預覽";
+"option_row.fastest_trip_title" = "最快行程";
+"option_row.fastest_trip_desc" = "優先考量最短的行程時間";
+"option_row.fewest_transfers_title" = "最少轉乘";
+"option_row.fewest_transfers_desc" = "盡量減少轉乘次數";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "出發時間";
+"advanced_options.route_optimization_title" = "路線最佳化";
+"advanced_options.walking_distance_title" = "步行距離";
+"advanced_options.wheelchair_accessible" = "輪椅無障礙";
+"advanced_options.wheelchair_accessible_label" = "輪椅無障礙路線";
+"advanced_options.wheelchair_toggle_hint" = "切換以尋找適合行動輔具的路線";
+"advanced_options.wheelchair_footer" = "尋找適合行動輔具與輪椅的路線";
+"advanced_options.max_walking_distance" = "最長步行距離";
+"advanced_options.cancel" = "取消";
+"advanced_options.done" = "完成";
+"advanced_options.cancel_accessibility" = "取消進階選項";
+"advanced_options.save_accessibility" = "儲存進階選項";
+
+/* Bottom Controls */
+"bottom.from" = "從";
+"bottom.to" = "到";
+"bottom.current_location" = "目前位置";
+"bottom.choose_destination" = "選擇目的地";
+"bottom.search" = "搜尋";
+"bottom.options" = "選項";
+"bottom.directions" = "路線指引";
+"bottom.advanced_options" = "行程選項";
+
+// MARK: - Itinerary
+"itinerary.summary" = "於 %@ 出發；歷時：%@";

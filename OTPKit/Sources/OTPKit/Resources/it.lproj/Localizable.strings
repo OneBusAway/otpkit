@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Italian - it)
+ */
+
+/* Test */
+"test_loc" = "Ciao da OTPKit";
+
+
+/* Titles */
+"error.network.title" = "Errore di rete";
+"error.trip_planning.title" = "Errore di pianificazione del viaggio";
+
+/* Messages */
+"error.api.message" = "Errore API: %@";
+"error.trip_planning.message" = "Pianificazione del viaggio non riuscita: %@";
+"error.missing_locations.message" = "Seleziona sia il punto di partenza che la destinazione.";
+"error.unknown" = "Si è verificato un errore sconosciuto.";
+
+/* Planning */
+"error.system_error" = "Al momento non è stato possibile pianificare il viaggio. Riprova.";
+"error.graph_unavailable" = "La pianificazione del viaggio non è momentaneamente disponibile. Riprova a breve.";
+"error.outside_bounds" = "Questa posizione non è ancora supportata.";
+"error.path_not_found" = "Nessun percorso disponibile per questo viaggio.";
+"error.no_transit_times" = "Al momento non è disponibile alcuna opzione di trasporto pubblico.";
+"error.request_timeout" = "L'operazione ha richiesto più tempo del previsto. Riprova.";
+"error.bogus_parameter" = "Si è verificato un problema con la richiesta. Riprova.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "Non è stato possibile trovare il punto di partenza.";
+"error.geocode_to_not_found" = "Non è stato possibile trovare la destinazione.";
+"error.geocode_from_to_not_found" = "Non è stato possibile trovare né il punto di partenza né la destinazione.";
+"error.geocode_from_ambiguous" = "Il punto di partenza non è chiaro. Prova a essere più specifico.";
+"error.geocode_to_ambiguous" = "La destinazione non è chiara. Prova a essere più specifico.";
+"error.geocode_from_to_ambiguous" = "Entrambe le posizioni necessitano di maggiori dettagli. Prova a precisarle.";
+
+/* Validation */
+"error.too_close" = "Il punto di partenza e la destinazione sono troppo vicini.";
+"error.location_not_accessible" = "Questo percorso non è accessibile con l'opzione selezionata.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "Alcune opzioni di percorso sono mancanti.";
+"error.triangle_not_affine" = "Le opzioni di percorso selezionate non sono compatibili tra loro.";
+"error.triangle_optimize_type_not_set" = "Scegli una preferenza di percorso.";
+"error.triangle_values_not_set" = "Modifica le preferenze di percorso.";
+
+/* Map */
+"map.origin" = "Partenza";
+"map.destination" = "Destinazione";
+"map.finding" = "Ricerca in corso...";
+"map.searching_address" = "Ricerca dell'indirizzo";
+
+/* Loading */
+"loading.planning_trip" = "Pianificazione del viaggio in corso...";
+
+/* Time Selection */
+"time_selection.title" = "Selezione dell'orario";
+"time_selection.date" = "Data";
+"time_selection.time" = "Ora";
+"time_selection.select_date_accessibility" = "Seleziona la data di partenza";
+"time_selection.select_time_accessibility" = "Seleziona l'ora di partenza";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "Parti ora";
+"time_preference.depart_at_title" = "Parti alle";
+"time_preference.arrive_by_title" = "Arriva entro";
+"time_preference.leave_now_desc" = "Inizia subito il viaggio";
+"time_preference.depart_at_desc" = "Parti a un orario specifico";
+"time_preference.arrive_by_desc" = "Arriva entro un orario specifico";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "Viaggio più veloce";
+"route_preference.fewest_transfers_title" = "Meno cambi";
+"route_preference.fastest_trip_desc" = "Dai priorità al minor tempo di viaggio";
+"route_preference.fewest_transfers_desc" = "Riduci al minimo il numero di cambi";
+
+/* Search Bar */
+"search_bar.placeholder" = "Cerca luoghi";
+
+/* Trip Results */
+"trip_results.preview_button" = "Anteprima";
+"trip_results.cancel_button" = "Annulla";
+"trip_results.no_trips_found" = "Nessun viaggio trovato";
+"trip_results.duration_format" = "%d min";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "Annulla";
+"trip_preview.start_button" = "Inizia";
+"trip_preview.depart_label" = "Partenza:";
+"trip_preview.arrive_label" = "Arrivo:";
+
+/* Option Row */
+"option_row.selected_hint" = "Selezionato";
+"option_row.tap_to_select_hint" = "Tocca per selezionare";
+"option_row.preview_section" = "Anteprima";
+"option_row.fastest_trip_title" = "Viaggio più veloce";
+"option_row.fastest_trip_desc" = "Dai priorità al minor tempo di viaggio";
+"option_row.fewest_transfers_title" = "Meno cambi";
+"option_row.fewest_transfers_desc" = "Riduci al minimo il numero di cambi";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "Orario di partenza";
+"advanced_options.route_optimization_title" = "Ottimizzazione del percorso";
+"advanced_options.walking_distance_title" = "Distanza a piedi";
+"advanced_options.wheelchair_accessible" = "Accessibile in sedia a rotelle";
+"advanced_options.wheelchair_accessible_label" = "Percorsi accessibili in sedia a rotelle";
+"advanced_options.wheelchair_toggle_hint" = "Attiva per trovare percorsi adatti ai dispositivi per la mobilità";
+"advanced_options.wheelchair_footer" = "Trova percorsi adatti a dispositivi per la mobilità e sedie a rotelle";
+"advanced_options.max_walking_distance" = "Distanza massima a piedi";
+"advanced_options.cancel" = "Annulla";
+"advanced_options.done" = "Fatto";
+"advanced_options.cancel_accessibility" = "Annulla opzioni avanzate";
+"advanced_options.save_accessibility" = "Salva opzioni avanzate";
+
+/* Bottom Controls */
+"bottom.from" = "Da";
+"bottom.to" = "A";
+"bottom.current_location" = "Posizione attuale";
+"bottom.choose_destination" = "Scegli la destinazione";
+"bottom.search" = "Cerca";
+"bottom.options" = "Opzioni";
+"bottom.directions" = "Indicazioni";
+"bottom.advanced_options" = "Opzioni del viaggio";
+
+// MARK: - Itinerary
+"itinerary.summary" = "Parte alle %@; durata: %@";
