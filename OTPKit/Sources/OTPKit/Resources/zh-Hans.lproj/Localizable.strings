@@ -15,6 +15,33 @@
 "error.missing_locations.message" = "请选择起点和终点位置。";
 "error.unknown" = "发生未知错误。";
 
+/* Planning */
+"error.system_error" = "我们暂时无法规划您的行程。请重试。";
+"error.graph_unavailable" = "行程规划暂时不可用。请稍后重试。";
+"error.outside_bounds" = "尚不支持此位置。";
+"error.path_not_found" = "此行程没有可用的路线。";
+"error.no_transit_times" = "目前没有可用的公交方案。";
+"error.request_timeout" = "此操作耗时超出预期。请重试。";
+"error.bogus_parameter" = "请求出现问题。请重试。";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "无法找到起点位置。";
+"error.geocode_to_not_found" = "无法找到终点位置。";
+"error.geocode_from_to_not_found" = "无法找到起点或终点位置。";
+"error.geocode_from_ambiguous" = "起点位置不够明确。请提供更具体的信息。";
+"error.geocode_to_ambiguous" = "终点位置不够明确。请提供更具体的信息。";
+"error.geocode_from_to_ambiguous" = "两个位置都需要更多细节。请进一步明确。";
+
+/* Validation */
+"error.too_close" = "起点和终点距离太近。";
+"error.location_not_accessible" = "在所选选项下，此路线无法通行。";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "部分路线选项缺失。";
+"error.triangle_not_affine" = "所选的路线选项无法同时使用。";
+"error.triangle_optimize_type_not_set" = "请选择路线偏好。";
+"error.triangle_values_not_set" = "请调整路线偏好。";
+
 /* Map */
 "map.origin" = "起点";
 "map.destination" = "终点";
@@ -93,4 +120,5 @@
 "bottom.directions" = "路线";
 "bottom.advanced_options" = "高级选项";
 
-
+// MARK: - Itinerary
+"itinerary.summary" = "%@ 出发；时长：%@";

@@ -16,6 +16,33 @@
 "error.missing_locations.message" = "Por favor selecciona ubicaciones de origen y destino.";
 "error.unknown" = "Ocurrió un error desconocido.";
 
+/* Planning */
+"error.system_error" = "No pudimos planificar tu viaje en este momento. Inténtalo de nuevo.";
+"error.graph_unavailable" = "La planificación de viajes no está disponible temporalmente. Inténtalo de nuevo en unos momentos.";
+"error.outside_bounds" = "Esta ubicación aún no es compatible.";
+"error.path_not_found" = "No hay ninguna ruta disponible para este viaje.";
+"error.no_transit_times" = "No hay opciones de transporte público disponibles en este momento.";
+"error.request_timeout" = "Esto tardó más de lo esperado. Inténtalo de nuevo.";
+"error.bogus_parameter" = "Algo salió mal con la solicitud. Inténtalo de nuevo.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "No pudimos encontrar el punto de partida.";
+"error.geocode_to_not_found" = "No pudimos encontrar el destino.";
+"error.geocode_from_to_not_found" = "No pudimos encontrar ni el punto de partida ni el destino.";
+"error.geocode_from_ambiguous" = "El punto de partida no está claro. Intenta ser más específico.";
+"error.geocode_to_ambiguous" = "El destino no está claro. Intenta ser más específico.";
+"error.geocode_from_to_ambiguous" = "Ambas ubicaciones necesitan más detalle. Intenta precisarlas.";
+
+/* Validation */
+"error.too_close" = "El punto de partida y el destino están demasiado cerca.";
+"error.location_not_accessible" = "Esta ruta no es accesible con la opción seleccionada.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "Faltan algunas opciones de ruta.";
+"error.triangle_not_affine" = "Las opciones de ruta seleccionadas no son compatibles entre sí.";
+"error.triangle_optimize_type_not_set" = "Por favor elige una preferencia de ruta.";
+"error.triangle_values_not_set" = "Por favor ajusta las preferencias de ruta.";
+
 /* Map */
 "map.origin" = "Origen";
 "map.destination" = "Destino";
@@ -94,4 +121,5 @@
 "bottom.directions" = "Indicaciones";
 "bottom.advanced_options" = "Opciones Avanzadas";
 
-
+// MARK: - Itinerary
+"itinerary.summary" = "Sale a las %@; duración: %@";

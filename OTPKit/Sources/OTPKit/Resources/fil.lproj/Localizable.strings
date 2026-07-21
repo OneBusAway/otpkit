@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Filipino - fil)
+ */
+
+/* Test */
+"test_loc" = "Kumusta mula sa OTPKit";
+
+
+/* Titles */
+"error.network.title" = "Error sa Network";
+"error.trip_planning.title" = "Error sa Pagpaplano ng Biyahe";
+
+/* Messages */
+"error.api.message" = "Error sa API: %@";
+"error.trip_planning.message" = "Nabigo ang pagpaplano ng biyahe: %@";
+"error.missing_locations.message" = "Pakipili ang parehong lokasyon ng pinagmulan at destinasyon.";
+"error.unknown" = "May naganap na hindi kilalang error.";
+
+/* Planning */
+"error.system_error" = "Hindi namin maplano ang iyong biyahe sa ngayon. Pakisubukang muli.";
+"error.graph_unavailable" = "Pansamantalang hindi available ang pagpaplano ng biyahe. Subukang muli sa ilang sandali.";
+"error.outside_bounds" = "Hindi pa suportado ang lokasyong ito.";
+"error.path_not_found" = "Walang available na ruta para sa biyaheng ito.";
+"error.no_transit_times" = "Walang available na opsyon sa transit sa ngayon.";
+"error.request_timeout" = "Mas matagal ito kaysa sa inaasahan. Pakisubukang muli.";
+"error.bogus_parameter" = "May nangyaring mali sa kahilingan. Pakisubukang muli.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "Hindi namin nahanap ang panimulang lokasyon.";
+"error.geocode_to_not_found" = "Hindi namin nahanap ang destinasyon.";
+"error.geocode_from_to_not_found" = "Hindi namin nahanap ang panimulang lokasyon o ang destinasyon.";
+"error.geocode_from_ambiguous" = "Hindi malinaw ang panimulang lokasyon. Subukang maging mas tiyak.";
+"error.geocode_to_ambiguous" = "Hindi malinaw ang destinasyon. Subukang maging mas tiyak.";
+"error.geocode_from_to_ambiguous" = "Kailangan ng mas maraming detalye ang parehong lokasyon. Subukang pinuhin ang mga ito.";
+
+/* Validation */
+"error.too_close" = "Masyadong malapit ang panimula at destinasyon.";
+"error.location_not_accessible" = "Hindi maa-access ang rutang ito gamit ang napiling opsyon.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "May kulang na mga opsyon sa ruta.";
+"error.triangle_not_affine" = "Hindi magkatugma ang mga napiling opsyon sa ruta.";
+"error.triangle_optimize_type_not_set" = "Pumili ng kagustuhan sa ruta.";
+"error.triangle_values_not_set" = "Pakiayos ang mga kagustuhan sa ruta.";
+
+/* Map */
+"map.origin" = "Pinagmulan";
+"map.destination" = "Destinasyon";
+"map.finding" = "Hinahanap...";
+"map.searching_address" = "Naghahanap ng address";
+
+/* Loading */
+"loading.planning_trip" = "Pinaplano ang iyong biyahe...";
+
+/* Time Selection */
+"time_selection.title" = "Pagpili ng Oras";
+"time_selection.date" = "Petsa";
+"time_selection.time" = "Oras";
+"time_selection.select_date_accessibility" = "Pumili ng petsa ng pag-alis";
+"time_selection.select_time_accessibility" = "Pumili ng oras ng pag-alis";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "Umalis Ngayon";
+"time_preference.depart_at_title" = "Umalis Sa";
+"time_preference.arrive_by_title" = "Dumating Sa";
+"time_preference.leave_now_desc" = "Simulan agad ang iyong biyahe";
+"time_preference.depart_at_desc" = "Umalis sa isang partikular na oras";
+"time_preference.arrive_by_desc" = "Dumating sa isang partikular na oras";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "Pinakamabilis na Biyahe";
+"route_preference.fewest_transfers_title" = "Pinakakaunting Paglipat";
+"route_preference.fastest_trip_desc" = "Unahin ang pinakamaikling oras ng biyahe";
+"route_preference.fewest_transfers_desc" = "Bawasan ang bilang ng mga koneksyon";
+
+/* Search Bar */
+"search_bar.placeholder" = "Maghanap ng mga lugar";
+
+/* Trip Results */
+"trip_results.preview_button" = "I-preview";
+"trip_results.cancel_button" = "Kanselahin";
+"trip_results.no_trips_found" = "Walang nahanap na biyahe";
+"trip_results.duration_format" = "%d min";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "Kanselahin";
+"trip_preview.start_button" = "Simulan";
+"trip_preview.depart_label" = "Alis:";
+"trip_preview.arrive_label" = "Dating:";
+
+/* Option Row */
+"option_row.selected_hint" = "Napili";
+"option_row.tap_to_select_hint" = "I-tap para pumili";
+"option_row.preview_section" = "Preview";
+"option_row.fastest_trip_title" = "Pinakamabilis na Biyahe";
+"option_row.fastest_trip_desc" = "Unahin ang pinakamaikling oras ng biyahe";
+"option_row.fewest_transfers_title" = "Pinakakaunting Paglipat";
+"option_row.fewest_transfers_desc" = "Bawasan ang bilang ng mga koneksyon";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "Oras ng Pag-alis";
+"advanced_options.route_optimization_title" = "Pag-optimize ng Ruta";
+"advanced_options.walking_distance_title" = "Distansya ng Paglalakad";
+"advanced_options.wheelchair_accessible" = "Naa-access sa wheelchair";
+"advanced_options.wheelchair_accessible_label" = "Mga rutang naa-access sa wheelchair";
+"advanced_options.wheelchair_toggle_hint" = "I-toggle para maghanap ng mga rutang angkop para sa mga mobility device";
+"advanced_options.wheelchair_footer" = "Maghanap ng mga rutang angkop para sa mga mobility device at wheelchair";
+"advanced_options.max_walking_distance" = "Pinakamataas na distansya ng paglalakad";
+"advanced_options.cancel" = "Kanselahin";
+"advanced_options.done" = "Tapos Na";
+"advanced_options.cancel_accessibility" = "Kanselahin ang mga advanced na opsyon";
+"advanced_options.save_accessibility" = "I-save ang mga advanced na opsyon";
+
+/* Bottom Controls */
+"bottom.from" = "Mula";
+"bottom.to" = "Patungo";
+"bottom.current_location" = "Kasalukuyang lokasyon";
+"bottom.choose_destination" = "Pumili ng destinasyon";
+"bottom.search" = "Maghanap";
+"bottom.options" = "Mga Opsyon";
+"bottom.directions" = "Mga Direksyon";
+"bottom.advanced_options" = "Mga Opsyon sa Biyahe";
+
+// MARK: - Itinerary
+"itinerary.summary" = "Aalis sa %@; tagal: %@";

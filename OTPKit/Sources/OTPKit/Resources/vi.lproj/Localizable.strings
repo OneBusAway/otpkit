@@ -1,0 +1,125 @@
+/*
+ Localizable.strings (Vietnamese - vi)
+ */
+
+/* Test */
+"test_loc" = "Xin chào từ OTPKit";
+
+
+/* Titles */
+"error.network.title" = "Lỗi mạng";
+"error.trip_planning.title" = "Lỗi lập kế hoạch chuyến đi";
+
+/* Messages */
+"error.api.message" = "Lỗi API: %@";
+"error.trip_planning.message" = "Lập kế hoạch chuyến đi thất bại: %@";
+"error.missing_locations.message" = "Vui lòng chọn cả điểm đi và điểm đến.";
+"error.unknown" = "Đã xảy ra lỗi không xác định.";
+
+/* Planning */
+"error.system_error" = "Hiện chúng tôi không thể lập kế hoạch chuyến đi của bạn. Vui lòng thử lại.";
+"error.graph_unavailable" = "Tính năng lập kế hoạch chuyến đi tạm thời không khả dụng. Vui lòng thử lại sau giây lát.";
+"error.outside_bounds" = "Địa điểm này chưa được hỗ trợ.";
+"error.path_not_found" = "Không có tuyến đường nào cho chuyến đi này.";
+"error.no_transit_times" = "Hiện không có lựa chọn phương tiện công cộng nào.";
+"error.request_timeout" = "Quá trình này mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.";
+"error.bogus_parameter" = "Đã xảy ra sự cố với yêu cầu. Vui lòng thử lại.";
+
+/* Geocoding */
+"error.geocode_from_not_found" = "Chúng tôi không tìm thấy điểm xuất phát.";
+"error.geocode_to_not_found" = "Chúng tôi không tìm thấy điểm đến.";
+"error.geocode_from_to_not_found" = "Chúng tôi không tìm thấy cả điểm xuất phát lẫn điểm đến.";
+"error.geocode_from_ambiguous" = "Điểm xuất phát chưa rõ ràng. Hãy thử nêu cụ thể hơn.";
+"error.geocode_to_ambiguous" = "Điểm đến chưa rõ ràng. Hãy thử nêu cụ thể hơn.";
+"error.geocode_from_to_ambiguous" = "Cả hai địa điểm cần thêm chi tiết. Hãy thử làm rõ hơn.";
+
+/* Validation */
+"error.too_close" = "Điểm xuất phát và điểm đến quá gần nhau.";
+"error.location_not_accessible" = "Không thể tiếp cận tuyến đường này với lựa chọn đã chọn.";
+
+/* Triangle routing (advanced) */
+"error.underspecified_triangle" = "Thiếu một số tùy chọn tuyến đường.";
+"error.triangle_not_affine" = "Các tùy chọn tuyến đường đã chọn không tương thích với nhau.";
+"error.triangle_optimize_type_not_set" = "Vui lòng chọn một ưu tiên tuyến đường.";
+"error.triangle_values_not_set" = "Vui lòng điều chỉnh các tùy chọn tuyến đường.";
+
+/* Map */
+"map.origin" = "Điểm đi";
+"map.destination" = "Điểm đến";
+"map.finding" = "Đang tìm...";
+"map.searching_address" = "Đang tìm địa chỉ";
+
+/* Loading */
+"loading.planning_trip" = "Đang lập kế hoạch chuyến đi của bạn...";
+
+/* Time Selection */
+"time_selection.title" = "Chọn thời gian";
+"time_selection.date" = "Ngày";
+"time_selection.time" = "Giờ";
+"time_selection.select_date_accessibility" = "Chọn ngày khởi hành";
+"time_selection.select_time_accessibility" = "Chọn giờ khởi hành";
+
+/* Time Preference */
+"time_preference.leave_now_title" = "Đi ngay";
+"time_preference.depart_at_title" = "Khởi hành lúc";
+"time_preference.arrive_by_title" = "Đến trước";
+"time_preference.leave_now_desc" = "Bắt đầu chuyến đi ngay lập tức";
+"time_preference.depart_at_desc" = "Khởi hành vào một thời điểm cụ thể";
+"time_preference.arrive_by_desc" = "Đến vào một thời điểm cụ thể";
+
+/* Route Preference */
+"route_preference.fastest_trip_title" = "Chuyến nhanh nhất";
+"route_preference.fewest_transfers_title" = "Ít chuyển tuyến nhất";
+"route_preference.fastest_trip_desc" = "Ưu tiên thời gian di chuyển ngắn nhất";
+"route_preference.fewest_transfers_desc" = "Giảm thiểu số lần chuyển tuyến";
+
+/* Search Bar */
+"search_bar.placeholder" = "Tìm kiếm địa điểm";
+
+/* Trip Results */
+"trip_results.preview_button" = "Xem trước";
+"trip_results.cancel_button" = "Hủy";
+"trip_results.no_trips_found" = "Không tìm thấy chuyến đi nào";
+"trip_results.duration_format" = "%d phút";
+
+/* Trip Preview */
+"trip_preview.cancel_button" = "Hủy";
+"trip_preview.start_button" = "Bắt đầu";
+"trip_preview.depart_label" = "Khởi hành:";
+"trip_preview.arrive_label" = "Đến:";
+
+/* Option Row */
+"option_row.selected_hint" = "Đã chọn";
+"option_row.tap_to_select_hint" = "Nhấn để chọn";
+"option_row.preview_section" = "Xem trước";
+"option_row.fastest_trip_title" = "Chuyến nhanh nhất";
+"option_row.fastest_trip_desc" = "Ưu tiên thời gian di chuyển ngắn nhất";
+"option_row.fewest_transfers_title" = "Ít chuyển tuyến nhất";
+"option_row.fewest_transfers_desc" = "Giảm thiểu số lần chuyển tuyến";
+
+/* Advanced Options */
+"advanced_options.departure_time_title" = "Thời gian khởi hành";
+"advanced_options.route_optimization_title" = "Tối ưu hóa tuyến đường";
+"advanced_options.walking_distance_title" = "Khoảng cách đi bộ";
+"advanced_options.wheelchair_accessible" = "Tiếp cận bằng xe lăn";
+"advanced_options.wheelchair_accessible_label" = "Tuyến đường tiếp cận bằng xe lăn";
+"advanced_options.wheelchair_toggle_hint" = "Bật để tìm các tuyến đường phù hợp với thiết bị hỗ trợ di chuyển";
+"advanced_options.wheelchair_footer" = "Tìm các tuyến đường phù hợp với thiết bị hỗ trợ di chuyển và xe lăn";
+"advanced_options.max_walking_distance" = "Khoảng cách đi bộ tối đa";
+"advanced_options.cancel" = "Hủy";
+"advanced_options.done" = "Xong";
+"advanced_options.cancel_accessibility" = "Hủy tùy chọn nâng cao";
+"advanced_options.save_accessibility" = "Lưu tùy chọn nâng cao";
+
+/* Bottom Controls */
+"bottom.from" = "Từ";
+"bottom.to" = "Đến";
+"bottom.current_location" = "Vị trí hiện tại";
+"bottom.choose_destination" = "Chọn điểm đến";
+"bottom.search" = "Tìm kiếm";
+"bottom.options" = "Tùy chọn";
+"bottom.directions" = "Chỉ đường";
+"bottom.advanced_options" = "Tùy chọn chuyến đi";
+
+// MARK: - Itinerary
+"itinerary.summary" = "Khởi hành lúc %@; thời lượng: %@";
