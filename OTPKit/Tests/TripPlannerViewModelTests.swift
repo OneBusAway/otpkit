@@ -25,16 +25,19 @@ struct TripPlannerViewModelTests {
 
     // MARK: - Test Helpers
 
-    /// Waits for the ViewModel's isLoading to become false, with a timeout.
-    /// This replaces fixed `Task.sleep` calls that are flaky on slow CI machines.
+    /// Waits for the ViewModel's in-flight trip planning work to finish.
+    ///
+    /// This awaits the ViewModel's `activePlanTask` directly rather than polling
+    /// `isLoading` against a wall-clock timeout. Polling was flaky under Swift
+    /// Testing's parallel execution: every `@MainActor` test contends for the
+    /// main actor, so the async response could be applied after the timeout
+    /// fired. Awaiting the task is deterministic and has no timing dependence.
+    /// If there is no active task (e.g. `planTrip()` returned early on a
+    /// validation failure), this returns immediately.
     func waitForLoadingComplete(
-        _ viewModel: TripPlannerViewModel,
-        timeout: TimeInterval = 5.0
-    ) async throws {
-        let start = Date()
-        while viewModel.isLoading && Date().timeIntervalSince(start) < timeout {
-            try await Task.sleep(nanoseconds: 100_000_000) // Poll every 0.1 seconds
-        }
+        _ viewModel: TripPlannerViewModel
+    ) async {
+        await viewModel.activePlanTask?.value
     }
 
     func createViewModel(
@@ -206,7 +209,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.isLoading == false)
         #expect(viewModel.tripPlanResponse != nil)
@@ -229,7 +232,7 @@ struct TripPlannerViewModelTests {
         // Note: isLoading may already be false by the time we check due to async completion
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.isLoading == false)
     }
@@ -247,7 +250,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == true)
         #expect(viewModel.errorMessage != nil)
@@ -270,7 +273,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == false)
         #expect(viewModel.errorMessage == nil)
@@ -289,7 +292,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.wheelchairAccessible == true)
     }
@@ -307,7 +310,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.maxWalkDistance == WalkingDistance.halfMile.meters)
     }
@@ -325,7 +328,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.arriveBy == true)
     }
@@ -343,7 +346,7 @@ struct TripPlannerViewModelTests {
         viewModel.planTrip()
 
         // Wait for async operation to complete (polling instead of fixed sleep)
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(mockAPIService.lastRequest?.arriveBy == false)
     }
@@ -467,7 +470,7 @@ struct TripPlannerViewModelTests {
 
         viewModel.planTrip()
 
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == true)
         #expect(viewModel.errorMessage != nil)
@@ -488,7 +491,7 @@ struct TripPlannerViewModelTests {
         mockAPIService.mockResponse = successResponse
 
         viewModel.planTrip()
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.tripPlanResponse != nil)
         #expect(viewModel.showingError == false)
@@ -505,7 +508,7 @@ struct TripPlannerViewModelTests {
         mockAPIService.mockResponse = errorResponse
 
         viewModel.planTrip()
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         // Verify previous response is cleared and error is shown
         #expect(viewModel.tripPlanResponse == nil)
@@ -526,7 +529,7 @@ struct TripPlannerViewModelTests {
         viewModel.selectedDestination = TestHelpers.location(title: "Destination")
 
         viewModel.planTrip()
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         #expect(viewModel.showingError == true)
         #expect(viewModel.errorMessage == errorResponse.error?.messageCode.displayMessage)
@@ -546,7 +549,7 @@ struct TripPlannerViewModelTests {
         mockAPIService.mockError = OTPKitError.apiError("Network timeout")
 
         viewModel.planTrip()
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         let networkErrorMessage = viewModel.errorMessage
         #expect(viewModel.showingError == true)
@@ -563,7 +566,7 @@ struct TripPlannerViewModelTests {
         mockAPIService.mockResponse = errorResponse
 
         viewModel.planTrip()
-        try await waitForLoadingComplete(viewModel)
+        await waitForLoadingComplete(viewModel)
 
         let otpErrorMessage = viewModel.errorMessage
         #expect(viewModel.showingError == true)

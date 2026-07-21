@@ -66,6 +66,11 @@ public class TripPlannerViewModel: ObservableObject {
     /// Loading state for API calls
     @Published var isLoading = false
 
+    /// Handle to the in-flight trip planning task, if any.
+    /// Exposed so callers (and tests) can deterministically await completion
+    /// instead of polling `isLoading`.
+    private(set) var activePlanTask: Task<Void, Never>?
+
     /// Response from the OTP API containing trip plans
     @Published var tripPlanResponse: OTPResponse?
 
@@ -202,7 +207,7 @@ public class TripPlannerViewModel: ObservableObject {
         errorMessage = nil
         showingError = false
 
-        Task {
+        activePlanTask = Task {
             do {
                 let response = try await apiService.fetchPlan(request)
                 await MainActor.run {
