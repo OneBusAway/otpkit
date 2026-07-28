@@ -20,7 +20,7 @@ struct SearchBar: View {
                 .foregroundColor(theme.secondaryColor)
                 .font(.system(size: 16))
 
-            TextField("Search for places", text: $searchText)
+            TextField(OTPLoc("search_bar.placeholder", comment: "Placeholder for the location search field"), text: $searchText)
                 .focused($isSearchFocused)
                 .font(.system(size: 16))
                 .textFieldStyle(PlainTextFieldStyle())

@@ -138,12 +138,12 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Title for the selected origin or a placeholder if it is nil
     var selectedOriginTitle: String {
-        selectedOrigin?.title ?? Localization.string("bottom.current_location")
+        selectedOrigin?.title ?? OTPLoc("bottom.current_location", comment: "Placeholder when no origin is chosen")
     }
 
     /// Title for the selected destination or a placeholder if it is nil
     var selectedDestinationTitle: String {
-        selectedDestination?.title ?? Localization.string("bottom.choose_destination")
+        selectedDestination?.title ?? OTPLoc("bottom.choose_destination", comment: "Placeholder when no destination is chosen")
     }
 
     /// Returns true if both origin and destination are selected

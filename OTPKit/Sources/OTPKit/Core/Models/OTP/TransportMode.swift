@@ -22,13 +22,13 @@ public enum TransportMode: String, CaseIterable, Codable {
     public var displayName: String {
         switch self {
         case .transit:
-            return NSLocalizedString("transport_mode_transit", comment: "Transport mode: Transit")
+            return OTPLoc("transport_mode.transit", comment: "Transport mode: Transit")
         case .walk:
-            return NSLocalizedString("transport_mode_walk", comment: "Transport mode: Walk")
+            return OTPLoc("transport_mode.walk", comment: "Transport mode: Walk")
         case .bike:
-            return NSLocalizedString("transport_mode_bike", comment: "Transport mode: Bike")
+            return OTPLoc("transport_mode.bike", comment: "Transport mode: Bike")
         case .car:
-            return NSLocalizedString("transport_mode_car", comment: "Transport mode: Car")
+            return OTPLoc("transport_mode.car", comment: "Transport mode: Car")
         }
     }
 

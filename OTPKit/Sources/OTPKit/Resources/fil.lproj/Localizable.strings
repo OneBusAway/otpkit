@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "Kumusta mula sa OTPKit";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "Pakiayos ang mga kagustuhan sa ruta.";
 
 /* Map */
-"map.origin" = "Pinagmulan";
 "map.destination" = "Destinasyon";
-"map.finding" = "Hinahanap...";
-"map.searching_address" = "Naghahanap ng address";
 
 /* Loading */
 "loading.planning_trip" = "Pinaplano ang iyong biyahe...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "Maghanap ng mga lugar";
 
 /* Trip Results */
-"trip_results.preview_button" = "I-preview";
-"trip_results.cancel_button" = "Kanselahin";
 "trip_results.no_trips_found" = "Walang nahanap na biyahe";
-"trip_results.duration_format" = "%d min";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "Kanselahin";
-"trip_preview.start_button" = "Simulan";
 "trip_preview.depart_label" = "Alis:";
 "trip_preview.arrive_label" = "Dating:";
 
@@ -116,10 +107,154 @@
 "bottom.to" = "Patungo";
 "bottom.current_location" = "Kasalukuyang lokasyon";
 "bottom.choose_destination" = "Pumili ng destinasyon";
-"bottom.search" = "Maghanap";
 "bottom.options" = "Mga Opsyon";
-"bottom.directions" = "Mga Direksyon";
 "bottom.advanced_options" = "Mga Opsyon sa Biyahe";
 
 // MARK: - Itinerary
 "itinerary.summary" = "Aalis sa %@; tagal: %@";
+
+/* Common */
+"common.cancel" = "Kanselahin";
+"common.close" = "Isara";
+"common.delete" = "Tanggalin";
+"common.more" = "Higit pa";
+"common.unknown_location" = "Hindi alam";
+"common.error" = "Error";
+"common.generic_error" = "May naganap na error";
+
+/* Trip Planner */
+"trip_planner.title" = "Pagpaplano ng Biyahe";
+"trip_planner.find_routes" = "Maghanap ng Ruta";
+"trip_planner.go" = "Simulan";
+
+/* Location Picker */
+"location_picker.choose_start" = "Piliin ang Simula";
+"location_picker.choose_destination" = "Piliin ang Destinasyon";
+"location_picker.current_location_title" = "Kasalukuyang Lokasyon";
+"location_picker.current_location_subtitle" = "Gamitin ang iyong kasalukuyang lokasyon sa GPS";
+"location_picker.gps_location_subtitle" = "Ang iyong kasalukuyang lokasyon sa GPS";
+"location_picker.favorites_title" = "Mga Paborito";
+"location_picker.favorites_subtitle" = "Pumili mula sa iyong mga naka-save na lugar";
+"location_picker.recents_title" = "Kamakailan";
+"location_picker.recents_subtitle" = "Tingnan ang iyong mga kamakailang lokasyon";
+
+/* Search */
+"search.searching" = "Naghahanap...";
+"search.no_results_title" = "Walang nahanap na resulta";
+"search.no_results_message" = "Subukang maghanap ng ibang lokasyon";
+
+/* Current Location Button */
+"current_location.getting" = "Kinukuha ang lokasyon...";
+"current_location.access_denied" = "Tinanggihan ang access sa lokasyon";
+"current_location.unavailable" = "Hindi available ang lokasyon";
+"current_location.use_current" = "Gamitin ang Kasalukuyang Lokasyon";
+"current_location.getting_subtitle" = "Maghintay habang kinukuha namin ang iyong lokasyon";
+"current_location.enable_in_settings" = "I-enable ang access sa lokasyon sa Settings";
+"current_location.unable_subtitle" = "Hindi makuha ang iyong kasalukuyang lokasyon";
+"current_location.default_subtitle" = "Kumuha ng direksyon mula sa kinaroroonan mo ngayon";
+"current_location.access_denied_error" = "Tinanggihan ang access sa lokasyon";
+"current_location.unable_error" = "Hindi makuha ang kasalukuyang lokasyon";
+
+/* Favorites */
+"favorites.title" = "Mga Paborito";
+"favorites.empty" = "Walang Paborito";
+"favorites.sheet_title" = "Mga Paboritong Hintuan";
+"favorites.loading" = "Naglo-load ng mga paborito...";
+"favorites.empty_title" = "Walang Paboritong Hintuan";
+"favorites.empty_message" = "Wala ka pang na-save na paboritong lokasyon. Magsimula sa pagpili ng mga lokasyon sa mapa!";
+
+/* Recents */
+"recents.title" = "Kamakailan";
+"recents.sheet_title" = "Mga Kamakailang Lokasyon";
+"recents.loading" = "Naglo-load ng mga kamakailang lokasyon...";
+"recents.empty_title" = "Walang Kamakailang Lokasyon";
+"recents.empty_message" = "Lalabas dito ang mga lokasyong binisita mo kamakailan habang ginagamit mo ang app.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "Tapusin ang biyahe?";
+"directions.end_trip_confirm_message" = "Sigurado ka bang gusto mong tapusin ang biyaheng ito?";
+"directions.end_trip" = "Tapusin ang Biyahe";
+"directions.end_trip_cancel" = "Hindi";
+"directions.start" = "Simula";
+"directions.end" = "Dulo";
+"directions.start_navigation" = "Simulan ang Nabigasyon";
+"directions.swipe_hint" = "Mag-swipe para makita ang bawat hakbang";
+
+/* Direction Legs */
+"leg.deboard_at" = "Bumaba sa";
+"leg.stop_id" = "ID ng hintuan: %@";
+"leg.scheduled_at" = "Nakaiskedyul nang %@";
+"leg.arrives_at" = "Darating nang %@";
+"leg.walk_to" = "Maglakad papuntang %@";
+"leg.walk_distance_duration" = "%1$@, mga %2$@";
+"leg.step_turn" = "%1$@ papuntang %2$@, maglakad nang %3$@.";
+"leg.step_continue" = "Maglakad sa %1$@ nang %2$@.";
+"leg.unknown_mode" = "Hindi Kilalang Uri ng Transportasyon";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "Aalis nang %@";
+"trip_options.arrive_by_time" = "Darating bago ang %@";
+"trip_options.tomorrow_time" = "Bukas nang %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 m";
+"walking_distance.half_mile" = "800 m";
+"walking_distance.one_mile" = "1.6 km";
+"walking_distance.two_miles" = "3.2 km";
+"walking_distance.accessibility" = "Pinakamalayong lakad: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "Nagbalik ang server ng hindi wastong tugon";
+"error.saved_locations_unavailable" = "Hindi makuha ang mga naka-save na lokasyon";
+
+/* Location */
+"location.no_address" = "Walang available na address";
+
+/* Transport Modes */
+"transport_mode.transit" = "Pampublikong Transportasyon";
+"transport_mode.walk" = "Lakad";
+"transport_mode.bike" = "Bisikleta";
+"transport_mode.car" = "Kotse";
+
+/* Walking Directions */
+"direction.depart" = "Umalis";
+"direction.hard_left" = "Kumaliwa nang matulis";
+"direction.left" = "Kumaliwa";
+"direction.slightly_left" = "Bahagyang kumaliwa";
+"direction.continue" = "Magpatuloy";
+"direction.slightly_right" = "Bahagyang kumanan";
+"direction.right" = "Kumanan";
+"direction.hard_right" = "Kumanan nang matulis";
+"direction.elevator" = "Sumakay sa elevator";
+"direction.enter_station" = "Pumasok sa istasyon";
+"direction.exit_station" = "Lumabas sa istasyon";
+"direction.follow_signs" = "Sundan ang mga karatula";
+
+/* Leg Modes */
+"leg_mode.bus" = "Bus";
+"leg_mode.tram" = "Tram";
+"leg_mode.subway" = "Subway";
+"leg_mode.rail" = "Tren";
+"leg_mode.ferry" = "Ferry";
+"leg_mode.cable_car" = "Cable car";
+"leg_mode.gondola" = "Gondola";
+"leg_mode.funicular" = "Funicular";
+"leg_mode.airplane" = "Eroplano";
+"leg_mode.trolleybus" = "Trolleybus";
+"leg_mode.monorail" = "Monorail";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "%@ na lakad";
+"leg.board_with_route" = "Sumakay sa %1$@ Ruta %2$@";
+"leg.board_agency_only" = "Sumakay sa %@";
+"location.unknown_place" = "Hindi Kilalang Lokasyon";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "Mag-U-turn pakaliwa";
+"direction.uturn_right" = "Mag-U-turn pakanan";
+"direction.circle_clockwise" = "Pumasok sa rotonda pasunod sa orasan";
+"direction.circle_counterclockwise" = "Pumasok sa rotonda pasalungat sa orasan";

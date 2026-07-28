@@ -89,7 +89,10 @@ public actor RestAPIService: APIService {
             httpResponse.statusCode == 200
         else {
             let statusCode = (response as? HTTPURLResponse)?.statusCode
-            throw OTPKitError.apiError("Server returned invalid response", statusCode: statusCode)
+            throw OTPKitError.apiError(
+                OTPLoc("error.invalid_response", comment: "Shown when the server response can't be parsed"),
+                statusCode: statusCode
+            )
         }
 
         let decoder = JSONDecoder()

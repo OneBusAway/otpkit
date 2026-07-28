@@ -19,7 +19,10 @@ struct PagedDirectionsView: View {
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
                     VStack {
-                        DirectionLegOriginDestinationView(title: "Start", description: trip.origin.title)
+                        DirectionLegOriginDestinationView(
+                            title: OTPLoc("directions.start", comment: "Label for the start of a trip"),
+                            description: trip.origin.title
+                        )
                             .frame(width: proxy.size.width)
 
                         HStack {
@@ -29,7 +32,7 @@ struct PagedDirectionsView: View {
                                     .init(color: .accentColor.mix(with: .white, by: 0.2), location: 0.5),
                                     .init(color: .accentColor, location: 0.5)
                                 ], startPoint: .top, endPoint: .bottom))
-                            Text("Swipe to view each step")
+                            Text(OTPLoc("directions.swipe_hint", comment: "Hint telling the user to swipe through trip steps"))
                                 .padding(.vertical, 8)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
@@ -46,7 +49,10 @@ struct PagedDirectionsView: View {
                             }
                             .id("leg-\(index)")
                     }
-                    DirectionLegOriginDestinationView(title: "End", description: trip.destination.title)
+                    DirectionLegOriginDestinationView(
+                        title: OTPLoc("directions.end", comment: "Label for the end of a trip"),
+                        description: trip.destination.title
+                    )
                         .frame(width: proxy.size.width)
                         .id("destination")
 

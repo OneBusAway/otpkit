@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "来自 OTPKit 的问候";
 
 /* Titles */
 "error.network.title" = "网络错误";
@@ -43,10 +42,7 @@
 "error.triangle_values_not_set" = "请调整路线偏好。";
 
 /* Map */
-"map.origin" = "起点";
 "map.destination" = "终点";
-"map.finding" = "正在查找...";
-"map.searching_address" = "正在搜索地址";
 
 /* Loading */
 "loading.planning_trip" = "正在规划您的行程...";
@@ -76,14 +72,9 @@
 "search_bar.placeholder" = "搜索地点";
 
 /* Trip Results */
-"trip_results.preview_button" = "预览";
-"trip_results.cancel_button" = "取消";
 "trip_results.no_trips_found" = "未找到行程";
-"trip_results.duration_format" = "%d 分钟";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "取消";
-"trip_preview.start_button" = "开始";
 "trip_preview.depart_label" = "出发：";
 "trip_preview.arrive_label" = "到达：";
 
@@ -115,10 +106,154 @@
 "bottom.to" = "到";
 "bottom.current_location" = "当前位置";
 "bottom.choose_destination" = "选择目的地";
-"bottom.search" = "搜索";
 "bottom.options" = "选项";
-"bottom.directions" = "路线";
 "bottom.advanced_options" = "高级选项";
 
 // MARK: - Itinerary
 "itinerary.summary" = "%@ 出发；时长：%@";
+
+/* Common */
+"common.cancel" = "取消";
+"common.close" = "关闭";
+"common.delete" = "删除";
+"common.more" = "更多";
+"common.unknown_location" = "未知";
+"common.error" = "错误";
+"common.generic_error" = "发生错误";
+
+/* Trip Planner */
+"trip_planner.title" = "行程规划";
+"trip_planner.find_routes" = "查找路线";
+"trip_planner.go" = "出发";
+
+/* Location Picker */
+"location_picker.choose_start" = "选择起点";
+"location_picker.choose_destination" = "选择终点";
+"location_picker.current_location_title" = "当前位置";
+"location_picker.current_location_subtitle" = "使用您当前的 GPS 位置";
+"location_picker.gps_location_subtitle" = "您当前的 GPS 位置";
+"location_picker.favorites_title" = "收藏";
+"location_picker.favorites_subtitle" = "从已保存的地点中选择";
+"location_picker.recents_title" = "最近";
+"location_picker.recents_subtitle" = "查看最近使用的位置";
+
+/* Search */
+"search.searching" = "正在搜索...";
+"search.no_results_title" = "未找到结果";
+"search.no_results_message" = "请尝试搜索其他地点";
+
+/* Current Location Button */
+"current_location.getting" = "正在获取位置...";
+"current_location.access_denied" = "位置访问被拒绝";
+"current_location.unavailable" = "位置不可用";
+"current_location.use_current" = "使用当前位置";
+"current_location.getting_subtitle" = "正在获取您的位置，请稍候";
+"current_location.enable_in_settings" = "请在“设置”中启用位置访问权限";
+"current_location.unable_subtitle" = "无法获取您的当前位置";
+"current_location.default_subtitle" = "从您当前所在位置获取路线";
+"current_location.access_denied_error" = "位置访问被拒绝";
+"current_location.unable_error" = "无法获取当前位置";
+
+/* Favorites */
+"favorites.title" = "收藏";
+"favorites.empty" = "暂无收藏";
+"favorites.sheet_title" = "收藏的站点";
+"favorites.loading" = "正在加载收藏...";
+"favorites.empty_title" = "暂无收藏的站点";
+"favorites.empty_message" = "您还没有保存任何收藏地点。先在地图上选择地点吧！";
+
+/* Recents */
+"recents.title" = "最近";
+"recents.sheet_title" = "最近的位置";
+"recents.loading" = "正在加载最近的位置...";
+"recents.empty_title" = "暂无最近的位置";
+"recents.empty_message" = "随着您使用本应用，最近访问过的位置将显示在这里。";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "结束行程？";
+"directions.end_trip_confirm_message" = "确定要结束此行程吗？";
+"directions.end_trip" = "结束行程";
+"directions.end_trip_cancel" = "否";
+"directions.start" = "起点";
+"directions.end" = "终点";
+"directions.start_navigation" = "开始导航";
+"directions.swipe_hint" = "滑动查看每一步";
+
+/* Direction Legs */
+"leg.deboard_at" = "下车站点";
+"leg.stop_id" = "站点编号：%@";
+"leg.scheduled_at" = "预计 %@ 发车";
+"leg.arrives_at" = "%@ 到达";
+"leg.walk_to" = "步行至 %@";
+"leg.walk_distance_duration" = "%1$@，约 %2$@";
+"leg.step_turn" = "%1$@ 进入 %2$@，步行 %3$@。";
+"leg.step_continue" = "沿 %1$@ 步行 %2$@。";
+"leg.unknown_mode" = "未知交通方式";
+"leg.mode_duration" = "%1$@：%2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "%@ 出发";
+"trip_options.arrive_by_time" = "%@ 前到达";
+"trip_options.tomorrow_time" = "明天 %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 米";
+"walking_distance.half_mile" = "800 米";
+"walking_distance.one_mile" = "1.6 公里";
+"walking_distance.two_miles" = "3.2 公里";
+"walking_distance.accessibility" = "最大步行距离：%@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@：%2$@";
+
+/* Service Errors */
+"error.invalid_response" = "服务器返回了无效响应";
+"error.saved_locations_unavailable" = "无法读取已保存的位置数据";
+
+/* Location */
+"location.no_address" = "无可用地址";
+
+/* Transport Modes */
+"transport_mode.transit" = "公共交通";
+"transport_mode.walk" = "步行";
+"transport_mode.bike" = "骑行";
+"transport_mode.car" = "驾车";
+
+/* Walking Directions */
+"direction.depart" = "出发";
+"direction.hard_left" = "向左急转";
+"direction.left" = "左转";
+"direction.slightly_left" = "稍向左转";
+"direction.continue" = "继续直行";
+"direction.slightly_right" = "稍向右转";
+"direction.right" = "右转";
+"direction.hard_right" = "向右急转";
+"direction.elevator" = "乘坐电梯";
+"direction.enter_station" = "进入车站";
+"direction.exit_station" = "离开车站";
+"direction.follow_signs" = "按照指示牌前行";
+
+/* Leg Modes */
+"leg_mode.bus" = "公交车";
+"leg_mode.tram" = "有轨电车";
+"leg_mode.subway" = "地铁";
+"leg_mode.rail" = "火车";
+"leg_mode.ferry" = "渡轮";
+"leg_mode.cable_car" = "缆车";
+"leg_mode.gondola" = "空中缆车";
+"leg_mode.funicular" = "缆索铁路";
+"leg_mode.airplane" = "飞机";
+"leg_mode.trolleybus" = "无轨电车";
+"leg_mode.monorail" = "单轨列车";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "步行 %@";
+"leg.board_with_route" = "乘坐 %1$@ %2$@ 路";
+"leg.board_agency_only" = "乘坐 %@";
+"location.unknown_place" = "未知位置";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "向左掉头";
+"direction.uturn_right" = "向右掉头";
+"direction.circle_clockwise" = "顺时针进入环岛";
+"direction.circle_counterclockwise" = "逆时针进入环岛";

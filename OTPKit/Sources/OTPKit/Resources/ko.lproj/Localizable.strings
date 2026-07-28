@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "OTPKit에서 안녕하세요!";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "경로 선호 옵션을 조정해 주세요.";
 
 /* Map */
-"map.origin" = "출발지";
 "map.destination" = "도착지";
-"map.finding" = "찾는 중...";
-"map.searching_address" = "주소 검색 중";
 
 /* Loading */
 "loading.planning_trip" = "경로를 계획하는 중...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "장소 검색";
 
 /* Trip Results */
-"trip_results.preview_button" = "미리보기";
-"trip_results.cancel_button" = "취소";
 "trip_results.no_trips_found" = "경로를 찾을 수 없습니다";
-"trip_results.duration_format" = "%d분";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "취소";
-"trip_preview.start_button" = "시작";
 "trip_preview.depart_label" = "출발:";
 "trip_preview.arrive_label" = "도착:";
 
@@ -116,10 +107,154 @@
 "bottom.to" = "도착지";
 "bottom.current_location" = "현재 위치";
 "bottom.choose_destination" = "도착지 선택";
-"bottom.search" = "검색";
 "bottom.options" = "옵션";
-"bottom.directions" = "길찾기";
 "bottom.advanced_options" = "경로 옵션";
 
 // MARK: - Itinerary
 "itinerary.summary" = "%@ 출발, 소요 시간: %@";
+
+/* Common */
+"common.cancel" = "취소";
+"common.close" = "닫기";
+"common.delete" = "삭제";
+"common.more" = "더 보기";
+"common.unknown_location" = "알 수 없음";
+"common.error" = "오류";
+"common.generic_error" = "오류가 발생했습니다";
+
+/* Trip Planner */
+"trip_planner.title" = "경로 계획";
+"trip_planner.find_routes" = "경로 찾기";
+"trip_planner.go" = "출발";
+
+/* Location Picker */
+"location_picker.choose_start" = "출발지 선택";
+"location_picker.choose_destination" = "도착지 선택";
+"location_picker.current_location_title" = "현재 위치";
+"location_picker.current_location_subtitle" = "현재 GPS 위치 사용";
+"location_picker.gps_location_subtitle" = "현재 GPS 위치";
+"location_picker.favorites_title" = "즐겨찾기";
+"location_picker.favorites_subtitle" = "저장한 장소에서 선택";
+"location_picker.recents_title" = "최근";
+"location_picker.recents_subtitle" = "최근 위치 보기";
+
+/* Search */
+"search.searching" = "검색 중...";
+"search.no_results_title" = "검색 결과 없음";
+"search.no_results_message" = "다른 장소를 검색해 보세요";
+
+/* Current Location Button */
+"current_location.getting" = "위치 확인 중...";
+"current_location.access_denied" = "위치 접근 거부됨";
+"current_location.unavailable" = "위치를 사용할 수 없음";
+"current_location.use_current" = "현재 위치 사용";
+"current_location.getting_subtitle" = "위치를 확인하는 동안 기다려 주세요";
+"current_location.enable_in_settings" = "설정에서 위치 접근을 허용하세요";
+"current_location.unable_subtitle" = "현재 위치를 확인할 수 없습니다";
+"current_location.default_subtitle" = "현재 있는 곳에서 경로 안내 받기";
+"current_location.access_denied_error" = "위치 접근 거부됨";
+"current_location.unable_error" = "현재 위치를 확인할 수 없습니다";
+
+/* Favorites */
+"favorites.title" = "즐겨찾기";
+"favorites.empty" = "즐겨찾기 없음";
+"favorites.sheet_title" = "즐겨찾는 정류장";
+"favorites.loading" = "즐겨찾기 불러오는 중...";
+"favorites.empty_title" = "즐겨찾는 정류장 없음";
+"favorites.empty_message" = "아직 저장한 즐겨찾기 위치가 없습니다. 지도에서 위치를 선택해 시작하세요!";
+
+/* Recents */
+"recents.title" = "최근";
+"recents.sheet_title" = "최근 위치";
+"recents.loading" = "최근 위치 불러오는 중...";
+"recents.empty_title" = "최근 위치 없음";
+"recents.empty_message" = "앱을 사용하면 최근에 방문한 위치가 여기에 표시됩니다.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "경로 안내를 종료할까요?";
+"directions.end_trip_confirm_message" = "이 경로 안내를 종료하시겠습니까?";
+"directions.end_trip" = "경로 종료";
+"directions.end_trip_cancel" = "아니오";
+"directions.start" = "출발";
+"directions.end" = "도착";
+"directions.start_navigation" = "길 안내 시작";
+"directions.swipe_hint" = "쓸어넘겨 각 단계를 확인하세요";
+
+/* Direction Legs */
+"leg.deboard_at" = "하차 정류장";
+"leg.stop_id" = "정류장 ID: %@";
+"leg.scheduled_at" = "%@ 출발 예정";
+"leg.arrives_at" = "%@ 도착";
+"leg.walk_to" = "%@까지 도보";
+"leg.walk_distance_duration" = "%1$@, 약 %2$@";
+"leg.step_turn" = "%2$@ 방향으로 %1$@ 후 %3$@ 도보.";
+"leg.step_continue" = "%1$@을(를) 따라 %2$@ 도보.";
+"leg.unknown_mode" = "알 수 없는 교통수단";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "%@ 출발";
+"trip_options.arrive_by_time" = "%@까지 도착";
+"trip_options.tomorrow_time" = "내일 %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 m";
+"walking_distance.half_mile" = "800 m";
+"walking_distance.one_mile" = "1.6 km";
+"walking_distance.two_miles" = "3.2 km";
+"walking_distance.accessibility" = "최대 도보 거리: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "서버가 잘못된 응답을 반환했습니다";
+"error.saved_locations_unavailable" = "저장된 위치를 불러오지 못했습니다";
+
+/* Location */
+"location.no_address" = "사용 가능한 주소 없음";
+
+/* Transport Modes */
+"transport_mode.transit" = "대중교통";
+"transport_mode.walk" = "도보";
+"transport_mode.bike" = "자전거";
+"transport_mode.car" = "자동차";
+
+/* Walking Directions */
+"direction.depart" = "출발";
+"direction.hard_left" = "크게 좌회전";
+"direction.left" = "좌회전";
+"direction.slightly_left" = "왼쪽으로";
+"direction.continue" = "직진";
+"direction.slightly_right" = "오른쪽으로";
+"direction.right" = "우회전";
+"direction.hard_right" = "크게 우회전";
+"direction.elevator" = "엘리베이터 이용";
+"direction.enter_station" = "역 진입";
+"direction.exit_station" = "역에서 나가기";
+"direction.follow_signs" = "표지판을 따라 이동";
+
+/* Leg Modes */
+"leg_mode.bus" = "버스";
+"leg_mode.tram" = "트램";
+"leg_mode.subway" = "지하철";
+"leg_mode.rail" = "기차";
+"leg_mode.ferry" = "페리";
+"leg_mode.cable_car" = "케이블카";
+"leg_mode.gondola" = "곤돌라";
+"leg_mode.funicular" = "푸니쿨라";
+"leg_mode.airplane" = "비행기";
+"leg_mode.trolleybus" = "트롤리버스";
+"leg_mode.monorail" = "모노레일";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "도보 %@";
+"leg.board_with_route" = "%1$@ %2$@번 탑승";
+"leg.board_agency_only" = "%@ 탑승";
+"location.unknown_place" = "알 수 없는 위치";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "좌측으로 유턴";
+"direction.uturn_right" = "우측으로 유턴";
+"direction.circle_clockwise" = "시계 방향으로 회전 교차로 진입";
+"direction.circle_counterclockwise" = "반시계 방향으로 회전 교차로 진입";

@@ -26,7 +26,7 @@ struct AdvancedOptionsSheet: View {
                 walkingDistanceSection
             }
             .navigationTitle(
-                Localization.string("bottom.advanced_options", comment: "Shows Adavanced Options title")
+                OTPLoc("bottom.advanced_options", comment: "Title of the trip options sheet")
             )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

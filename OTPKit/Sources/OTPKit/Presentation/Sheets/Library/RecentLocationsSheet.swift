@@ -21,7 +21,7 @@ struct RecentLocationsSheet: View {
         NavigationView {
             VStack {
                 if isLoading {
-                    ProgressView("Loading recent locations...")
+                    ProgressView(OTPLoc("recents.loading", comment: "Shown while recent locations load"))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if recentLocations.isEmpty {
                     emptyStateView()
@@ -29,11 +29,11 @@ struct RecentLocationsSheet: View {
                     locationsList()
                 }
             }
-            .navigationTitle("Recent Locations")
+            .navigationTitle(OTPLoc("recents.sheet_title", comment: "Title of the recent locations sheet"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                    Button(OTPLoc("common.cancel", comment: "Cancel button")) {
                         dismiss()
                     }
                 }
@@ -64,11 +64,11 @@ struct RecentLocationsSheet: View {
                 .font(.system(size: 50))
                 .foregroundColor(.gray)
 
-            Text("No Recent Locations")
+            Text(OTPLoc("recents.empty_title", comment: "Title shown when there are no recent locations"))
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("Your recently visited locations will appear here as you use the app.")
+            Text(OTPLoc("recents.empty_message", comment: "Advice shown when there are no recent locations"))
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

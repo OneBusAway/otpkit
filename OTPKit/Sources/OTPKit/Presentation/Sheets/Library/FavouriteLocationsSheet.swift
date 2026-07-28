@@ -21,7 +21,7 @@ struct FavouriteLocationsSheet: View {
         NavigationView {
             VStack {
                 if isLoading {
-                    ProgressView("Loading favourites...")
+                    ProgressView(OTPLoc("favorites.loading", comment: "Shown while favorite locations load"))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if favouriteLocations.isEmpty {
                     emptyStateView()
@@ -29,11 +29,11 @@ struct FavouriteLocationsSheet: View {
                     locationsList()
                 }
             }
-            .navigationTitle("Favourite Stops")
+            .navigationTitle(OTPLoc("favorites.sheet_title", comment: "Title of the favorite locations sheet"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                    Button(OTPLoc("common.cancel", comment: "Cancel button")) {
                         dismiss()
                     }
                 }
@@ -62,11 +62,11 @@ struct FavouriteLocationsSheet: View {
                 .font(.system(size: 50))
                 .foregroundColor(.gray)
 
-            Text("No Favourite Stops")
+            Text(OTPLoc("favorites.empty_title", comment: "Title shown when there are no favorite locations"))
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("You haven't saved any favourite locations yet. Start by selecting locations on the map!")
+            Text(OTPLoc("favorites.empty_message", comment: "Advice shown when there are no favorite locations"))
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

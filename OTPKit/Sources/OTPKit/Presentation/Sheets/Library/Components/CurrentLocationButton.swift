@@ -62,7 +62,7 @@ struct CurrentLocationButton: View {
         .cornerRadius(12)
         .onReceive(locationManager.$authorizationStatus) { status in
             if status == .denied || status == .restricted {
-                errorMessage = "Location access denied"
+                errorMessage = OTPLoc("current_location.access_denied_error", comment: "Error when location permission is denied")
                 showError = true
             } else {
                 showError = false
@@ -74,21 +74,25 @@ struct CurrentLocationButton: View {
 
     private var buttonTitle: String {
         if isGettingLocation {
-            return "Getting Location..."
+            return OTPLoc("current_location.getting", comment: "Title while acquiring the device's location")
         } else if showError {
-            return isLocationDenied ? "Location Access Denied" : "Location Unavailable"
+            return isLocationDenied
+                ? OTPLoc("current_location.access_denied", comment: "Title when location permission is denied")
+                : OTPLoc("current_location.unavailable", comment: "Title when the location can't be determined")
         } else {
-            return "Use Current Location"
+            return OTPLoc("current_location.use_current", comment: "Title of the use-current-location button")
         }
     }
 
     private var buttonSubtitle: String {
         if isGettingLocation {
-            return "Please wait while we get your location"
+            return OTPLoc("current_location.getting_subtitle", comment: "Subtitle while acquiring the device's location")
         } else if showError {
-            return isLocationDenied ? "Enable location access in Settings" : "Unable to get your current location"
+            return isLocationDenied
+                ? OTPLoc("current_location.enable_in_settings", comment: "Subtitle when location permission is denied")
+                : OTPLoc("current_location.unable_subtitle", comment: "Subtitle when the location can't be determined")
         } else {
-            return "Get directions from where you are now"
+            return OTPLoc("current_location.default_subtitle", comment: "Subtitle of the use-current-location button")
         }
     }
 
@@ -127,7 +131,7 @@ struct CurrentLocationButton: View {
         if let location = await locationManager.getCurrentLocation() {
             onLocationSelected(location)
         } else {
-            errorMessage = "Unable to get current location"
+            errorMessage = OTPLoc("current_location.unable_error", comment: "Error when the location can't be determined")
             showError = true
             // Hide error after 3 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

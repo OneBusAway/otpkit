@@ -97,11 +97,11 @@ public struct Itinerary: Codable, Hashable {
     }
 
     public var summary: String {
-        // TODO: localize this!
         let time = Formatters.formatDateToTime(startTime)
         let formattedDuration = Formatters.formatTimeDuration(duration)
-        // return something like "43 minutes, departs at X:YY PM"
-        return "Departs at \(time); duration: \(formattedDuration)"
+        return OTPLoc("itinerary.summary",
+                      comment: "Summary of an itinerary: departure time, then duration",
+                      time, formattedDuration)
     }
 
     /// Calculates a bounding box for the coordinates represented by this Itinerary's `Leg`s.

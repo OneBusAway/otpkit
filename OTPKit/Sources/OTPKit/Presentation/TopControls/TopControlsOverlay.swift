@@ -35,7 +35,7 @@ struct TopControlsOverlay: View {
             RouteInputRow(
                 icon: "record.circle",
                 iconColor: .primary,
-                title: "From",
+                title: OTPLoc("bottom.from", comment: "Label for the trip's starting location"),
                 subtitle: tripPlannerVM.selectedOriginTitle,
                 hasLocation: tripPlannerVM.selectedOrigin != nil
             ) {
@@ -49,7 +49,7 @@ struct TopControlsOverlay: View {
             RouteInputRow(
                 icon: "location",
                 iconColor: .primary,
-                title: "To",
+                title: OTPLoc("bottom.to", comment: "Label for the trip's destination"),
                 subtitle: tripPlannerVM.selectedDestinationTitle,
                 hasLocation: tripPlannerVM.selectedDestination != nil
             ) {
@@ -85,7 +85,7 @@ struct TopControlsOverlay: View {
             Button(action: { tripPlannerVM.presentSheet(.advancedOptions) }) {
                 HStack(spacing: 8) {
                     Image(systemName: "slider.horizontal.3")
-                    Text("Options")
+                    Text(OTPLoc("bottom.options", comment: "Opens the trip options sheet"))
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
@@ -102,7 +102,7 @@ struct TopControlsOverlay: View {
                     } else {
                         Image(systemName: "arrow.right")
                     }
-                    Text("Find Routes")
+                    Text(OTPLoc("trip_planner.find_routes", comment: "Starts a trip plan search"))
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)

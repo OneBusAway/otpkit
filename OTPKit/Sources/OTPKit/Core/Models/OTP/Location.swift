@@ -29,6 +29,18 @@ public struct Location: Identifiable, Codable, Equatable, Hashable {
         self.longitude = longitude
     }
 
+    /// Builds the "Current Location" entry shown wherever the user's own position is offered
+    /// as an origin or destination. Centralized so its localized title and subtitle stay in
+    /// sync across the location manager and the picker sheet.
+    public static func currentLocation(from coordinate: CLLocationCoordinate2D) -> Location {
+        Location(
+            title: OTPLoc("location_picker.current_location_title", comment: "Name given to the device's location"),
+            subTitle: OTPLoc("location_picker.gps_location_subtitle", comment: "Subtitle for the device's location"),
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude
+        )
+    }
+
     public static func == (lhs: Location, rhs: Location) -> Bool {
         return lhs.title == rhs.title &&
         lhs.subTitle == rhs.subTitle &&

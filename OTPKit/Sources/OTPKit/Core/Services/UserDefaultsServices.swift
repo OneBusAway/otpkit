@@ -21,7 +21,10 @@ public final class UserDefaultsServices {
         guard let savedLocationsData = userDefaults.data(forKey: savedLocationsKey) else {
             let error = NSError(domain: "UserDefaults",
                                 code: 1001,
-                                userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve saved locations data"])
+                                userInfo: [NSLocalizedDescriptionKey: OTPLoc(
+                                    "error.saved_locations_unavailable",
+                                    comment: "Shown when stored locations can't be read"
+                                )])
             return .failure(error)
         }
 
@@ -94,7 +97,10 @@ public final class UserDefaultsServices {
         guard let savedLocationsData = userDefaults.data(forKey: recentLocationsKey) else {
             let error = NSError(domain: "UserDefaults",
                                 code: 1001,
-                                userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve saved locations data"])
+                                userInfo: [NSLocalizedDescriptionKey: OTPLoc(
+                                    "error.saved_locations_unavailable",
+                                    comment: "Shown when stored locations can't be read"
+                                )])
             return .failure(error)
         }
 

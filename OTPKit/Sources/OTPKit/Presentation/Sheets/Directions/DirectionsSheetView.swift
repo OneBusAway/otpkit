@@ -51,22 +51,22 @@ struct DirectionsSheetView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close", systemImage: "xmark") {
+                    Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
                         showEndConfirmation = true
                     }
                 }
             }
             .confirmationDialog(
-                "End Trip?",
+                OTPLoc("directions.end_trip_confirm_title", comment: "Title of the end-trip confirmation dialog"),
                 isPresented: $showEndConfirmation,
                 titleVisibility: .visible
             ) {
-                Button("End Trip", role: .destructive) {
+                Button(OTPLoc("directions.end_trip", comment: "Confirms ending the active trip"), role: .destructive) {
                     tripPlannerVM.resetTripPlanner()
                 }
-                Button("No", role: .cancel) {}
+                Button(OTPLoc("directions.end_trip_cancel", comment: "Declines ending the active trip"), role: .cancel) {}
             } message: {
-                Text("Are you sure you want to end this trip?")
+                Text(OTPLoc("directions.end_trip_confirm_message", comment: "Body of the end-trip confirmation dialog"))
             }
         }
         .presentationDragIndicator(.visible)

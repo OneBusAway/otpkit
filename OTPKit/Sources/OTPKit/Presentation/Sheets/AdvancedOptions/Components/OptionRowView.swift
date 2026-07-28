@@ -42,7 +42,9 @@ struct OptionRowView: View {
             action()
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(title): \(description)")
+        .accessibilityLabel(OTPLoc("option_row.accessibility_label",
+                                   comment: "Accessibility label joining an option's title and description",
+                                   title, description))
         .accessibilityHint(isSelected ?
             OTPLoc("option_row.selected_hint", comment: "Accessibility hint for selected option") :
             OTPLoc("option_row.tap_to_select_hint", comment: "Accessibility hint for unselected option")

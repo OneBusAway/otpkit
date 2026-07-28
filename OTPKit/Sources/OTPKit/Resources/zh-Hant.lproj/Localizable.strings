@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "來自 OTPKit 的問候";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "請調整路線偏好。";
 
 /* Map */
-"map.origin" = "起點";
 "map.destination" = "終點";
-"map.finding" = "尋找中…";
-"map.searching_address" = "正在搜尋地址";
 
 /* Loading */
 "loading.planning_trip" = "正在規劃您的行程…";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "搜尋地點";
 
 /* Trip Results */
-"trip_results.preview_button" = "預覽";
-"trip_results.cancel_button" = "取消";
 "trip_results.no_trips_found" = "找不到行程";
-"trip_results.duration_format" = "%d 分鐘";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "取消";
-"trip_preview.start_button" = "開始";
 "trip_preview.depart_label" = "出發：";
 "trip_preview.arrive_label" = "到達：";
 
@@ -116,10 +107,154 @@
 "bottom.to" = "到";
 "bottom.current_location" = "目前位置";
 "bottom.choose_destination" = "選擇目的地";
-"bottom.search" = "搜尋";
 "bottom.options" = "選項";
-"bottom.directions" = "路線指引";
 "bottom.advanced_options" = "行程選項";
 
 // MARK: - Itinerary
 "itinerary.summary" = "於 %@ 出發；歷時：%@";
+
+/* Common */
+"common.cancel" = "取消";
+"common.close" = "關閉";
+"common.delete" = "刪除";
+"common.more" = "更多";
+"common.unknown_location" = "未知";
+"common.error" = "錯誤";
+"common.generic_error" = "發生錯誤";
+
+/* Trip Planner */
+"trip_planner.title" = "行程規劃";
+"trip_planner.find_routes" = "尋找路線";
+"trip_planner.go" = "出發";
+
+/* Location Picker */
+"location_picker.choose_start" = "選擇起點";
+"location_picker.choose_destination" = "選擇目的地";
+"location_picker.current_location_title" = "目前位置";
+"location_picker.current_location_subtitle" = "使用您目前的 GPS 位置";
+"location_picker.gps_location_subtitle" = "您目前的 GPS 位置";
+"location_picker.favorites_title" = "收藏";
+"location_picker.favorites_subtitle" = "從已儲存的地點中選擇";
+"location_picker.recents_title" = "最近";
+"location_picker.recents_subtitle" = "檢視最近使用的位置";
+
+/* Search */
+"search.searching" = "搜尋中...";
+"search.no_results_title" = "找不到結果";
+"search.no_results_message" = "請嘗試搜尋其他地點";
+
+/* Current Location Button */
+"current_location.getting" = "正在取得位置...";
+"current_location.access_denied" = "位置存取遭拒";
+"current_location.unavailable" = "位置無法使用";
+"current_location.use_current" = "使用目前位置";
+"current_location.getting_subtitle" = "正在取得您的位置，請稍候";
+"current_location.enable_in_settings" = "請在「設定」中啟用位置存取權";
+"current_location.unable_subtitle" = "無法取得您目前的位置";
+"current_location.default_subtitle" = "從您目前所在位置取得路線";
+"current_location.access_denied_error" = "位置存取遭拒";
+"current_location.unable_error" = "無法取得目前位置";
+
+/* Favorites */
+"favorites.title" = "收藏";
+"favorites.empty" = "尚無收藏";
+"favorites.sheet_title" = "收藏的站點";
+"favorites.loading" = "正在載入收藏...";
+"favorites.empty_title" = "尚無收藏的站點";
+"favorites.empty_message" = "您尚未儲存任何收藏地點。先在地圖上選擇地點吧！";
+
+/* Recents */
+"recents.title" = "最近";
+"recents.sheet_title" = "最近的位置";
+"recents.loading" = "正在載入最近的位置...";
+"recents.empty_title" = "尚無最近的位置";
+"recents.empty_message" = "隨著您使用本 App，最近造訪過的位置將顯示在這裡。";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "結束行程？";
+"directions.end_trip_confirm_message" = "確定要結束此行程嗎？";
+"directions.end_trip" = "結束行程";
+"directions.end_trip_cancel" = "否";
+"directions.start" = "起點";
+"directions.end" = "終點";
+"directions.start_navigation" = "開始導航";
+"directions.swipe_hint" = "滑動以檢視每個步驟";
+
+/* Direction Legs */
+"leg.deboard_at" = "下車站點";
+"leg.stop_id" = "站點編號：%@";
+"leg.scheduled_at" = "預計 %@ 發車";
+"leg.arrives_at" = "%@ 抵達";
+"leg.walk_to" = "步行至 %@";
+"leg.walk_distance_duration" = "%1$@，約 %2$@";
+"leg.step_turn" = "%1$@ 進入 %2$@，步行 %3$@。";
+"leg.step_continue" = "沿 %1$@ 步行 %2$@。";
+"leg.unknown_mode" = "未知交通方式";
+"leg.mode_duration" = "%1$@：%2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "%@ 出發";
+"trip_options.arrive_by_time" = "%@ 前抵達";
+"trip_options.tomorrow_time" = "明天 %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 公尺";
+"walking_distance.half_mile" = "800 公尺";
+"walking_distance.one_mile" = "1.6 公里";
+"walking_distance.two_miles" = "3.2 公里";
+"walking_distance.accessibility" = "最大步行距離：%@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@：%2$@";
+
+/* Service Errors */
+"error.invalid_response" = "伺服器傳回無效的回應";
+"error.saved_locations_unavailable" = "無法讀取已儲存的位置資料";
+
+/* Location */
+"location.no_address" = "無可用地址";
+
+/* Transport Modes */
+"transport_mode.transit" = "大眾運輸";
+"transport_mode.walk" = "步行";
+"transport_mode.bike" = "自行車";
+"transport_mode.car" = "開車";
+
+/* Walking Directions */
+"direction.depart" = "出發";
+"direction.hard_left" = "向左急轉";
+"direction.left" = "左轉";
+"direction.slightly_left" = "稍向左轉";
+"direction.continue" = "繼續直行";
+"direction.slightly_right" = "稍向右轉";
+"direction.right" = "右轉";
+"direction.hard_right" = "向右急轉";
+"direction.elevator" = "搭乘電梯";
+"direction.enter_station" = "進入車站";
+"direction.exit_station" = "離開車站";
+"direction.follow_signs" = "依照指示牌前行";
+
+/* Leg Modes */
+"leg_mode.bus" = "公車";
+"leg_mode.tram" = "路面電車";
+"leg_mode.subway" = "地鐵";
+"leg_mode.rail" = "火車";
+"leg_mode.ferry" = "渡輪";
+"leg_mode.cable_car" = "纜車";
+"leg_mode.gondola" = "空中纜車";
+"leg_mode.funicular" = "纜索鐵路";
+"leg_mode.airplane" = "飛機";
+"leg_mode.trolleybus" = "無軌電車";
+"leg_mode.monorail" = "單軌列車";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "步行 %@";
+"leg.board_with_route" = "搭乘 %1$@ %2$@ 路線";
+"leg.board_agency_only" = "搭乘 %@";
+"location.unknown_place" = "未知位置";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "向左迴轉";
+"direction.uturn_right" = "向右迴轉";
+"direction.circle_clockwise" = "順時針進入圓環";
+"direction.circle_counterclockwise" = "逆時針進入圓環";

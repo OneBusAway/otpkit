@@ -18,13 +18,13 @@ public enum WalkingDistance: Int, CaseIterable, Sendable {
     public var title: String {
         switch self {
         case .quarterMile:
-            return "0.25 mile"
+            return OTPLoc("walking_distance.quarter_mile", comment: "Walking distance option")
         case .halfMile:
-            return "0.5 mile"
+            return OTPLoc("walking_distance.half_mile", comment: "Walking distance option")
         case .oneMile:
-            return "1 mile"
+            return OTPLoc("walking_distance.one_mile", comment: "Walking distance option")
         case .twoMiles:
-            return "2 miles"
+            return OTPLoc("walking_distance.two_miles", comment: "Walking distance option")
         }
     }
 
@@ -35,6 +35,8 @@ public enum WalkingDistance: Int, CaseIterable, Sendable {
 
     /// Accessibility description for VoiceOver
     public var accessibilityDescription: String {
-        return "Maximum walking distance: \(title)"
+        return OTPLoc("walking_distance.accessibility",
+                      comment: "VoiceOver description of the maximum walking distance setting",
+                      title)
     }
 }

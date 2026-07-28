@@ -82,11 +82,18 @@ class Formatters {
         }
     }
 
-    static func formatDateToTime(_ date: Date, locale: Locale = .current) -> String {
+    // MARK: - Time Formatting
+
+    /// Built once: `DateFormatter` construction costs ~65x a reuse, and this runs per
+    /// itinerary row and per transit leg while scrolling.
+    private lazy var timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = locale
         formatter.dateStyle = .none
         formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    static func formatDateToTime(_ date: Date) -> String {
+        shared.timeFormatter.string(from: date)
     }
 }

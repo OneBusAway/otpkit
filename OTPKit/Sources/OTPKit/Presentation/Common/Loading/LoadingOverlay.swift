@@ -18,7 +18,7 @@ struct LoadingOverlay: View {
                             .scaleEffect(1.5)
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
 
-                        Text("Planning your trip...")
+                        Text(OTPLoc("loading.planning_trip", comment: "Shown while a trip plan is being fetched"))
                             .foregroundColor(.white)
                             .font(.headline)
                             .padding(.top)

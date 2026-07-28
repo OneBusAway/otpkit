@@ -20,7 +20,7 @@ struct ErrorCardView: View {
                     .foregroundColor(.red)
                     .font(.title2)
 
-                Text("Error")
+                Text(OTPLoc("common.error", comment: "Title of the error card"))
                     .font(.headline)
                     .foregroundColor(.primary)
 

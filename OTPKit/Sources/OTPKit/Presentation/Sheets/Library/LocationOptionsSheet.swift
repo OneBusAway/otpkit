@@ -29,8 +29,8 @@ struct LocationOptionsSheet: View {
                 VStack(spacing: 0) {
                     LocationOptionButton(
                         icon: "location.fill",
-                        title: "Current Location",
-                        subtitle: "Use your current GPS location",
+                        title: OTPLoc("location_picker.current_location_title", comment: "Option to use the device's location"),
+                        subtitle: OTPLoc("location_picker.current_location_subtitle", comment: "Describes the current location option"),
                         color: theme.primaryColor
                     ) { requestCurrentLocation() }
 
@@ -38,8 +38,8 @@ struct LocationOptionsSheet: View {
 
                     LocationOptionButton(
                         icon: "heart.fill",
-                        title: "Favorites",
-                        subtitle: "Choose from your saved places",
+                        title: OTPLoc("location_picker.favorites_title", comment: "Option to pick a saved favorite location"),
+                        subtitle: OTPLoc("location_picker.favorites_subtitle", comment: "Describes the favorites option"),
                         color: .red
                     ) { showingFavourites = true }
 
@@ -47,8 +47,8 @@ struct LocationOptionsSheet: View {
 
                     LocationOptionButton(
                         icon: "clock.fill",
-                        title: "Recents",
-                        subtitle: "View your recent locations",
+                        title: OTPLoc("location_picker.recents_title", comment: "Option to pick a recently used location"),
+                        subtitle: OTPLoc("location_picker.recents_subtitle", comment: "Describes the recents option"),
                         color: theme.secondaryColor
                     ) { showingRecents = true }
                 }
@@ -58,11 +58,13 @@ struct LocationOptionsSheet: View {
 
                 Spacer()
             }
-            .navigationTitle(selectedMode == .origin ? "Choose Start" : "Choose Destination")
+            .navigationTitle(selectedMode == .origin
+                ? OTPLoc("location_picker.choose_start", comment: "Title when picking the trip's starting point")
+                : OTPLoc("location_picker.choose_destination", comment: "Title when picking the trip's destination"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button(OTPLoc("common.cancel", comment: "Cancel button")) { dismiss() }
                 }
             }
         }
@@ -82,12 +84,7 @@ struct LocationOptionsSheet: View {
             return
         }
 
-        let currentLocation = Location(
-            title: "Current Location",
-            subTitle: "Your current GPS location",
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
+        let currentLocation = Location.currentLocation(from: location.coordinate)
 
         onLocationSelected(currentLocation, selectedMode)
     }

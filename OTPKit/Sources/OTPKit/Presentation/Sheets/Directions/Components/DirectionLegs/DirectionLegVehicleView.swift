@@ -34,12 +34,13 @@ struct DirectionLegVehicleView: View {
 
                         HStack {
                             if let stopCode = leg.to.stopCode {
-                                Text("Stop ID: \(stopCode)")
+                                Text(OTPLoc("leg.stop_id", comment: "Transit stop identifier", stopCode))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
 
-                            Text("Scheduled at \(Formatters.formatDateToTime(leg.startTime))")
+                            Text(OTPLoc("leg.scheduled_at", comment: "Scheduled departure time for a transit leg",
+                                        Formatters.formatDateToTime(leg.startTime)))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -53,7 +54,7 @@ struct DirectionLegVehicleView: View {
                     Color.clear
                 } rightContent: {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Deboard at")
+                        Text(OTPLoc("leg.deboard_at", comment: "Label for where the rider exits the vehicle"))
                             .font(.headline)
 
                         Text(leg.to.name)
@@ -62,12 +63,13 @@ struct DirectionLegVehicleView: View {
 
                         HStack {
                             if let stopCode = leg.to.stopCode {
-                                Text("Stop ID: \(stopCode)")
+                                Text(OTPLoc("leg.stop_id", comment: "Transit stop identifier", stopCode))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
 
-                            Text("Arrives at \(Formatters.formatDateToTime(leg.endTime))")
+                            Text(OTPLoc("leg.arrives_at", comment: "Arrival time for a transit leg",
+                                        Formatters.formatDateToTime(leg.endTime)))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -90,8 +92,12 @@ struct DirectionLegVehicleView: View {
 
     private var boardingText: String {
         let agency = leg.agencyName ?? ""
-        let routeText = leg.route != nil && !leg.route!.isEmpty ? "Route \(leg.route!)" : ""
-        return "Board \(agency) \(routeText)"
+        guard let route = leg.route, !route.isEmpty else {
+            return OTPLoc("leg.board_agency_only", comment: "Board a vehicle when no route is known: agency", agency)
+        }
+        return OTPLoc("leg.board_with_route",
+                      comment: "Board a vehicle: agency name, then route identifier",
+                      agency, route)
     }
 }
 
