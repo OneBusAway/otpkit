@@ -1,0 +1,664 @@
+{
+  "data": {
+    "plan": {
+      "date": 1785340800000,
+      "from": {
+        "name": "Origin",
+        "lon": -122.3331,
+        "lat": 47.6097,
+        "vertexType": "NORMAL"
+      },
+      "to": {
+        "name": "Destination",
+        "lon": -122.3493,
+        "lat": 47.6205,
+        "vertexType": "NORMAL"
+      },
+      "routingErrors": [],
+      "itineraries": [
+        {
+          "duration": 775,
+          "startTime": 1785341233000,
+          "endTime": 1785342008000,
+          "walkTime": 595,
+          "waitingTime": 0,
+          "walkDistance": 626.6,
+          "elevationLost": 0.0,
+          "elevationGained": 0.0,
+          "numberOfTransfers": 0,
+          "legs": [
+            {
+              "startTime": 1785341233000,
+              "endTime": 1785341700000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Origin",
+                "lon": -122.3331,
+                "lat": 47.6097,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "to": {
+                "name": "Westlake Center",
+                "lon": -122.33696,
+                "lat": 47.612046,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:WL",
+                  "code": null
+                }
+              },
+              "legGeometry": {
+                "points": "owqaHbetiVEBDP@@eA~@CDAAININA@AAC?E@y@r@YVc@^QPONCBAD?FEBGFIJA@J\\Tp@`@rABFABWVoAhAw@r@@B@FSPQVBJ@BIHSP]Z??",
+                "length": 43
+              },
+              "distance": 475.97,
+              "transitLeg": false,
+              "duration": 467.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 60.61,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.3331305,
+                  "lat": 47.6096872
+                },
+                {
+                  "distance": 135.05,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "UTURN_RIGHT",
+                  "lon": -122.3337668,
+                  "lat": 47.6101666
+                },
+                {
+                  "distance": 17.78,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3345615,
+                  "lat": 47.6110276
+                },
+                {
+                  "distance": 72.9,
+                  "streetName": "Pike Street",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3346944,
+                  "lat": 47.6111598
+                },
+                {
+                  "distance": 5.16,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "SLIGHTLY_RIGHT",
+                  "lon": -122.3355192,
+                  "lat": 47.6108124
+                },
+                {
+                  "distance": 105.38,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3355799,
+                  "lat": 47.6108046
+                },
+                {
+                  "distance": 2.22,
+                  "streetName": "Pine Street",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3363222,
+                  "lat": 47.6116094
+                },
+                {
+                  "distance": 35.06,
+                  "streetName": "path",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.336347,
+                  "lat": 47.6115985
+                },
+                {
+                  "distance": 1.83,
+                  "streetName": "Pine Street",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.3366545,
+                  "lat": 47.6117507
+                },
+                {
+                  "distance": 40.0,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3366751,
+                  "lat": 47.6117418
+                }
+              ]
+            },
+            {
+              "startTime": 1785341700000,
+              "endTime": 1785341880000,
+              "mode": "MONORAIL",
+              "route": {
+                "shortName": "Monorail",
+                "type": 12,
+                "color": null,
+                "textColor": null,
+                "agency": {
+                  "name": "Seattle Center Monorail"
+                }
+              },
+              "from": {
+                "name": "Westlake Center",
+                "lon": -122.33696,
+                "lat": 47.612046,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:WL",
+                  "code": null
+                }
+              },
+              "to": {
+                "name": "Seattle Center",
+                "lon": -122.349955,
+                "lat": 47.621263,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:SC",
+                  "code": null
+                }
+              },
+              "legGeometry": {
+                "points": "gfraH~|tiVuBhBe@j@y@|A_EdI}Pl]gGzLYf@QTg@f@]TcA\\[DuBBaBAy@Da@L]TYf@Oh@Kt@ANB~F",
+                "length": 23
+              },
+              "distance": 1507.0,
+              "transitLeg": true,
+              "duration": 180.0,
+              "realTime": false,
+              "headsign": "Seattle Center",
+              "intermediatePlaces": [],
+              "steps": []
+            },
+            {
+              "startTime": 1785341880000,
+              "endTime": 1785342008000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Seattle Center",
+                "lon": -122.349955,
+                "lat": 47.621263,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:SC",
+                  "code": null
+                }
+              },
+              "to": {
+                "name": "Destination",
+                "lon": -122.3493,
+                "lat": 47.6205,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "legGeometry": {
+                "points": "{_taHfnwiV??XFJC@C@m@X?BA?I?KNKRCXADBDBF?DAFCDEBEBI@I@I?IAIAC",
+                "length": 26
+              },
+              "distance": 150.63,
+              "transitLeg": false,
+              "duration": 128.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 15.06,
+                  "streetName": "Seattle Monorail Concourse",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.349955,
+                  "lat": 47.621263
+                },
+                {
+                  "distance": 135.56,
+                  "streetName": "path",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3499937,
+                  "lat": 47.6211301
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 1104,
+          "startTime": 1785341432000,
+          "endTime": 1785342536000,
+          "walkTime": 647,
+          "waitingTime": 0,
+          "walkDistance": 748.1,
+          "elevationLost": 0.0,
+          "elevationGained": 0.0,
+          "numberOfTransfers": 0,
+          "legs": [
+            {
+              "startTime": 1785341432000,
+              "endTime": 1785341760000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Origin",
+                "lon": -122.3331,
+                "lat": 47.6097,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "to": {
+                "name": "3rd Ave & Union St",
+                "lon": -122.3367,
+                "lat": 47.6086884,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "kcm:570",
+                  "code": "570"
+                }
+              },
+              "legGeometry": {
+                "points": "owqaHbetiVEBDP@@eA~@CDX|@HVRl@Tp@@ABFBHBLBD?@@DDN~@vCDA@FFX@H@B@B?DBHTt@j@hBFGBD",
+                "length": 31
+              },
+              "distance": 343.94,
+              "transitLeg": false,
+              "duration": 328.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 60.61,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.3331305,
+                  "lat": 47.6096872
+                },
+                {
+                  "distance": 38.02,
+                  "streetName": "sidewalk",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3336032,
+                  "lat": 47.6100412
+                },
+                {
+                  "distance": 240.12,
+                  "streetName": "Union Street",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.3340342,
+                  "lat": 47.609861
+                },
+                {
+                  "distance": 5.22,
+                  "streetName": "3rd Avenue",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3367025,
+                  "lat": 47.6087422
+                }
+              ]
+            },
+            {
+              "startTime": 1785341760000,
+              "endTime": 1785342217000,
+              "mode": "BUS",
+              "route": {
+                "shortName": "33",
+                "type": 3,
+                "color": "FDB71A",
+                "textColor": "000000",
+                "agency": {
+                  "name": "Metro Transit"
+                }
+              },
+              "from": {
+                "name": "3rd Ave & Union St",
+                "lon": -122.3367,
+                "lat": 47.6086884,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "kcm:570",
+                  "code": "570"
+                }
+              },
+              "to": {
+                "name": "Denny Way & 2nd Ave N",
+                "lon": -122.352615,
+                "lat": 47.61866,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "kcm:20829",
+                  "code": "20829"
+                }
+              },
+              "legGeometry": {
+                "points": "aqqaH~{tiVSRgErDwChCm@j@gA`AcA`AIFGFGHKPKTOVKRO`@aB`DkBvDk@jAyCdGeBhDs@xAiAtBkAbCCFEJgBnDoBxD_AlBm@jAmBzDmBxDMb@k@hAIPAD?dF?@",
+                "length": 37
+              },
+              "distance": 1657.0,
+              "transitLeg": true,
+              "duration": 457.0,
+              "realTime": false,
+              "headsign": "E Magnolia",
+              "intermediatePlaces": [
+                {
+                  "name": "3rd Ave & Pine St",
+                  "lon": -122.338951,
+                  "lat": 47.6111374,
+                  "vertexType": "TRANSIT",
+                  "stop": {
+                    "gtfsId": "kcm:590",
+                    "code": "590"
+                  }
+                },
+                {
+                  "name": "3rd Ave & Virginia St",
+                  "lon": -122.341743,
+                  "lat": 47.6129951,
+                  "vertexType": "TRANSIT",
+                  "stop": {
+                    "gtfsId": "kcm:600",
+                    "code": "600"
+                  }
+                },
+                {
+                  "name": "3rd Ave & Bell St",
+                  "lon": -122.345337,
+                  "lat": 47.6151199,
+                  "vertexType": "TRANSIT",
+                  "stop": {
+                    "gtfsId": "kcm:605",
+                    "code": "605"
+                  }
+                },
+                {
+                  "name": "3rd Ave & Vine St",
+                  "lon": -122.34845,
+                  "lat": 47.6169586,
+                  "vertexType": "TRANSIT",
+                  "stop": {
+                    "gtfsId": "kcm:1690",
+                    "code": "1690"
+                  }
+                }
+              ],
+              "steps": []
+            },
+            {
+              "startTime": 1785342217000,
+              "endTime": 1785342536000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Denny Way & 2nd Ave N",
+                "lon": -122.352615,
+                "lat": 47.61866,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "kcm:20829",
+                  "code": "20829"
+                }
+              },
+              "to": {
+                "name": "Destination",
+                "lon": -122.3493,
+                "lat": 47.6205,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "legGeometry": {
+                "points": "sosaHz~wiVA??kBEGCGAG?kE@GBEBCAGAWAKCKCGCEGIGEIEKEGOEQCAGAMAMAICIEEGIKEGEGU?WDWFKBC@?ECKCGAAC?C@AAECIAIC@_@BWE?CAECGKEMAOC?C?IU",
+                "length": 58
+              },
+              "distance": 404.16,
+              "transitLeg": false,
+              "duration": 319.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 136.53,
+                  "streetName": "Denny Way",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.352615,
+                  "lat": 47.6186763
+                },
+                {
+                  "distance": 225.08,
+                  "streetName": "path",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.3508456,
+                  "lat": 47.6186882
+                },
+                {
+                  "distance": 42.55,
+                  "streetName": "path",
+                  "relativeDirection": "UTURN_LEFT",
+                  "lon": -122.349301,
+                  "lat": 47.6202614
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 775,
+          "startTime": 1785341833000,
+          "endTime": 1785342608000,
+          "walkTime": 595,
+          "waitingTime": 0,
+          "walkDistance": 626.6,
+          "elevationLost": 0.0,
+          "elevationGained": 0.0,
+          "numberOfTransfers": 0,
+          "legs": [
+            {
+              "startTime": 1785341833000,
+              "endTime": 1785342300000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Origin",
+                "lon": -122.3331,
+                "lat": 47.6097,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "to": {
+                "name": "Westlake Center",
+                "lon": -122.33696,
+                "lat": 47.612046,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:WL",
+                  "code": null
+                }
+              },
+              "legGeometry": {
+                "points": "owqaHbetiVEBDP@@eA~@CDAAININA@AAC?E@y@r@YVc@^QPONCBAD?FEBGFIJA@J\\Tp@`@rABFABWVoAhAw@r@@B@FSPQVBJ@BIHSP]Z??",
+                "length": 43
+              },
+              "distance": 475.97,
+              "transitLeg": false,
+              "duration": 467.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 60.61,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.3331305,
+                  "lat": 47.6096872
+                },
+                {
+                  "distance": 135.05,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "UTURN_RIGHT",
+                  "lon": -122.3337668,
+                  "lat": 47.6101666
+                },
+                {
+                  "distance": 17.78,
+                  "streetName": "6th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3345615,
+                  "lat": 47.6110276
+                },
+                {
+                  "distance": 72.9,
+                  "streetName": "Pike Street",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3346944,
+                  "lat": 47.6111598
+                },
+                {
+                  "distance": 5.16,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "SLIGHTLY_RIGHT",
+                  "lon": -122.3355192,
+                  "lat": 47.6108124
+                },
+                {
+                  "distance": 105.38,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3355799,
+                  "lat": 47.6108046
+                },
+                {
+                  "distance": 2.22,
+                  "streetName": "Pine Street",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3363222,
+                  "lat": 47.6116094
+                },
+                {
+                  "distance": 35.06,
+                  "streetName": "path",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.336347,
+                  "lat": 47.6115985
+                },
+                {
+                  "distance": 1.83,
+                  "streetName": "Pine Street",
+                  "relativeDirection": "CONTINUE",
+                  "lon": -122.3366545,
+                  "lat": 47.6117507
+                },
+                {
+                  "distance": 40.0,
+                  "streetName": "5th Avenue",
+                  "relativeDirection": "RIGHT",
+                  "lon": -122.3366751,
+                  "lat": 47.6117418
+                }
+              ]
+            },
+            {
+              "startTime": 1785342300000,
+              "endTime": 1785342480000,
+              "mode": "MONORAIL",
+              "route": {
+                "shortName": "Monorail",
+                "type": 12,
+                "color": null,
+                "textColor": null,
+                "agency": {
+                  "name": "Seattle Center Monorail"
+                }
+              },
+              "from": {
+                "name": "Westlake Center",
+                "lon": -122.33696,
+                "lat": 47.612046,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:WL",
+                  "code": null
+                }
+              },
+              "to": {
+                "name": "Seattle Center",
+                "lon": -122.349955,
+                "lat": 47.621263,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:SC",
+                  "code": null
+                }
+              },
+              "legGeometry": {
+                "points": "gfraH~|tiVuBhBe@j@y@|A_EdI}Pl]gGzLYf@QTg@f@]TcA\\[DuBBaBAy@Da@L]TYf@Oh@Kt@ANB~F",
+                "length": 23
+              },
+              "distance": 1507.0,
+              "transitLeg": true,
+              "duration": 180.0,
+              "realTime": false,
+              "headsign": "Seattle Center",
+              "intermediatePlaces": [],
+              "steps": []
+            },
+            {
+              "startTime": 1785342480000,
+              "endTime": 1785342608000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Seattle Center",
+                "lon": -122.349955,
+                "lat": 47.621263,
+                "vertexType": "TRANSIT",
+                "stop": {
+                  "gtfsId": "96:SC",
+                  "code": null
+                }
+              },
+              "to": {
+                "name": "Destination",
+                "lon": -122.3493,
+                "lat": 47.6205,
+                "vertexType": "NORMAL",
+                "stop": null
+              },
+              "legGeometry": {
+                "points": "{_taHfnwiV??XFJC@C@m@X?BA?I?KNKRCXADBDBF?DAFCDEBEBI@I@I?IAIAC",
+                "length": 26
+              },
+              "distance": 150.63,
+              "transitLeg": false,
+              "duration": 128.0,
+              "realTime": false,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 15.06,
+                  "streetName": "Seattle Monorail Concourse",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.349955,
+                  "lat": 47.621263
+                },
+                {
+                  "distance": 135.56,
+                  "streetName": "path",
+                  "relativeDirection": "LEFT",
+                  "lon": -122.3499937,
+                  "lat": 47.6211301
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

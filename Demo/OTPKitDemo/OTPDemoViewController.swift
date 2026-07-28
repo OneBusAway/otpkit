@@ -30,7 +30,7 @@ class OTPDemoViewController: UIViewController {
     private let regionInfo: OTPRegionInfo
     private var mapView: MKMapView!
     private var mapProvider: OTPMapProvider?
-    private var apiService: RestAPIService!
+    private var apiService: APIService!
     private var tripPlanner: TripPlanner?
     private var hostingController: UIViewController?
 
@@ -116,8 +116,13 @@ class OTPDemoViewController: UIViewController {
     }
 
     private func setupAPIService() {
-        // Create API service
-        apiService = RestAPIService(baseURL: serverURL)
+        // Create the API service matching the region's OTP server version
+        switch regionInfo.apiType {
+        case .rest:
+            apiService = RestAPIService(baseURL: serverURL)
+        case .graphQL:
+            apiService = GraphQLAPIService(baseURL: serverURL)
+        }
     }
 
     // MARK: - Actions

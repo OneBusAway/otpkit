@@ -30,6 +30,14 @@ class OnboardingViewController: UIViewController {
             icon: "building.2.fill",
             url: URL(string: "https://otp.prod.sound.obaweb.org/otp/routers/default/")!,
             center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
+        ),
+        OTPRegionInfo(
+            name: "Seattle (OTP 2.x GraphQL)",
+            description: "Puget Sound region via the OTP 2.x GraphQL API",
+            icon: "building.2.fill",
+            url: URL(string: "https://sound-transit-otp.ibi-transit.com/otp/")!,
+            center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321),
+            apiType: .graphQL
         )
     ]
 
