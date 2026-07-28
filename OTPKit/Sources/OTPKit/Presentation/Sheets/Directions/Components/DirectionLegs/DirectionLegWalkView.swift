@@ -19,16 +19,17 @@ struct DirectionLegWalkView: View {
             } rightContent: {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Walk to \(leg.to.name)")
+                        Text(OTPLoc("leg.walk_to", comment: "Instruction to walk to a place", leg.to.name))
                             .font(.title3)
                             .fontWeight(.bold)
                             .fixedSize(horizontal: false, vertical: true)
 
-                        Text(
-                            Formatters.formatDistance(Int(leg.distance)) +
-                            ", about " +
+                        Text(OTPLoc(
+                            "leg.walk_distance_duration",
+                            comment: "Walking distance followed by approximate duration",
+                            Formatters.formatDistance(Int(leg.distance)),
                             Formatters.formatTimeDuration(leg.duration)
-                        )
+                        ))
                         .foregroundStyle(.gray)
                         .fixedSize(horizontal: false, vertical: true)
                     }
@@ -67,11 +68,21 @@ struct DirectionLegWalkView: View {
 
     /// Generates a user-friendly step description.
     private func stepDescription(for step: Step) -> String {
-        if let direction = step.relativeDirection {
-            let distance = Formatters.formatDistance(Int(step.distance))
-            return "\(direction.capitalized) onto \(step.streetName), walk \(distance)."
+        if let direction = step.directionDisplayName {
+            return OTPLoc(
+                "leg.step_turn",
+                comment: "A walking step: turn direction, street name, distance",
+                direction,
+                step.streetName,
+                Formatters.formatDistance(Int(step.distance))
+            )
         } else {
-            return "Walk along \(step.streetName) for \(Formatters.formatDistance(Int(step.distance)))."
+            return OTPLoc(
+                "leg.step_continue",
+                comment: "A walking step with no turn: street name, distance",
+                step.streetName,
+                Formatters.formatDistance(Int(step.distance))
+            )
         }
     }
 }

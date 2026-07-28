@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "Ciao da OTPKit";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "Modifica le preferenze di percorso.";
 
 /* Map */
-"map.origin" = "Partenza";
 "map.destination" = "Destinazione";
-"map.finding" = "Ricerca in corso...";
-"map.searching_address" = "Ricerca dell'indirizzo";
 
 /* Loading */
 "loading.planning_trip" = "Pianificazione del viaggio in corso...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "Cerca luoghi";
 
 /* Trip Results */
-"trip_results.preview_button" = "Anteprima";
-"trip_results.cancel_button" = "Annulla";
 "trip_results.no_trips_found" = "Nessun viaggio trovato";
-"trip_results.duration_format" = "%d min";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "Annulla";
-"trip_preview.start_button" = "Inizia";
 "trip_preview.depart_label" = "Partenza:";
 "trip_preview.arrive_label" = "Arrivo:";
 
@@ -116,10 +107,152 @@
 "bottom.to" = "A";
 "bottom.current_location" = "Posizione attuale";
 "bottom.choose_destination" = "Scegli la destinazione";
-"bottom.search" = "Cerca";
 "bottom.options" = "Opzioni";
-"bottom.directions" = "Indicazioni";
 "bottom.advanced_options" = "Opzioni del viaggio";
 
 // MARK: - Itinerary
 "itinerary.summary" = "Parte alle %@; durata: %@";
+
+/* Common */
+"common.cancel" = "Annulla";
+"common.close" = "Chiudi";
+"common.delete" = "Elimina";
+"common.more" = "Altro";
+"common.unknown_location" = "Sconosciuto";
+"common.error" = "Errore";
+"common.generic_error" = "Si è verificato un errore";
+
+/* Trip Planner */
+"trip_planner.title" = "Pianificazione del viaggio";
+"trip_planner.find_routes" = "Cerca percorsi";
+"trip_planner.go" = "Vai";
+
+/* Location Picker */
+"location_picker.choose_start" = "Scegli la partenza";
+"location_picker.choose_destination" = "Scegli la destinazione";
+"location_picker.current_location_title" = "Posizione attuale";
+"location_picker.current_location_subtitle" = "Usa la tua posizione GPS attuale";
+"location_picker.gps_location_subtitle" = "La tua posizione GPS attuale";
+"location_picker.favorites_title" = "Preferiti";
+"location_picker.favorites_subtitle" = "Scegli tra i luoghi salvati";
+"location_picker.recents_title" = "Recenti";
+"location_picker.recents_subtitle" = "Visualizza i luoghi recenti";
+
+/* Search */
+"search.searching" = "Ricerca in corso...";
+"search.no_results_title" = "Nessun risultato";
+"search.no_results_message" = "Prova a cercare un altro luogo";
+
+/* Current Location Button */
+"current_location.getting" = "Rilevamento posizione...";
+"current_location.access_denied" = "Accesso alla posizione negato";
+"current_location.unavailable" = "Posizione non disponibile";
+"current_location.use_current" = "Usa posizione attuale";
+"current_location.getting_subtitle" = "Attendi mentre rileviamo la tua posizione";
+"current_location.enable_in_settings" = "Attiva l’accesso alla posizione in Impostazioni";
+"current_location.unable_subtitle" = "Impossibile rilevare la tua posizione attuale";
+"current_location.default_subtitle" = "Ottieni indicazioni da dove ti trovi ora";
+
+/* Favorites */
+"favorites.title" = "Preferiti";
+"favorites.empty" = "Nessun preferito";
+"favorites.sheet_title" = "Fermate preferite";
+"favorites.loading" = "Caricamento preferiti...";
+"favorites.empty_title" = "Nessuna fermata preferita";
+"favorites.empty_message" = "Non hai ancora salvato nessun luogo preferito. Inizia selezionando i luoghi sulla mappa!";
+
+/* Recents */
+"recents.title" = "Recenti";
+"recents.sheet_title" = "Luoghi recenti";
+"recents.loading" = "Caricamento luoghi recenti...";
+"recents.empty_title" = "Nessun luogo recente";
+"recents.empty_message" = "I luoghi visitati di recente appariranno qui man mano che usi l’app.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "Terminare il viaggio?";
+"directions.end_trip_confirm_message" = "Vuoi davvero terminare questo viaggio?";
+"directions.end_trip" = "Termina viaggio";
+"directions.end_trip_cancel" = "No";
+"directions.start" = "Partenza";
+"directions.end" = "Arrivo";
+"directions.start_navigation" = "Avvia navigazione";
+"directions.swipe_hint" = "Scorri per vedere ogni passaggio";
+
+/* Direction Legs */
+"leg.deboard_at" = "Scendi a";
+"leg.stop_id" = "ID fermata: %@";
+"leg.scheduled_at" = "Previsto alle %@";
+"leg.arrives_at" = "Arriva alle %@";
+"leg.walk_to" = "Cammina fino a %@";
+"leg.walk_distance_duration" = "%1$@, circa %2$@";
+"leg.step_turn" = "%1$@ su %2$@, cammina per %3$@.";
+"leg.step_continue" = "Cammina lungo %1$@ per %2$@.";
+"leg.unknown_mode" = "Mezzo di trasporto sconosciuto";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "Partenza alle %@";
+"trip_options.arrive_by_time" = "Arrivo entro le %@";
+"trip_options.tomorrow_time" = "Domani alle %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 m";
+"walking_distance.half_mile" = "800 m";
+"walking_distance.one_mile" = "1,6 km";
+"walking_distance.two_miles" = "3,2 km";
+"walking_distance.accessibility" = "Distanza massima a piedi: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "Il server ha restituito una risposta non valida";
+"error.saved_locations_unavailable" = "Impossibile recuperare i luoghi salvati";
+
+/* Location */
+"location.no_address" = "Indirizzo non disponibile";
+
+/* Transport Modes */
+"transport_mode.transit" = "Trasporto pubblico";
+"transport_mode.walk" = "A piedi";
+"transport_mode.bike" = "Bicicletta";
+"transport_mode.car" = "Auto";
+
+/* Walking Directions */
+"direction.depart" = "Parti";
+"direction.hard_left" = "Svolta secca a sinistra";
+"direction.left" = "Svolta a sinistra";
+"direction.slightly_left" = "Mantieni la sinistra";
+"direction.continue" = "Continua";
+"direction.slightly_right" = "Mantieni la destra";
+"direction.right" = "Svolta a destra";
+"direction.hard_right" = "Svolta secca a destra";
+"direction.elevator" = "Prendi l’ascensore";
+"direction.enter_station" = "Entra nella stazione";
+"direction.exit_station" = "Esci dalla stazione";
+"direction.follow_signs" = "Segui i cartelli";
+
+/* Leg Modes */
+"leg_mode.bus" = "Autobus";
+"leg_mode.tram" = "Tram";
+"leg_mode.subway" = "Metropolitana";
+"leg_mode.rail" = "Treno";
+"leg_mode.ferry" = "Traghetto";
+"leg_mode.cable_car" = "Funivia a fune";
+"leg_mode.gondola" = "Cabinovia";
+"leg_mode.funicular" = "Funicolare";
+"leg_mode.airplane" = "Aereo";
+"leg_mode.trolleybus" = "Filobus";
+"leg_mode.monorail" = "Monorotaia";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "%@ a piedi";
+"leg.board_with_route" = "Sali su %1$@ linea %2$@";
+"leg.board_agency_only" = "Sali su %@";
+"location.unknown_place" = "Posizione sconosciuta";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "Fai un’inversione a U a sinistra";
+"direction.uturn_right" = "Fai un’inversione a U a destra";
+"direction.circle_clockwise" = "Entra nella rotatoria in senso orario";
+"direction.circle_counterclockwise" = "Entra nella rotatoria in senso antiorario";

@@ -18,9 +18,9 @@ struct DirectionLegUnknownView: View {
         } rightContent: {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Unknown Transit Mode")
+                    Text(OTPLoc("leg.unknown_mode", comment: "Shown when a trip leg uses an unrecognized transit mode"))
                         .font(.headline)
-                    Text(leg.mode)
+                    Text(leg.modeDisplayName)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }

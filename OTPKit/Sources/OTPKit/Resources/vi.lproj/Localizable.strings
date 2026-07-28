@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "Xin chào từ OTPKit";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "Vui lòng điều chỉnh các tùy chọn tuyến đường.";
 
 /* Map */
-"map.origin" = "Điểm đi";
 "map.destination" = "Điểm đến";
-"map.finding" = "Đang tìm...";
-"map.searching_address" = "Đang tìm địa chỉ";
 
 /* Loading */
 "loading.planning_trip" = "Đang lập kế hoạch chuyến đi của bạn...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "Tìm kiếm địa điểm";
 
 /* Trip Results */
-"trip_results.preview_button" = "Xem trước";
-"trip_results.cancel_button" = "Hủy";
 "trip_results.no_trips_found" = "Không tìm thấy chuyến đi nào";
-"trip_results.duration_format" = "%d phút";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "Hủy";
-"trip_preview.start_button" = "Bắt đầu";
 "trip_preview.depart_label" = "Khởi hành:";
 "trip_preview.arrive_label" = "Đến:";
 
@@ -116,10 +107,152 @@
 "bottom.to" = "Đến";
 "bottom.current_location" = "Vị trí hiện tại";
 "bottom.choose_destination" = "Chọn điểm đến";
-"bottom.search" = "Tìm kiếm";
 "bottom.options" = "Tùy chọn";
-"bottom.directions" = "Chỉ đường";
 "bottom.advanced_options" = "Tùy chọn chuyến đi";
 
 // MARK: - Itinerary
 "itinerary.summary" = "Khởi hành lúc %@; thời lượng: %@";
+
+/* Common */
+"common.cancel" = "Huỷ";
+"common.close" = "Đóng";
+"common.delete" = "Xoá";
+"common.more" = "Thêm";
+"common.unknown_location" = "Không rõ";
+"common.error" = "Lỗi";
+"common.generic_error" = "Đã xảy ra lỗi";
+
+/* Trip Planner */
+"trip_planner.title" = "Lập kế hoạch chuyến đi";
+"trip_planner.find_routes" = "Tìm tuyến đường";
+"trip_planner.go" = "Đi";
+
+/* Location Picker */
+"location_picker.choose_start" = "Chọn điểm đi";
+"location_picker.choose_destination" = "Chọn điểm đến";
+"location_picker.current_location_title" = "Vị trí hiện tại";
+"location_picker.current_location_subtitle" = "Dùng vị trí GPS hiện tại của bạn";
+"location_picker.gps_location_subtitle" = "Vị trí GPS hiện tại của bạn";
+"location_picker.favorites_title" = "Yêu thích";
+"location_picker.favorites_subtitle" = "Chọn từ các địa điểm đã lưu";
+"location_picker.recents_title" = "Gần đây";
+"location_picker.recents_subtitle" = "Xem các vị trí gần đây";
+
+/* Search */
+"search.searching" = "Đang tìm kiếm...";
+"search.no_results_title" = "Không tìm thấy kết quả";
+"search.no_results_message" = "Hãy thử tìm một địa điểm khác";
+
+/* Current Location Button */
+"current_location.getting" = "Đang lấy vị trí...";
+"current_location.access_denied" = "Quyền truy cập vị trí bị từ chối";
+"current_location.unavailable" = "Không có vị trí";
+"current_location.use_current" = "Dùng vị trí hiện tại";
+"current_location.getting_subtitle" = "Vui lòng đợi trong khi chúng tôi lấy vị trí của bạn";
+"current_location.enable_in_settings" = "Bật quyền truy cập vị trí trong Cài đặt";
+"current_location.unable_subtitle" = "Không thể lấy vị trí hiện tại của bạn";
+"current_location.default_subtitle" = "Xem chỉ đường từ nơi bạn đang đứng";
+
+/* Favorites */
+"favorites.title" = "Yêu thích";
+"favorites.empty" = "Chưa có mục yêu thích";
+"favorites.sheet_title" = "Trạm yêu thích";
+"favorites.loading" = "Đang tải mục yêu thích...";
+"favorites.empty_title" = "Chưa có trạm yêu thích";
+"favorites.empty_message" = "Bạn chưa lưu địa điểm yêu thích nào. Hãy bắt đầu bằng cách chọn địa điểm trên bản đồ!";
+
+/* Recents */
+"recents.title" = "Gần đây";
+"recents.sheet_title" = "Vị trí gần đây";
+"recents.loading" = "Đang tải vị trí gần đây...";
+"recents.empty_title" = "Chưa có vị trí gần đây";
+"recents.empty_message" = "Các vị trí bạn đã xem gần đây sẽ xuất hiện ở đây khi bạn dùng ứng dụng.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "Kết thúc chuyến đi?";
+"directions.end_trip_confirm_message" = "Bạn có chắc muốn kết thúc chuyến đi này không?";
+"directions.end_trip" = "Kết thúc chuyến đi";
+"directions.end_trip_cancel" = "Không";
+"directions.start" = "Điểm đi";
+"directions.end" = "Điểm đến";
+"directions.start_navigation" = "Bắt đầu dẫn đường";
+"directions.swipe_hint" = "Vuốt để xem từng bước";
+
+/* Direction Legs */
+"leg.deboard_at" = "Xuống tại";
+"leg.stop_id" = "Mã trạm: %@";
+"leg.scheduled_at" = "Theo lịch lúc %@";
+"leg.arrives_at" = "Đến lúc %@";
+"leg.walk_to" = "Đi bộ đến %@";
+"leg.walk_distance_duration" = "%1$@, khoảng %2$@";
+"leg.step_turn" = "%1$@ vào %2$@, đi bộ %3$@.";
+"leg.step_continue" = "Đi bộ dọc theo %1$@ %2$@.";
+"leg.unknown_mode" = "Phương tiện không xác định";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "Khởi hành lúc %@";
+"trip_options.arrive_by_time" = "Đến trước %@";
+"trip_options.tomorrow_time" = "Ngày mai %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 m";
+"walking_distance.half_mile" = "800 m";
+"walking_distance.one_mile" = "1,6 km";
+"walking_distance.two_miles" = "3,2 km";
+"walking_distance.accessibility" = "Khoảng cách đi bộ tối đa: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "Máy chủ trả về phản hồi không hợp lệ";
+"error.saved_locations_unavailable" = "Không thể đọc các vị trí đã lưu";
+
+/* Location */
+"location.no_address" = "Không có địa chỉ";
+
+/* Transport Modes */
+"transport_mode.transit" = "Giao thông công cộng";
+"transport_mode.walk" = "Đi bộ";
+"transport_mode.bike" = "Xe đạp";
+"transport_mode.car" = "Ô tô";
+
+/* Walking Directions */
+"direction.depart" = "Xuất phát";
+"direction.hard_left" = "Rẽ gấp sang trái";
+"direction.left" = "Rẽ trái";
+"direction.slightly_left" = "Đi chếch sang trái";
+"direction.continue" = "Đi tiếp";
+"direction.slightly_right" = "Đi chếch sang phải";
+"direction.right" = "Rẽ phải";
+"direction.hard_right" = "Rẽ gấp sang phải";
+"direction.elevator" = "Đi thang máy";
+"direction.enter_station" = "Vào nhà ga";
+"direction.exit_station" = "Ra khỏi nhà ga";
+"direction.follow_signs" = "Đi theo biển chỉ dẫn";
+
+/* Leg Modes */
+"leg_mode.bus" = "Xe buýt";
+"leg_mode.tram" = "Tàu điện";
+"leg_mode.subway" = "Tàu điện ngầm";
+"leg_mode.rail" = "Tàu hoả";
+"leg_mode.ferry" = "Phà";
+"leg_mode.cable_car" = "Tàu cáp";
+"leg_mode.gondola" = "Cáp treo";
+"leg_mode.funicular" = "Đường sắt leo núi";
+"leg_mode.airplane" = "Máy bay";
+"leg_mode.trolleybus" = "Xe buýt điện";
+"leg_mode.monorail" = "Tàu một ray";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "Đi bộ %@";
+"leg.board_with_route" = "Lên %1$@ tuyến %2$@";
+"leg.board_agency_only" = "Lên %@";
+"location.unknown_place" = "Vị trí không xác định";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "Quay đầu sang trái";
+"direction.uturn_right" = "Quay đầu sang phải";
+"direction.circle_clockwise" = "Vào vòng xuyến theo chiều kim đồng hồ";
+"direction.circle_counterclockwise" = "Vào vòng xuyến ngược chiều kim đồng hồ";

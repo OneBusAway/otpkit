@@ -17,14 +17,16 @@ struct ItineraryDetailsView: View {
     @Environment(\.dismiss) var dismiss
 
     public var body: some View {
-        NavigationStack {
+        let unknownLocation = OTPLoc("common.unknown_location", comment: "Fallback for a location with no name")
+
+        return NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 8.0, pinnedViews: [.sectionFooters]) {
                     Section {
                         Group {
                             DirectionLegOriginDestinationView(
-                                title: "Start",
-                                description: origin?.title ?? "Unknown"
+                                title: OTPLoc("directions.start", comment: "Label for the start of a trip"),
+                                description: origin?.title ?? unknownLocation
                             )
                             .padding(.horizontal, 20)
 
@@ -39,8 +41,8 @@ struct ItineraryDetailsView: View {
                             }
 
                             DirectionLegOriginDestinationView(
-                                title: "Destination",
-                                description: destination?.title ?? "Unknown"
+                                title: OTPLoc("map.destination", comment: "The destination of a trip"),
+                                description: destination?.title ?? unknownLocation
                             )
                             .padding(.horizontal, 20)
                         }
@@ -50,7 +52,7 @@ struct ItineraryDetailsView: View {
                             Rectangle()
                                 .fill(.thinMaterial)
 
-                            Button("Start Navigation") {
+                            Button(OTPLoc("directions.start_navigation", comment: "Starts turn-by-turn navigation")) {
                                 tripPlannerVM.handleTripStarted(itinerary)
                             }
                             .buttonStyle(.borderedProminent)
@@ -63,11 +65,11 @@ struct ItineraryDetailsView: View {
             }
             .ignoresSafeArea(edges: .bottom)
             .scrollDismissesKeyboard(.interactively)
-            .navigationTitle(destination?.title ?? "Destination")
+            .navigationTitle(destination?.title ?? OTPLoc("map.destination", comment: "The destination of a trip"))
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close", systemImage: "xmark") {
+                    Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
                         dismiss()
                     }
                 }

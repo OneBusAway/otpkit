@@ -87,6 +87,43 @@ addChild(hostingController)
 view.addSubview(hostingController.view)
 ```
 
+## Localization
+
+OTPKit ships translations for Arabic, English, Filipino, French, Italian, Korean, Polish,
+Portuguese (Brazil), Russian, Simplified Chinese, Spanish, Traditional Chinese, and Vietnamese.
+
+**Your app must declare which of these languages it supports, or OTPKit will render in English.**
+iOS resolves an app's language from the *main* bundle, and OTPKit's strings follow that
+resolution — so a host app that ships no localizations pins the whole process to English no
+matter what the device language is.
+
+If your app is already localized into these languages, there is nothing to do. Otherwise, add
+the ones you want to your app target's `Info.plist`:
+
+```xml
+<key>CFBundleLocalizations</key>
+<array>
+    <string>en</string>
+    <string>ar</string>
+    <string>es</string>
+    <string>fil</string>
+    <string>fr</string>
+    <string>it</string>
+    <string>ko</string>
+    <string>pl</string>
+    <string>pt-BR</string>
+    <string>ru</string>
+    <string>vi</string>
+    <string>zh-Hans</string>
+    <string>zh-Hant</string>
+</array>
+```
+
+OTPKit resolves its strings from its own resource bundle, so defining the same keys in your
+app's `Localizable.strings` will not override them. To change or add wording, edit
+[`OTPKit/Sources/OTPKit/Resources/en.lproj/Localizable.strings`](OTPKit/Sources/OTPKit/Resources/en.lproj/Localizable.strings)
+and its sibling locales.
+
 ## Development
 
 ### SwiftLint

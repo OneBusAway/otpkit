@@ -56,7 +56,7 @@ struct ItineraryPreviewView: View {
             VStack(spacing: 2) {
                 Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
                     .font(.system(size: 16, weight: .semibold))
-                Text("Go")
+                Text(OTPLoc("trip_planner.go", comment: "Starts the selected itinerary"))
                     .font(.system(size: 12, weight: .bold))
             }
             .foregroundStyle(.white)

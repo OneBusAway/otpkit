@@ -70,11 +70,11 @@ public struct TripPlannerView: View {
                 .padding(.top, 8)
             }
             .scrollDismissesKeyboard(.interactively)
-            .navigationTitle("Trip Planning")
+            .navigationTitle(OTPLoc("trip_planner.title", comment: "Title of the trip planning screen"))
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close", systemImage: "xmark") {
+                    Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
                         tripPlannerVM.resetTripPlanner()
                         self.onClose()
                     }
@@ -98,7 +98,7 @@ public struct TripPlannerView: View {
         }
         .errorCard(
             isPresented: tripPlannerVM.showingError,
-            message: tripPlannerVM.errorMessage ?? "An error occurred",
+            message: tripPlannerVM.errorMessage ?? OTPLoc("common.generic_error", comment: "Fallback error message"),
             onDismiss: clearError
         )
         .sheet(item: $tripPlannerVM.activeSheet, content: sheetView)

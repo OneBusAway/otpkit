@@ -33,7 +33,7 @@ struct SearchSheetView: View {
                             .accessibilityAddTraits(.isHeader)
                             .frame(maxWidth: .infinity)
 
-                        Button("Cancel") {
+                        Button(OTPLoc("common.cancel", comment: "Cancel button")) {
                             dismiss()
                         }
                     }
@@ -105,7 +105,7 @@ struct SearchSheetView: View {
     private func buildSearchingView() -> some View {
         VStack(spacing: 16) {
             ProgressView().scaleEffect(1.2)
-            Text("Searching...")
+            Text(OTPLoc("search.searching", comment: "Shown while a location search is in flight"))
                 .font(.subheadline)
                 .foregroundColor(theme.secondaryColor)
         }
@@ -120,11 +120,11 @@ struct SearchSheetView: View {
                 .font(.system(size: 48))
                 .foregroundColor(theme.secondaryColor)
 
-            Text("No results found")
+            Text(OTPLoc("search.no_results_title", comment: "Title shown when a search returns nothing"))
                 .font(.headline)
                 .foregroundColor(theme.secondaryColor)
 
-            Text("Try searching for a different location")
+            Text(OTPLoc("search.no_results_message", comment: "Advice shown when a search returns nothing"))
                 .font(.subheadline)
                 .foregroundColor(theme.secondaryColor)
                 .multilineTextAlignment(.center)
@@ -150,9 +150,9 @@ struct SearchSheetView: View {
     private func buildNavigationTitle() -> String {
         switch selectedMode {
         case .origin:
-            return "Choose Start"
+            return OTPLoc("location_picker.choose_start", comment: "Title when picking the trip's starting point")
         case .destination:
-            return "Choose Destination"
+            return OTPLoc("location_picker.choose_destination", comment: "Title when picking the trip's destination")
         }
     }
 }

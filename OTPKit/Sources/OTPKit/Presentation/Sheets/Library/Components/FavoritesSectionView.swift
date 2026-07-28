@@ -37,7 +37,7 @@ struct FavoritesSectionView: View {
 
     private var headerView: some View {
         HStack {
-            Text("Favorites")
+            Text(OTPLoc("favorites.title", comment: "Header of the favorites section"))
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
@@ -80,7 +80,7 @@ struct FavoritesSectionView: View {
     private var emptyStateView: some View {
         HStack {
             Spacer()
-            Text("No Favorites")
+            Text(OTPLoc("favorites.empty", comment: "Shown when the favorites section is empty"))
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.secondary)
@@ -120,7 +120,7 @@ struct FavoritesSectionView: View {
                         .foregroundColor(.secondary)
                 }
 
-                Text("More")
+                Text(OTPLoc("common.more", comment: "Shows the full list"))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)

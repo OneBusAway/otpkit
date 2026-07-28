@@ -38,7 +38,7 @@ struct RecentsSectionView: View {
 
     private var headerView: some View {
         HStack {
-            Text("Recents")
+            Text(OTPLoc("recents.title", comment: "Header of the recent locations section"))
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
@@ -46,7 +46,7 @@ struct RecentsSectionView: View {
             Spacer()
 
             if !recentLocations.isEmpty && !isLoading {
-                Button("More", action: onMoreTapped)
+                Button(OTPLoc("common.more", comment: "Shows the full list"), action: onMoreTapped)
                     .font(.subheadline)
                     .foregroundColor(theme.primaryColor)
             }
@@ -97,7 +97,7 @@ struct RecentsSectionView: View {
     private var emptyStateView: some View {
         HStack {
             Spacer()
-            Text("No Recent Locations")
+            Text(OTPLoc("recents.empty_title", comment: "Shown when the recents section is empty"))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             Spacer()
@@ -143,7 +143,7 @@ struct RecentsSectionView: View {
                     Button(role: .destructive) {
                         deleteLocation(location)
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label(OTPLoc("common.delete", comment: "Deletes a recent location"), systemImage: "trash")
                     }
                 }
             }

@@ -38,7 +38,7 @@ public struct TripPlannerResultsView: View {
             if hasItineraries {
                 itinerariesScrollView()
             } else {
-                Text("No trips found")
+                Text(OTPLoc("trip_results.no_trips_found", comment: "Shown when no itineraries were returned"))
                     .foregroundStyle(theme.secondaryColor)
                     .padding()
             }

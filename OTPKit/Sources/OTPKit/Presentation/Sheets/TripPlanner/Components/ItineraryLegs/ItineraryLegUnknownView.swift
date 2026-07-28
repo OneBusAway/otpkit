@@ -13,7 +13,8 @@ struct ItineraryLegUnknownView: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Text("\(leg.mode): \(Formatters.formatTimeDuration(leg.duration))")
+            Text(OTPLoc("leg.mode_duration", comment: "Transit mode followed by its duration",
+                        leg.modeDisplayName, Formatters.formatTimeDuration(leg.duration)))
                 .font(.caption)
         }
         .padding(.horizontal, 8)

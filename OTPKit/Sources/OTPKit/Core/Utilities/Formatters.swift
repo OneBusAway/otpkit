@@ -82,11 +82,27 @@ class Formatters {
         }
     }
 
-    static func formatDateToTime(_ date: Date, locale: Locale = .current) -> String {
+    // MARK: - Time Formatting
+
+    /// Built once: `DateFormatter` construction costs ~65x a reuse, and this runs per
+    /// itinerary row and per transit leg while scrolling.
+    ///
+    /// Because it is built once and never rebuilt, the device settings are wired up as
+    /// `autoupdatingCurrent`. A plain `DateFormatter` captures `Locale.current` and friends at
+    /// init, so a rider who switches region or 24-hour time — or crosses a time zone — would
+    /// keep seeing arrival times in the old format and offset until the app relaunched.
+    private lazy var timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = locale
+        // Order matters: assigning `locale` resets `calendar`, so set it first.
+        formatter.locale = .autoupdatingCurrent
+        formatter.calendar = .autoupdatingCurrent
+        formatter.timeZone = .autoupdatingCurrent
         formatter.dateStyle = .none
         formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    static func formatDateToTime(_ date: Date) -> String {
+        shared.timeFormatter.string(from: date)
     }
 }

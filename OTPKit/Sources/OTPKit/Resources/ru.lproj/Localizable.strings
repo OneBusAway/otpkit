@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "Привет от OTPKit";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "Настройте предпочтения для маршрута.";
 
 /* Map */
-"map.origin" = "Пункт отправления";
 "map.destination" = "Пункт назначения";
-"map.finding" = "Поиск...";
-"map.searching_address" = "Поиск адреса";
 
 /* Loading */
 "loading.planning_trip" = "Планируем ваш маршрут...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "Поиск мест";
 
 /* Trip Results */
-"trip_results.preview_button" = "Предпросмотр";
-"trip_results.cancel_button" = "Отменить";
 "trip_results.no_trips_found" = "Маршруты не найдены";
-"trip_results.duration_format" = "%d мин";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "Отменить";
-"trip_preview.start_button" = "Начать";
 "trip_preview.depart_label" = "Отправление:";
 "trip_preview.arrive_label" = "Прибытие:";
 
@@ -116,10 +107,152 @@
 "bottom.to" = "Куда";
 "bottom.current_location" = "Текущее местоположение";
 "bottom.choose_destination" = "Выберите пункт назначения";
-"bottom.search" = "Поиск";
 "bottom.options" = "Параметры";
-"bottom.directions" = "Маршрут";
 "bottom.advanced_options" = "Параметры поездки";
 
 // MARK: - Itinerary
 "itinerary.summary" = "Отправление в %@; продолжительность: %@";
+
+/* Common */
+"common.cancel" = "Отмена";
+"common.close" = "Закрыть";
+"common.delete" = "Удалить";
+"common.more" = "Ещё";
+"common.unknown_location" = "Неизвестно";
+"common.error" = "Ошибка";
+"common.generic_error" = "Произошла ошибка";
+
+/* Trip Planner */
+"trip_planner.title" = "Планирование поездки";
+"trip_planner.find_routes" = "Найти маршруты";
+"trip_planner.go" = "В путь";
+
+/* Location Picker */
+"location_picker.choose_start" = "Выберите начало";
+"location_picker.choose_destination" = "Выберите пункт назначения";
+"location_picker.current_location_title" = "Текущее местоположение";
+"location_picker.current_location_subtitle" = "Использовать текущее местоположение GPS";
+"location_picker.gps_location_subtitle" = "Ваше текущее местоположение GPS";
+"location_picker.favorites_title" = "Избранное";
+"location_picker.favorites_subtitle" = "Выберите из сохранённых мест";
+"location_picker.recents_title" = "Недавние";
+"location_picker.recents_subtitle" = "Посмотреть недавние места";
+
+/* Search */
+"search.searching" = "Поиск...";
+"search.no_results_title" = "Ничего не найдено";
+"search.no_results_message" = "Попробуйте найти другое место";
+
+/* Current Location Button */
+"current_location.getting" = "Определение местоположения...";
+"current_location.access_denied" = "Доступ к геопозиции запрещён";
+"current_location.unavailable" = "Местоположение недоступно";
+"current_location.use_current" = "Использовать текущее местоположение";
+"current_location.getting_subtitle" = "Подождите, определяем ваше местоположение";
+"current_location.enable_in_settings" = "Разрешите доступ к геопозиции в Настройках";
+"current_location.unable_subtitle" = "Не удалось определить ваше местоположение";
+"current_location.default_subtitle" = "Построить маршрут от текущего места";
+
+/* Favorites */
+"favorites.title" = "Избранное";
+"favorites.empty" = "Нет избранного";
+"favorites.sheet_title" = "Избранные остановки";
+"favorites.loading" = "Загрузка избранного...";
+"favorites.empty_title" = "Нет избранных остановок";
+"favorites.empty_message" = "Вы ещё не сохранили ни одного избранного места. Начните с выбора мест на карте!";
+
+/* Recents */
+"recents.title" = "Недавние";
+"recents.sheet_title" = "Недавние места";
+"recents.loading" = "Загрузка недавних мест...";
+"recents.empty_title" = "Нет недавних мест";
+"recents.empty_message" = "Недавно посещённые места появятся здесь по мере использования приложения.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "Завершить поездку?";
+"directions.end_trip_confirm_message" = "Вы действительно хотите завершить эту поездку?";
+"directions.end_trip" = "Завершить поездку";
+"directions.end_trip_cancel" = "Нет";
+"directions.start" = "Начало";
+"directions.end" = "Конец";
+"directions.start_navigation" = "Начать навигацию";
+"directions.swipe_hint" = "Смахните, чтобы увидеть каждый шаг";
+
+/* Direction Legs */
+"leg.deboard_at" = "Выйдите на";
+"leg.stop_id" = "Код остановки: %@";
+"leg.scheduled_at" = "По расписанию в %@";
+"leg.arrives_at" = "Прибытие в %@";
+"leg.walk_to" = "Идите пешком до %@";
+"leg.walk_distance_duration" = "%1$@, около %2$@";
+"leg.step_turn" = "%1$@ на %2$@, пройдите %3$@.";
+"leg.step_continue" = "Идите вдоль %1$@ %2$@.";
+"leg.unknown_mode" = "Неизвестный вид транспорта";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "Отправление в %@";
+"trip_options.arrive_by_time" = "Прибытие к %@";
+"trip_options.tomorrow_time" = "Завтра в %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 м";
+"walking_distance.half_mile" = "800 м";
+"walking_distance.one_mile" = "1,6 км";
+"walking_distance.two_miles" = "3,2 км";
+"walking_distance.accessibility" = "Максимальное расстояние пешком: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "Сервер вернул некорректный ответ";
+"error.saved_locations_unavailable" = "Не удалось загрузить сохранённые места";
+
+/* Location */
+"location.no_address" = "Адрес недоступен";
+
+/* Transport Modes */
+"transport_mode.transit" = "Общественный транспорт";
+"transport_mode.walk" = "Пешком";
+"transport_mode.bike" = "Велосипед";
+"transport_mode.car" = "Автомобиль";
+
+/* Walking Directions */
+"direction.depart" = "Начните движение";
+"direction.hard_left" = "Резко поверните налево";
+"direction.left" = "Поверните налево";
+"direction.slightly_left" = "Держитесь левее";
+"direction.continue" = "Продолжайте движение";
+"direction.slightly_right" = "Держитесь правее";
+"direction.right" = "Поверните направо";
+"direction.hard_right" = "Резко поверните направо";
+"direction.elevator" = "Воспользуйтесь лифтом";
+"direction.enter_station" = "Войдите на станцию";
+"direction.exit_station" = "Выйдите со станции";
+"direction.follow_signs" = "Следуйте указателям";
+
+/* Leg Modes */
+"leg_mode.bus" = "Автобус";
+"leg_mode.tram" = "Трамвай";
+"leg_mode.subway" = "Метро";
+"leg_mode.rail" = "Поезд";
+"leg_mode.ferry" = "Паром";
+"leg_mode.cable_car" = "Фуникулёр";
+"leg_mode.gondola" = "Канатная дорога";
+"leg_mode.funicular" = "Фуникулёр наклонный";
+"leg_mode.airplane" = "Самолёт";
+"leg_mode.trolleybus" = "Троллейбус";
+"leg_mode.monorail" = "Монорельс";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "%@ пешком";
+"leg.board_with_route" = "Сядьте на %1$@ маршрут %2$@";
+"leg.board_agency_only" = "Сядьте на %@";
+"location.unknown_place" = "Неизвестное место";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "Развернитесь налево";
+"direction.uturn_right" = "Развернитесь направо";
+"direction.circle_clockwise" = "Въезжайте на круговое движение по часовой стрелке";
+"direction.circle_counterclockwise" = "Въезжайте на круговое движение против часовой стрелки";

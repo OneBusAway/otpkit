@@ -17,10 +17,10 @@ struct TripOptionsSummaryView: View {
 
     // MARK: - Static Date Formatters
 
-    /// Formatter for date and time (e.g., "Jan 15, 3:30 PM")
+    /// Formatter for date and time (e.g., "Jan 15, 3:30 PM"), ordered and punctuated per the user's locale
     private static let dateTimeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, h:mm a"
+        formatter.setLocalizedDateFormatFromTemplate("MMMdjmm")
         return formatter
     }()
 
@@ -70,7 +70,7 @@ struct TripOptionsSummaryView: View {
             summaries.append(OptionSummary(
                 id: "wheelchair",
                 icon: "figure.roll",
-                text: "Wheelchair accessible"
+                text: OTPLoc("advanced_options.wheelchair_accessible", comment: "Pill shown when wheelchair routing is on")
             ))
         }
 
@@ -97,19 +97,20 @@ struct TripOptionsSummaryView: View {
 
     /// Formats the time preference for display
     private func formatTimePreference() -> String {
-        switch tripPlannerVM.timePreference {
+        let preference = tripPlannerVM.timePreference
+        guard let date = tripPlannerVM.departureDate, let time = tripPlannerVM.departureTime else {
+            return preference.title
+        }
+
+        switch preference {
         case .leaveNow:
-            return "Leave Now"
+            return preference.title
         case .departAt:
-            if let date = tripPlannerVM.departureDate, let time = tripPlannerVM.departureTime {
-                return "Depart at \(formatTime(date: date, time: time))"
-            }
-            return "Depart At"
+            return OTPLoc("trip_options.depart_at_time", comment: "Departure time pill",
+                          formatTime(date: date, time: time))
         case .arriveBy:
-            if let date = tripPlannerVM.departureDate, let time = tripPlannerVM.departureTime {
-                return "Arrive by \(formatTime(date: date, time: time))"
-            }
-            return "Arrive By"
+            return OTPLoc("trip_options.arrive_by_time", comment: "Arrival time pill",
+                          formatTime(date: date, time: time))
         }
     }
 
@@ -139,7 +140,7 @@ struct TripOptionsSummaryView: View {
 
         // Check if it's tomorrow
         if calendar.isDateInTomorrow(combinedDate) {
-            return "Tomorrow \(formatTimeOnly(time))"
+            return OTPLoc("trip_options.tomorrow_time", comment: "A time occurring tomorrow", formatTimeOnly(time))
         }
 
         // Otherwise show date and time
@@ -153,17 +154,9 @@ struct TripOptionsSummaryView: View {
 
     /// Formats walking distance for display
     private func formatWalkingDistance() -> String {
-        let distance = tripPlannerVM.maxWalkingDistance
-        switch distance {
-        case .quarterMile:
-            return "0.25 mi walk"
-        case .halfMile:
-            return "0.5 mi walk"
-        case .oneMile:
-            return "1 mi walk"
-        case .twoMiles:
-            return "2 mi walk"
-        }
+        OTPLoc("trip_options.walk_distance",
+               comment: "Max walking distance pill, e.g. \"1 mile walk\"",
+               tripPlannerVM.maxWalkingDistance.title)
     }
 }
 

@@ -88,7 +88,9 @@ public class LocationManager: NSObject, ObservableObject {
             // Fall back to street address
             let streetComponents = [placemark.subThoroughfare, placemark.thoroughfare]
                 .compactMap { $0 }
-            return streetComponents.isEmpty ? "Unknown Location" : streetComponents.joined(separator: " ")
+            return streetComponents.isEmpty
+                ? OTPLoc("location.unknown_place", comment: "Title for a place whose street address can't be resolved")
+                : streetComponents.joined(separator: " ")
         }
     }
 
@@ -112,7 +114,9 @@ public class LocationManager: NSObject, ObservableObject {
             components.append(locality)
         }
 
-        return components.isEmpty ? "No address available" : components.joined(separator: ", ")
+        return components.isEmpty
+            ? OTPLoc("location.no_address", comment: "Shown when a place has no resolvable address")
+            : components.joined(separator: ", ")
     }
 
     // MARK: - Current Location
@@ -121,12 +125,7 @@ public class LocationManager: NSObject, ObservableObject {
     public func getCurrentLocation() async -> Location? {
         // Return cached location if available
         if let location = currentLocation {
-            return Location(
-                title: "Current Location",
-                subTitle: "Your current GPS location",
-                latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
-            )
+            return Location.currentLocation(from: location.coordinate)
         }
 
         // Request location if not available
@@ -143,12 +142,7 @@ public class LocationManager: NSObject, ObservableObject {
 
         guard let location = currentLocation else { return nil }
 
-        return Location(
-            title: "Current Location",
-            subTitle: "Your current GPS location",
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
+        return Location.currentLocation(from: location.coordinate)
     }
 }
 

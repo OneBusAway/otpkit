@@ -3,7 +3,6 @@
  */
 
 /* Test */
-"test_loc" = "مرحبًا من OTPKit";
 
 
 /* Titles */
@@ -44,10 +43,7 @@
 "error.triangle_values_not_set" = "يُرجى ضبط تفضيلات المسار.";
 
 /* Map */
-"map.origin" = "نقطة الانطلاق";
 "map.destination" = "الوجهة";
-"map.finding" = "جارٍ البحث...";
-"map.searching_address" = "جارٍ البحث عن العنوان";
 
 /* Loading */
 "loading.planning_trip" = "جارٍ تخطيط رحلتك...";
@@ -77,14 +73,9 @@
 "search_bar.placeholder" = "ابحث عن أماكن";
 
 /* Trip Results */
-"trip_results.preview_button" = "معاينة";
-"trip_results.cancel_button" = "إلغاء";
 "trip_results.no_trips_found" = "لم يتم العثور على رحلات";
-"trip_results.duration_format" = "%d دقيقة";
 
 /* Trip Preview */
-"trip_preview.cancel_button" = "إلغاء";
-"trip_preview.start_button" = "ابدأ";
 "trip_preview.depart_label" = "المغادرة:";
 "trip_preview.arrive_label" = "الوصول:";
 
@@ -116,10 +107,152 @@
 "bottom.to" = "إلى";
 "bottom.current_location" = "الموقع الحالي";
 "bottom.choose_destination" = "اختر الوجهة";
-"bottom.search" = "بحث";
 "bottom.options" = "الخيارات";
-"bottom.directions" = "الاتجاهات";
 "bottom.advanced_options" = "خيارات الرحلة";
 
 // MARK: - Itinerary
 "itinerary.summary" = "المغادرة في %@؛ المدة: %@";
+
+/* Common */
+"common.cancel" = "إلغاء";
+"common.close" = "إغلاق";
+"common.delete" = "حذف";
+"common.more" = "المزيد";
+"common.unknown_location" = "غير معروف";
+"common.error" = "خطأ";
+"common.generic_error" = "حدث خطأ";
+
+/* Trip Planner */
+"trip_planner.title" = "تخطيط الرحلة";
+"trip_planner.find_routes" = "البحث عن مسارات";
+"trip_planner.go" = "انطلق";
+
+/* Location Picker */
+"location_picker.choose_start" = "اختر نقطة البداية";
+"location_picker.choose_destination" = "اختر الوجهة";
+"location_picker.current_location_title" = "الموقع الحالي";
+"location_picker.current_location_subtitle" = "استخدم موقع GPS الحالي";
+"location_picker.gps_location_subtitle" = "موقع GPS الحالي الخاص بك";
+"location_picker.favorites_title" = "المفضلة";
+"location_picker.favorites_subtitle" = "اختر من أماكنك المحفوظة";
+"location_picker.recents_title" = "الأخيرة";
+"location_picker.recents_subtitle" = "اعرض مواقعك الأخيرة";
+
+/* Search */
+"search.searching" = "جارٍ البحث...";
+"search.no_results_title" = "لم يتم العثور على نتائج";
+"search.no_results_message" = "جرّب البحث عن موقع آخر";
+
+/* Current Location Button */
+"current_location.getting" = "جارٍ تحديد الموقع...";
+"current_location.access_denied" = "تم رفض الوصول إلى الموقع";
+"current_location.unavailable" = "الموقع غير متاح";
+"current_location.use_current" = "استخدام الموقع الحالي";
+"current_location.getting_subtitle" = "يرجى الانتظار بينما نحدد موقعك";
+"current_location.enable_in_settings" = "فعّل الوصول إلى الموقع من الإعدادات";
+"current_location.unable_subtitle" = "تعذّر تحديد موقعك الحالي";
+"current_location.default_subtitle" = "احصل على الاتجاهات من موقعك الحالي";
+
+/* Favorites */
+"favorites.title" = "المفضلة";
+"favorites.empty" = "لا توجد مفضلات";
+"favorites.sheet_title" = "المحطات المفضلة";
+"favorites.loading" = "جارٍ تحميل المفضلة...";
+"favorites.empty_title" = "لا توجد محطات مفضلة";
+"favorites.empty_message" = "لم تحفظ أي مواقع مفضلة بعد. ابدأ باختيار المواقع على الخريطة!";
+
+/* Recents */
+"recents.title" = "الأخيرة";
+"recents.sheet_title" = "المواقع الأخيرة";
+"recents.loading" = "جارٍ تحميل المواقع الأخيرة...";
+"recents.empty_title" = "لا توجد مواقع أخيرة";
+"recents.empty_message" = "ستظهر المواقع التي زرتها مؤخرًا هنا أثناء استخدامك للتطبيق.";
+
+/* Directions */
+"directions.end_trip_confirm_title" = "إنهاء الرحلة؟";
+"directions.end_trip_confirm_message" = "هل تريد بالتأكيد إنهاء هذه الرحلة؟";
+"directions.end_trip" = "إنهاء الرحلة";
+"directions.end_trip_cancel" = "لا";
+"directions.start" = "البداية";
+"directions.end" = "النهاية";
+"directions.start_navigation" = "بدء التنقل";
+"directions.swipe_hint" = "اسحب لعرض كل خطوة";
+
+/* Direction Legs */
+"leg.deboard_at" = "انزل عند";
+"leg.stop_id" = "معرّف المحطة: %@";
+"leg.scheduled_at" = "المُجدول في %@";
+"leg.arrives_at" = "يصل في %@";
+"leg.walk_to" = "امشِ إلى %@";
+"leg.walk_distance_duration" = "%1$@، حوالي %2$@";
+"leg.step_turn" = "%1$@ إلى %2$@، امشِ %3$@.";
+"leg.step_continue" = "امشِ على طول %1$@ لمسافة %2$@.";
+"leg.unknown_mode" = "وسيلة نقل غير معروفة";
+"leg.mode_duration" = "%1$@: %2$@";
+
+/* Trip Options Summary */
+"trip_options.depart_at_time" = "المغادرة في %@";
+"trip_options.arrive_by_time" = "الوصول بحلول %@";
+"trip_options.tomorrow_time" = "غدًا %@";
+
+/* Walking Distance */
+"walking_distance.quarter_mile" = "400 م";
+"walking_distance.half_mile" = "800 م";
+"walking_distance.one_mile" = "1.6 كم";
+"walking_distance.two_miles" = "3.2 كم";
+"walking_distance.accessibility" = "أقصى مسافة مشي: %@";
+
+/* Option Row */
+"option_row.accessibility_label" = "%1$@: %2$@";
+
+/* Service Errors */
+"error.invalid_response" = "أعاد الخادم استجابة غير صالحة";
+"error.saved_locations_unavailable" = "تعذّر استرجاع المواقع المحفوظة";
+
+/* Location */
+"location.no_address" = "العنوان غير متاح";
+
+/* Transport Modes */
+"transport_mode.transit" = "النقل العام";
+"transport_mode.walk" = "المشي";
+"transport_mode.bike" = "الدراجة";
+"transport_mode.car" = "السيارة";
+
+/* Walking Directions */
+"direction.depart" = "انطلق";
+"direction.hard_left" = "انعطف يسارًا بحدة";
+"direction.left" = "انعطف يسارًا";
+"direction.slightly_left" = "مِل يسارًا";
+"direction.continue" = "تابع";
+"direction.slightly_right" = "مِل يمينًا";
+"direction.right" = "انعطف يمينًا";
+"direction.hard_right" = "انعطف يمينًا بحدة";
+"direction.elevator" = "استخدم المصعد";
+"direction.enter_station" = "ادخل المحطة";
+"direction.exit_station" = "اخرج من المحطة";
+"direction.follow_signs" = "اتبع اللافتات";
+
+/* Leg Modes */
+"leg_mode.bus" = "حافلة";
+"leg_mode.tram" = "ترام";
+"leg_mode.subway" = "مترو";
+"leg_mode.rail" = "قطار";
+"leg_mode.ferry" = "عبّارة";
+"leg_mode.cable_car" = "تلفريك أرضي";
+"leg_mode.gondola" = "تلفريك";
+"leg_mode.funicular" = "قطار مائل";
+"leg_mode.airplane" = "طائرة";
+"leg_mode.trolleybus" = "حافلة كهربائية";
+"leg_mode.monorail" = "قطار أحادي";
+
+/* Simplify pass: unified keys */
+"trip_options.walk_distance" = "مشي %@";
+"leg.board_with_route" = "اركب %1$@ المسار %2$@";
+"leg.board_agency_only" = "اركب %@";
+"location.unknown_place" = "موقع غير معروف";
+
+/* Roundabout and U-turn directions, kept distinct per side */
+"direction.uturn_left" = "استدر للخلف جهة اليسار";
+"direction.uturn_right" = "استدر للخلف جهة اليمين";
+"direction.circle_clockwise" = "ادخل الدوار باتجاه عقارب الساعة";
+"direction.circle_counterclockwise" = "ادخل الدوار عكس عقارب الساعة";
