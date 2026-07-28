@@ -142,23 +142,22 @@ extension GraphQLPlan {
 extension GraphQLRoutingError {
     func toErrorResponse() -> ErrorResponse {
         let messageCode: ErrorResponseCode
-        // The ids match the OTP 1.x planner error ids for the equivalent conditions.
-        let id: Int
 
         switch code {
         case "OUTSIDE_BOUNDS":
-            (messageCode, id) = (.outsideBounds, 400)
+            messageCode = .outsideBounds
         case "NO_TRANSIT_CONNECTION", "NO_DIRECT_MODE_CONNECTION":
-            (messageCode, id) = (.pathNotFound, 404)
+            messageCode = .pathNotFound
         case "NO_TRANSIT_CONNECTION_IN_SEARCH_WINDOW", "OUTSIDE_SERVICE_PERIOD":
-            (messageCode, id) = (.noTransitTimes, 406)
+            messageCode = .noTransitTimes
         case "LOCATION_NOT_FOUND", "NO_STOPS_IN_RANGE":
-            (messageCode, id) = (.locationNotAccessible, 470)
+            messageCode = .locationNotAccessible
         default:
-            (messageCode, id) = (.unknown, -1)
+            messageCode = .unknown
         }
 
-        return ErrorResponse(id: id, message: description, messageCode: messageCode)
+        // `id` is an OTP 1.x REST wire field with no GraphQL equivalent; consumers key off messageCode.
+        return ErrorResponse(id: -1, message: description, messageCode: messageCode)
     }
 }
 

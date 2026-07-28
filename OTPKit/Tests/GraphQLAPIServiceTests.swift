@@ -80,12 +80,24 @@ class GraphQLAPIServiceTests: OTPTestCase {
         XCTAssertEqual(modes.map { $0["mode"] as? String }, ["TRANSIT", "WALK"])
     }
 
+    func testFetchPlanMapsBikeModeToGraphQLBicycle() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        _ = try await service.fetchPlan(createTripPlanRequest(transportModes: [.bike, .walk]))
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        let modes = try XCTUnwrap(variables["transportModes"] as? [[String: Any]])
+        // The GraphQL Mode enum spells it BICYCLE; TransportMode.bike.rawValue ("BIKE") is a REST-only token.
+        XCTAssertEqual(modes.map { $0["mode"] as? String }, ["BICYCLE", "WALK"])
+    }
+
     // MARK: - Response Mapping
 
     func testFetchPlanMapsItineraries() async throws {
-        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
-
-        let response = try await service.fetchPlan(createTripPlanRequest())
+        let response = try await fetchSuccessPlan()
 
         XCTAssertNil(response.error)
         let plan = try XCTUnwrap(response.plan)
@@ -108,9 +120,7 @@ class GraphQLAPIServiceTests: OTPTestCase {
     }
 
     func testFetchPlanMapsTransitLeg() async throws {
-        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
-
-        let response = try await service.fetchPlan(createTripPlanRequest())
+        let response = try await fetchSuccessPlan()
 
         let leg = try XCTUnwrap(response.plan?.itineraries[0].legs[1])
         XCTAssertEqual(leg.mode, "MONORAIL")
@@ -131,9 +141,7 @@ class GraphQLAPIServiceTests: OTPTestCase {
     }
 
     func testFetchPlanMapsBusLegWithIntermediateStops() async throws {
-        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
-
-        let response = try await service.fetchPlan(createTripPlanRequest())
+        let response = try await fetchSuccessPlan()
 
         let leg = try XCTUnwrap(response.plan?.itineraries[1].legs[1])
         XCTAssertEqual(leg.mode, "BUS")
@@ -144,9 +152,7 @@ class GraphQLAPIServiceTests: OTPTestCase {
     }
 
     func testFetchPlanMapsWalkLegSteps() async throws {
-        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
-
-        let response = try await service.fetchPlan(createTripPlanRequest())
+        let response = try await fetchSuccessPlan()
 
         let leg = try XCTUnwrap(response.plan?.itineraries[0].legs[0])
         XCTAssertEqual(leg.mode, "WALK")
@@ -159,9 +165,7 @@ class GraphQLAPIServiceTests: OTPTestCase {
     }
 
     func testFetchPlanSynthesizesRequestParameters() async throws {
-        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
-
-        let response = try await service.fetchPlan(createTripPlanRequest())
+        let response = try await fetchSuccessPlan()
 
         let params = response.requestParameters
         XCTAssertEqual(params.fromPlace, "47.6097,-122.3331")
@@ -222,27 +226,23 @@ class GraphQLAPIServiceTests: OTPTestCase {
 // MARK: - Test Helpers
 
 private extension GraphQLAPIServiceTests {
-    func createTripPlanRequest(
-        transportModes: [TransportMode] = [.transit, .walk],
-        maxWalkDistance: Int = 800,
-        wheelchairAccessible: Bool = false,
-        arriveBy: Bool = false
-    ) -> TripPlanRequest {
-        guard let date = DateFormatter.tripDateFormatter.date(from: "05-10-2024"),
-              let time = DateFormatter.tripAPITimeFormatter.date(from: "08:00") else {
-            XCTFail("Failed to parse test dates")
-            fatalError("Test setup failure")
-        }
+    static let testDate = DateFormatter.tripDateFormatter.date(from: "05-10-2024")!
+    static let testTime = DateFormatter.tripAPITimeFormatter.date(from: "08:00")!
 
-        return TripPlanRequest(
+    func createTripPlanRequest(transportModes: [TransportMode] = [.transit, .walk]) -> TripPlanRequest {
+        TestFixtures.makeTripPlanRequest(
             origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
             destination: CLLocationCoordinate2D(latitude: 47.6205, longitude: -122.3493),
-            date: date,
-            time: time,
+            date: Self.testDate,
+            time: Self.testTime,
             transportModes: transportModes,
-            maxWalkDistance: maxWalkDistance,
-            wheelchairAccessible: wheelchairAccessible,
-            arriveBy: arriveBy
+            maxWalkDistance: 800
         )
+    }
+
+    /// Mocks the captured live-server success fixture and fetches a plan through the service.
+    func fetchSuccessPlan() async throws -> OTPResponse {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+        return try await service.fetchPlan(createTripPlanRequest())
     }
 }

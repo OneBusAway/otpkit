@@ -82,22 +82,8 @@ public actor RestAPIService: APIService {
 
         Logger.main.info("Fetching trip plan: \(request.url!.absoluteString)")
 
-        let (data, response) = try await dataLoader.data(for: request)
-
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            httpResponse.statusCode == 200
-        else {
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            throw OTPKitError.apiError(
-                OTPLoc("error.invalid_response", comment: "Shown when the server response can't be parsed"),
-                statusCode: statusCode
-            )
-        }
-
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .millisecondsSince1970
-        return try decoder.decode(OTPResponse.self, from: data)
+        let data = try await dataLoader.validatedData(for: request)
+        return try JSONDecoder.otpDecoder().decode(OTPResponse.self, from: data)
     }
 
     /// Builds a URL for the given endpoint
@@ -109,13 +95,7 @@ public actor RestAPIService: APIService {
     /// - Parameter url: The base URL to normalize
     /// - Returns: Normalized URL with router path included
     private static func normalizeBaseURL(_ url: URL) -> URL {
-        let path = url.path()
-
-        // Check if the path already ends with /routers/<something>
-        let routerPattern = #/routers/[^/]+/?$/#
-        let hasRouterPath = path.contains(routerPattern)
-
-        if hasRouterPath {
+        if url.hasOTPRouterPath {
             return url
         } else {
             return url.appending(path: "routers/default")

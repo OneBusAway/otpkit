@@ -50,31 +50,15 @@ public actor GraphQLAPIService: APIService {
 
         Logger.main.info("Fetching trip plan via GraphQL: \(self.endpointURL.absoluteString)")
 
-        let (data, response) = try await dataLoader.data(for: urlRequest)
-
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            httpResponse.statusCode == 200
-        else {
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            throw OTPKitError.apiError(
-                OTPLoc("error.invalid_response", comment: "Shown when the server response can't be parsed"),
-                statusCode: statusCode
-            )
-        }
-
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .millisecondsSince1970
-        let envelope = try decoder.decode(GraphQLResponseEnvelope.self, from: data)
+        let data = try await dataLoader.validatedData(for: urlRequest)
+        let envelope = try JSONDecoder.otpDecoder().decode(GraphQLResponseEnvelope.self, from: data)
 
         if let firstError = envelope.errors?.first {
             throw OTPKitError.apiError(firstError.message)
         }
 
         guard let plan = envelope.data?.plan else {
-            throw OTPKitError.apiError(
-                OTPLoc("error.invalid_response", comment: "Shown when the server response can't be parsed")
-            )
+            throw OTPKitError.invalidResponse()
         }
 
         return OTPResponse(
@@ -93,11 +77,22 @@ public actor GraphQLAPIService: APIService {
             "to": ["lat": request.destination.latitude, "lon": request.destination.longitude],
             "date": request.date.formattedTripDate,
             "time": request.time.formattedTripTime,
-            "transportModes": request.transportModes.map { ["mode": $0.rawValue] },
+            "transportModes": request.transportModes.map { ["mode": graphQLModeName(for: $0)] },
             "arriveBy": request.arriveBy,
             "wheelchair": request.wheelchairAccessible,
             "maxWalkDistance": Double(request.maxWalkDistance)
         ]
+    }
+
+    /// The GraphQL `Mode` enum value for a transport mode. `TransportMode.rawValue` is the
+    /// OTP 1.x REST token, which mostly — but not always — matches the GraphQL vocabulary.
+    private static func graphQLModeName(for mode: TransportMode) -> String {
+        switch mode {
+        case .bike:
+            return "BICYCLE"
+        case .transit, .walk, .car:
+            return mode.rawValue
+        }
     }
 
     /// Synthesizes the REST-style request parameters echoed back in `OTPResponse`.
@@ -120,11 +115,7 @@ public actor GraphQLAPIService: APIService {
     /// - Parameter url: The base URL to normalize
     /// - Returns: The GraphQL endpoint URL
     private static func normalizeEndpointURL(_ url: URL) -> URL {
-        var urlString = url.absoluteString
-
-        if let routersRange = urlString.range(of: "routers/[^/]+/?$", options: .regularExpression) {
-            urlString.removeSubrange(routersRange)
-        }
+        var urlString = url.strippingOTPRouterPath().absoluteString
 
         while urlString.hasSuffix("/") {
             urlString.removeLast()
