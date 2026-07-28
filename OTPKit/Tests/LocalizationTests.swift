@@ -143,7 +143,12 @@ struct LocalizationTests {
                 #expect(formatter.calendar.identifier == .gregorian)
                 // Guards the UTC shift: without an explicit zone these emit times offset
                 // from the user's, so OTP plans for the wrong part of the day.
-                #expect(formatter.timeZone == TimeZone.current)
+                #expect(formatter.timeZone.identifier == TimeZone.current.identifier)
+                // And guards a regression to a pinned `.current`: these formatters are
+                // `static let`, so a fixed zone would go stale the moment the device's
+                // changes. Note `.autoupdatingCurrent != .current` even when they resolve
+                // to the same zone, which is why the check above compares identifiers.
+                #expect(formatter.timeZone == TimeZone.autoupdatingCurrent)
             }
         }
 
@@ -239,20 +244,38 @@ struct LocalizationTests {
             }
         }
 
-        @Test("Format specifier counts match the base table")
+        @Test("Format specifiers match the base table in type and arity")
         func formatSpecifierParity() throws {
             let base = try Self.keys(in: "en")
-            let specifier = try NSRegularExpression(pattern: "%(\\d+\\$)?[@dfs]")
+            let specifier = try NSRegularExpression(pattern: "%(\\d+\\$)?([@dfs])")
 
-            func count(_ string: String) -> Int {
-                specifier.numberOfMatches(in: string, range: NSRange(string.startIndex..., in: string))
+            // Maps each argument position to the conversion it expects. Comparing counts alone
+            // would let a translation swap `%@` for `%d`, which crashes `String(format:)` at
+            // runtime; comparing the raw sequence would instead reject the reordering that
+            // positional specifiers exist to allow, and that several locales here rely on.
+            func specifierTypes(_ string: String) -> [Int: String] {
+                var types: [Int: String] = [:]
+                var nextImplicitPosition = 1
+                for match in specifier.matches(in: string, range: NSRange(string.startIndex..., in: string)) {
+                    guard let conversion = Range(match.range(at: 2), in: string) else { continue }
+                    let position: Int
+                    if let explicit = Range(match.range(at: 1), in: string),
+                       let parsed = Int(string[explicit].dropLast()) {  // drops the trailing "$"
+                        position = parsed
+                    } else {
+                        position = nextImplicitPosition
+                        nextImplicitPosition += 1
+                    }
+                    types[position] = String(string[conversion])
+                }
+                return types
             }
 
             for locale in Self.locales.dropFirst() {
                 let table = try Self.keys(in: locale)
                 for (key, baseValue) in base {
                     guard let translated = table[key] else { continue }
-                    #expect(count(baseValue) == count(translated),
+                    #expect(specifierTypes(baseValue) == specifierTypes(translated),
                             "\(locale) \(key): \(baseValue) vs \(translated)")
                 }
             }

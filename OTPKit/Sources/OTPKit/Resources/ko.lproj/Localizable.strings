@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "설정에서 위치 접근을 허용하세요";
 "current_location.unable_subtitle" = "현재 위치를 확인할 수 없습니다";
 "current_location.default_subtitle" = "현재 있는 곳에서 경로 안내 받기";
-"current_location.access_denied_error" = "위치 접근 거부됨";
-"current_location.unable_error" = "현재 위치를 확인할 수 없습니다";
 
 /* Favorites */
 "favorites.title" = "즐겨찾기";

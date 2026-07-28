@@ -24,7 +24,14 @@ extension DateFormatter {
         // offset and planning trips for the wrong local time. (Verified by A/B on the
         // simulator; the same experiment on macOS shows no difference, so don't "clean this
         // up" based on host-side behavior.) `LocalizationTests` pins the emitted value.
-        formatter.timeZone = .current
+        //
+        // It must be `.autoupdatingCurrent` rather than `.current`, because these formatters
+        // are `static let` and outlive any time zone change. A rider who flies across a
+        // boundary — or whose device picks up a new zone automatically — would otherwise keep
+        // planning trips in the departure zone's offset until the app is relaunched. Unlike
+        // the locale and calendar above, which are pinned deliberately for wire stability,
+        // the zone is genuinely meant to follow the device.
+        formatter.timeZone = .autoupdatingCurrent
         formatter.dateFormat = dateFormat
         return formatter
     }

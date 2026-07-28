@@ -151,8 +151,6 @@
 "current_location.enable_in_settings" = "请在“设置”中启用位置访问权限";
 "current_location.unable_subtitle" = "无法获取您的当前位置";
 "current_location.default_subtitle" = "从您当前所在位置获取路线";
-"current_location.access_denied_error" = "位置访问被拒绝";
-"current_location.unable_error" = "无法获取当前位置";
 
 /* Favorites */
 "favorites.title" = "收藏";

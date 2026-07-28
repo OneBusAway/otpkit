@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "I-enable ang access sa lokasyon sa Settings";
 "current_location.unable_subtitle" = "Hindi makuha ang iyong kasalukuyang lokasyon";
 "current_location.default_subtitle" = "Kumuha ng direksyon mula sa kinaroroonan mo ngayon";
-"current_location.access_denied_error" = "Tinanggihan ang access sa lokasyon";
-"current_location.unable_error" = "Hindi makuha ang kasalukuyang lokasyon";
 
 /* Favorites */
 "favorites.title" = "Mga Paborito";

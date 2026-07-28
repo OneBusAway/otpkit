@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "請在「設定」中啟用位置存取權";
 "current_location.unable_subtitle" = "無法取得您目前的位置";
 "current_location.default_subtitle" = "從您目前所在位置取得路線";
-"current_location.access_denied_error" = "位置存取遭拒";
-"current_location.unable_error" = "無法取得目前位置";
 
 /* Favorites */
 "favorites.title" = "收藏";

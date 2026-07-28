@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "Bật quyền truy cập vị trí trong Cài đặt";
 "current_location.unable_subtitle" = "Không thể lấy vị trí hiện tại của bạn";
 "current_location.default_subtitle" = "Xem chỉ đường từ nơi bạn đang đứng";
-"current_location.access_denied_error" = "Quyền truy cập vị trí bị từ chối";
-"current_location.unable_error" = "Không thể lấy vị trí hiện tại";
 
 /* Favorites */
 "favorites.title" = "Yêu thích";

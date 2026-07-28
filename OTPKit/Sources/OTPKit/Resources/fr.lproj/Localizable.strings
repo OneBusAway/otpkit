@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "Activez l’accès à la position dans Réglages";
 "current_location.unable_subtitle" = "Impossible d’obtenir votre position actuelle";
 "current_location.default_subtitle" = "Obtenir un itinéraire depuis votre position";
-"current_location.access_denied_error" = "Accès à la position refusé";
-"current_location.unable_error" = "Impossible d’obtenir la position actuelle";
 
 /* Favorites */
 "favorites.title" = "Favoris";

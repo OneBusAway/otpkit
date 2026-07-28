@@ -15,7 +15,6 @@ struct CurrentLocationButton: View {
     @Environment(\.otpTheme) private var theme
     @StateObject private var locationManager = LocationManager.shared
     @State private var isGettingLocation = false
-    @State private var errorMessage: String?
     @State private var showError = false
 
     var body: some View {
@@ -62,7 +61,6 @@ struct CurrentLocationButton: View {
         .cornerRadius(12)
         .onReceive(locationManager.$authorizationStatus) { status in
             if status == .denied || status == .restricted {
-                errorMessage = OTPLoc("current_location.access_denied_error", comment: "Error when location permission is denied")
                 showError = true
             } else {
                 showError = false
@@ -131,7 +129,6 @@ struct CurrentLocationButton: View {
         if let location = await locationManager.getCurrentLocation() {
             onLocationSelected(location)
         } else {
-            errorMessage = OTPLoc("current_location.unable_error", comment: "Error when the location can't be determined")
             showError = true
             // Hide error after 3 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

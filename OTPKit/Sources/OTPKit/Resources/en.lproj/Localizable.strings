@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "Enable location access in Settings";
 "current_location.unable_subtitle" = "Unable to get your current location";
 "current_location.default_subtitle" = "Get directions from where you are now";
-"current_location.access_denied_error" = "Location access denied";
-"current_location.unable_error" = "Unable to get current location";
 
 /* Favorites */
 "favorites.title" = "Favorites";

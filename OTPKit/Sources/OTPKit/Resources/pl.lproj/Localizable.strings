@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "Włącz dostęp do lokalizacji w Ustawieniach";
 "current_location.unable_subtitle" = "Nie można ustalić Twojej bieżącej lokalizacji";
 "current_location.default_subtitle" = "Wyznacz trasę z miejsca, w którym jesteś";
-"current_location.access_denied_error" = "Odmowa dostępu do lokalizacji";
-"current_location.unable_error" = "Nie można ustalić bieżącej lokalizacji";
 
 /* Favorites */
 "favorites.title" = "Ulubione";

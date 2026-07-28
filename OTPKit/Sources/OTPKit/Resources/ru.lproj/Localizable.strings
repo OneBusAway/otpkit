@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "Разрешите доступ к геопозиции в Настройках";
 "current_location.unable_subtitle" = "Не удалось определить ваше местоположение";
 "current_location.default_subtitle" = "Построить маршрут от текущего места";
-"current_location.access_denied_error" = "Доступ к геопозиции запрещён";
-"current_location.unable_error" = "Не удалось определить текущее местоположение";
 
 /* Favorites */
 "favorites.title" = "Избранное";

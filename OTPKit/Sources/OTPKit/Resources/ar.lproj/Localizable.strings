@@ -152,8 +152,6 @@
 "current_location.enable_in_settings" = "فعّل الوصول إلى الموقع من الإعدادات";
 "current_location.unable_subtitle" = "تعذّر تحديد موقعك الحالي";
 "current_location.default_subtitle" = "احصل على الاتجاهات من موقعك الحالي";
-"current_location.access_denied_error" = "تم رفض الوصول إلى الموقع";
-"current_location.unable_error" = "تعذّر تحديد الموقع الحالي";
 
 /* Favorites */
 "favorites.title" = "المفضلة";

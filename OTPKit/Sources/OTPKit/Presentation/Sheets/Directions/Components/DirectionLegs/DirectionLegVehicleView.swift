@@ -33,7 +33,9 @@ struct DirectionLegVehicleView: View {
                             .foregroundStyle(.secondary)
 
                         HStack {
-                            if let stopCode = leg.to.stopCode {
+                            // The boarding stop, not `leg.to` — that is where the rider gets off,
+                            // and it is shown in the alighting section below.
+                            if let stopCode = leg.from.stopCode {
                                 Text(OTPLoc("leg.stop_id", comment: "Transit stop identifier", stopCode))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
