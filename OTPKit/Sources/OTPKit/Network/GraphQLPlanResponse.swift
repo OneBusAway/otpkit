@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import OSLog
 
 // Internal wire types for the OTP 2.x GTFS GraphQL API `plan` query, plus the
 // mapping that converts them into the public models shared with the REST path.
@@ -153,6 +154,7 @@ extension GraphQLRoutingError {
         case "LOCATION_NOT_FOUND", "NO_STOPS_IN_RANGE":
             messageCode = .locationNotAccessible
         default:
+            Logger.main.warning("Unrecognized OTP routing error code: \(code)")
             messageCode = .unknown
         }
 

@@ -29,13 +29,13 @@ public struct Itinerary: Codable, Hashable {
     /// End time of the itinerary.
     public let endTime: Date
 
-    /// Total walking time in minutes within the itinerary.
+    /// Total walking time in seconds within the itinerary.
     public let walkTime: Int
 
-    /// Total transit time in minutes within the itinerary.
+    /// Total transit time in seconds within the itinerary.
     public let transitTime: Int
 
-    /// Total waiting time in minutes within the itinerary.
+    /// Total waiting time in seconds within the itinerary.
     public let waitingTime: Int
 
     /// Total walking distance in meters within the itinerary.

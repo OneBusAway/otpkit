@@ -191,6 +191,25 @@ class GraphQLAPIServiceTests: OTPTestCase {
         XCTAssertTrue(error.message.contains("outside the map data boundary"))
     }
 
+    func testFetchPlanMapsUnrecognizedRoutingErrorToUnknown() async throws {
+        let json = """
+        {"data":{"plan":{
+            "date":1785340800000,
+            "from":{"name":"Origin","lon":-80.0,"lat":25.0,"vertexType":"NORMAL"},
+            "to":{"name":"Destination","lon":-122.3493,"lat":47.6205,"vertexType":"NORMAL"},
+            "routingErrors":[{"code":"SOME_FUTURE_CODE","description":"Something new went wrong."}],
+            "itineraries":[]
+        }}}
+        """
+        mockDataLoader.mockResponse(data: Data(json.utf8))
+
+        let response = try await service.fetchPlan(createTripPlanRequest())
+
+        let error = try XCTUnwrap(response.error)
+        XCTAssertEqual(error.messageCode, .unknown)
+        XCTAssertEqual(error.message, "Something new went wrong.")
+    }
+
     func testFetchPlanThrowsOnTopLevelGraphQLError() async throws {
         let errorJSON = """
         {"errors":[{"message":"Validation error (FieldUndefined@[plan]) : Field 'plan' is undefined"}]}
