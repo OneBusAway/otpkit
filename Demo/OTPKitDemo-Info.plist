@@ -26,5 +26,26 @@
 		<string>zh-Hans</string>
 		<string>zh-Hant</string>
 	</array>
+	<!--
+		iOS 27 requires UIScene lifecycle adoption; apps built with the iOS 27 SDK
+		that only use the UIApplicationDelegate lifecycle crash at launch.
+	-->
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 </dict>
 </plist>
