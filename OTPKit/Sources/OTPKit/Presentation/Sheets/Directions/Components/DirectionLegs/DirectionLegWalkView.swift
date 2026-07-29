@@ -54,7 +54,7 @@ struct DirectionLegWalkView: View {
                     // Step descriptions
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(steps, id: \.self) { step in
-                            Text(stepDescription(for: step))
+                            Text(step.localizedInstruction)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -66,25 +66,6 @@ struct DirectionLegWalkView: View {
         }
     }
 
-    /// Generates a user-friendly step description.
-    private func stepDescription(for step: Step) -> String {
-        if let direction = step.directionDisplayName {
-            return OTPLoc(
-                "leg.step_turn",
-                comment: "A walking step: turn direction, street name, distance",
-                direction,
-                step.streetName,
-                Formatters.formatDistance(Int(step.distance))
-            )
-        } else {
-            return OTPLoc(
-                "leg.step_continue",
-                comment: "A walking step with no turn: street name, distance",
-                step.streetName,
-                Formatters.formatDistance(Int(step.distance))
-            )
-        }
-    }
 }
 
 #Preview {

@@ -15,25 +15,24 @@ struct TripProgressBarView: View {
 
     /// The leg the ‹ › stepper has focused, outlined so the two cursors are
     /// both visible in one control. Nil when tethered to now.
-    var focusedLegIndex: Int?
+    let focusedLegIndex: Int?
 
     @Environment(\.otpTheme) private var theme
 
     var body: some View {
+        let segments = progress.segments
+        let totalSpacing = CGFloat(max(0, segments.count - 1)) * 3
+
         GeometryReader { proxy in
             HStack(spacing: 3) {
-                ForEach(progress.segments, id: \.legIndex) { segment in
+                ForEach(segments, id: \.legIndex) { segment in
                     segmentView(segment)
-                        .frame(width: max(8, (proxy.size.width - spacing(in: proxy.size.width)) * segment.widthFraction))
+                        .frame(width: max(8, (proxy.size.width - totalSpacing) * segment.widthFraction))
                 }
             }
         }
         .frame(height: 5)
         .accessibilityHidden(true)
-    }
-
-    private func spacing(in totalWidth: CGFloat) -> CGFloat {
-        CGFloat(max(0, progress.segments.count - 1)) * 3
     }
 
     private func segmentView(_ segment: TripProgress.Segment) -> some View {

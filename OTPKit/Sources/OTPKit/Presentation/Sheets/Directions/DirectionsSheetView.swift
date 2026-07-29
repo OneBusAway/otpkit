@@ -11,7 +11,7 @@ import MapKit
 /// The in-trip panel: a progress rail over the whole trip at the medium and
 /// large detents, and a glanceable one-instruction bar at the tip detent.
 ///
-/// The sheet's anatomy is fixed at every detent: grabber → destination header →
+/// At the expanded detents the anatomy is fixed: grabber → destination header →
 /// scrolling rail → optional pinned footer. The header never scrolls and the
 /// progress bar never resets — those two continuities make six trip moments
 /// feel like one trip.
@@ -35,8 +35,8 @@ struct DirectionsSheetView: View {
     /// its overview footer to live guidance.
     @State private var tripStarted = false
 
-    /// The 150pt-class tip detent: the current instruction is one line, so the
-    /// map keeps most of the screen.
+    /// The compact tip detent: the current instruction is one line, so the map
+    /// keeps most of the screen.
     static let tipDetent: PresentationDetent = .height(160)
 
     public init(trip: Trip, sheetDetent: Binding<PresentationDetent>) {
@@ -69,7 +69,18 @@ struct DirectionsSheetView: View {
         .onChange(of: sheetDetent) { _, _ in
             updateMap(now: Date())
         }
+        .onChange(of: focusedLegIndex) { _, _ in
+            // The one place browsing drives the map: frame the focused leg,
+            // or fall back to following the rider when focus clears.
+            updateMap(now: Date())
+        }
         .onAppear {
+            // Pre-trip, open at the overview height so the rider sees the whole
+            // plan and the Start Trip button; the tip detent hides both.
+            let progress = TripProgress(itinerary: trip.itinerary, now: Date())
+            if !hasStarted(progress) {
+                sheetDetent = .medium
+            }
             updateMap(now: Date())
         }
     }
@@ -82,9 +93,8 @@ struct DirectionsSheetView: View {
             if sheetDetent == DirectionsSheetView.tipDetent {
                 TipContentView(
                     trip: trip,
-                    now: now,
-                    focusedLegIndex: $focusedLegIndex,
-                    onFocusLeg: handleFocusChange
+                    progress: progress,
+                    focusedLegIndex: $focusedLegIndex
                 )
             } else {
                 TripHeaderView(trip: trip, progress: progress)
@@ -92,17 +102,15 @@ struct DirectionsSheetView: View {
                 Divider()
 
                 InTripRailView(
-                    trip: trip,
-                    now: now,
-                    focusedLegIndex: $focusedLegIndex,
-                    onFocusLeg: handleFocusChange
+                    progress: progress,
+                    focusedLegIndex: $focusedLegIndex
                 )
 
                 footer(progress)
             }
         }
-        .onChange(of: progress.phase) { _, newPhase in
-            handlePhaseChange(newPhase, now: now)
+        .onChange(of: progress.phase) { _, _ in
+            handlePhaseChange(progress)
         }
     }
 
@@ -120,7 +128,7 @@ struct DirectionsSheetView: View {
     private func footer(_ progress: TripProgress) -> some View {
         if !hasStarted(progress) {
             preTripFooter
-        } else if sheetDetent == .large {
+        } else if sheetDetent != DirectionsSheetView.tipDetent {
             VStack(spacing: 0) {
                 Divider()
                 HStack(spacing: 12) {
@@ -198,19 +206,11 @@ struct DirectionsSheetView: View {
         let screenHeight = UIScreen.main.bounds.height
         switch sheetDetent {
         case DirectionsSheetView.tipDetent:
-            return 170
+            return 160
         case .medium:
             return screenHeight * 0.5
         default:
             return screenHeight * 0.9
-        }
-    }
-
-    private func handleFocusChange(_ leg: Leg?) {
-        if let leg {
-            mapCoordinator.focusOnLeg(leg, bottomPadding: currentSheetHeight)
-        } else {
-            updateMap(now: Date())
         }
     }
 
@@ -223,39 +223,27 @@ struct DirectionsSheetView: View {
         }
 
         let progress = TripProgress(itinerary: trip.itinerary, now: now)
-        let legIndex = focusedLegIndex ?? progress.phase.legIndex ?? 0
-        guard legIndex < progress.legs.count else { return }
+        // Pre-trip the first leg is what matters; after arrival, the last —
+        // panning back to the origin at the destination helps no one.
+        let fallback = progress.phase == .arrived ? progress.legs.count - 1 : 0
+        let legIndex = focusedLegIndex ?? progress.phase.legIndex ?? fallback
+        guard progress.legs.indices.contains(legIndex) else { return }
         mapCoordinator.focusOnLeg(progress.legs[legIndex], bottomPadding: currentSheetHeight)
     }
 
     /// Auto-advance is announced, not silent: a rider staring at a stop sign
     /// isn't watching the screen.
-    private func handlePhaseChange(_ phase: TripPhase, now: Date) {
+    private func handlePhaseChange(_ progress: TripProgress) {
+        guard progress.phase != .notStarted else { return }
         HapticManager.shared.success()
 
-        let progress = TripProgress(itinerary: trip.itinerary, now: now)
-        let announcement: String
-        switch phase {
-        case .walking:
-            announcement = OTPLoc("rail.now_walking", comment: "The rider is currently walking")
-        case .waiting(let index):
-            announcement = OTPLoc("rail.now_waiting_fmt",
-                                  comment: "The rider is waiting for this route",
-                                  RailText.routeName(progress.legs[index]))
-        case .riding(let index):
-            announcement = OTPLoc("rail.now_riding_fmt",
-                                  comment: "The rider is aboard this route",
-                                  RailText.routeName(progress.legs[index]))
-        case .arrived:
-            announcement = OTPLoc("rail.arrived", comment: "The rider has reached the destination")
-        case .notStarted:
-            return
-        }
+        let announcement = progress.localizedActivityName
+            ?? OTPLoc("rail.arrived", comment: "The rider has reached the destination")
         AccessibilityNotification.Announcement(announcement).post()
 
         // Tethered focus follows the rider; untethered, the rail stays put.
         if focusedLegIndex == nil {
-            updateMap(now: now)
+            updateMap(now: progress.now)
         }
     }
 }
@@ -265,10 +253,9 @@ struct DirectionsSheetView: View {
     @Previewable @State var directionSheetDetent = DirectionsSheetView.tipDetent
     let trip = Trip(origin: PreviewHelpers.createOrigin(), destination: PreviewHelpers.createDestination(), itinerary: PreviewHelpers.buildItin(legsCount: 2))
 
-    VStack {
-        Text("HI")
-    }
-    .sheet(isPresented: $sheetVisible) {
+    Color(.systemGray5)
+        .ignoresSafeArea()
+        .sheet(isPresented: $sheetVisible) {
         DirectionsSheetView(
             trip: trip, sheetDetent: $directionSheetDetent
         )

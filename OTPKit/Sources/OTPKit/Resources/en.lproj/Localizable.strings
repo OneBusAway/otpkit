@@ -176,7 +176,6 @@
 "directions.start" = "Start";
 "directions.end" = "End";
 "directions.start_navigation" = "Start Navigation";
-"directions.swipe_hint" = "Swipe to view each step";
 
 /* Direction Legs */
 "leg.deboard_at" = "Deboard at";
@@ -291,7 +290,6 @@
 "rail.stops_to_go_fmt" = "%d stops to go";
 "rail.one_stop_to_go" = "1 stop to go";
 "rail.get_off_at_fmt" = "Get off at %@";
-"rail.get_off_time_fmt" = "Get off %@";
 "rail.wait_for_fmt" = "Wait %1$@ for %2$@";
 "rail.wait_same_stop_fmt" = "Wait %1$@ · %2$@ leaves from the same stop";
 "rail.same_stop_note" = "Same stop as your arrival — stay put, no street crossing.";
@@ -302,7 +300,6 @@
 "rail.now_walking" = "Walking";
 "rail.now_waiting_fmt" = "Waiting for the %@";
 "rail.now_riding_fmt" = "Riding %@";
-"rail.step_of_fmt" = "Step %1$d of %2$d";
 "rail.step_of_previewing_fmt" = "Step %1$d of %2$d · previewing";
 "rail.next_leg_fmt" = "%1$@ · %2$@ at %3$@";
 "rail.last_step" = "Last step";

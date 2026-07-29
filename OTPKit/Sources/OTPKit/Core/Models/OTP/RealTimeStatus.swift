@@ -20,7 +20,7 @@ import SwiftUI
 ///
 /// The four cases render with fixed colors that mean the same thing at every
 /// agency: green (on time), violet (late), red (early), blue (scheduled).
-public enum RealTimeStatus: Hashable {
+public enum RealTimeStatus: Hashable, Sendable {
     /// Real-time data says the vehicle is running on schedule.
     case onTime
 

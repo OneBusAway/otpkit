@@ -176,7 +176,6 @@
 "directions.start" = "Simula";
 "directions.end" = "Dulo";
 "directions.start_navigation" = "Simulan ang Nabigasyon";
-"directions.swipe_hint" = "Mag-swipe para makita ang bawat hakbang";
 
 /* Direction Legs */
 "leg.deboard_at" = "Bumaba sa";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "%d hintuan na lang";
 "rail.one_stop_to_go" = "1 hintuan na lang";
 "rail.get_off_at_fmt" = "Bumaba sa %@";
-"rail.get_off_time_fmt" = "Bumaba nang %@";
 "rail.wait_for_fmt" = "Maghintay nang %1$@ para sa %2$@";
 "rail.wait_same_stop_fmt" = "Maghintay nang %1$@ · aalis ang %2$@ sa parehong hintuan";
 "rail.same_stop_note" = "Parehong hintuan ng iyong dating — manatili lang, hindi kailangang tumawid ng kalye.";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "Naglalakad";
 "rail.now_waiting_fmt" = "Hinihintay ang %@";
 "rail.now_riding_fmt" = "Nakasakay sa %@";
-"rail.step_of_fmt" = "Hakbang %1$d ng %2$d";
 "rail.step_of_previewing_fmt" = "Hakbang %1$d ng %2$d · preview";
 "rail.next_leg_fmt" = "%1$@ · %2$@ nang %3$@";
 "rail.last_step" = "Huling hakbang";

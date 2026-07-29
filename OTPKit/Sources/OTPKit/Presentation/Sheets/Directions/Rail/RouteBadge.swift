@@ -14,7 +14,7 @@ struct RouteBadge: View {
     let leg: Leg
 
     var body: some View {
-        Text(leg.route ?? leg.mode.capitalized)
+        Text(leg.riderFacingRouteName)
             .font(.footnote.weight(.semibold))
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -45,7 +45,8 @@ extension Color {
         guard uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
             return false
         }
-        // Relative luminance, WCAG coefficients.
+        // WCAG luminance coefficients applied to gamma-encoded sRGB — an
+        // approximation, but plenty for a black-vs-white text decision.
         let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
         return luminance > 0.6
     }

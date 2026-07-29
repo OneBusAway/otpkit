@@ -176,7 +176,6 @@
 "directions.start" = "البداية";
 "directions.end" = "النهاية";
 "directions.start_navigation" = "بدء التنقل";
-"directions.swipe_hint" = "اسحب لعرض كل خطوة";
 
 /* Direction Legs */
 "leg.deboard_at" = "انزل عند";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "%d محطات متبقية";
 "rail.one_stop_to_go" = "محطة واحدة متبقية";
 "rail.get_off_at_fmt" = "انزل عند %@";
-"rail.get_off_time_fmt" = "النزول %@";
 "rail.wait_for_fmt" = "انتظر %1$@ حتى وصول %2$@";
 "rail.wait_same_stop_fmt" = "انتظر %1$@ · %2$@ يغادر من المحطة نفسها";
 "rail.same_stop_note" = "نفس المحطة التي وصلت إليها — ابقَ مكانك، لا حاجة لعبور الشارع.";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "المشي";
 "rail.now_waiting_fmt" = "في انتظار %@";
 "rail.now_riding_fmt" = "على متن %@";
-"rail.step_of_fmt" = "الخطوة %1$d من %2$d";
 "rail.step_of_previewing_fmt" = "الخطوة %1$d من %2$d · معاينة";
 "rail.next_leg_fmt" = "%1$@ · %2$@ في %3$@";
 "rail.last_step" = "الخطوة الأخيرة";

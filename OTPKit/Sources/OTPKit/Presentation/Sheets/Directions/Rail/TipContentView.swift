@@ -7,39 +7,32 @@
 
 import SwiftUI
 
-/// The 150pt tip detent: one instruction, a live countdown, and trip progress.
+/// The 160pt tip detent: one instruction, a live countdown, and trip progress.
 /// The map above does the wayfinding; this stays glanceable at arm's length.
 ///
 /// The ‹ › stepper keeps the one thing riders already knew from the old pager —
 /// stepping leg by leg — but as a real hit target. The progress bar doubles as
-/// the stepper's track: green fill is `currentLeg`, the outlined segment is
-/// `focusedLeg`, so the two cursors are never ambiguous.
+/// the stepper's track: elapsed fill shows where `currentLeg` is, the outlined
+/// segment is `focusedLeg`, so the two cursors are never ambiguous.
 struct TipContentView: View {
     let trip: Trip
-    let now: Date
+    let progress: TripProgress
     @Binding var focusedLegIndex: Int?
-    let onFocusLeg: (Leg?) -> Void
 
     @Environment(\.otpTheme) private var theme
 
-    private var progress: TripProgress {
-        TripProgress(itinerary: trip.itinerary, now: now)
-    }
-
     var body: some View {
-        let progress = self.progress
-
         VStack(spacing: 0) {
             HStack(alignment: .top, spacing: 10) {
-                stepperButton(systemImage: "chevron.left", enabled: canStepBack(progress)) {
-                    step(by: -1, progress: progress)
+                stepperButton(systemImage: "chevron.left", enabled: canStepBack) {
+                    step(by: -1)
                 }
 
-                instructionContent(progress)
+                instructionContent
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                stepperButton(systemImage: "chevron.right", enabled: canStepForward(progress)) {
-                    step(by: 1, progress: progress)
+                stepperButton(systemImage: "chevron.right", enabled: canStepForward) {
+                    step(by: 1)
                 }
             }
             .padding(.horizontal, 14)
@@ -51,10 +44,10 @@ struct TipContentView: View {
                 TripProgressBarView(progress: progress, focusedLegIndex: focusedLegIndex)
 
                 HStack {
-                    Text(footerLeadingText(progress))
+                    Text(footerLeadingText)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    footerTrailing(progress)
+                    footerTrailing
                 }
                 .font(.footnote)
             }
@@ -66,27 +59,25 @@ struct TipContentView: View {
     // MARK: - Instruction
 
     @ViewBuilder
-    private func instructionContent(_ progress: TripProgress) -> some View {
-        let displayIndex = focusedLegIndex ?? currentLegIndex(progress)
-
-        if focusedLegIndex == nil {
-            liveInstruction(progress)
-        } else if let displayIndex, displayIndex < progress.legs.count {
-            legPreview(progress.legs[displayIndex], progress: progress, index: displayIndex)
+    private var instructionContent: some View {
+        if let focusedLegIndex, focusedLegIndex < progress.legs.count {
+            legPreview(progress.legs[focusedLegIndex])
+        } else {
+            liveInstruction
         }
     }
 
     /// What to do right now, driven by the trip phase.
     @ViewBuilder
-    private func liveInstruction(_ progress: TripProgress) -> some View {
+    private var liveInstruction: some View {
         switch progress.phase {
         case .notStarted:
             HStack(alignment: .top, spacing: 12) {
                 walkIcon
-                title(leaveInstruction(progress),
+                title(RailText.leaveInstruction(progress),
                       subtitle: trip.destination.title)
                 trailingCountdown(
-                    Formatters.formatTimeDuration(max(60, Int(progress.secondsUntilStart))),
+                    Formatters.formatCountdown(progress.secondsUntilStart),
                     color: theme.primaryColor
                 )
             }
@@ -98,9 +89,9 @@ struct TipContentView: View {
                 title(OTPLoc("rail.walk_fmt",
                              comment: "Walking instruction: distance, then destination",
                              Formatters.formatDistance(Int(leg.distance)), leg.to.name),
-                      subtitle: currentStepText(leg))
+                      subtitle: progress.currentStep(onLegAt: index)?.localizedInstruction)
                 trailingCountdown(
-                    Formatters.formatTimeDuration(max(60, Int(leg.endTime.timeIntervalSince(now)))),
+                    Formatters.formatCountdown(leg.endTime.timeIntervalSince(progress.now)),
                     color: theme.primaryColor
                 )
             }
@@ -109,7 +100,7 @@ struct TipContentView: View {
             let leg = progress.legs[index]
             HStack(alignment: .top, spacing: 12) {
                 RouteBadge(leg: leg)
-                title(waitingTitle(leg),
+                title(RailText.boardingCountdown(for: leg, now: progress.now),
                       subtitle: OTPLoc("rail.at_stop_fmt",
                                        comment: "The stop the rider boards at", leg.from.name))
                 trailingTime(leg.startTime, status: leg.departureStatus)
@@ -136,7 +127,7 @@ struct TipContentView: View {
 
     /// The focused (previewed) leg, when the stepper has moved off "now".
     @ViewBuilder
-    private func legPreview(_ leg: Leg, progress: TripProgress, index: Int) -> some View {
+    private func legPreview(_ leg: Leg) -> some View {
         HStack(alignment: .top, spacing: 12) {
             if leg.transitLeg == true {
                 RouteBadge(leg: leg)
@@ -222,7 +213,7 @@ struct TipContentView: View {
 
     // MARK: - Stepper Logic
 
-    private func currentLegIndex(_ progress: TripProgress) -> Int? {
+    private var currentLegIndex: Int? {
         switch progress.phase {
         case .notStarted:
             return progress.legs.isEmpty ? nil : 0
@@ -235,37 +226,29 @@ struct TipContentView: View {
 
     /// ‹ is dimmed at the current leg rather than wrapping — a rider mid-trip
     /// has no reason to step backward into completed legs.
-    private func canStepBack(_ progress: TripProgress) -> Bool {
-        guard let current = currentLegIndex(progress) else { return false }
-        return (focusedLegIndex ?? current) > current
+    private var canStepBack: Bool {
+        guard let currentLegIndex else { return false }
+        return (focusedLegIndex ?? currentLegIndex) > currentLegIndex
     }
 
-    private func canStepForward(_ progress: TripProgress) -> Bool {
-        guard let current = currentLegIndex(progress) else { return false }
-        return (focusedLegIndex ?? current) < progress.legs.count - 1
+    private var canStepForward: Bool {
+        guard let currentLegIndex else { return false }
+        return (focusedLegIndex ?? currentLegIndex) < progress.legs.count - 1
     }
 
-    private func step(by delta: Int, progress: TripProgress) {
-        guard let current = currentLegIndex(progress) else { return }
-        let next = (focusedLegIndex ?? current) + delta
-        guard next >= current, next < progress.legs.count else { return }
-
-        if next == current {
-            focusedLegIndex = nil
-            onFocusLeg(nil)
-        } else {
-            focusedLegIndex = next
-            onFocusLeg(progress.legs[next])
-        }
+    private func step(by delta: Int) {
+        guard let currentLegIndex else { return }
+        let next = (focusedLegIndex ?? currentLegIndex) + delta
+        guard next >= currentLegIndex, next < progress.legs.count else { return }
+        focusedLegIndex = next == currentLegIndex ? nil : next
     }
-
 }
 
 // MARK: - Footer & Copy
 
 private extension TipContentView {
-    func footerLeadingText(_ progress: TripProgress) -> String {
-        let current = currentLegIndex(progress) ?? 0
+    var footerLeadingText: String {
+        let current = currentLegIndex ?? 0
         let stepNumber = (focusedLegIndex ?? current) + 1
 
         if focusedLegIndex != nil {
@@ -274,93 +257,70 @@ private extension TipContentView {
                           stepNumber, progress.legs.count)
         }
 
-        // Name the next boarding so the footer answers "what's next." Before
-        // the rider is aboard, the current leg's own boarding still counts.
-        let isAboardCurrent = {
-            if case .riding = progress.phase { return true }
-            return false
-        }()
+        // Name the next boarding so the footer answers "what's next." While
+        // walking (or pre-trip) the current leg's own boarding still counts;
+        // riding or already waiting at the stop, only later boardings do —
+        // "Waiting for the C Line · C Line at 9:42" says nothing twice.
+        let includesCurrentBoarding: Bool
+        switch progress.phase {
+        case .riding, .waiting:
+            includesCurrentBoarding = false
+        default:
+            includesCurrentBoarding = true
+        }
         let nextTransitIndex = progress.legs.indices.first {
-            ($0 > current || ($0 == current && !isAboardCurrent)) && progress.legs[$0].transitLeg == true
+            ($0 > current || ($0 == current && includesCurrentBoarding)) && progress.legs[$0].transitLeg == true
         }
         if let nextTransitIndex {
             let nextLeg = progress.legs[nextTransitIndex]
             return OTPLoc("rail.next_leg_fmt",
                           comment: "Current activity, then the next route and its time",
-                          currentActivityName(progress),
+                          currentActivity,
                           RailText.routeName(nextLeg),
                           Formatters.formatDateToTime(nextLeg.startTime))
         }
         return OTPLoc("rail.last_step", comment: "The rider is on the trip's final step")
     }
 
+    /// The footer's leading word: the live activity, or the leave-in countdown
+    /// before the trip starts — pre-trip, nobody is "Walking" yet.
+    var currentActivity: String {
+        if progress.phase == .notStarted {
+            return OTPLoc("rail.leave_in_fmt",
+                          comment: "Countdown until the rider must leave",
+                          Formatters.formatCountdown(progress.secondsUntilStart))
+        }
+        return progress.localizedActivityName
+            ?? OTPLoc("rail.now_walking", comment: "The rider is currently walking")
+    }
+
     @ViewBuilder
-    private func footerTrailing(_ progress: TripProgress) -> some View {
+    var footerTrailing: some View {
         if focusedLegIndex != nil {
             Button {
                 focusedLegIndex = nil
-                onFocusLeg(nil)
             } label: {
                 Text(OTPLoc("rail.back_to_now", comment: "Returns the panel to the rider's current step"))
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(theme.primaryColor)
             }
         } else {
-            (Text(OTPLoc("rail.arrive_time_fmt", comment: "Trailing arrival time", ""))
-                + Text(Formatters.formatDateToTime(trip.itinerary.endTime)).bold())
+            Text(arrivalFooterText)
                 .foregroundStyle(.secondary)
         }
     }
 
-    private func currentActivityName(_ progress: TripProgress) -> String {
-        switch progress.phase {
-        case .waiting(let index):
-            return OTPLoc("rail.now_waiting_fmt",
-                          comment: "The rider is waiting for this route",
-                          RailText.routeName(progress.legs[index]))
-        case .riding(let index):
-            return OTPLoc("rail.now_riding_fmt",
-                          comment: "The rider is aboard this route",
-                          RailText.routeName(progress.legs[index]))
-        default:
-            return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
+    /// "Arrive 10:29 PM" with the time bolded in place, so locales that put
+    /// the placeholder first (e.g. zh-Hans "%@ 到达") keep their word order.
+    var arrivalFooterText: AttributedString {
+        let time = Formatters.formatDateToTime(progress.itinerary.endTime)
+        var text = AttributedString(
+            OTPLoc("rail.arrive_time_fmt", comment: "Trailing arrival time", time)
+        )
+        if let range = text.range(of: time) {
+            text[range].font = .footnote.bold()
         }
+        return text
     }
 
-    private func waitingTitle(_ leg: Leg) -> String {
-        let seconds = leg.startTime.timeIntervalSince(now)
-        if seconds > 0, leg.realTime == true {
-            return OTPLoc("rail.arriving_in_fmt",
-                          comment: "Countdown until the vehicle arrives at the rider's stop",
-                          Formatters.formatTimeDuration(max(60, Int(seconds))))
-        }
-        return OTPLoc("rail.departs_at_fmt",
-                      comment: "Scheduled departure time of the vehicle",
-                      Formatters.formatDateToTime(leg.startTime))
-    }
-
-    private func leaveInstruction(_ progress: TripProgress) -> String {
-        let startTime = Formatters.formatDateToTime(progress.legs.first?.startTime ?? trip.itinerary.startTime)
-        if let firstLeg = progress.legs.first, firstLeg.transitLeg != true,
-           let firstTransit = progress.legs.first(where: { $0.transitLeg == true }) {
-            return OTPLoc("rail.start_walking_fmt",
-                          comment: "Pre-trip instruction: when to start walking and which route it catches",
-                          startTime, RailText.routeName(firstTransit))
-        }
-        return OTPLoc("rail.leave_at_fmt", comment: "Pre-trip instruction: when to leave", startTime)
-    }
-
-    private func currentStepText(_ leg: Leg) -> String? {
-        guard let steps = leg.steps, !steps.isEmpty else { return nil }
-        let duration = leg.endTime.timeIntervalSince(leg.startTime)
-        guard duration > 0 else { return nil }
-
-        let fraction = min(0.999, max(0, now.timeIntervalSince(leg.startTime) / duration))
-        let step = steps[Int(fraction * Double(steps.count))]
-        let distance = Formatters.formatDistance(Int(step.distance))
-        if let direction = step.directionDisplayName {
-            return "\(direction) \(step.streetName) · \(distance)"
-        }
-        return "\(step.streetName) · \(distance)"
-    }
 }

@@ -44,24 +44,21 @@ struct TripHeaderView: View {
     /// through — riders need to know how far off plan they are.
     @ViewBuilder
     private var arrivalTime: some View {
-        let delay = arrivalDelaySeconds
+        let status = progress.arrivalStatus
+        let isLate = { if case .late = status { return true } else { return false } }()
+
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text(Formatters.formatDateToTime(progress.itinerary.endTime))
                 .font(.title.bold())
-                .foregroundStyle(delay > 60 ? RealTimeStatus.late(minutes: 0).color : Color.primary)
+                .foregroundStyle(isLate ? status.color : Color.primary)
 
-            if delay > 60 {
+            if isLate, let delay = progress.legs.last(where: { $0.transitLeg == true })?.arrivalDelay {
                 Text(Formatters.formatDateToTime(progress.itinerary.endTime.addingTimeInterval(-Double(delay))))
                     .font(.body)
                     .strikethrough()
                     .foregroundStyle(.secondary)
             }
         }
-    }
-
-    /// Arrival delay in seconds carried by the trip's final transit leg.
-    private var arrivalDelaySeconds: Int {
-        progress.legs.last(where: { $0.transitLeg == true })?.arrivalDelay ?? 0
     }
 
     private var remainingText: String {

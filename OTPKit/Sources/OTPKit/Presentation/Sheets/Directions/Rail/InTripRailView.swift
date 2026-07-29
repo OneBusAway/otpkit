@@ -14,21 +14,13 @@ import SwiftUI
 /// with the clock; `focusedLeg` moves on tap and springs back via the
 /// Back-to-now pill. Nothing the rider taps can change where they are.
 struct InTripRailView: View {
-    let trip: Trip
-    let now: Date
+    let progress: TripProgress
     @Binding var focusedLegIndex: Int?
-    /// Called when focus changes so the host can frame the leg on the map.
-    let onFocusLeg: (Leg?) -> Void
 
     @Environment(\.otpTheme) private var theme
     @State private var isCurrentRowVisible = true
 
-    private var progress: TripProgress {
-        TripProgress(itinerary: trip.itinerary, now: now)
-    }
-
     var body: some View {
-        let progress = self.progress
         let rows = progress.rows
         let currentRowID = rows.first(where: { $0.state == .current })?.id
 
@@ -36,12 +28,12 @@ struct InTripRailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     if progress.phase == .notStarted {
-                        leaveBanner(progress)
+                        leaveBanner
                             .padding(.bottom, 18)
                     }
 
                     ForEach(rows) { row in
-                        railRow(for: row, progress: progress)
+                        railRow(for: row)
                             .id(row.id)
                             .contentShape(Rectangle())
                             .onTapGesture { handleTap(on: row) }
@@ -57,9 +49,8 @@ struct InTripRailView: View {
             }
             .overlay(alignment: .bottom) {
                 if showsBackToNow {
-                    backToNowPill(progress) {
+                    backToNowPill {
                         focusedLegIndex = nil
-                        onFocusLeg(nil)
                         if let currentRowID {
                             withAnimation {
                                 scrollProxy.scrollTo(currentRowID, anchor: .center)
@@ -83,15 +74,15 @@ struct InTripRailView: View {
     // MARK: - Rows
 
     @ViewBuilder
-    private func railRow(for row: RailRow, progress: TripProgress) -> some View {
+    private func railRow(for row: RailRow) -> some View {
         let isFocused = row.legIndex != nil && row.legIndex == focusedLegIndex && row.state != .current
 
         RailRowView(
-            time: row.kind.showsTime ? row.time : nil,
+            time: row.time,
             timeProminent: row.state != .done,
             gutterDetail: gutterDetail(for: row),
             mark: mark(for: row),
-            segment: segment(for: row, progress: progress),
+            segment: segment(for: row),
             dimmed: row.state == .done
         ) {
             switch row.kind {
@@ -106,8 +97,7 @@ struct InTripRailView: View {
                     progress: progress,
                     legIndex: index,
                     state: row.state,
-                    isFocused: isFocused,
-                    now: now
+                    isFocused: isFocused
                 )
             case .ride(let index):
                 RideRowContent(progress: progress, legIndex: index)
@@ -123,7 +113,7 @@ struct InTripRailView: View {
         if row.state == .current {
             return .now
         }
-        if let status = row.status, row.state != .done, status != .scheduled || row.kind.isBoard {
+        if let status = row.status, row.state != .done {
             return .status(status)
         }
         return .none
@@ -146,7 +136,7 @@ struct InTripRailView: View {
 
     /// The segment below a row is fat and colored only while the span it covers
     /// is a ride still ahead of (or under) the rider.
-    private func segment(for row: RailRow, progress: TripProgress) -> RailSegment {
+    private func segment(for row: RailRow) -> RailSegment {
         switch row.kind {
         case .arrive:
             return .none
@@ -168,56 +158,56 @@ struct InTripRailView: View {
     // MARK: - Interactions
 
     private func handleTap(on row: RailRow) {
-        guard let legIndex = row.legIndex else { return }
-        if focusedLegIndex == legIndex {
+        // Tapping the current row means "back to now", never "focus" — focusing
+        // where you already are would only summon the pill and stall auto-scroll.
+        guard let legIndex = row.legIndex, row.state != .current else {
             focusedLegIndex = nil
-            onFocusLeg(nil)
-        } else {
-            focusedLegIndex = legIndex
-            onFocusLeg(progress.legs[legIndex])
+            return
         }
+        focusedLegIndex = focusedLegIndex == legIndex ? nil : legIndex
     }
 
     private var showsBackToNow: Bool {
+        // A focused row always earns the pill — even pre-trip, when there is
+        // no green pip yet, it's the way back out of an inspected leg.
+        if focusedLegIndex != nil { return true }
         guard progress.phase.legIndex != nil else { return false }
-        return focusedLegIndex != nil || !isCurrentRowVisible
+        return !isCurrentRowVisible
     }
 
     // MARK: - Chrome
 
     /// The pre-trip banner: "Leave in 4m" is the single most valuable thing a
     /// planner can say, and it's just the first leg's start time minus now.
-    private func leaveBanner(_ progress: TripProgress) -> some View {
+    private var leaveBanner: some View {
         NowCard {
             VStack(alignment: .leading, spacing: 5) {
                 Text(OTPLoc("rail.leave_in_fmt",
                             comment: "Countdown until the rider must leave",
-                            Formatters.formatTimeDuration(max(60, Int(progress.secondsUntilStart)))))
+                            Formatters.formatCountdown(progress.secondsUntilStart)))
                     .font(.caption.weight(.semibold))
                     .textCase(.uppercase)
                     .foregroundStyle(theme.primaryColor)
 
-                Text(leaveInstruction(progress))
+                Text(RailText.leaveInstruction(progress))
                     .font(.title3.weight(.semibold))
             }
         }
         .accessibilityElement(children: .combine)
     }
 
-    private func leaveInstruction(_ progress: TripProgress) -> String {
-        let startTime = Formatters.formatDateToTime(progress.legs.first?.startTime ?? trip.itinerary.startTime)
-        if let firstLeg = progress.legs.first, firstLeg.transitLeg != true,
-           let firstTransit = progress.legs.first(where: { $0.transitLeg == true }) {
-            return OTPLoc("rail.start_walking_fmt",
-                          comment: "Pre-trip instruction: when to start walking and which route it catches",
-                          startTime, RailText.routeName(firstTransit))
-        }
-        return OTPLoc("rail.leave_at_fmt", comment: "Pre-trip instruction: when to leave", startTime)
-    }
+    private func backToNowPill(action: @escaping () -> Void) -> some View {
+        // Back-to-now names the current leg, so it doubles as a status line
+        // for the state the rider left behind. Pre-trip there is no current
+        // activity to name, so the pill stays plain.
+        let label = progress.localizedActivityName.map { activity in
+            OTPLoc("rail.back_to_now_fmt",
+                   comment: "Button returning the rail to the rider's current step; argument names that step",
+                   activity)
+        } ?? OTPLoc("rail.back_to_now", comment: "Returns the panel to the rider's current step")
 
-    private func backToNowPill(_ progress: TripProgress, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label(backToNowLabel(progress), systemImage: "arrow.up")
+        return Button(action: action) {
+            Label(label, systemImage: "arrow.up")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.white)
                 .padding(.horizontal, 17)
@@ -226,40 +216,6 @@ struct InTripRailView: View {
                 .shadow(color: .black.opacity(0.28), radius: 9, y: 6)
         }
         .buttonStyle(.plain)
-    }
-
-    /// Back-to-now names the current leg, so it doubles as a status line for
-    /// the state the rider left behind.
-    private func backToNowLabel(_ progress: TripProgress) -> String {
-        OTPLoc("rail.back_to_now_fmt",
-               comment: "Button returning the rail to the rider's current step; argument names that step",
-               currentActivityName(progress))
-    }
-
-    private func currentActivityName(_ progress: TripProgress) -> String {
-        switch progress.phase {
-        case .walking:
-            return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
-        case .waiting(let index):
-            return OTPLoc("rail.now_waiting_fmt",
-                          comment: "The rider is waiting for this route",
-                          RailText.routeName(progress.legs[index]))
-        case .riding(let index):
-            return OTPLoc("rail.now_riding_fmt",
-                          comment: "The rider is aboard this route",
-                          RailText.routeName(progress.legs[index]))
-        case .notStarted, .arrived:
-            return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
-        }
-    }
-}
-
-private extension RailRow.Kind {
-    var showsTime: Bool { true }
-
-    var isBoard: Bool {
-        if case .board = self { return true }
-        return false
     }
 }
 

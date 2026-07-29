@@ -191,6 +191,44 @@ struct TripProgressTests {
         #expect(progress.isSameStopTransfer(fromLegAt: 1) == true)
     }
 
+    @Test func currentStepAdvancesWithElapsedTime() {
+        // Give the first walk leg two equal-weight steps.
+        let itinerary = makeItinerary()
+        var legs = itinerary.legs
+        let walk = legs[0]
+        legs[0] = Leg(
+            startTime: walk.startTime, endTime: walk.endTime, mode: walk.mode,
+            routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil,
+            from: walk.from, to: walk.to, legGeometry: walk.legGeometry,
+            distance: walk.distance, transitLeg: false, duration: walk.duration, realTime: nil,
+            streetNames: nil, pathway: nil,
+            steps: [
+                Step(distance: 100, streetName: "45th Ave SW", relativeDirection: "DEPART",
+                     elevationChange: nil, lon: -122.3, lat: 47.5),
+                Step(distance: 120, streetName: "SW Myrtle St", relativeDirection: "RIGHT",
+                     elevationChange: nil, lon: -122.3, lat: 47.5)
+            ],
+            headsign: nil, intermediateStops: nil
+        )
+        let stepped = Itinerary(
+            duration: itinerary.duration, startTime: itinerary.startTime, endTime: itinerary.endTime,
+            walkTime: itinerary.walkTime, transitTime: itinerary.transitTime,
+            waitingTime: itinerary.waitingTime, walkDistance: itinerary.walkDistance,
+            walkLimitExceeded: false, elevationLost: 0, elevationGained: 0,
+            transfers: itinerary.transfers, legs: legs
+        )
+
+        // First half of the 180s walk → first step; second half → second step.
+        let early = TripProgress(itinerary: stepped, now: tripStart.addingTimeInterval(30))
+        #expect(early.currentStep(onLegAt: 0)?.streetName == "45th Ave SW")
+
+        let late = TripProgress(itinerary: stepped, now: tripStart.addingTimeInterval(150))
+        #expect(late.currentStep(onLegAt: 0)?.streetName == "SW Myrtle St")
+
+        // Legs without steps have no current step.
+        #expect(early.currentStep(onLegAt: 1) == nil)
+    }
+
     // MARK: - Progress Bar
 
     @Test func segmentsAreProportionalAndFill() {

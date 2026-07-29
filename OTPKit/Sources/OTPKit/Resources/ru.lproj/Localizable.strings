@@ -176,7 +176,6 @@
 "directions.start" = "Начало";
 "directions.end" = "Конец";
 "directions.start_navigation" = "Начать навигацию";
-"directions.swipe_hint" = "Смахните, чтобы увидеть каждый шаг";
 
 /* Direction Legs */
 "leg.deboard_at" = "Выйдите на";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "Ещё %d ост.";
 "rail.one_stop_to_go" = "Ещё 1 остановка";
 "rail.get_off_at_fmt" = "Выйдите на %@";
-"rail.get_off_time_fmt" = "Выход: %@";
 "rail.wait_for_fmt" = "Подождите %1$@ — %2$@";
 "rail.wait_same_stop_fmt" = "Подождите %1$@ · %2$@ отправляется с той же остановки";
 "rail.same_stop_note" = "Та же остановка, где вы вышли — оставайтесь на месте, переходить дорогу не нужно.";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "Идёте пешком";
 "rail.now_waiting_fmt" = "Ждёте %@";
 "rail.now_riding_fmt" = "Едете на %@";
-"rail.step_of_fmt" = "Шаг %1$d из %2$d";
 "rail.step_of_previewing_fmt" = "Шаг %1$d из %2$d · предпросмотр";
 "rail.next_leg_fmt" = "%1$@ · %2$@ в %3$@";
 "rail.last_step" = "Последний шаг";

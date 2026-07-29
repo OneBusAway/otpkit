@@ -176,7 +176,6 @@
 "directions.start" = "출발";
 "directions.end" = "도착";
 "directions.start_navigation" = "길 안내 시작";
-"directions.swipe_hint" = "쓸어넘겨 각 단계를 확인하세요";
 
 /* Direction Legs */
 "leg.deboard_at" = "하차 정류장";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "%d개 정류장 남음";
 "rail.one_stop_to_go" = "1개 정류장 남음";
 "rail.get_off_at_fmt" = "%@에서 하차";
-"rail.get_off_time_fmt" = "%@ 하차";
 "rail.wait_for_fmt" = "%2$@ 탑승까지 %1$@ 대기";
 "rail.wait_same_stop_fmt" = "%1$@ 대기 · 같은 정류장에서 %2$@ 출발";
 "rail.same_stop_note" = "도착한 정류장과 같은 곳입니다. 길을 건너지 말고 그 자리에서 기다리세요.";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "도보 이동 중";
 "rail.now_waiting_fmt" = "%@ 대기 중";
 "rail.now_riding_fmt" = "%@ 탑승 중";
-"rail.step_of_fmt" = "%2$d단계 중 %1$d단계";
 "rail.step_of_previewing_fmt" = "%2$d단계 중 %1$d단계 · 미리보기";
 "rail.next_leg_fmt" = "%1$@ · %2$@ %3$@ 출발";
 "rail.last_step" = "마지막 단계";

@@ -176,7 +176,6 @@
 "directions.start" = "Départ";
 "directions.end" = "Arrivée";
 "directions.start_navigation" = "Démarrer la navigation";
-"directions.swipe_hint" = "Balayez pour voir chaque étape";
 
 /* Direction Legs */
 "leg.deboard_at" = "Descendez à";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "Encore %d arrêts";
 "rail.one_stop_to_go" = "Encore 1 arrêt";
 "rail.get_off_at_fmt" = "Descendez à %@";
-"rail.get_off_time_fmt" = "Descente %@";
 "rail.wait_for_fmt" = "Attendez le %2$@ pendant %1$@";
 "rail.wait_same_stop_fmt" = "Attendez %1$@ · le %2$@ part du même arrêt";
 "rail.same_stop_note" = "Même arrêt que votre arrivée — restez sur place, pas de rue à traverser.";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "En marche";
 "rail.now_waiting_fmt" = "En attente du %@";
 "rail.now_riding_fmt" = "À bord du %@";
-"rail.step_of_fmt" = "Étape %1$d sur %2$d";
 "rail.step_of_previewing_fmt" = "Étape %1$d sur %2$d · aperçu";
 "rail.next_leg_fmt" = "%1$@ · %2$@ à %3$@";
 "rail.last_step" = "Dernière étape";

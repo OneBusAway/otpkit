@@ -176,7 +176,6 @@
 "directions.start" = "起點";
 "directions.end" = "終點";
 "directions.start_navigation" = "開始導航";
-"directions.swipe_hint" = "滑動以檢視每個步驟";
 
 /* Direction Legs */
 "leg.deboard_at" = "下車站點";
@@ -290,7 +289,6 @@
 "rail.stops_to_go_fmt" = "還有 %d 站";
 "rail.one_stop_to_go" = "還有 1 站";
 "rail.get_off_at_fmt" = "於 %@ 下車";
-"rail.get_off_time_fmt" = "%@ 下車";
 "rail.wait_for_fmt" = "等候 %1$@，搭乘 %2$@";
 "rail.wait_same_stop_fmt" = "等候 %1$@ · %2$@ 於同一站發車";
 "rail.same_stop_note" = "與您抵達的站點相同——請留在原地，無需過馬路。";
@@ -301,7 +299,6 @@
 "rail.now_walking" = "步行中";
 "rail.now_waiting_fmt" = "正在等候 %@";
 "rail.now_riding_fmt" = "正在搭乘 %@";
-"rail.step_of_fmt" = "第 %1$d 步，共 %2$d 步";
 "rail.step_of_previewing_fmt" = "第 %1$d 步，共 %2$d 步 · 預覽中";
 "rail.next_leg_fmt" = "%1$@ · %3$@ 的 %2$@";
 "rail.last_step" = "最後一步";

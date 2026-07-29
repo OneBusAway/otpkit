@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-/// The five marks of the rail vocabulary. Exactly one `.now` pip appears per trip.
+/// The marks of the rail vocabulary. At most one `.now` pip appears at a time —
+/// none before the trip starts.
 enum RailMark: Equatable {
     /// Filled pip in the theme's primary color with a halo — where the rider is now.
     case now
     /// Small gray pip — a moment the rider has completed.
     case done
-    /// Ring in the given color — a boarding or alighting point still ahead.
+    /// Ring in the given color — a boarding, alighting, or walking waypoint
+    /// still ahead (walks ring in gray).
     case ring(Color)
     /// Solid dark pip — the final destination.
     case destination
@@ -35,7 +37,7 @@ enum RailSegment: Equatable {
 struct RailMarkColumn: View {
     let mark: RailMark
     let segment: RailSegment
-    var theme: OTPThemeConfiguration
+    let theme: OTPThemeConfiguration
 
     static let columnWidth: CGFloat = 26
 

@@ -71,7 +71,8 @@ public struct RailRow: Identifiable, Equatable {
     public enum State: Equatable {
         /// Behind the rider. Collapses to one line at reduced opacity.
         case done
-        /// Where the rider is. Exactly one row per trip, rendered as the now-card.
+        /// Where the rider is: exactly one row while the trip is underway,
+        /// none before it starts.
         case current
         /// Still ahead.
         case upcoming
@@ -125,10 +126,6 @@ public struct TripProgress {
             return .notStarted
         }
 
-        if now >= itinerary.endTime, let lastLeg = legs.last, now >= lastLeg.endTime {
-            return .arrived
-        }
-
         for (index, leg) in legs.enumerated() {
             // Inside the leg's own time window.
             if now >= leg.startTime && now < leg.endTime {
@@ -169,7 +166,7 @@ public struct TripProgress {
                     )
                 }
 
-                rows.append(getOffRow(for: leg, at: index, phase: phase))
+                rows.append(getOffRow(for: leg, at: index))
             } else {
                 rows.append(walkRow(for: leg, at: index, phase: phase))
             }
@@ -217,7 +214,7 @@ public struct TripProgress {
         )
     }
 
-    private func getOffRow(for leg: Leg, at index: Int, phase: TripPhase) -> RailRow {
+    private func getOffRow(for leg: Leg, at index: Int) -> RailRow {
         RailRow(
             id: "getoff-\(index)",
             kind: .getOff(legIndex: index),
@@ -225,6 +222,33 @@ public struct TripProgress {
             time: leg.endTime,
             status: nil
         )
+    }
+
+    /// The rider's current activity, localized ("Walking", "Waiting for the C Line",
+    /// "Riding C Line"). Nil before the trip starts and after it ends — the one
+    /// vocabulary shared by the Back-to-now pill, the tip footer, and the
+    /// VoiceOver auto-advance announcement.
+    public var localizedActivityName: String? {
+        switch phase {
+        case .walking:
+            return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
+        case .waiting(let index):
+            return OTPLoc("rail.now_waiting_fmt",
+                          comment: "The rider is waiting for this route",
+                          legs[index].riderFacingRouteName)
+        case .riding(let index):
+            return OTPLoc("rail.now_riding_fmt",
+                          comment: "The rider is aboard this route",
+                          legs[index].riderFacingRouteName)
+        case .notStarted, .arrived:
+            return nil
+        }
+    }
+
+    /// Real-time status of the trip's final transit arrival — what the header's
+    /// late treatment keys off.
+    public var arrivalStatus: RealTimeStatus {
+        legs.last(where: { $0.transitLeg == true })?.arrivalStatus ?? .scheduled
     }
 
     // MARK: - Rider Questions
@@ -241,6 +265,8 @@ public struct TripProgress {
     }
 
     /// Seconds of waiting between leg `index` ending and the next leg starting.
+    /// Gaps of a minute or less aren't worth telling the rider about, so they
+    /// return nil.
     public func waitAfterLeg(at index: Int) -> TimeInterval? {
         guard index >= 0, index + 1 < legs.count else { return nil }
         let gap = legs[index + 1].startTime.timeIntervalSince(legs[index].endTime)
@@ -285,6 +311,20 @@ public struct TripProgress {
         return (legs[index].intermediateStops?.count ?? 0) + 1
     }
 
+    /// The walking sub-step the rider is likely on, estimated by elapsed time
+    /// across the leg's steps.
+    public func currentStep(onLegAt index: Int) -> Step? {
+        guard index >= 0, index < legs.count else { return nil }
+        let leg = legs[index]
+        guard let steps = leg.steps, !steps.isEmpty else { return nil }
+
+        let duration = leg.endTime.timeIntervalSince(leg.startTime)
+        guard duration > 0 else { return nil }
+
+        let fraction = min(0.999, max(0, now.timeIntervalSince(leg.startTime) / duration))
+        return steps[Int(fraction * Double(steps.count))]
+    }
+
     // MARK: - Progress Bar
 
     /// One segment of the trip progress bar.
@@ -301,11 +341,12 @@ public struct TripProgress {
 
     /// Proportional segments for the tip-detent progress bar.
     public var segments: [Segment] {
-        let totalDuration = legs.reduce(0.0) { $0 + Double($1.duration) }
+        let durations = legs.map { $0.endTime.timeIntervalSince($0.startTime) }
+        let totalDuration = durations.reduce(0, +)
         guard totalDuration > 0 else { return [] }
 
         return legs.enumerated().map { index, leg in
-            let duration = leg.endTime.timeIntervalSince(leg.startTime)
+            let duration = durations[index]
             let fill: Double
             if now >= leg.endTime {
                 fill = 1
@@ -317,7 +358,7 @@ public struct TripProgress {
 
             return Segment(
                 legIndex: index,
-                widthFraction: Double(leg.duration) / totalDuration,
+                widthFraction: duration / totalDuration,
                 fillFraction: fill,
                 isTransit: leg.transitLeg == true
             )

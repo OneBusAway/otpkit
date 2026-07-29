@@ -26,6 +26,12 @@ class Formatters {
         return shared.durationFormatter.string(from: components) ?? "?"
     }
 
+    /// Formats a countdown for display, never showing less than one minute —
+    /// "0s" is an answer no rider wants from a transit app.
+    static func formatCountdown(_ seconds: TimeInterval) -> String {
+        formatTimeDuration(max(60, Int(seconds)))
+    }
+
     // MARK: - Distance Formatting
 
     private lazy var feetFormatter: MeasurementFormatter = {

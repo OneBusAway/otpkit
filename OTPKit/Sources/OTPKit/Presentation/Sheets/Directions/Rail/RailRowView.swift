@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-/// The layout system of the in-trip panel: a three-column row of
-/// time gutter · rail · content at 52 / 26 / flexible. Nothing else in the rail
-/// is positioned, which is why long strings and XXL text never break it.
-///
-/// Past accessibility text sizes the 52pt gutter can't hold a time without
-/// wrapping, so it moves inline above the content and the row drops to two
-/// columns. The rail marks are untouched at every size.
 /// What renders beneath the gutter time: nothing, the "now" marker, or a
 /// real-time status line.
 enum RailGutterDetail: Equatable {
@@ -22,6 +15,13 @@ enum RailGutterDetail: Equatable {
     case status(RealTimeStatus)
 }
 
+/// The layout system of the in-trip panel: a three-column row of
+/// time gutter · rail · content at 64 / 26 / flexible. Nothing else in the rail
+/// is positioned, which is why long strings and XXL text never break it.
+///
+/// Past accessibility text sizes the 64pt gutter can't hold a time without
+/// wrapping, so it moves inline above the content and the row drops to two
+/// columns. The rail marks are untouched at every size.
 struct RailRowView<Content: View>: View {
     let time: Date?
     let timeProminent: Bool
@@ -114,8 +114,8 @@ struct RailRowView<Content: View>: View {
     }
 }
 
-/// The tinted card that wraps the current step's content — the only card in the
-/// rail, so "where am I" is answerable at a glance.
+/// The tinted card that wraps the current step's content — the only *tinted*
+/// card in the rail, so "where am I" is answerable at a glance.
 struct NowCard<Content: View>: View {
     @Environment(\.otpTheme) private var theme
     @ViewBuilder let content: () -> Content

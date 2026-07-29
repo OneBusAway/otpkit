@@ -250,6 +250,12 @@ public struct Leg: Codable, Hashable {
         return Color(hex: routeTextColor)
     }
 
+    /// The rider-facing route name ("C Line", "2"), falling back to the
+    /// localized mode name so raw OTP wire tokens never reach the UI.
+    public var riderFacingRouteName: String {
+        route ?? modeDisplayName
+    }
+
     // MARK: - Real-Time Status
 
     /// Real-time status of this leg's departure, from `realTime` and `departureDelay`.

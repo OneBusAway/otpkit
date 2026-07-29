@@ -7,16 +7,46 @@
 
 import SwiftUI
 
-// The content column of each rail row kind. Every view here is state-aware:
-// done rows collapse to one line, the current row expands into a NowCard, and
-// a focused row shows its full detail inside a neutral dark outline.
+// The content column of each rail row kind. The views are state-aware: done
+// rows collapse to one line, current boarding/riding rows expand into the
+// tinted NowCard, and a focused boarding row shows its full detail inside the
+// neutral dark FocusedCard outline.
 
 // MARK: - Shared helpers
 
 enum RailText {
     /// The rider-facing route name for a transit leg ("C Line", "2").
     static func routeName(_ leg: Leg) -> String {
-        leg.route ?? leg.mode.capitalized
+        leg.riderFacingRouteName
+    }
+
+    /// The pre-trip instruction: "Start walking at 9:38 PM to catch the C Line"
+    /// when the trip opens with a walk toward transit, otherwise plain
+    /// "Leave at 9:38 PM".
+    static func leaveInstruction(_ progress: TripProgress) -> String {
+        let startTime = Formatters.formatDateToTime(progress.legs.first?.startTime ?? progress.itinerary.startTime)
+        if let firstLeg = progress.legs.first, firstLeg.transitLeg != true,
+           let firstTransit = progress.legs.first(where: { $0.transitLeg == true }) {
+            return OTPLoc("rail.start_walking_fmt",
+                          comment: "Pre-trip instruction: when to start walking and which route it catches",
+                          startTime, routeName(firstTransit))
+        }
+        return OTPLoc("rail.leave_at_fmt", comment: "Pre-trip instruction: when to leave", startTime)
+    }
+
+    /// What to say while waiting to board: a live countdown when the data is
+    /// real-time, the scheduled departure otherwise. That gate is a product
+    /// rule, so it lives here once.
+    static func boardingCountdown(for leg: Leg, now: Date) -> String {
+        let seconds = leg.startTime.timeIntervalSince(now)
+        if seconds > 0, leg.realTime == true {
+            return OTPLoc("rail.arriving_in_fmt",
+                          comment: "Countdown until the vehicle arrives at the rider's stop",
+                          Formatters.formatCountdown(seconds))
+        }
+        return OTPLoc("rail.departs_at_fmt",
+                      comment: "Scheduled departure time of the vehicle",
+                      Formatters.formatDateToTime(leg.startTime))
     }
 
     /// "12 stops" / "1 stop".
@@ -86,7 +116,7 @@ struct WalkRowContent: View {
                 if isExpanded, let steps = leg.steps, !steps.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(Array(steps.enumerated()), id: \.offset) { _, step in
-                            Text(stepInstruction(step))
+                            Text(step.localizedInstruction)
                                 .font(.subheadline)
                                 .foregroundStyle(.primary)
                         }
@@ -103,13 +133,6 @@ struct WalkRowContent: View {
         }
     }
 
-    private func stepInstruction(_ step: Step) -> String {
-        let distance = Formatters.formatDistance(Int(step.distance))
-        if let direction = step.directionDisplayName {
-            return "\(direction) \(step.streetName) · \(distance)"
-        }
-        return "\(step.streetName) · \(distance)"
-    }
 }
 
 // MARK: - Board rows
@@ -121,7 +144,6 @@ struct BoardRowContent: View {
     let legIndex: Int
     let state: RailRow.State
     let isFocused: Bool
-    let now: Date
 
     private var leg: Leg { progress.legs[legIndex] }
 
@@ -162,7 +184,7 @@ struct BoardRowContent: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 9) {
                 RouteBadge(leg: leg)
-                Text(countdownText)
+                Text(RailText.boardingCountdown(for: leg, now: progress.now))
                     .font(.title3.weight(.semibold))
             }
 
@@ -199,18 +221,6 @@ struct BoardRowContent: View {
                 .padding(.top, 5)
             }
         }
-    }
-
-    private var countdownText: String {
-        let seconds = leg.startTime.timeIntervalSince(now)
-        if seconds > 0, leg.realTime == true {
-            return OTPLoc("rail.arriving_in_fmt",
-                          comment: "Countdown until the vehicle arrives at the rider's stop",
-                          Formatters.formatTimeDuration(max(60, Int(seconds))))
-        }
-        return OTPLoc("rail.departs_at_fmt",
-                      comment: "Scheduled departure time of the vehicle",
-                      Formatters.formatDateToTime(leg.startTime))
     }
 
     /// Stop name and code in reference position: at the stop, the code is how
@@ -258,9 +268,9 @@ struct BoardRowContent: View {
 
 // MARK: - Ride row
 
-/// The synthetic row present only while aboard: "4 stops to go" with the
-/// remaining stop ladder nested inside the now-card, so trip context above and
-/// below never disappears.
+/// The synthetic row present only while aboard: "4 stops to go" with the leg's
+/// final approach nested inside the now-card, so trip context above and below
+/// never disappears.
 struct RideRowContent: View {
     let progress: TripProgress
     let legIndex: Int
@@ -288,8 +298,9 @@ struct RideRowContent: View {
         }
     }
 
-    /// The last few stops before alighting, so "is mine next?" is answerable
-    /// without watching the map.
+    /// The leg's last few stops before alighting (a fixed preview, not a live
+    /// countdown — per-stop times aren't decoded yet), with the final
+    /// intermediate stop emphasized as the "get ready" cue.
     @ViewBuilder
     private var stopLadder: some View {
         if let stops = leg.intermediateStops, !stops.isEmpty {
