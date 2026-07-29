@@ -176,7 +176,6 @@
 "directions.start" = "Start";
 "directions.end" = "End";
 "directions.start_navigation" = "Start Navigation";
-"directions.swipe_hint" = "Swipe to view each step";
 
 /* Direction Legs */
 "leg.deboard_at" = "Deboard at";
@@ -257,3 +256,52 @@
 "direction.uturn_right" = "Make a U-turn to the right";
 "direction.circle_clockwise" = "Enter the roundabout clockwise";
 "direction.circle_counterclockwise" = "Enter the roundabout counterclockwise";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "On time";
+"status.late_fmt" = "%d min late";
+"status.early_fmt" = "%d min early";
+"status.scheduled" = "Scheduled";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Arrive at %@";
+"rail.time_left_fmt" = "%@ left";
+"rail.transfer_one" = "1 transfer";
+"rail.transfers_fmt" = "%d transfers";
+"rail.leave_in_fmt" = "Leave in %@";
+"rail.start_walking_fmt" = "Start walking at %1$@ to catch the %2$@";
+"rail.leave_at_fmt" = "Leave at %@";
+"rail.start_trip" = "Start Trip";
+"rail.hide" = "Hide";
+"rail.walk_fmt" = "Walk %1$@ to %2$@";
+"rail.walked_done_fmt" = "Walked %@ · done";
+"rail.about_duration_fmt" = "About %@";
+"rail.board" = "Board";
+"rail.boarded_done_fmt" = "Boarded the %@ · done";
+"rail.toward_fmt" = "Toward %@";
+"rail.toward_stops_fmt" = "Toward %1$@ · %2$@";
+"rail.stop_one" = "1 stop";
+"rail.stops_fmt" = "%d stops";
+"rail.arriving_in_fmt" = "Arriving in %@";
+"rail.departs_at_fmt" = "Departs at %@";
+"rail.at_stop_fmt" = "At %@";
+"rail.stop_code_fmt" = "Stop #%@";
+"rail.ride_stops_duration_fmt" = "ride %1$@, %2$@";
+"rail.stops_to_go_fmt" = "%d stops to go";
+"rail.one_stop_to_go" = "1 stop to go";
+"rail.get_off_at_fmt" = "Get off at %@";
+"rail.wait_for_fmt" = "Wait %1$@ for %2$@";
+"rail.wait_same_stop_fmt" = "Wait %1$@ · %2$@ leaves from the same stop";
+"rail.same_stop_note" = "Same stop as your arrival — stay put, no street crossing.";
+"rail.arrive" = "Arrive";
+"rail.arrived" = "You've arrived";
+"rail.back_to_now" = "Back to now";
+"rail.back_to_now_fmt" = "Back to now · %@";
+"rail.now_walking" = "Walking";
+"rail.now_waiting_fmt" = "Waiting for the %@";
+"rail.now_riding_fmt" = "Riding %@";
+"rail.step_of_previewing_fmt" = "Step %1$d of %2$d · previewing";
+"rail.next_leg_fmt" = "%1$@ · %2$@ at %3$@";
+"rail.last_step" = "Last step";
+"rail.arrive_time_fmt" = "Arrive %@";
+"rail.now" = "now";

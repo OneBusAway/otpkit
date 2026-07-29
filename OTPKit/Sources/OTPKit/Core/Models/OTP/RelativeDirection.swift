@@ -86,4 +86,25 @@ public extension Step {
         }
         return direction.displayName
     }
+
+    /// The full rider-facing sentence for this step, e.g.
+    /// "Turn right onto SW Myrtle St, walk 610 ft."
+    var localizedInstruction: String {
+        let distance = Formatters.formatDistance(Int(self.distance))
+        if let direction = directionDisplayName {
+            return OTPLoc(
+                "leg.step_turn",
+                comment: "A walking step: turn direction, street name, distance",
+                direction,
+                streetName,
+                distance
+            )
+        }
+        return OTPLoc(
+            "leg.step_continue",
+            comment: "A walking step with no turn: street name, distance",
+            streetName,
+            distance
+        )
+    }
 }

@@ -176,7 +176,6 @@
 "directions.start" = "Początek";
 "directions.end" = "Koniec";
 "directions.start_navigation" = "Rozpocznij nawigację";
-"directions.swipe_hint" = "Przesuń, aby zobaczyć każdy krok";
 
 /* Direction Legs */
 "leg.deboard_at" = "Wysiądź na";
@@ -256,3 +255,52 @@
 "direction.uturn_right" = "Zawróć w prawo";
 "direction.circle_clockwise" = "Wjedź na rondo zgodnie z ruchem wskazówek zegara";
 "direction.circle_counterclockwise" = "Wjedź na rondo przeciwnie do ruchu wskazówek zegara";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "O czasie";
+"status.late_fmt" = "%d min opóźnienia";
+"status.early_fmt" = "%d min przed czasem";
+"status.scheduled" = "Planowo";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Przyjazd o %@";
+"rail.time_left_fmt" = "Pozostało %@";
+"rail.transfer_one" = "1 przesiadka";
+"rail.transfers_fmt" = "%d przes.";
+"rail.leave_in_fmt" = "Wyjdź za %@";
+"rail.start_walking_fmt" = "Zacznij iść o %1$@, aby zdążyć na %2$@";
+"rail.leave_at_fmt" = "Wyjdź o %@";
+"rail.start_trip" = "Rozpocznij podróż";
+"rail.hide" = "Ukryj";
+"rail.walk_fmt" = "Idź %1$@ do %2$@";
+"rail.walked_done_fmt" = "Przebyto %@ · gotowe";
+"rail.about_duration_fmt" = "Około %@";
+"rail.board" = "Wsiądź";
+"rail.boarded_done_fmt" = "Wsiadanie do %@ · gotowe";
+"rail.toward_fmt" = "W kierunku %@";
+"rail.toward_stops_fmt" = "W kierunku %1$@ · %2$@";
+"rail.stop_one" = "1 przystanek";
+"rail.stops_fmt" = "%d przyst.";
+"rail.arriving_in_fmt" = "Przyjazd za %@";
+"rail.departs_at_fmt" = "Odjazd o %@";
+"rail.at_stop_fmt" = "Na przystanku %@";
+"rail.stop_code_fmt" = "Przystanek nr %@";
+"rail.ride_stops_duration_fmt" = "przejedź %1$@, %2$@";
+"rail.stops_to_go_fmt" = "Jeszcze %d przyst.";
+"rail.one_stop_to_go" = "Jeszcze 1 przystanek";
+"rail.get_off_at_fmt" = "Wysiądź na %@";
+"rail.wait_for_fmt" = "Poczekaj %1$@ na %2$@";
+"rail.wait_same_stop_fmt" = "Poczekaj %1$@ · %2$@ odjeżdża z tego samego przystanku";
+"rail.same_stop_note" = "Ten sam przystanek co przyjazd — zostań na miejscu, nie musisz przechodzić przez ulicę.";
+"rail.arrive" = "Przyjazd";
+"rail.arrived" = "Jesteś na miejscu";
+"rail.back_to_now" = "Wróć do teraz";
+"rail.back_to_now_fmt" = "Wróć do teraz · %@";
+"rail.now_walking" = "Idziesz";
+"rail.now_waiting_fmt" = "Czekasz na %@";
+"rail.now_riding_fmt" = "Jedziesz: %@";
+"rail.step_of_previewing_fmt" = "Krok %1$d z %2$d · podgląd";
+"rail.next_leg_fmt" = "%1$@ · %2$@ o %3$@";
+"rail.last_step" = "Ostatni krok";
+"rail.arrive_time_fmt" = "Przyjazd %@";
+"rail.now" = "teraz";

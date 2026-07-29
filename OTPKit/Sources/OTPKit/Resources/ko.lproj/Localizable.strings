@@ -176,7 +176,6 @@
 "directions.start" = "출발";
 "directions.end" = "도착";
 "directions.start_navigation" = "길 안내 시작";
-"directions.swipe_hint" = "쓸어넘겨 각 단계를 확인하세요";
 
 /* Direction Legs */
 "leg.deboard_at" = "하차 정류장";
@@ -256,3 +255,52 @@
 "direction.uturn_right" = "우측으로 유턴";
 "direction.circle_clockwise" = "시계 방향으로 회전 교차로 진입";
 "direction.circle_counterclockwise" = "반시계 방향으로 회전 교차로 진입";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "정시";
+"status.late_fmt" = "%d분 지연";
+"status.early_fmt" = "%d분 일찍";
+"status.scheduled" = "예정 시간";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "%@ 도착";
+"rail.time_left_fmt" = "%@ 남음";
+"rail.transfer_one" = "환승 1회";
+"rail.transfers_fmt" = "환승 %d회";
+"rail.leave_in_fmt" = "%@ 후 출발";
+"rail.start_walking_fmt" = "%2$@ 탑승을 위해 %1$@에 걷기 시작하세요";
+"rail.leave_at_fmt" = "%@에 출발";
+"rail.start_trip" = "경로 시작";
+"rail.hide" = "숨기기";
+"rail.walk_fmt" = "%2$@까지 %1$@ 도보";
+"rail.walked_done_fmt" = "%@ 도보 · 완료";
+"rail.about_duration_fmt" = "약 %@";
+"rail.board" = "탑승";
+"rail.boarded_done_fmt" = "%@ 탑승 · 완료";
+"rail.toward_fmt" = "%@ 방면";
+"rail.toward_stops_fmt" = "%1$@ 방면 · %2$@";
+"rail.stop_one" = "1개 정류장";
+"rail.stops_fmt" = "%d개 정류장";
+"rail.arriving_in_fmt" = "%@ 후 도착";
+"rail.departs_at_fmt" = "%@ 출발";
+"rail.at_stop_fmt" = "%@에서";
+"rail.stop_code_fmt" = "정류장 번호 %@";
+"rail.ride_stops_duration_fmt" = "%1$@ 이동, %2$@";
+"rail.stops_to_go_fmt" = "%d개 정류장 남음";
+"rail.one_stop_to_go" = "1개 정류장 남음";
+"rail.get_off_at_fmt" = "%@에서 하차";
+"rail.wait_for_fmt" = "%2$@ 탑승까지 %1$@ 대기";
+"rail.wait_same_stop_fmt" = "%1$@ 대기 · 같은 정류장에서 %2$@ 출발";
+"rail.same_stop_note" = "도착한 정류장과 같은 곳입니다. 길을 건너지 말고 그 자리에서 기다리세요.";
+"rail.arrive" = "도착";
+"rail.arrived" = "도착했습니다";
+"rail.back_to_now" = "현재로 돌아가기";
+"rail.back_to_now_fmt" = "현재로 돌아가기 · %@";
+"rail.now_walking" = "도보 이동 중";
+"rail.now_waiting_fmt" = "%@ 대기 중";
+"rail.now_riding_fmt" = "%@ 탑승 중";
+"rail.step_of_previewing_fmt" = "%2$d단계 중 %1$d단계 · 미리보기";
+"rail.next_leg_fmt" = "%1$@ · %2$@ %3$@ 출발";
+"rail.last_step" = "마지막 단계";
+"rail.arrive_time_fmt" = "도착 %@";
+"rail.now" = "지금";

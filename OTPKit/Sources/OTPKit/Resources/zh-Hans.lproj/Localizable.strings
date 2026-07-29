@@ -175,7 +175,6 @@
 "directions.start" = "起点";
 "directions.end" = "终点";
 "directions.start_navigation" = "开始导航";
-"directions.swipe_hint" = "滑动查看每一步";
 
 /* Direction Legs */
 "leg.deboard_at" = "下车站点";
@@ -255,3 +254,52 @@
 "direction.uturn_right" = "向右掉头";
 "direction.circle_clockwise" = "顺时针进入环岛";
 "direction.circle_counterclockwise" = "逆时针进入环岛";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "准点";
+"status.late_fmt" = "晚点 %d 分钟";
+"status.early_fmt" = "提前 %d 分钟";
+"status.scheduled" = "按时刻表";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "%@ 到达";
+"rail.time_left_fmt" = "剩余 %@";
+"rail.transfer_one" = "1 次换乘";
+"rail.transfers_fmt" = "%d 次换乘";
+"rail.leave_in_fmt" = "%@ 后出发";
+"rail.start_walking_fmt" = "%1$@ 开始步行，赶乘 %2$@";
+"rail.leave_at_fmt" = "%@ 出发";
+"rail.start_trip" = "开始行程";
+"rail.hide" = "隐藏";
+"rail.walk_fmt" = "步行 %1$@ 至 %2$@";
+"rail.walked_done_fmt" = "已步行 %@ · 完成";
+"rail.about_duration_fmt" = "约 %@";
+"rail.board" = "上车";
+"rail.boarded_done_fmt" = "已乘坐 %@ · 完成";
+"rail.toward_fmt" = "开往 %@";
+"rail.toward_stops_fmt" = "开往 %1$@ · %2$@";
+"rail.stop_one" = "1 站";
+"rail.stops_fmt" = "%d 站";
+"rail.arriving_in_fmt" = "%@ 后到达";
+"rail.departs_at_fmt" = "%@ 发车";
+"rail.at_stop_fmt" = "在 %@";
+"rail.stop_code_fmt" = "站点编号 %@";
+"rail.ride_stops_duration_fmt" = "乘车 %1$@，%2$@";
+"rail.stops_to_go_fmt" = "还剩 %d 站";
+"rail.one_stop_to_go" = "还剩 1 站";
+"rail.get_off_at_fmt" = "在 %@ 下车";
+"rail.wait_for_fmt" = "等候 %1$@，乘坐 %2$@";
+"rail.wait_same_stop_fmt" = "等候 %1$@ · %2$@ 在同一站点发车";
+"rail.same_stop_note" = "与下车站点相同——原地等候，无需过马路。";
+"rail.arrive" = "到达";
+"rail.arrived" = "您已到达";
+"rail.back_to_now" = "回到当前";
+"rail.back_to_now_fmt" = "回到当前 · %@";
+"rail.now_walking" = "步行中";
+"rail.now_waiting_fmt" = "正在等候 %@";
+"rail.now_riding_fmt" = "正在乘坐 %@";
+"rail.step_of_previewing_fmt" = "第 %1$d 步，共 %2$d 步 · 预览中";
+"rail.next_leg_fmt" = "%1$@ · %2$@：%3$@";
+"rail.last_step" = "最后一步";
+"rail.arrive_time_fmt" = "%@ 到达";
+"rail.now" = "现在";

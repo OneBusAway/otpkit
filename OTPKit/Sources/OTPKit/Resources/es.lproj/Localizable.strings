@@ -176,7 +176,6 @@
 "directions.start" = "Inicio";
 "directions.end" = "Fin";
 "directions.start_navigation" = "Iniciar navegación";
-"directions.swipe_hint" = "Desliza para ver cada paso";
 
 /* Direction Legs */
 "leg.deboard_at" = "Baja en";
@@ -256,3 +255,52 @@
 "direction.uturn_right" = "Haz un cambio de sentido a la derecha";
 "direction.circle_clockwise" = "Entra en la rotonda en sentido horario";
 "direction.circle_counterclockwise" = "Entra en la rotonda en sentido antihorario";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "A tiempo";
+"status.late_fmt" = "%d min de retraso";
+"status.early_fmt" = "%d min de adelanto";
+"status.scheduled" = "Programado";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Llegada a las %@";
+"rail.time_left_fmt" = "Faltan %@";
+"rail.transfer_one" = "1 transbordo";
+"rail.transfers_fmt" = "%d transbordos";
+"rail.leave_in_fmt" = "Sal en %@";
+"rail.start_walking_fmt" = "Empieza a caminar a las %1$@ para tomar %2$@";
+"rail.leave_at_fmt" = "Sal a las %@";
+"rail.start_trip" = "Iniciar viaje";
+"rail.hide" = "Ocultar";
+"rail.walk_fmt" = "Camina %1$@ hasta %2$@";
+"rail.walked_done_fmt" = "Caminaste %@ · listo";
+"rail.about_duration_fmt" = "Unos %@";
+"rail.board" = "Sube";
+"rail.boarded_done_fmt" = "Subiste a %@ · listo";
+"rail.toward_fmt" = "Hacia %@";
+"rail.toward_stops_fmt" = "Hacia %1$@ · %2$@";
+"rail.stop_one" = "1 parada";
+"rail.stops_fmt" = "%d paradas";
+"rail.arriving_in_fmt" = "Llega en %@";
+"rail.departs_at_fmt" = "Sale a las %@";
+"rail.at_stop_fmt" = "En %@";
+"rail.stop_code_fmt" = "Parada n.º %@";
+"rail.ride_stops_duration_fmt" = "recorre %1$@, %2$@";
+"rail.stops_to_go_fmt" = "Faltan %d paradas";
+"rail.one_stop_to_go" = "Falta 1 parada";
+"rail.get_off_at_fmt" = "Baja en %@";
+"rail.wait_for_fmt" = "Espera %1$@ para tomar %2$@";
+"rail.wait_same_stop_fmt" = "Espera %1$@ · %2$@ sale de la misma parada";
+"rail.same_stop_note" = "Es la misma parada donde llegas: quédate ahí, no hace falta cruzar la calle.";
+"rail.arrive" = "Llegada";
+"rail.arrived" = "Has llegado";
+"rail.back_to_now" = "Volver a ahora";
+"rail.back_to_now_fmt" = "Volver a ahora · %@";
+"rail.now_walking" = "Caminando";
+"rail.now_waiting_fmt" = "Esperando %@";
+"rail.now_riding_fmt" = "A bordo de %@";
+"rail.step_of_previewing_fmt" = "Paso %1$d de %2$d · vista previa";
+"rail.next_leg_fmt" = "%1$@ · %2$@ a las %3$@";
+"rail.last_step" = "Último paso";
+"rail.arrive_time_fmt" = "Llegada %@";
+"rail.now" = "ahora";

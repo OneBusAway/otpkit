@@ -176,7 +176,6 @@
 "directions.start" = "Départ";
 "directions.end" = "Arrivée";
 "directions.start_navigation" = "Démarrer la navigation";
-"directions.swipe_hint" = "Balayez pour voir chaque étape";
 
 /* Direction Legs */
 "leg.deboard_at" = "Descendez à";
@@ -256,3 +255,52 @@
 "direction.uturn_right" = "Faites demi-tour par la droite";
 "direction.circle_clockwise" = "Entrez dans le rond-point dans le sens horaire";
 "direction.circle_counterclockwise" = "Entrez dans le rond-point dans le sens antihoraire";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "À l’heure";
+"status.late_fmt" = "%d min de retard";
+"status.early_fmt" = "%d min d’avance";
+"status.scheduled" = "Prévu";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Arrivée à %@";
+"rail.time_left_fmt" = "Il reste %@";
+"rail.transfer_one" = "1 correspondance";
+"rail.transfers_fmt" = "%d correspondances";
+"rail.leave_in_fmt" = "Partez dans %@";
+"rail.start_walking_fmt" = "Commencez à marcher à %1$@ pour prendre le %2$@";
+"rail.leave_at_fmt" = "Partez à %@";
+"rail.start_trip" = "Démarrer le trajet";
+"rail.hide" = "Masquer";
+"rail.walk_fmt" = "Marchez %1$@ jusqu’à %2$@";
+"rail.walked_done_fmt" = "%@ à pied · terminé";
+"rail.about_duration_fmt" = "Environ %@";
+"rail.board" = "Montez à bord";
+"rail.boarded_done_fmt" = "Embarquement dans le %@ · terminé";
+"rail.toward_fmt" = "Direction %@";
+"rail.toward_stops_fmt" = "Direction %1$@ · %2$@";
+"rail.stop_one" = "1 arrêt";
+"rail.stops_fmt" = "%d arrêts";
+"rail.arriving_in_fmt" = "Arrivée dans %@";
+"rail.departs_at_fmt" = "Départ à %@";
+"rail.at_stop_fmt" = "À %@";
+"rail.stop_code_fmt" = "Arrêt n° %@";
+"rail.ride_stops_duration_fmt" = "%1$@ à bord, %2$@";
+"rail.stops_to_go_fmt" = "Encore %d arrêts";
+"rail.one_stop_to_go" = "Encore 1 arrêt";
+"rail.get_off_at_fmt" = "Descendez à %@";
+"rail.wait_for_fmt" = "Attendez le %2$@ pendant %1$@";
+"rail.wait_same_stop_fmt" = "Attendez %1$@ · le %2$@ part du même arrêt";
+"rail.same_stop_note" = "Même arrêt que votre arrivée — restez sur place, pas de rue à traverser.";
+"rail.arrive" = "Arrivée";
+"rail.arrived" = "Vous êtes à destination";
+"rail.back_to_now" = "Revenir à maintenant";
+"rail.back_to_now_fmt" = "Revenir à maintenant · %@";
+"rail.now_walking" = "En marche";
+"rail.now_waiting_fmt" = "En attente du %@";
+"rail.now_riding_fmt" = "À bord du %@";
+"rail.step_of_previewing_fmt" = "Étape %1$d sur %2$d · aperçu";
+"rail.next_leg_fmt" = "%1$@ · %2$@ à %3$@";
+"rail.last_step" = "Dernière étape";
+"rail.arrive_time_fmt" = "Arrivée %@";
+"rail.now" = "maintenant";
