@@ -22,7 +22,11 @@ import Foundation
 /// `RestAPIService` (OTP 1.x) does not. Conformance doubles as the capability
 /// flag: hosts check `apiService is VehicleRentalService` to decide whether
 /// rental features can work at all.
-public protocol VehicleRentalService {
+///
+/// `Sendable` because services are shared across isolation domains by design:
+/// `VehicleRentalSource` (an actor) fetches through one while hosts hold it on
+/// the main actor. Conformers are typically actors already.
+public protocol VehicleRentalService: Sendable {
     /// Fetches rental stations and free-floating vehicles in a bounding box.
     ///
     /// - Parameters:

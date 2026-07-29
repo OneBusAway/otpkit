@@ -65,7 +65,8 @@ enum TestFixtures {
 
     /// A mock APIService that also advertises vehicle rental capability, for testing
     /// capability-gated behavior like `availableTransportModes`.
-    class MockRentalAPIService: MockAPIService, VehicleRentalService {
+    // @unchecked: single-threaded test usage; VehicleRentalService requires Sendable.
+    final class MockRentalAPIService: MockAPIService, VehicleRentalService, @unchecked Sendable {
         var mockRentals: [VehicleRental] = []
 
         func fetchVehicleRentals(
