@@ -81,6 +81,12 @@ public struct Leg: Codable, Hashable {
     /// Optional flag indicating if the leg details are based on real-time data.
     public let realTime: Bool?
 
+    /// Seconds the departure deviates from schedule (positive = late). Real-time data only.
+    public let departureDelay: Int?
+
+    /// Seconds the arrival deviates from schedule (positive = late). Real-time data only.
+    public let arrivalDelay: Int?
+
     /// Optional list of street names traversed in this leg.
     public let streetNames: [String]?
 
@@ -95,6 +101,54 @@ public struct Leg: Codable, Hashable {
 
     /// Optional list of intermediate stops along this transit leg
     public let intermediateStops: [Place]?
+
+    public init(
+        startTime: Date,
+        endTime: Date,
+        mode: String,
+        routeType: RouteType?,
+        routeColor: String?,
+        routeTextColor: String?,
+        route: String?,
+        agencyName: String?,
+        from: Place,
+        to: Place,
+        legGeometry: LegGeometry,
+        distance: Double,
+        transitLeg: Bool?,
+        duration: Int,
+        realTime: Bool?,
+        streetNames: [String]?,
+        pathway: Bool?,
+        steps: [Step]?,
+        headsign: String?,
+        intermediateStops: [Place]?,
+        departureDelay: Int? = nil,
+        arrivalDelay: Int? = nil
+    ) {
+        self.startTime = startTime
+        self.endTime = endTime
+        self.mode = mode
+        self.routeType = routeType
+        self.routeColor = routeColor
+        self.routeTextColor = routeTextColor
+        self.route = route
+        self.agencyName = agencyName
+        self.from = from
+        self.to = to
+        self.legGeometry = legGeometry
+        self.distance = distance
+        self.transitLeg = transitLeg
+        self.duration = duration
+        self.realTime = realTime
+        self.streetNames = streetNames
+        self.pathway = pathway
+        self.steps = steps
+        self.headsign = headsign
+        self.intermediateStops = intermediateStops
+        self.departureDelay = departureDelay
+        self.arrivalDelay = arrivalDelay
+    }
 
     /// Merges `Itinerary` `Leg`s that are part of the same route on the same vehicle.
     /// - Parameters:
@@ -122,7 +176,9 @@ public struct Leg: Codable, Hashable {
             pathway: leg1.pathway,
             steps: leg1.steps,
             headsign: leg1.headsign,
-            intermediateStops: leg1.intermediateStops
+            intermediateStops: leg1.intermediateStops,
+            departureDelay: leg1.departureDelay,
+            arrivalDelay: leg2.arrivalDelay
         )
     }
 
@@ -192,6 +248,18 @@ public struct Leg: Codable, Hashable {
     public var routeTextUIColor: Color? {
         guard let routeTextColor = routeTextColor else { return nil }
         return Color(hex: routeTextColor)
+    }
+
+    // MARK: - Real-Time Status
+
+    /// Real-time status of this leg's departure, from `realTime` and `departureDelay`.
+    public var departureStatus: RealTimeStatus {
+        RealTimeStatus(realTime: realTime, delaySeconds: departureDelay)
+    }
+
+    /// Real-time status of this leg's arrival, from `realTime` and `arrivalDelay`.
+    public var arrivalStatus: RealTimeStatus {
+        RealTimeStatus(realTime: realTime, delaySeconds: arrivalDelay)
     }
 }
 

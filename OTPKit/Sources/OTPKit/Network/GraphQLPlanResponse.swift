@@ -71,6 +71,8 @@ struct GraphQLLeg: Decodable {
     let transitLeg: Bool?
     let duration: Double
     let realTime: Bool?
+    let departureDelay: Int?
+    let arrivalDelay: Int?
     let headsign: String?
     let intermediatePlaces: [GraphQLPlace]?
     let steps: [GraphQLStep]?
@@ -204,7 +206,9 @@ extension GraphQLLeg {
             pathway: nil,
             steps: steps?.map { $0.toStep() },
             headsign: headsign,
-            intermediateStops: intermediatePlaces?.map { $0.toPlace() }
+            intermediateStops: intermediatePlaces?.map { $0.toPlace() },
+            departureDelay: departureDelay,
+            arrivalDelay: arrivalDelay
         )
     }
 }

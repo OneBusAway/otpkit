@@ -256,3 +256,54 @@
 "direction.uturn_right" = "Quay đầu sang phải";
 "direction.circle_clockwise" = "Vào vòng xuyến theo chiều kim đồng hồ";
 "direction.circle_counterclockwise" = "Vào vòng xuyến ngược chiều kim đồng hồ";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "Đúng giờ";
+"status.late_fmt" = "Trễ %d phút";
+"status.early_fmt" = "Sớm %d phút";
+"status.scheduled" = "Theo lịch";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Đến %@";
+"rail.time_left_fmt" = "Còn %@";
+"rail.transfer_one" = "1 lần chuyển tuyến";
+"rail.transfers_fmt" = "%d lần chuyển tuyến";
+"rail.leave_in_fmt" = "Xuất phát sau %@";
+"rail.start_walking_fmt" = "Bắt đầu đi bộ lúc %1$@ để kịp tuyến %2$@";
+"rail.leave_at_fmt" = "Xuất phát lúc %@";
+"rail.start_trip" = "Bắt đầu chuyến đi";
+"rail.hide" = "Ẩn";
+"rail.walk_fmt" = "Đi bộ %1$@ đến %2$@";
+"rail.walked_done_fmt" = "Đã đi bộ %@ · xong";
+"rail.about_duration_fmt" = "Khoảng %@";
+"rail.board" = "Lên xe";
+"rail.boarded_done_fmt" = "Đã lên tuyến %@ · xong";
+"rail.toward_fmt" = "Hướng %@";
+"rail.toward_stops_fmt" = "Hướng %1$@ · %2$@";
+"rail.stop_one" = "1 trạm";
+"rail.stops_fmt" = "%d trạm";
+"rail.arriving_in_fmt" = "Đến sau %@";
+"rail.departs_at_fmt" = "Khởi hành lúc %@";
+"rail.at_stop_fmt" = "Tại %@";
+"rail.stop_code_fmt" = "Trạm #%@";
+"rail.ride_stops_duration_fmt" = "đi %1$@, %2$@";
+"rail.stops_to_go_fmt" = "Còn %d trạm";
+"rail.one_stop_to_go" = "Còn 1 trạm";
+"rail.get_off_at_fmt" = "Xuống tại %@";
+"rail.get_off_time_fmt" = "Xuống lúc %@";
+"rail.wait_for_fmt" = "Chờ %1$@ để đón %2$@";
+"rail.wait_same_stop_fmt" = "Chờ %1$@ · %2$@ khởi hành từ cùng trạm này";
+"rail.same_stop_note" = "Cùng trạm bạn vừa đến — cứ đứng yên, không cần băng qua đường.";
+"rail.arrive" = "Đến nơi";
+"rail.arrived" = "Bạn đã đến nơi";
+"rail.back_to_now" = "Về hiện tại";
+"rail.back_to_now_fmt" = "Về hiện tại · %@";
+"rail.now_walking" = "Đang đi bộ";
+"rail.now_waiting_fmt" = "Đang chờ tuyến %@";
+"rail.now_riding_fmt" = "Đang đi tuyến %@";
+"rail.step_of_fmt" = "Bước %1$d/%2$d";
+"rail.step_of_previewing_fmt" = "Bước %1$d/%2$d · đang xem trước";
+"rail.next_leg_fmt" = "%1$@ · %2$@ lúc %3$@";
+"rail.last_step" = "Bước cuối";
+"rail.arrive_time_fmt" = "Đến lúc %@";
+"rail.now" = "bây giờ";

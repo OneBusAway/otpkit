@@ -256,3 +256,54 @@
 "direction.uturn_right" = "向右迴轉";
 "direction.circle_clockwise" = "順時針進入圓環";
 "direction.circle_counterclockwise" = "逆時針進入圓環";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "準點";
+"status.late_fmt" = "誤點 %d 分鐘";
+"status.early_fmt" = "提早 %d 分鐘";
+"status.scheduled" = "表定";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "抵達 %@";
+"rail.time_left_fmt" = "剩餘 %@";
+"rail.transfer_one" = "轉乘 1 次";
+"rail.transfers_fmt" = "轉乘 %d 次";
+"rail.leave_in_fmt" = "%@ 後出發";
+"rail.start_walking_fmt" = "%1$@ 開始步行，以趕上 %2$@";
+"rail.leave_at_fmt" = "%@ 出發";
+"rail.start_trip" = "開始行程";
+"rail.hide" = "隱藏";
+"rail.walk_fmt" = "步行 %1$@ 至 %2$@";
+"rail.walked_done_fmt" = "已步行 %@ · 完成";
+"rail.about_duration_fmt" = "約 %@";
+"rail.board" = "上車";
+"rail.boarded_done_fmt" = "已搭上 %@ · 完成";
+"rail.toward_fmt" = "開往 %@";
+"rail.toward_stops_fmt" = "開往 %1$@ · %2$@";
+"rail.stop_one" = "1 站";
+"rail.stops_fmt" = "%d 站";
+"rail.arriving_in_fmt" = "%@ 後抵達";
+"rail.departs_at_fmt" = "%@ 發車";
+"rail.at_stop_fmt" = "在 %@";
+"rail.stop_code_fmt" = "站點編號 %@";
+"rail.ride_stops_duration_fmt" = "搭乘 %1$@，%2$@";
+"rail.stops_to_go_fmt" = "還有 %d 站";
+"rail.one_stop_to_go" = "還有 1 站";
+"rail.get_off_at_fmt" = "於 %@ 下車";
+"rail.get_off_time_fmt" = "%@ 下車";
+"rail.wait_for_fmt" = "等候 %1$@，搭乘 %2$@";
+"rail.wait_same_stop_fmt" = "等候 %1$@ · %2$@ 於同一站發車";
+"rail.same_stop_note" = "與您抵達的站點相同——請留在原地，無需過馬路。";
+"rail.arrive" = "抵達";
+"rail.arrived" = "您已抵達";
+"rail.back_to_now" = "回到現在";
+"rail.back_to_now_fmt" = "回到現在 · %@";
+"rail.now_walking" = "步行中";
+"rail.now_waiting_fmt" = "正在等候 %@";
+"rail.now_riding_fmt" = "正在搭乘 %@";
+"rail.step_of_fmt" = "第 %1$d 步，共 %2$d 步";
+"rail.step_of_previewing_fmt" = "第 %1$d 步，共 %2$d 步 · 預覽中";
+"rail.next_leg_fmt" = "%1$@ · %3$@ 的 %2$@";
+"rail.last_step" = "最後一步";
+"rail.arrive_time_fmt" = "抵達 %@";
+"rail.now" = "現在";

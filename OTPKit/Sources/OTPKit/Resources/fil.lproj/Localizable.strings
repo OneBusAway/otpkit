@@ -256,3 +256,54 @@
 "direction.uturn_right" = "Mag-U-turn pakanan";
 "direction.circle_clockwise" = "Pumasok sa rotonda pasunod sa orasan";
 "direction.circle_counterclockwise" = "Pumasok sa rotonda pasalungat sa orasan";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "Nasa oras";
+"status.late_fmt" = "%d min na huli";
+"status.early_fmt" = "%d min na maaga";
+"status.scheduled" = "Nakaiskedyul";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Dumating sa %@";
+"rail.time_left_fmt" = "%@ na lang";
+"rail.transfer_one" = "1 paglipat";
+"rail.transfers_fmt" = "%d paglipat";
+"rail.leave_in_fmt" = "Umalis sa loob ng %@";
+"rail.start_walking_fmt" = "Magsimulang maglakad nang %1$@ para maabutan ang %2$@";
+"rail.leave_at_fmt" = "Umalis nang %@";
+"rail.start_trip" = "Simulan ang Biyahe";
+"rail.hide" = "Itago";
+"rail.walk_fmt" = "Maglakad nang %1$@ papuntang %2$@";
+"rail.walked_done_fmt" = "Nakalakad ng %@ · tapos na";
+"rail.about_duration_fmt" = "Mga %@";
+"rail.board" = "Sumakay";
+"rail.boarded_done_fmt" = "Nakasakay na sa %@ · tapos na";
+"rail.toward_fmt" = "Papuntang %@";
+"rail.toward_stops_fmt" = "Papuntang %1$@ · %2$@";
+"rail.stop_one" = "1 hintuan";
+"rail.stops_fmt" = "%d hintuan";
+"rail.arriving_in_fmt" = "Darating sa loob ng %@";
+"rail.departs_at_fmt" = "Aalis nang %@";
+"rail.at_stop_fmt" = "Nasa %@";
+"rail.stop_code_fmt" = "Hintuan #%@";
+"rail.ride_stops_duration_fmt" = "sakay %1$@, %2$@";
+"rail.stops_to_go_fmt" = "%d hintuan na lang";
+"rail.one_stop_to_go" = "1 hintuan na lang";
+"rail.get_off_at_fmt" = "Bumaba sa %@";
+"rail.get_off_time_fmt" = "Bumaba nang %@";
+"rail.wait_for_fmt" = "Maghintay nang %1$@ para sa %2$@";
+"rail.wait_same_stop_fmt" = "Maghintay nang %1$@ · aalis ang %2$@ sa parehong hintuan";
+"rail.same_stop_note" = "Parehong hintuan ng iyong dating — manatili lang, hindi kailangang tumawid ng kalye.";
+"rail.arrive" = "Dumating";
+"rail.arrived" = "Nakarating ka na";
+"rail.back_to_now" = "Bumalik sa ngayon";
+"rail.back_to_now_fmt" = "Bumalik sa ngayon · %@";
+"rail.now_walking" = "Naglalakad";
+"rail.now_waiting_fmt" = "Hinihintay ang %@";
+"rail.now_riding_fmt" = "Nakasakay sa %@";
+"rail.step_of_fmt" = "Hakbang %1$d ng %2$d";
+"rail.step_of_previewing_fmt" = "Hakbang %1$d ng %2$d · preview";
+"rail.next_leg_fmt" = "%1$@ · %2$@ nang %3$@";
+"rail.last_step" = "Huling hakbang";
+"rail.arrive_time_fmt" = "Dating %@";
+"rail.now" = "ngayon";

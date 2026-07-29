@@ -256,3 +256,54 @@
 "direction.uturn_right" = "استدر للخلف جهة اليمين";
 "direction.circle_clockwise" = "ادخل الدوار باتجاه عقارب الساعة";
 "direction.circle_counterclockwise" = "ادخل الدوار عكس عقارب الساعة";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "في الموعد";
+"status.late_fmt" = "متأخر %d د";
+"status.early_fmt" = "مبكر %d د";
+"status.scheduled" = "مجدول";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "الوصول في %@";
+"rail.time_left_fmt" = "متبقٍّ %@";
+"rail.transfer_one" = "تحويلة واحدة";
+"rail.transfers_fmt" = "%d تحويلات";
+"rail.leave_in_fmt" = "غادر بعد %@";
+"rail.start_walking_fmt" = "ابدأ المشي في %1$@ للحاق بـ %2$@";
+"rail.leave_at_fmt" = "غادر في %@";
+"rail.start_trip" = "بدء الرحلة";
+"rail.hide" = "إخفاء";
+"rail.walk_fmt" = "امشِ %1$@ إلى %2$@";
+"rail.walked_done_fmt" = "مشيت %@ · تم";
+"rail.about_duration_fmt" = "حوالي %@";
+"rail.board" = "اركب";
+"rail.boarded_done_fmt" = "ركبت %@ · تم";
+"rail.toward_fmt" = "باتجاه %@";
+"rail.toward_stops_fmt" = "باتجاه %1$@ · %2$@";
+"rail.stop_one" = "محطة واحدة";
+"rail.stops_fmt" = "%d محطات";
+"rail.arriving_in_fmt" = "الوصول بعد %@";
+"rail.departs_at_fmt" = "المغادرة في %@";
+"rail.at_stop_fmt" = "عند %@";
+"rail.stop_code_fmt" = "المحطة رقم %@";
+"rail.ride_stops_duration_fmt" = "اركب %1$@، %2$@";
+"rail.stops_to_go_fmt" = "%d محطات متبقية";
+"rail.one_stop_to_go" = "محطة واحدة متبقية";
+"rail.get_off_at_fmt" = "انزل عند %@";
+"rail.get_off_time_fmt" = "النزول %@";
+"rail.wait_for_fmt" = "انتظر %1$@ حتى وصول %2$@";
+"rail.wait_same_stop_fmt" = "انتظر %1$@ · %2$@ يغادر من المحطة نفسها";
+"rail.same_stop_note" = "نفس المحطة التي وصلت إليها — ابقَ مكانك، لا حاجة لعبور الشارع.";
+"rail.arrive" = "الوصول";
+"rail.arrived" = "لقد وصلت";
+"rail.back_to_now" = "العودة إلى الآن";
+"rail.back_to_now_fmt" = "العودة إلى الآن · %@";
+"rail.now_walking" = "المشي";
+"rail.now_waiting_fmt" = "في انتظار %@";
+"rail.now_riding_fmt" = "على متن %@";
+"rail.step_of_fmt" = "الخطوة %1$d من %2$d";
+"rail.step_of_previewing_fmt" = "الخطوة %1$d من %2$d · معاينة";
+"rail.next_leg_fmt" = "%1$@ · %2$@ في %3$@";
+"rail.last_step" = "الخطوة الأخيرة";
+"rail.arrive_time_fmt" = "الوصول %@";
+"rail.now" = "الآن";

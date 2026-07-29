@@ -185,6 +185,8 @@ public actor GraphQLAPIService: APIService {
             transitLeg
             duration
             realTime
+            departureDelay
+            arrivalDelay
             headsign
             intermediatePlaces { name lon lat vertexType stop { gtfsId code } }
             steps { distance streetName relativeDirection lon lat }

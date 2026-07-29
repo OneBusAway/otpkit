@@ -256,3 +256,54 @@
 "direction.uturn_right" = "Fai un’inversione a U a destra";
 "direction.circle_clockwise" = "Entra nella rotatoria in senso orario";
 "direction.circle_counterclockwise" = "Entra nella rotatoria in senso antiorario";
+
+/* Real-time status. The four strings are fixed vocabulary per the OBA content guide. */
+"status.on_time" = "In orario";
+"status.late_fmt" = "%d min di ritardo";
+"status.early_fmt" = "%d min di anticipo";
+"status.scheduled" = "Previsto";
+
+/* In-trip progress rail */
+"rail.arrive_at_fmt" = "Arrivo alle %@";
+"rail.time_left_fmt" = "Ancora %@";
+"rail.transfer_one" = "1 cambio";
+"rail.transfers_fmt" = "%d cambi";
+"rail.leave_in_fmt" = "Parti tra %@";
+"rail.start_walking_fmt" = "Inizia a camminare alle %1$@ per prendere %2$@";
+"rail.leave_at_fmt" = "Parti alle %@";
+"rail.start_trip" = "Inizia viaggio";
+"rail.hide" = "Nascondi";
+"rail.walk_fmt" = "Cammina %1$@ fino a %2$@";
+"rail.walked_done_fmt" = "%@ a piedi · fatto";
+"rail.about_duration_fmt" = "Circa %@";
+"rail.board" = "Sali";
+"rail.boarded_done_fmt" = "A bordo di %@ · fatto";
+"rail.toward_fmt" = "Direzione %@";
+"rail.toward_stops_fmt" = "Direzione %1$@ · %2$@";
+"rail.stop_one" = "1 fermata";
+"rail.stops_fmt" = "%d fermate";
+"rail.arriving_in_fmt" = "In arrivo tra %@";
+"rail.departs_at_fmt" = "Parte alle %@";
+"rail.at_stop_fmt" = "A %@";
+"rail.stop_code_fmt" = "Fermata n. %@";
+"rail.ride_stops_duration_fmt" = "percorri %1$@, %2$@";
+"rail.stops_to_go_fmt" = "Ancora %d fermate";
+"rail.one_stop_to_go" = "Ancora 1 fermata";
+"rail.get_off_at_fmt" = "Scendi a %@";
+"rail.get_off_time_fmt" = "Scendi alle %@";
+"rail.wait_for_fmt" = "Attendi %1$@ per %2$@";
+"rail.wait_same_stop_fmt" = "Attendi %1$@ · %2$@ parte dalla stessa fermata";
+"rail.same_stop_note" = "È la stessa fermata del tuo arrivo: resta dove sei, non serve attraversare la strada.";
+"rail.arrive" = "Arrivo";
+"rail.arrived" = "Sei a destinazione";
+"rail.back_to_now" = "Torna a ora";
+"rail.back_to_now_fmt" = "Torna a ora · %@";
+"rail.now_walking" = "A piedi";
+"rail.now_waiting_fmt" = "In attesa di %@";
+"rail.now_riding_fmt" = "A bordo di %@";
+"rail.step_of_fmt" = "Passaggio %1$d di %2$d";
+"rail.step_of_previewing_fmt" = "Passaggio %1$d di %2$d · anteprima";
+"rail.next_leg_fmt" = "%1$@ · %2$@ alle %3$@";
+"rail.last_step" = "Ultimo passaggio";
+"rail.arrive_time_fmt" = "Arrivo alle %@";
+"rail.now" = "ora";
