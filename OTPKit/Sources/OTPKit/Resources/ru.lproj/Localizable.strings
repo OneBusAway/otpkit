@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Пешком";
 "transport_mode.bike" = "Велосипед";
 "transport_mode.car" = "Автомобиль";
-"transport_mode.bike_rental" = "Велопрокат";
+"transport_mode.bike_rental" = "Только велопрокат";
+"transport_mode.transit_bike_rental" = "Транспорт + велопрокат";
 
 "rental.vehicle_type.bike" = "велосипед";
 "rental.vehicle_type.ebike" = "электровелосипед";

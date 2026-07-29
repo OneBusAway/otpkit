@@ -216,7 +216,8 @@
 "transport_mode.walk" = "도보";
 "transport_mode.bike" = "자전거";
 "transport_mode.car" = "자동차";
-"transport_mode.bike_rental" = "공유 자전거";
+"transport_mode.bike_rental" = "공유 자전거만";
+"transport_mode.transit_bike_rental" = "대중교통 + 공유 자전거";
 
 "rental.vehicle_type.bike" = "자전거";
 "rental.vehicle_type.ebike" = "전기 자전거";

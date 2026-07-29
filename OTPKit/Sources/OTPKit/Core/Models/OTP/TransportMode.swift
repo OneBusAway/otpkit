@@ -17,9 +17,14 @@ public enum TransportMode: String, CaseIterable, Codable {
     case bike = "BIKE"
     /// Driving
     case car = "CAR"
-    /// Rented bicycle/micromobility (bikeshare). The raw value is the OTP 1.x REST wire
-    /// token; the GraphQL service translates it to `{mode: BICYCLE, qualifier: RENT}`.
+    /// Rented bicycle/micromobility (bikeshare) without transit — "Bikeshare Only".
+    /// The raw value is the OTP 1.x REST wire token; the GraphQL service translates
+    /// it to `{mode: BICYCLE, qualifier: RENT}`.
     case bikeRental = "BICYCLE_RENT"
+    /// Transit combined with rented micromobility — "Transit + Bikeshare". Unlike the
+    /// other cases, the raw value is *not* a wire token: this mode only ever reaches a
+    /// request expanded through `apiModes`, never as itself.
+    case transitBikeRental = "TRANSIT_BICYCLE_RENT"
 
     /// Localized, human-readable description of the transport mode
     public var displayName: String {
@@ -33,7 +38,9 @@ public enum TransportMode: String, CaseIterable, Codable {
         case .car:
             return OTPLoc("transport_mode.car", comment: "Transport mode: Car")
         case .bikeRental:
-            return OTPLoc("transport_mode.bike_rental", comment: "Transport mode: Bike Rental")
+            return OTPLoc("transport_mode.bike_rental", comment: "Transport mode: Bikeshare Only")
+        case .transitBikeRental:
+            return OTPLoc("transport_mode.transit_bike_rental", comment: "Transport mode: Transit + Bikeshare")
         }
     }
 
@@ -50,6 +57,8 @@ public enum TransportMode: String, CaseIterable, Codable {
             return "car"
         case .bikeRental:
             return "bicycle.circle"
+        case .transitBikeRental:
+            return "bicycle.circle.fill"
         }
     }
 
@@ -67,6 +76,14 @@ public enum TransportMode: String, CaseIterable, Codable {
             return [.car]
         case .bikeRental:
             return [.bikeRental, .walk]
+        case .transitBikeRental:
+            return [.transit, .walk, .bikeRental]
         }
+    }
+
+    /// True for modes that only work against a rental-capable backend
+    /// (`apiService is VehicleRentalService`). The UI hides these otherwise.
+    public var requiresVehicleRentalSupport: Bool {
+        self == .bikeRental || self == .transitBikeRental
     }
 }

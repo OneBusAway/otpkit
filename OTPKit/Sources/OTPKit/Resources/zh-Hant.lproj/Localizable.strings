@@ -216,7 +216,8 @@
 "transport_mode.walk" = "步行";
 "transport_mode.bike" = "自行車";
 "transport_mode.car" = "開車";
-"transport_mode.bike_rental" = "共享單車";
+"transport_mode.bike_rental" = "僅共享單車";
+"transport_mode.transit_bike_rental" = "大眾運輸 + 共享單車";
 
 "rental.vehicle_type.bike" = "單車";
 "rental.vehicle_type.ebike" = "電動單車";

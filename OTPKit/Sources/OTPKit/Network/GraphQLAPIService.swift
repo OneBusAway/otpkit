@@ -140,7 +140,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
 
     /// Builds the GraphQL `variables` payload for a trip plan request.
     private static func planVariables(for request: TripPlanRequest) -> [String: Any] {
-        [
+        var variables: [String: Any] = [
             "from": ["lat": request.origin.latitude, "lon": request.origin.longitude],
             "to": ["lat": request.destination.latitude, "lon": request.destination.longitude],
             "date": request.date.formattedTripDate,
@@ -150,6 +150,16 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
             "wheelchair": request.wheelchairAccessible,
             "maxWalkDistance": Double(request.maxWalkDistance)
         ]
+
+        // Omitted entirely when absent: a null `via` and a missing `via` are not
+        // guaranteed to be treated identically by every OTP build.
+        if let viaPoint = request.viaPoint {
+            variables["via"] = [
+                ["visit": ["coordinate": ["latitude": viaPoint.latitude, "longitude": viaPoint.longitude]]]
+            ]
+        }
+
+        return variables
     }
 
     /// The GraphQL `TransportMode` input value for a transport mode. `TransportMode.rawValue`
@@ -161,6 +171,10 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
             return ["mode": "BICYCLE"]
         case .bikeRental:
             return ["mode": "BICYCLE", "qualifier": "RENT"]
+        case .transitBikeRental:
+            // Unreachable in practice: composite UI modes reach requests expanded
+            // through `apiModes`, never as themselves.
+            return ["mode": "TRANSIT"]
         case .transit, .walk, .car:
             return ["mode": mode.rawValue]
         }
@@ -213,6 +227,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
       $arriveBy: Boolean
       $wheelchair: Boolean
       $maxWalkDistance: Float
+      $via: [PlanViaLocationInput!]
     ) {
       plan(
         from: $from
@@ -223,6 +238,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
         arriveBy: $arriveBy
         wheelchair: $wheelchair
         maxWalkDistance: $maxWalkDistance
+        via: $via
       ) {
         date
         from { name lon lat vertexType }

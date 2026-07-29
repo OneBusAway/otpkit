@@ -216,7 +216,8 @@
 "transport_mode.walk" = "A pie";
 "transport_mode.bike" = "Bicicleta";
 "transport_mode.car" = "Coche";
-"transport_mode.bike_rental" = "Bicicleta compartida";
+"transport_mode.bike_rental" = "Solo bicicleta compartida";
+"transport_mode.transit_bike_rental" = "Transporte público + bicicleta compartida";
 
 "rental.vehicle_type.bike" = "bici";
 "rental.vehicle_type.ebike" = "bici eléctrica";

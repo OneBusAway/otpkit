@@ -217,7 +217,8 @@
 "transport_mode.walk" = "Walk";
 "transport_mode.bike" = "Bike";
 "transport_mode.car" = "Car";
-"transport_mode.bike_rental" = "Bike Rental";
+"transport_mode.bike_rental" = "Bikeshare Only";
+"transport_mode.transit_bike_rental" = "Transit + Bikeshare";
 
 "rental.vehicle_type.bike" = "bike";
 "rental.vehicle_type.ebike" = "e-bike";

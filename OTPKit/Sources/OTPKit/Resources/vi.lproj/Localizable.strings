@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Đi bộ";
 "transport_mode.bike" = "Xe đạp";
 "transport_mode.car" = "Ô tô";
-"transport_mode.bike_rental" = "Xe đạp công cộng";
+"transport_mode.bike_rental" = "Chỉ xe đạp công cộng";
+"transport_mode.transit_bike_rental" = "Phương tiện công cộng + xe đạp công cộng";
 
 "rental.vehicle_type.bike" = "xe đạp";
 "rental.vehicle_type.ebike" = "xe đạp điện";

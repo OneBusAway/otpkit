@@ -151,6 +151,23 @@ struct TripPlannerViewModelTests {
         #expect(viewModel.availableTransportModes == [.bike, .car])
     }
 
+    @Test("availableTransportModes filters transit + bikeshare when the service lacks rental support")
+    func availableTransportModesFiltersTransitBikeRental() {
+        let viewModel = createViewModel(enabledModes: [.transit, .walk, .transitBikeRental, .bikeRental])
+
+        #expect(viewModel.availableTransportModes == [.transit, .walk])
+    }
+
+    @Test("availableTransportModes keeps transit + bikeshare when the service supports rentals")
+    func availableTransportModesKeepsTransitBikeRentalWithCapableService() {
+        let viewModel = createViewModel(
+            enabledModes: [.transit, .walk, .transitBikeRental],
+            mockAPIService: TestFixtures.MockRentalAPIService()
+        )
+
+        #expect(viewModel.availableTransportModes == [.transit, .walk, .transitBikeRental])
+    }
+
     @Test("Default selected mode skips an unavailable rental mode listed first")
     func defaultSelectedModeSkipsUnavailableRentalMode() {
         // .bikeRental configured first, but the service has no rental support:

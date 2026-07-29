@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Lakad";
 "transport_mode.bike" = "Bisikleta";
 "transport_mode.car" = "Kotse";
-"transport_mode.bike_rental" = "Rentahan ng Bisikleta";
+"transport_mode.bike_rental" = "Rentahan ng Bisikleta Lamang";
+"transport_mode.transit_bike_rental" = "Transit + Rentahan ng Bisikleta";
 
 "rental.vehicle_type.bike" = "bisikleta";
 "rental.vehicle_type.ebike" = "e-bike";

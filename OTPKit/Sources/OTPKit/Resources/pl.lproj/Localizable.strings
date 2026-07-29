@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Pieszo";
 "transport_mode.bike" = "Rower";
 "transport_mode.car" = "Samochód";
-"transport_mode.bike_rental" = "Rower miejski";
+"transport_mode.bike_rental" = "Tylko rower miejski";
+"transport_mode.transit_bike_rental" = "Komunikacja miejska + rower miejski";
 
 "rental.vehicle_type.bike" = "rower";
 "rental.vehicle_type.ebike" = "rower elektryczny";

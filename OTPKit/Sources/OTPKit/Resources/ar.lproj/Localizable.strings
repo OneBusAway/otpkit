@@ -216,7 +216,8 @@
 "transport_mode.walk" = "المشي";
 "transport_mode.bike" = "الدراجة";
 "transport_mode.car" = "السيارة";
-"transport_mode.bike_rental" = "دراجات مشتركة";
+"transport_mode.bike_rental" = "دراجات مشتركة فقط";
+"transport_mode.transit_bike_rental" = "المواصلات + دراجات مشتركة";
 
 "rental.vehicle_type.bike" = "دراجة";
 "rental.vehicle_type.ebike" = "دراجة كهربائية";

@@ -215,7 +215,8 @@
 "transport_mode.walk" = "步行";
 "transport_mode.bike" = "骑行";
 "transport_mode.car" = "驾车";
-"transport_mode.bike_rental" = "共享单车";
+"transport_mode.bike_rental" = "仅共享单车";
+"transport_mode.transit_bike_rental" = "公交 + 共享单车";
 
 "rental.vehicle_type.bike" = "单车";
 "rental.vehicle_type.ebike" = "电动单车";

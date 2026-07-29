@@ -63,7 +63,30 @@ public class TripPlanner {
 
     // MARK: - Presentation & Dismissal
 
-    public func createTripPlannerView(origin: Location? = nil, destination: Location? = nil, onClose: @escaping VoidBlock) -> some View {
+    /// Creates the trip planner UI, optionally prefilled.
+    ///
+    /// - Parameters:
+    ///   - origin: Prefilled origin location.
+    ///   - destination: Prefilled destination location.
+    ///   - viaPoint: An intermediate coordinate every planned trip must pass through —
+    ///     the "plan a trip using this bike" entry point passes the vehicle's location.
+    ///     Note: OTP servers may require a transit mode in the request to route through
+    ///     a via point, so pair this with `.transitBikeRental` rather than `.bikeRental`.
+    ///   - transportMode: Preselected transport mode. Ignored when the injected API
+    ///     service cannot support it (e.g. rental modes on an OTP 1.x REST backend).
+    ///   - onClose: Called when the rider dismisses the planner.
+    public func createTripPlannerView(
+        origin: Location? = nil,
+        destination: Location? = nil,
+        viaPoint: CLLocationCoordinate2D? = nil,
+        transportMode: TransportMode? = nil,
+        onClose: @escaping VoidBlock
+    ) -> some View {
+        viewModel.viaPoint = viaPoint
+        if let transportMode, viewModel.availableTransportModes.contains(transportMode) {
+            viewModel.selectTransportMode(transportMode)
+        }
+
         let view = TripPlannerView(
             viewModel: viewModel,
             mapCoordinator: mapCoordinator,
