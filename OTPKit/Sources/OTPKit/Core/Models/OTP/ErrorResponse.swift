@@ -20,8 +20,9 @@ import OSLog
 /// `ErrorResponse` represents an error structure used across the application to handle and represent
 /// OTP errors uniformly.
 public struct ErrorResponse: Codable, Hashable {
-    /// A unique identifier for the error.
-    public let id: Int
+    /// A unique identifier for the error. Only the OTP 1.x REST API supplies one;
+    /// errors mapped from the OTP 2.x GraphQL API have no id.
+    public let id: Int?
 
     /// A descriptive message associated with the error, providing more detailed information about what went wrong.
     /// This message can be presented to the user or used in debugging to provide context about the error.

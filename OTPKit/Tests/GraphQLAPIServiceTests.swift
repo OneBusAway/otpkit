@@ -189,6 +189,8 @@ class GraphQLAPIServiceTests: OTPTestCase {
         let error = try XCTUnwrap(response.error)
         XCTAssertEqual(error.messageCode, .outsideBounds)
         XCTAssertTrue(error.message.contains("outside the map data boundary"))
+        // GraphQL routing errors carry no wire id; it must stay absent, not a fabricated sentinel.
+        XCTAssertNil(error.id)
     }
 
     func testFetchPlanMapsUnrecognizedRoutingErrorToUnknown() async throws {
@@ -208,6 +210,7 @@ class GraphQLAPIServiceTests: OTPTestCase {
         let error = try XCTUnwrap(response.error)
         XCTAssertEqual(error.messageCode, .unknown)
         XCTAssertEqual(error.message, "Something new went wrong.")
+        XCTAssertNil(error.id)
     }
 
     func testFetchPlanThrowsOnTopLevelGraphQLError() async throws {

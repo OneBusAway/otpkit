@@ -159,7 +159,7 @@ extension GraphQLRoutingError {
         }
 
         // `id` is an OTP 1.x REST wire field with no GraphQL equivalent; consumers key off messageCode.
-        return ErrorResponse(id: -1, message: description, messageCode: messageCode)
+        return ErrorResponse(id: nil, message: description, messageCode: messageCode)
     }
 }
 
