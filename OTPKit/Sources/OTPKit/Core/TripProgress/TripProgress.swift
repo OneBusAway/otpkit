@@ -141,11 +141,13 @@ public struct TripProgress {
                 return isAboard ? .riding(legIndex: index) : .walking(legIndex: index)
             }
 
-            // In the gap between this leg and the next: waiting if the next leg
-            // is transit (the rider is at the stop), otherwise treat the gap as
-            // part of the upcoming walk.
+            // In the gap between this leg and the next: waiting if the next leg is
+            // transit (the rider is at the stop) or a rental pickup (the rider is
+            // walking up to the vehicle — sub-minute walks get merged away, leaving
+            // a real gap). Otherwise the gap is part of the upcoming walk.
             if now < leg.startTime {
-                return leg.transitLeg == true ? .waiting(boardingLegIndex: index) : .walking(legIndex: index)
+                let isBoardable = leg.transitLeg == true || leg.isRentalRide
+                return isBoardable ? .waiting(boardingLegIndex: index) : .walking(legIndex: index)
             }
         }
 
@@ -162,38 +164,18 @@ public struct TripProgress {
         for (index, leg) in legs.enumerated() {
             if leg.transitLeg == true {
                 rows.append(boardRow(for: leg, at: index, phase: phase))
-
-                if case .riding(let ridingIndex) = phase, ridingIndex == index {
-                    rows.append(
-                        RailRow(
-                            id: "ride-\(index)",
-                            kind: .ride(legIndex: index),
-                            state: .current,
-                            time: now,
-                            status: nil
-                        )
-                    )
+                if isRiding(index, phase: phase) {
+                    rows.append(currentRideRow(id: "ride-\(index)", kind: .ride(legIndex: index)))
                 }
-
-                rows.append(getOffRow(for: leg, at: index))
+                rows.append(legEndRow(id: "getoff-\(index)", kind: .getOff(legIndex: index), for: leg))
             } else if leg.isRentalRide {
                 // Rental legs get pickup → ride → dropoff semantics, mirroring the
                 // transit board → ride → get off shape so the rail reads uniformly.
-                rows.append(pickUpVehicleRow(for: leg, at: index))
-
-                if case .riding(let ridingIndex) = phase, ridingIndex == index {
-                    rows.append(
-                        RailRow(
-                            id: "riderental-\(index)",
-                            kind: .rideRental(legIndex: index),
-                            state: .current,
-                            time: now,
-                            status: nil
-                        )
-                    )
+                rows.append(pickUpVehicleRow(for: leg, at: index, phase: phase))
+                if isRiding(index, phase: phase) {
+                    rows.append(currentRideRow(id: "riderental-\(index)", kind: .rideRental(legIndex: index)))
                 }
-
-                rows.append(dropOffVehicleRow(for: leg, at: index))
+                rows.append(legEndRow(id: "dropoff-\(index)", kind: .dropOffVehicle(legIndex: index), for: leg))
             } else {
                 rows.append(walkRow(for: leg, at: index, phase: phase))
             }
@@ -241,37 +223,39 @@ public struct TripProgress {
         )
     }
 
-    private func getOffRow(for leg: Leg, at index: Int) -> RailRow {
-        RailRow(
-            id: "getoff-\(index)",
-            kind: .getOff(legIndex: index),
-            state: now >= leg.endTime ? .done : .upcoming,
-            time: leg.endTime,
-            status: nil
-        )
-    }
+    /// The pickup row goes current during a `.waiting` gap before the ride — the
+    /// stretch where the rider is walking up to the parked vehicle. During the ride
+    /// itself the current row is the synthetic `rideRental` row.
+    private func pickUpVehicleRow(for leg: Leg, at index: Int, phase: TripPhase) -> RailRow {
+        let state: RailRow.State
+        if case .waiting(let boardingIndex) = phase, boardingIndex == index {
+            state = .current
+        } else {
+            state = now >= leg.startTime ? .done : .upcoming
+        }
 
-    /// Unlike a transit boarding, a pickup is never "current": there is no waiting
-    /// phase for a parked vehicle — the rider walks up and rides. The current row
-    /// during the ride is the synthetic `rideRental` row.
-    private func pickUpVehicleRow(for leg: Leg, at index: Int) -> RailRow {
-        RailRow(
+        return RailRow(
             id: "pickup-\(index)",
             kind: .pickUpVehicle(legIndex: index),
-            state: now >= leg.startTime ? .done : .upcoming,
+            state: state,
             time: leg.startTime,
             status: nil
         )
     }
 
-    private func dropOffVehicleRow(for leg: Leg, at index: Int) -> RailRow {
-        RailRow(
-            id: "dropoff-\(index)",
-            kind: .dropOffVehicle(legIndex: index),
-            state: now >= leg.endTime ? .done : .upcoming,
-            time: leg.endTime,
-            status: nil
-        )
+    /// The synthetic row present only while the rider is aboard this leg.
+    private func currentRideRow(id: String, kind: RailRow.Kind) -> RailRow {
+        RailRow(id: id, kind: kind, state: .current, time: now, status: nil)
+    }
+
+    /// A leg's final moment: get off transit, or drop off the rental vehicle.
+    private func legEndRow(id: String, kind: RailRow.Kind, for leg: Leg) -> RailRow {
+        RailRow(id: id, kind: kind, state: now >= leg.endTime ? .done : .upcoming, time: leg.endTime, status: nil)
+    }
+
+    private func isRiding(_ index: Int, phase: TripPhase) -> Bool {
+        if case .riding(let ridingIndex) = phase { return ridingIndex == index }
+        return false
     }
 
     /// The rider's current activity, localized ("Walking", "Waiting for the C Line",
@@ -283,6 +267,9 @@ public struct TripProgress {
         case .walking:
             return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
         case .waiting(let index):
+            if legs[index].isRentalRide {
+                return OTPLoc("rail.pick_up_bike", comment: "Instruction to pick up the rental bike")
+            }
             return OTPLoc("rail.now_waiting_fmt",
                           comment: "The rider is waiting for this route",
                           legs[index].riderFacingRouteName)

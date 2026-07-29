@@ -83,7 +83,13 @@ public actor VehicleRentalSource {
         self.boundingBoxPadding = boundingBoxPadding
 
         (snapshots, snapshotContinuation) = AsyncStream.makeStream(of: VehicleRentalSnapshot.self)
-        (fetchFailures, failureContinuation) = AsyncStream.makeStream(of: FetchFailure.self)
+        // Failures are advisory and hosts only need the latest; bounding the buffer
+        // means a host that never consumes this stream can't accumulate errors
+        // without bound against a persistently failing endpoint.
+        (fetchFailures, failureContinuation) = AsyncStream.makeStream(
+            of: FetchFailure.self,
+            bufferingPolicy: .bufferingNewest(1)
+        )
     }
 
     deinit {
@@ -99,9 +105,12 @@ public actor VehicleRentalSource {
     /// removing everything.
     public func setViewport(_ boundingBox: VehicleRentalBoundingBox?) {
         guard let boundingBox else {
-            clear()
+            reset()
             return
         }
+        // Map frameworks re-emit identical regions on layout passes; an unchanged
+        // viewport must not cancel and refetch a multi-thousand-entity payload.
+        guard boundingBox != viewport else { return }
         viewport = boundingBox
         scheduleFetch()
     }
@@ -116,15 +125,9 @@ public actor VehicleRentalSource {
         }
     }
 
-    /// Clears all state (e.g. the layer was switched off) and emits a snapshot
-    /// removing everything previously delivered.
+    /// Clears all state (e.g. the layer was switched off, or the zoom gate
+    /// closed) and emits a snapshot removing everything previously delivered.
     public func reset() {
-        clear()
-    }
-
-    // MARK: - Pipeline
-
-    private func clear() {
         pendingFetch?.cancel()
         pendingFetch = nil
         generation += 1
@@ -140,18 +143,23 @@ public actor VehicleRentalSource {
         ))
     }
 
+    // MARK: - Pipeline
+
     private func scheduleFetch() {
         pendingFetch?.cancel()
         generation += 1
         let scheduledGeneration = generation
         let interval = coalescingInterval
 
-        // The task inherits the actor's isolation: the sleep and the fetch suspend
-        // without blocking other actor work (fetchPlan on the same service is
-        // unaffected — decode already runs off-actor in GraphQLAPIService).
-        pendingFetch = Task {
+        // Weak so an abandoned source deallocates immediately instead of being
+        // kept alive through the debounce plus a multi-thousand-entity fetch
+        // whose snapshot nobody would consume. The body otherwise inherits the
+        // actor's isolation: the sleep and fetch suspend without blocking other
+        // actor work (fetchPlan on the same service is unaffected — decode
+        // already runs off-actor in GraphQLAPIService).
+        pendingFetch = Task { [weak self] in
             try? await Task.sleep(for: interval)
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, let self else { return }
             await self.performFetch(generation: scheduledGeneration)
         }
     }
@@ -168,6 +176,10 @@ public actor VehicleRentalSource {
             // Superseded by a newer viewport; the newer fetch reports instead.
         } catch {
             guard scheduledGeneration == generation else { return }
+            // Forget the failed viewport so the next region emission — identical or
+            // not — retries instead of being swallowed by the same-viewport guard.
+            // A stationary map must be able to heal from a transient failure.
+            self.viewport = nil
             failureContinuation.yield(FetchFailure(underlyingError: error, occurredAt: Date()))
         }
     }

@@ -50,10 +50,12 @@ enum RailText {
     }
 
     /// The rider-facing name of a rental place, or nil when the feed sent a known
-    /// placeholder ("Default vehicle type") that must never reach the UI.
+    /// placeholder that must never reach the UI. Same predicate as
+    /// `Leg.riderFacingName(of:)`, different policy: these rows hide the line
+    /// instead of substituting a generic.
     static func rentalPlaceName(_ name: String) -> String? {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty, trimmed.lowercased() != "default vehicle type" else { return nil }
+        guard !trimmed.isEmpty, !trimmed.isRentalPlaceholderName else { return nil }
         return trimmed
     }
 

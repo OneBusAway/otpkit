@@ -109,12 +109,21 @@ struct TipContentView: View {
 
         case .waiting(let index):
             let leg = progress.legs[index]
-            HStack(alignment: .top, spacing: 12) {
-                RouteBadge(leg: leg)
-                title(RailText.boardingCountdown(for: leg, now: progress.now),
-                      subtitle: OTPLoc("rail.at_stop_fmt",
-                                       comment: "The stop the rider boards at", leg.from.name))
-                trailingTime(leg.startTime, status: leg.departureStatus)
+            if leg.isRentalRide {
+                HStack(alignment: .top, spacing: 12) {
+                    bikeIcon
+                    title(OTPLoc("rail.pick_up_bike", comment: "Instruction to pick up the rental bike"),
+                          subtitle: RailText.rentalPlaceName(leg.from.name))
+                    trailingTime(leg.startTime, status: nil)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 12) {
+                    RouteBadge(leg: leg)
+                    title(RailText.boardingCountdown(for: leg, now: progress.now),
+                          subtitle: OTPLoc("rail.at_stop_fmt",
+                                           comment: "The stop the rider boards at", leg.from.name))
+                    trailingTime(leg.startTime, status: leg.departureStatus)
+                }
             }
 
         case .riding(let index):
@@ -182,20 +191,19 @@ struct TipContentView: View {
     // MARK: - Pieces
 
     private var walkIcon: some View {
-        Image(systemName: "figure.walk")
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.white)
-            .frame(width: 32, height: 32)
-            .background(Color(.label), in: RoundedRectangle(cornerRadius: 9))
-            .accessibilityHidden(true)
+        modeIcon("figure.walk", background: Color(.label))
     }
 
     private var bikeIcon: some View {
-        Image(systemName: "bicycle")
+        modeIcon("bicycle", background: .otpRentalPurple)
+    }
+
+    private func modeIcon(_ systemName: String, background: Color) -> some View {
+        Image(systemName: systemName)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.white)
             .frame(width: 32, height: 32)
-            .background(Color.otpRentalPurple, in: RoundedRectangle(cornerRadius: 9))
+            .background(background, in: RoundedRectangle(cornerRadius: 9))
             .accessibilityHidden(true)
     }
 

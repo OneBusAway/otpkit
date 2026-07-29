@@ -69,6 +69,17 @@ struct VehicleRentalSourceTests {
         maximumLongitude: -122.2
     )
 
+    /// A slightly panned viewport: identical boxes are deliberately deduplicated
+    /// by the source, so successive fetches in tests must actually move.
+    private static func pannedBox(_ offset: Double) -> VehicleRentalBoundingBox {
+        VehicleRentalBoundingBox(
+            minimumLatitude: 47.5 + offset,
+            maximumLatitude: 47.7 + offset,
+            minimumLongitude: -122.4,
+            maximumLongitude: -122.2
+        )
+    }
+
     private static func makeRental(id: String, lat: Double = 47.61) -> VehicleRental {
         .vehicle(RentalVehicle(
             vehicleId: id,
@@ -130,12 +141,28 @@ struct VehicleRentalSourceTests {
         await source.setViewport(Self.seattleBox)
         _ = await snapshots.next()
 
-        await source.setViewport(Self.seattleBox)
+        await source.setViewport(Self.pannedBox(0.01))
         let snapshot = try #require(await snapshots.next())
 
         #expect(snapshot.added.map(\.id) == ["c"])
         #expect(snapshot.removed == ["a"])
         #expect(snapshot.updated.map(\.id) == ["b"])
+    }
+
+    @Test("An identical viewport does not refetch")
+    func identicalViewportDeduplicated() async throws {
+        let service = ScriptedRentalService(results: [
+            .success(VehicleRentalFetchResult(rentals: [Self.makeRental(id: "a")]))
+        ])
+        let source = Self.makeSource(service: service)
+        var snapshots = source.snapshots.makeAsyncIterator()
+
+        await source.setViewport(Self.seattleBox)
+        _ = await snapshots.next()
+
+        await source.setViewport(Self.seattleBox)
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(await service.calls.count == 1)
     }
 
     @Test("An unchanged entity is neither added nor updated")
@@ -148,7 +175,7 @@ struct VehicleRentalSourceTests {
         await source.setViewport(Self.seattleBox)
         _ = await snapshots.next()
 
-        await source.setViewport(Self.seattleBox)
+        await source.setViewport(Self.pannedBox(0.01))
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.isEmpty)
     }
@@ -197,7 +224,7 @@ struct VehicleRentalSourceTests {
 
         await source.setViewport(Self.seattleBox)
         try await Task.sleep(for: .milliseconds(50))  // let the first fetch get in flight
-        await source.setViewport(Self.seattleBox)
+        await source.setViewport(Self.pannedBox(0.01))
 
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.added.map(\.id) == ["fresh"])
@@ -268,14 +295,35 @@ struct VehicleRentalSourceTests {
         await source.setViewport(Self.seattleBox)
         _ = await snapshots.next()
 
-        await source.setViewport(Self.seattleBox)
+        await source.setViewport(Self.pannedBox(0.01))
         let failure = try #require(await failures.next())
         #expect(failure.underlyingError is ScriptedError)
 
         // The next successful fetch diffs against state that survived the failure.
-        await source.setViewport(Self.seattleBox)
+        await source.setViewport(Self.pannedBox(0.02))
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.isEmpty)
+    }
+
+    @Test("A failed viewport retries on the next identical region emission")
+    func failedViewportRetries() async throws {
+        let service = ScriptedRentalService(results: [
+            .failure(ScriptedError()),
+            .success(VehicleRentalFetchResult(rentals: [Self.makeRental(id: "a")]))
+        ])
+        let source = Self.makeSource(service: service)
+        var snapshots = source.snapshots.makeAsyncIterator()
+        var failures = source.fetchFailures.makeAsyncIterator()
+
+        await source.setViewport(Self.seattleBox)
+        _ = try #require(await failures.next())
+
+        // A stationary map re-emits the same region; the failure must not be
+        // swallowed by the same-viewport deduplication.
+        await source.setViewport(Self.seattleBox)
+        let snapshot = try #require(await snapshots.next())
+        #expect(snapshot.added.map(\.id) == ["a"])
+        #expect(await service.calls.count == 2)
     }
 
     @Test("Changing form factors refetches with the new filter")

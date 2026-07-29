@@ -292,10 +292,13 @@ struct TripProgressTests {
 
     // MARK: - Rental legs
 
-    /// Walk 3m to the vehicle → ride the rental 10m → walk 2m to the destination.
-    func makeRentalItinerary() -> Itinerary {
+    /// Walk 3m to the vehicle → (optional gap) → ride the rental 10m → walk 2m to
+    /// the destination. A gap models the sub-minute approach walk that
+    /// `relevantLegs` merges away, leaving a hole before the ride starts.
+    func makeRentalItinerary(pickupGap: TimeInterval = 0) -> Itinerary {
         let walkEnd = tripStart.addingTimeInterval(180)
-        let rideEnd = walkEnd.addingTimeInterval(600)
+        let rideStart = walkEnd.addingTimeInterval(pickupGap)
+        let rideEnd = rideStart.addingTimeInterval(600)
         let arrivalTime = rideEnd.addingTimeInterval(120)
 
         let vehiclePlace = Place(name: "Default vehicle type", lon: -122.34, lat: 47.615,
@@ -315,7 +318,7 @@ struct TripProgressTests {
         )
 
         let rideLeg = Leg(
-            startTime: walkEnd, endTime: rideEnd, mode: "BICYCLE",
+            startTime: rideStart, endTime: rideEnd, mode: "BICYCLE",
             routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil,
             from: vehiclePlace, to: dropoffPlace,
             legGeometry: LegGeometry(points: "AA@@", length: 4),
@@ -354,6 +357,22 @@ struct TripProgressTests {
     @Test func rentalRideCountsAsRiding() {
         // 180s..780s is the ride window.
         #expect(rentalProgress(at: 400).phase == .riding(legIndex: 1))
+    }
+
+    @Test func gapBeforeRentalRideIsWaitingAtThePickup() throws {
+        // Walk ends at 180s, ride starts at 300s: the rider is approaching the
+        // parked vehicle. Classifying this as .walking would point the tip at the
+        // rental leg's full ride distance and leave the rail with no current row.
+        let progress = TripProgress(
+            itinerary: makeRentalItinerary(pickupGap: 120),
+            now: tripStart.addingTimeInterval(240)
+        )
+
+        #expect(progress.phase == .waiting(boardingLegIndex: 1))
+
+        let currentRows = progress.rows.filter { $0.state == .current }
+        #expect(currentRows.map(\.kind) == [.pickUpVehicle(legIndex: 1)])
+        #expect(progress.localizedActivityName == OTPLoc("rail.pick_up_bike", comment: ""))
     }
 
     @Test func rentalLegProducesPickupRideAndDropoffRows() {

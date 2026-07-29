@@ -285,8 +285,7 @@ public struct Leg: Codable, Hashable {
 
     static func riderFacingName(of place: Place) -> String {
         let trimmed = place.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let isPlaceholder = trimmed.lowercased() == "default vehicle type"
-        if isPlaceholder || (trimmed.isEmpty && place.bikeShareId != nil) {
+        if trimmed.isRentalPlaceholderName || (trimmed.isEmpty && place.bikeShareId != nil) {
             return OTPLoc("place.rental_bike", comment: "Generic name for a rental bike location")
         }
         return trimmed

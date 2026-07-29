@@ -105,16 +105,12 @@ public enum VehicleRental: Identifiable, Hashable, Sendable {
             }
 
             let trimmedName = vehicle.name.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmedName.isEmpty, !Self.isPlaceholderName(trimmedName) {
+            if !trimmedName.isEmpty, !trimmedName.isRentalPlaceholderName {
                 return trimmedName
             }
 
             return typeName.capitalizedFirst
         }
-    }
-
-    private static func isPlaceholderName(_ name: String) -> Bool {
-        name.lowercased() == "default vehicle type"
     }
 
     private static func localizedTypeName(for vehicleType: VehicleType?) -> String {

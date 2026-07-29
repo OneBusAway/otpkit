@@ -115,7 +115,7 @@ struct InTripRailView: View {
                 PickUpVehicleRowContent(
                     leg: progress.legs[index],
                     state: row.state,
-                    isExpanded: isFocused
+                    isExpanded: row.state == .current || isFocused
                 )
             case .rideRental(let index):
                 RideRentalRowContent(progress: progress, legIndex: index)
@@ -165,8 +165,10 @@ struct InTripRailView: View {
                 return .thin
             }
             return .bar(progress.legs[index].routeUIColor ?? Color(.systemGray2))
-        case .pickUpVehicle(let index), .rideRental(let index):
-            if row.state == .done, case .pickUpVehicle = row.kind, !isRiding(index) {
+        case .rideRental:
+            return .bar(.otpRentalPurple)
+        case .pickUpVehicle(let index):
+            if row.state == .done, !isRiding(index) {
                 return .thin
             }
             return .bar(.otpRentalPurple)

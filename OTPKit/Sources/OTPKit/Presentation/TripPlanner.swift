@@ -82,9 +82,19 @@ public class TripPlanner {
         transportMode: TransportMode? = nil,
         onClose: @escaping VoidBlock
     ) -> some View {
-        viewModel.viaPoint = viaPoint
-        if let transportMode, viewModel.availableTransportModes.contains(transportMode) {
-            viewModel.selectTransportMode(transportMode)
+        // The prefill is all-or-nothing: a via point paired with an unsupported mode
+        // must not be applied alone, or the planner would route the rider through a
+        // rental vehicle's location in a mode that can't use it. Nil parameters
+        // leave existing state untouched, so re-invoking the factory is harmless.
+        let modeIsAvailable = transportMode.map { viewModel.availableTransportModes.contains($0) } ?? true
+        if modeIsAvailable {
+            if let transportMode {
+                viewModel.selectTransportMode(transportMode)
+            }
+            if let viaPoint {
+                // After the mode change: selecting a mode clears any stale via point.
+                viewModel.viaPoint = viaPoint
+            }
         }
 
         let view = TripPlannerView(

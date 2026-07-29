@@ -107,6 +107,21 @@ struct TripPlanRequestTests {
         #expect(request.transportModesString == "TRANSIT,WALK,BICYCLE_RENT")
     }
 
+    @Test("A composite mode passed directly still serializes to primitive wire tokens")
+    func compositeModeExpandsAndDeduplicates() {
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(),
+            time: Date(),
+            transportModes: [.transitBikeRental, .walk]
+        )
+
+        // The fabricated TRANSIT_BICYCLE_RENT raw value must never reach the wire,
+        // and the duplicate walk collapses in first-appearance order.
+        #expect(request.transportModesString == "TRANSIT,WALK,BICYCLE_RENT")
+    }
+
     @Test("viaPoint participates in equality")
     func viaPointEquality() {
         let base = TripPlanRequest(

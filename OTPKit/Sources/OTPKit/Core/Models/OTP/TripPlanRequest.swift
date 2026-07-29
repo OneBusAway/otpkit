@@ -73,9 +73,17 @@ public struct TripPlanRequest: Codable, Hashable {
         self.viaPoint = viaPoint
     }
 
-    /// Converts the transport modes to the API string format
+    /// Converts the transport modes to the OTP 1.x REST `mode` parameter: wire tokens,
+    /// comma-joined. Composite UI modes expand to their primitives, deduplicated in
+    /// first-appearance order.
     public var transportModesString: String {
-        transportModes.map { $0.rawValue }.joined(separator: ",")
+        wireTransportModes.map { $0.rawValue }.joined(separator: ",")
+    }
+
+    /// The primitive, deduplicated modes requests actually serialize.
+    public var wireTransportModes: [TransportMode] {
+        var seen = Set<TransportMode>()
+        return transportModes.flatMap(\.wireModes).filter { seen.insert($0).inserted }
     }
 
     /// Validates the request parameters

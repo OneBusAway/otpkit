@@ -151,6 +151,29 @@ class GraphQLAPIServiceTests: OTPTestCase {
         let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
         // Absent, not null: not every OTP build treats a null via as "no via".
         XCTAssertNil(variables["via"])
+
+        // The query document itself must not mention via either: GraphQL validates
+        // documents statically, and `plan`'s via argument only exists on OTP 2.7+ —
+        // declaring it unconditionally would break every request against older servers.
+        let query = try XCTUnwrap(payload["query"] as? String)
+        XCTAssertFalse(query.contains("$via"))
+        XCTAssertFalse(query.contains("via:"))
+    }
+
+    func testFetchPlanExpandsCompositeModeToWireModes() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        // A host passing the composite mode directly must get the expanded wire
+        // modes, never the fabricated TRANSIT_BICYCLE_RENT raw value.
+        _ = try await service.fetchPlan(createTripPlanRequest(transportModes: [.transitBikeRental]))
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        let modes = try XCTUnwrap(variables["transportModes"] as? [[String: Any]])
+        XCTAssertEqual(modes.map { $0["mode"] as? String }, ["TRANSIT", "WALK", "BICYCLE"])
+        XCTAssertEqual(modes[2]["qualifier"] as? String, "RENT")
     }
 
     // MARK: - Response Mapping

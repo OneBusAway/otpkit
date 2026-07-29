@@ -186,6 +186,12 @@ public class TripPlannerViewModel: ObservableObject {
     /// Update the selected transport mode
     /// - Parameter mode: The transport mode to select
     func selectTransportMode(_ mode: TransportMode) {
+        // A via point exists to route through a specific rental vehicle. A rider who
+        // switches modes has abandoned that plan — keeping the via would silently
+        // force every later trip through a detour with no visible cause.
+        if mode != selectedTransportMode {
+            viaPoint = nil
+        }
         selectedTransportMode = mode
     }
 

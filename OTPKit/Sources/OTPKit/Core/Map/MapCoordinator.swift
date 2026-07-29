@@ -300,7 +300,7 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
 
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
         // Rental legs get pickup/dropoff markers; transit legs get embark/debark markers.
-        if leg.rentedBike == true {
+        if leg.isRentalRide {
             addRentalAnnotations(for: leg, index: index)
             return
         }
@@ -342,25 +342,13 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
     /// checks never match them. Only vehicles on the planned route are annotated — the
     /// browse layer is a separate surface owned by the host.
     private func addRentalAnnotations(for leg: Leg, index: Int) {
-        if leg.from.bikeShareId != nil {
+        let endpoints = [(leg.from, "rental_pickup_\(index)"), (leg.to, "rental_dropoff_\(index)")]
+        for (place, identifier) in endpoints where place.bikeShareId != nil {
             mapProvider.addAnnotation(
-                coordinate: CLLocationCoordinate2D(latitude: leg.from.lat, longitude: leg.from.lon),
-                title: leg.from.name,
+                coordinate: CLLocationCoordinate2D(latitude: place.lat, longitude: place.lon),
+                title: Leg.riderFacingName(of: place),
                 subtitle: nil,
-                identifier: "rental_pickup_\(index)",
-                type: .rentalVehicle,
-                routeName: nil,
-                routeBackgroundColor: nil,
-                routeTextColor: nil
-            )
-        }
-
-        if leg.to.bikeShareId != nil {
-            mapProvider.addAnnotation(
-                coordinate: CLLocationCoordinate2D(latitude: leg.to.lat, longitude: leg.to.lon),
-                title: leg.to.name,
-                subtitle: nil,
-                identifier: "rental_dropoff_\(index)",
+                identifier: identifier,
                 type: .rentalVehicle,
                 routeName: nil,
                 routeBackgroundColor: nil,

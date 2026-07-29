@@ -86,4 +86,12 @@ public enum TransportMode: String, CaseIterable, Codable {
     public var requiresVehicleRentalSupport: Bool {
         self == .bikeRental || self == .transitBikeRental
     }
+
+    /// The primitive modes this mode puts on the wire. Composite UI modes
+    /// (`.transitBikeRental`) expand to their `apiModes`; primitives are themselves.
+    /// Both services serialize through this, so a composite's fabricated raw value
+    /// can never leak into a request — no matter how the host built it.
+    public var wireModes: [TransportMode] {
+        self == .transitBikeRental ? apiModes : [self]
+    }
 }

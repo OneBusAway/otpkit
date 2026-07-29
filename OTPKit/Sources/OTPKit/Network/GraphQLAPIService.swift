@@ -42,7 +42,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
     /// Fetches a trip plan using a `TripPlanRequest`
     public func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
         let urlRequest = try makeGraphQLRequest(
-            query: Self.planQuery,
+            query: Self.planQuery(includingVia: request.viaPoint != nil),
             variables: Self.planVariables(for: request)
         )
 
@@ -145,7 +145,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
             "to": ["lat": request.destination.latitude, "lon": request.destination.longitude],
             "date": request.date.formattedTripDate,
             "time": request.time.formattedTripTime,
-            "transportModes": request.transportModes.map { graphQLTransportMode(for: $0) },
+            "transportModes": request.wireTransportModes.map { graphQLTransportMode(for: $0) },
             "arriveBy": request.arriveBy,
             "wheelchair": request.wheelchairAccessible,
             "maxWalkDistance": Double(request.maxWalkDistance)
@@ -172,8 +172,8 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
         case .bikeRental:
             return ["mode": "BICYCLE", "qualifier": "RENT"]
         case .transitBikeRental:
-            // Unreachable in practice: composite UI modes reach requests expanded
-            // through `apiModes`, never as themselves.
+            // Unreachable: `wireTransportModes` expands composites before this
+            // mapping ever runs; the arm exists only for switch exhaustiveness.
             return ["mode": "TRANSIT"]
         case .transit, .walk, .car:
             return ["mode": mode.rawValue]
@@ -217,7 +217,16 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
 
     /// The GTFS GraphQL API `plan` query. Requests only the fields OTPKit's models consume,
     /// mirroring what the OTP 1.x REST API returns.
-    static let planQuery = """
+    ///
+    /// The `via` argument only exists in the query document when the request actually
+    /// carries a via point: GraphQL validates documents statically, and `plan`'s `via`
+    /// argument (with its `PlanViaLocationInput` type) only exists on OTP 2.7+ — a
+    /// document that always declared it would break every plan request, transit
+    /// included, against older 2.x servers.
+    static func planQuery(includingVia: Bool) -> String {
+        let viaDeclaration = includingVia ? "\n      $via: [PlanViaLocationInput!]" : ""
+        let viaArgument = includingVia ? "\n        via: $via" : ""
+        return """
     query TripPlan(
       $from: InputCoordinates!
       $to: InputCoordinates!
@@ -226,8 +235,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
       $transportModes: [TransportMode!]
       $arriveBy: Boolean
       $wheelchair: Boolean
-      $maxWalkDistance: Float
-      $via: [PlanViaLocationInput!]
+      $maxWalkDistance: Float\(viaDeclaration)
     ) {
       plan(
         from: $from
@@ -237,8 +245,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
         transportModes: $transportModes
         arriveBy: $arriveBy
         wheelchair: $wheelchair
-        maxWalkDistance: $maxWalkDistance
-        via: $via
+        maxWalkDistance: $maxWalkDistance\(viaArgument)
       ) {
         date
         from { name lon lat vertexType }
@@ -291,6 +298,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
       }
     }
     """
+    }
 
     /// The GTFS GraphQL API `vehicleRentalsByBbox` query. Returns the `RentalPlace`
     /// union; `__typename` discriminates stations from free-floating vehicles.
