@@ -16,7 +16,7 @@ The repository contains both a Swift Package (Package.swift) and an Xcode projec
 
 ### API Support Status
 - **OTP 1.x REST API**: ✅ Fully implemented via `RestAPIService`
-- **OTP 2.x GraphQL API**: ❌ Not yet implemented
+- **OTP 2.x GraphQL API**: ✅ Implemented via `GraphQLAPIService` (GTFS GraphQL API `plan` query)
 
 ## Tests and Quality
 
@@ -90,7 +90,8 @@ If either linting or tests fail, the push will be blocked until issues are fixed
     - `MKMapViewAdapter` - MapKit implementation of OTPMapProvider
 - `Network/` - API communication layer
   - `APIService` - Protocol defining trip planning interface
-  - `RestAPIService/RestAPIService` - OTP 1.x REST API implementation (actor-based)
+  - `RestAPIService` - OTP 1.x REST API implementation (actor-based)
+  - `GraphQLAPIService` - OTP 2.x GTFS GraphQL API implementation (actor-based)
   - `URLDataLoader` - Network request handling
 - `Presentation/` - SwiftUI views and ViewModels
   - `OTPView` - Main entry point view that sets up the environment

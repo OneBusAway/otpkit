@@ -47,4 +47,11 @@ public class OTPTestCase: XCTestCase {
         let baseURL = URL(string: baseURLString)!
         return RestAPIService(baseURL: baseURL, dataLoader: buildMockDataLoader())
     }
+
+    func buildGraphQLAPIService(
+        baseURLString: String = "https://sound-transit-otp.ibi-transit.com/otp/"
+    ) -> GraphQLAPIService {
+        let baseURL = URL(string: baseURLString)!
+        return GraphQLAPIService(baseURL: baseURL, dataLoader: buildMockDataLoader())
+    }
 }

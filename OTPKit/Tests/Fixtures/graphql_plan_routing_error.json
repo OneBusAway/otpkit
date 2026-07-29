@@ -1,0 +1,26 @@
+{
+  "data": {
+    "plan": {
+      "date": 1785340800000,
+      "from": {
+        "name": "Origin",
+        "lon": -80.0,
+        "lat": 25.0,
+        "vertexType": "NORMAL"
+      },
+      "to": {
+        "name": "Destination",
+        "lon": -122.3493,
+        "lat": 47.6205,
+        "vertexType": "NORMAL"
+      },
+      "routingErrors": [
+        {
+          "code": "OUTSIDE_BOUNDS",
+          "description": "Trip is not possible. You might be trying to plan a trip outside the map data boundary."
+        }
+      ],
+      "itineraries": []
+    }
+  }
+}
