@@ -216,6 +216,14 @@
 "transport_mode.walk" = "도보";
 "transport_mode.bike" = "자전거";
 "transport_mode.car" = "자동차";
+"transport_mode.bike_rental" = "공유 자전거";
+
+"rental.vehicle_type.bike" = "자전거";
+"rental.vehicle_type.ebike" = "전기 자전거";
+"rental.vehicle_type.scooter" = "킥보드";
+"rental.vehicle_type.car" = "자동차";
+"rental.vehicle_type.moped" = "모페드";
+"rental.vehicle_type.vehicle" = "차량";
 
 /* Walking Directions */
 "direction.depart" = "출발";

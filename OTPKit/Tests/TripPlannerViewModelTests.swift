@@ -127,11 +127,47 @@ struct TripPlannerViewModelTests {
         #expect(viewModel.canPlanTrip == true)
     }
 
-    @Test("enabledTransportModes returns config modes")
-    func enabledTransportModesReturnsConfigModes() {
+    @Test("availableTransportModes filters bike rental when the service lacks rental support")
+    func availableTransportModesFiltersBikeRental() {
+        let viewModel = createViewModel(enabledModes: [.transit, .walk, .bikeRental])
+
+        #expect(viewModel.availableTransportModes == [.transit, .walk])
+    }
+
+    @Test("availableTransportModes keeps bike rental when the service supports rentals")
+    func availableTransportModesKeepsBikeRentalWithCapableService() {
+        let viewModel = createViewModel(
+            enabledModes: [.transit, .walk, .bikeRental],
+            mockAPIService: TestFixtures.MockRentalAPIService()
+        )
+
+        #expect(viewModel.availableTransportModes == [.transit, .walk, .bikeRental])
+    }
+
+    @Test("availableTransportModes passes non-rental modes through unchanged")
+    func availableTransportModesPassesOtherModesThrough() {
         let viewModel = createViewModel(enabledModes: [.bike, .car])
 
-        #expect(viewModel.enabledTransportModes == [.bike, .car])
+        #expect(viewModel.availableTransportModes == [.bike, .car])
+    }
+
+    @Test("Default selected mode skips an unavailable rental mode listed first")
+    func defaultSelectedModeSkipsUnavailableRentalMode() {
+        // .bikeRental configured first, but the service has no rental support:
+        // the default selection must agree with what the UI can actually offer.
+        let viewModel = createViewModel(enabledModes: [.bikeRental, .bike, .walk])
+
+        #expect(viewModel.selectedTransportMode == .bike)
+    }
+
+    @Test("Default selected mode honors a rental mode when the service supports it")
+    func defaultSelectedModeHonorsAvailableRentalMode() {
+        let viewModel = createViewModel(
+            enabledModes: [.bikeRental, .walk],
+            mockAPIService: TestFixtures.MockRentalAPIService()
+        )
+
+        #expect(viewModel.selectedTransportMode == .bikeRental)
     }
 
     @Test("itineraries returns empty array when no response")

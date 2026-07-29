@@ -216,6 +216,14 @@
 "transport_mode.walk" = "A pé";
 "transport_mode.bike" = "Bicicleta";
 "transport_mode.car" = "Carro";
+"transport_mode.bike_rental" = "Bicicleta compartilhada";
+
+"rental.vehicle_type.bike" = "bicicleta";
+"rental.vehicle_type.ebike" = "bicicleta elétrica";
+"rental.vehicle_type.scooter" = "patinete";
+"rental.vehicle_type.car" = "carro";
+"rental.vehicle_type.moped" = "ciclomotor";
+"rental.vehicle_type.vehicle" = "veículo";
 
 /* Walking Directions */
 "direction.depart" = "Siga";

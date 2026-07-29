@@ -17,6 +17,9 @@ public enum TransportMode: String, CaseIterable, Codable {
     case bike = "BIKE"
     /// Driving
     case car = "CAR"
+    /// Rented bicycle/micromobility (bikeshare). The raw value is the OTP 1.x REST wire
+    /// token; the GraphQL service translates it to `{mode: BICYCLE, qualifier: RENT}`.
+    case bikeRental = "BICYCLE_RENT"
 
     /// Localized, human-readable description of the transport mode
     public var displayName: String {
@@ -29,6 +32,8 @@ public enum TransportMode: String, CaseIterable, Codable {
             return OTPLoc("transport_mode.bike", comment: "Transport mode: Bike")
         case .car:
             return OTPLoc("transport_mode.car", comment: "Transport mode: Car")
+        case .bikeRental:
+            return OTPLoc("transport_mode.bike_rental", comment: "Transport mode: Bike Rental")
         }
     }
 
@@ -43,6 +48,8 @@ public enum TransportMode: String, CaseIterable, Codable {
             return "bicycle"
         case .car:
             return "car"
+        case .bikeRental:
+            return "bicycle.circle"
         }
     }
 
@@ -58,6 +65,8 @@ public enum TransportMode: String, CaseIterable, Codable {
             return [.bike, .walk]
         case .car:
             return [.car]
+        case .bikeRental:
+            return [.bikeRental, .walk]
         }
     }
 }

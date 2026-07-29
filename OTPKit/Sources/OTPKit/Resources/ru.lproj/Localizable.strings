@@ -216,6 +216,14 @@
 "transport_mode.walk" = "Пешком";
 "transport_mode.bike" = "Велосипед";
 "transport_mode.car" = "Автомобиль";
+"transport_mode.bike_rental" = "Велопрокат";
+
+"rental.vehicle_type.bike" = "велосипед";
+"rental.vehicle_type.ebike" = "электровелосипед";
+"rental.vehicle_type.scooter" = "самокат";
+"rental.vehicle_type.car" = "автомобиль";
+"rental.vehicle_type.moped" = "мопед";
+"rental.vehicle_type.vehicle" = "транспорт";
 
 /* Walking Directions */
 "direction.depart" = "Начните движение";

@@ -26,7 +26,9 @@ public struct OTPConfiguration {
 
     public init(
         otpServerURL: URL,
-        enabledTransportModes: [TransportMode] = TransportMode.allCases,
+        // An explicit list, not `allCases`: new framework modes (like .bikeRental, which
+        // needs backend rental support) must be opted into by hosts, never inherited.
+        enabledTransportModes: [TransportMode] = [.transit, .walk, .bike, .car],
         themeConfiguration: OTPThemeConfiguration = OTPThemeConfiguration(),
         searchRegion: MKCoordinateRegion
     ) {

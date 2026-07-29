@@ -14,6 +14,12 @@ extension String {
             .replacingOccurrences(of: " ", with: "_")
     }
 
+    /// Uppercases only the first character, leaving the rest untouched: `e-bike` becomes
+    /// `E-bike`. Unlike `capitalized`, this never lowercases the remainder.
+    var capitalizedFirst: String {
+        isEmpty ? self : prefix(1).uppercased() + dropFirst()
+    }
+
     /// Renders an unrecognized OTP token as readable text: `SPIN_AROUND` becomes `Spin Around`.
     ///
     /// Last-resort display fallback for a mode or direction this client doesn't know about.

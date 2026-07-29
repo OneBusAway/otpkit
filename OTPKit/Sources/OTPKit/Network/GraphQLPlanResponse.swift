@@ -20,8 +20,9 @@ import OSLog
 // Internal wire types for the OTP 2.x GTFS GraphQL API `plan` query, plus the
 // mapping that converts them into the public models shared with the REST path.
 
-struct GraphQLResponseEnvelope: Decodable {
-    let data: GraphQLPlanData?
+/// The standard GraphQL response envelope, generic over the query's payload shape.
+struct GraphQLEnvelope<Payload: Decodable>: Decodable {
+    let data: Payload?
     let errors: [GraphQLErrorMessage]?
 }
 
@@ -69,6 +70,7 @@ struct GraphQLLeg: Decodable {
     let legGeometry: GraphQLLegGeometry?
     let distance: Double
     let transitLeg: Bool?
+    let rentedBike: Bool?
     let duration: Double
     let realTime: Bool?
     let departureDelay: Int?
@@ -96,11 +98,21 @@ struct GraphQLPlace: Decodable {
     let lat: Double
     let vertexType: String?
     let stop: GraphQLStop?
+    let vehicleRentalStation: GraphQLVehicleRentalStationRef?
+    let rentalVehicle: GraphQLRentalVehicleRef?
 }
 
 struct GraphQLStop: Decodable {
     let gtfsId: String?
     let code: String?
+}
+
+struct GraphQLVehicleRentalStationRef: Decodable {
+    let stationId: String?
+}
+
+struct GraphQLRentalVehicleRef: Decodable {
+    let vehicleId: String?
 }
 
 struct GraphQLLegGeometry: Decodable {
@@ -208,7 +220,8 @@ extension GraphQLLeg {
             headsign: headsign,
             intermediateStops: intermediatePlaces?.map { $0.toPlace() },
             departureDelay: departureDelay,
-            arrivalDelay: arrivalDelay
+            arrivalDelay: arrivalDelay,
+            rentedBike: rentedBike
         )
     }
 }
@@ -221,7 +234,8 @@ extension GraphQLPlace {
             lat: lat,
             vertexType: vertexType ?? "NORMAL",
             stopId: stop?.gtfsId,
-            stopCode: stop?.code
+            stopCode: stop?.code,
+            bikeShareId: vehicleRentalStation?.stationId ?? rentalVehicle?.vehicleId
         )
     }
 }

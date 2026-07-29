@@ -215,6 +215,14 @@
 "transport_mode.walk" = "步行";
 "transport_mode.bike" = "骑行";
 "transport_mode.car" = "驾车";
+"transport_mode.bike_rental" = "共享单车";
+
+"rental.vehicle_type.bike" = "单车";
+"rental.vehicle_type.ebike" = "电动单车";
+"rental.vehicle_type.scooter" = "滑板车";
+"rental.vehicle_type.car" = "汽车";
+"rental.vehicle_type.moped" = "轻便摩托车";
+"rental.vehicle_type.vehicle" = "车辆";
 
 /* Walking Directions */
 "direction.depart" = "出发";

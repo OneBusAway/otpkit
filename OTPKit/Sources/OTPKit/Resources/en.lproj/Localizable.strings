@@ -217,6 +217,14 @@
 "transport_mode.walk" = "Walk";
 "transport_mode.bike" = "Bike";
 "transport_mode.car" = "Car";
+"transport_mode.bike_rental" = "Bike Rental";
+
+"rental.vehicle_type.bike" = "bike";
+"rental.vehicle_type.ebike" = "e-bike";
+"rental.vehicle_type.scooter" = "scooter";
+"rental.vehicle_type.car" = "car";
+"rental.vehicle_type.moped" = "moped";
+"rental.vehicle_type.vehicle" = "vehicle";
 
 /* Walking Directions */
 "direction.depart" = "Head out";

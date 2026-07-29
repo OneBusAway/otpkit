@@ -216,6 +216,14 @@
 "transport_mode.walk" = "Lakad";
 "transport_mode.bike" = "Bisikleta";
 "transport_mode.car" = "Kotse";
+"transport_mode.bike_rental" = "Rentahan ng Bisikleta";
+
+"rental.vehicle_type.bike" = "bisikleta";
+"rental.vehicle_type.ebike" = "e-bike";
+"rental.vehicle_type.scooter" = "scooter";
+"rental.vehicle_type.car" = "kotse";
+"rental.vehicle_type.moped" = "moped";
+"rental.vehicle_type.vehicle" = "sasakyan";
 
 /* Walking Directions */
 "direction.depart" = "Umalis";

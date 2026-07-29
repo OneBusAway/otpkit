@@ -112,8 +112,9 @@ public class TripPlannerViewModel: ObservableObject {
         self.mapCoordinator = mapCoordinator
         self.notificationCenter = notificationCenter
 
-        // Set the first enabled transport mode as default, fallback to transit
-        self.selectedTransportMode = config.enabledTransportModes.first ?? .transit
+        // Set the first *available* transport mode as default, fallback to transit.
+        // (Static helper because computed properties aren't usable until init completes.)
+        self.selectedTransportMode = Self.defaultTransportMode(config: config, apiService: apiService)
 
         // Load saved trip options from UserDefaults
         if let savedOptions = UserDefaultsServices.shared.loadTripOptions() {
@@ -151,9 +152,25 @@ public class TripPlannerViewModel: ObservableObject {
         selectedOrigin != nil && selectedDestination != nil
     }
 
-    /// Available transport modes from configuration
-    var enabledTransportModes: [TransportMode] {
-        config.enabledTransportModes
+    /// Transport modes the UI should offer: the configured modes, minus any the
+    /// injected API service cannot support. `.bikeRental` is part of the GraphQL-era
+    /// rental feature set (browse layer + rental trip modes ship together), so it is
+    /// hidden unless the service provides vehicle rental support — a REST-only host
+    /// never sees rental UI. This is the single source of truth for mode lists;
+    /// read `config.enabledTransportModes` only for raw configuration.
+    var availableTransportModes: [TransportMode] {
+        config.enabledTransportModes.filter { Self.isModeAvailable($0, apiService: apiService) }
+    }
+
+    /// Whether the API service can actually plan trips for the given mode.
+    private static func isModeAvailable(_ mode: TransportMode, apiService: APIService) -> Bool {
+        mode != .bikeRental || apiService is VehicleRentalService
+    }
+
+    /// The default selected mode: the first capability-available configured mode.
+    /// Must agree with `availableTransportModes` so the default is always offerable.
+    private static func defaultTransportMode(config: OTPConfiguration, apiService: APIService) -> TransportMode {
+        config.enabledTransportModes.first { isModeAvailable($0, apiService: apiService) } ?? .transit
     }
 
     /// All available itineraries from the current trip plan response
@@ -387,7 +404,7 @@ public class TripPlannerViewModel: ObservableObject {
         isLoading = false
 
         // Reset to default transport mode
-        selectedTransportMode = config.enabledTransportModes.first ?? .transit
+        selectedTransportMode = Self.defaultTransportMode(config: config, apiService: apiService)
 
         // Reset time preferences (not persisted)
         timePreference = .leaveNow
