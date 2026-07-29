@@ -29,6 +29,12 @@ struct DirectionsSheetView: View {
     /// expanding the sheet carries focus over.
     @State private var focusedLegIndex: Int?
 
+    /// True once the rider tapped Start Trip. Before the first leg's start
+    /// time the clock alone can't distinguish "reviewing the plan" from
+    /// "guidance underway", so the button press is what flips the sheet from
+    /// its overview footer to live guidance.
+    @State private var tripStarted = false
+
     /// The 150pt-class tip detent: the current instruction is one line, so the
     /// map keeps most of the screen.
     static let tipDetent: PresentationDetent = .height(160)
@@ -102,25 +108,18 @@ struct DirectionsSheetView: View {
 
     // MARK: - Footer
 
+    /// Whether guidance is underway: either the rider tapped Start Trip, or
+    /// the clock says the trip has already begun.
+    private func hasStarted(_ progress: TripProgress) -> Bool {
+        tripStarted || progress.phase != .notStarted
+    }
+
     /// Start Trip is the only primary button in the whole flow; Hide and End
     /// Trip split the two intents the old close button conflated.
     @ViewBuilder
     private func footer(_ progress: TripProgress) -> some View {
-        if progress.phase == .notStarted {
-            VStack(spacing: 0) {
-                Divider()
-                Button {
-                    sheetDetent = DirectionsSheetView.tipDetent
-                } label: {
-                    Text(OTPLoc("rail.start_trip", comment: "Begins turn-by-turn guidance for the trip"))
-                        .font(.body.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(theme.primaryColor, in: RoundedRectangle(cornerRadius: 12))
-                        .foregroundStyle(.white)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-            }
+        if !hasStarted(progress) {
+            preTripFooter
         } else if sheetDetent == .large {
             VStack(spacing: 0) {
                 Divider()
@@ -152,6 +151,44 @@ struct DirectionsSheetView: View {
                 .padding(.vertical, 12)
             }
         }
+    }
+
+    private var preTripFooter: some View {
+        VStack(spacing: 0) {
+            Divider()
+            Button {
+                startTrip()
+            } label: {
+                Text(OTPLoc("rail.start_trip", comment: "Begins turn-by-turn guidance for the trip"))
+                    .font(.body.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .background(theme.primaryColor, in: RoundedRectangle(cornerRadius: 12))
+                    .foregroundStyle(.white)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+
+            // A planned trip must be abandonable without starting it.
+            Button {
+                showEndConfirmation = true
+            } label: {
+                Text(OTPLoc("directions.end_trip", comment: "Confirms ending the active trip"))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, minHeight: 36)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
+        }
+    }
+
+    /// Begin guidance: collapse to the tip so the map does the wayfinding,
+    /// frame the first step, and confirm with a haptic.
+    private func startTrip() {
+        tripStarted = true
+        HapticManager.shared.success()
+        sheetDetent = DirectionsSheetView.tipDetent
+        updateMap(now: Date())
     }
 
     // MARK: - Map Coordination
