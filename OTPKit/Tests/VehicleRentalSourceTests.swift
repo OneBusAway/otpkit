@@ -10,18 +10,19 @@ import Foundation
 import Testing
 @testable import OTPKit
 
+/// One recorded `fetchVehicleRentals` invocation on the scripted service.
+private struct RentalServiceCall: Sendable {
+    let boundingBox: VehicleRentalBoundingBox
+    let formFactors: Set<VehicleFormFactor>?
+}
+
 @Suite("VehicleRentalSource")
 struct VehicleRentalSourceTests {
 
     // MARK: - Scripted service
 
     private actor ScriptedRentalService: VehicleRentalService {
-        struct Call: Sendable {
-            let boundingBox: VehicleRentalBoundingBox
-            let formFactors: Set<VehicleFormFactor>?
-        }
-
-        private(set) var calls: [Call] = []
+        private(set) var calls: [RentalServiceCall] = []
         private var results: [Result<VehicleRentalFetchResult, Error>]
         private var delay: Duration = .zero
 
@@ -37,7 +38,7 @@ struct VehicleRentalSourceTests {
             in boundingBox: VehicleRentalBoundingBox,
             formFactors: Set<VehicleFormFactor>?
         ) async throws -> VehicleRentalFetchResult {
-            calls.append(Call(boundingBox: boundingBox, formFactors: formFactors))
+            calls.append(RentalServiceCall(boundingBox: boundingBox, formFactors: formFactors))
 
             // Claim the scripted result at call time, before any delay: a cancelled
             // call must still consume its result so later calls stay aligned with

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// swiftlint:disable file_length
+
 // The content column of each rail row kind. The views are state-aware: done
 // rows collapse to one line, current boarding/riding rows expand into the
 // tinted NowCard, and a focused boarding row shows its full detail inside the
@@ -474,3 +476,5 @@ struct ArriveRowContent: View {
             .font(.body.weight(.semibold))
     }
 }
+
+// swiftlint:enable file_length

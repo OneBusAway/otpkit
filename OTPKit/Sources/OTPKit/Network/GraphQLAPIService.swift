@@ -19,7 +19,10 @@ import OSLog
 
 /// Actor-based GraphQL API client for OTP 2.x trip planning and vehicle rentals
 /// via the GTFS GraphQL API.
-public actor GraphQLAPIService: APIService, VehicleRentalService {
+///
+/// Most of the type body is the two static GraphQL documents; the lint pragmas
+/// below account for them, not for logic.
+public actor GraphQLAPIService: APIService, VehicleRentalService { // swiftlint:disable:this type_body_length
     public nonisolated let baseURL: URL
     public nonisolated let dataLoader: URLDataLoader
 
@@ -223,7 +226,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
     /// argument (with its `PlanViaLocationInput` type) only exists on OTP 2.7+ — a
     /// document that always declared it would break every plan request, transit
     /// included, against older 2.x servers.
-    static func planQuery(includingVia: Bool) -> String {
+    static func planQuery(includingVia: Bool) -> String { // swiftlint:disable:this function_body_length
         let viaDeclaration = includingVia ? "\n      $via: [PlanViaLocationInput!]" : ""
         let viaArgument = includingVia ? "\n        via: $via" : ""
         return """

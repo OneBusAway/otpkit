@@ -16,6 +16,11 @@
 
 import Foundation
 
+// swiftlint:disable file_length
+// The pure in-trip state machine: phases, rows, and the rider questions they
+// answer all live together deliberately — splitting them would scatter one
+// state machine across files.
+
 /// Where the rider is in an itinerary right now.
 ///
 /// This is the `currentLeg` cursor of the in-trip panel's two-cursor model: it
@@ -437,3 +442,5 @@ public struct TripProgress {
         }
     }
 }
+
+// swiftlint:enable file_length

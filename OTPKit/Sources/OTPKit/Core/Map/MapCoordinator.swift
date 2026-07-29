@@ -11,6 +11,8 @@ import MapKit
 import SwiftUI
 import OSLog
 
+// swiftlint:disable file_length
+
 /// Coordinates all map operations between OTPKit and the external map provider
 /// This class manages routes, annotations, and user interactions with the map
 @MainActor
@@ -405,3 +407,5 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
         Logger.main.info("Annotation selected: \(identifier)")
     }
 }
+
+// swiftlint:enable file_length
