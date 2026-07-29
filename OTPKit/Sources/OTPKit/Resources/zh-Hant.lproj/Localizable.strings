@@ -216,6 +216,14 @@
 "transport_mode.walk" = "步行";
 "transport_mode.bike" = "自行車";
 "transport_mode.car" = "開車";
+"transport_mode.bike_rental" = "共享單車";
+
+"rental.vehicle_type.bike" = "單車";
+"rental.vehicle_type.ebike" = "電動單車";
+"rental.vehicle_type.scooter" = "滑板車";
+"rental.vehicle_type.car" = "汽車";
+"rental.vehicle_type.moped" = "輕型機車";
+"rental.vehicle_type.vehicle" = "車輛";
 
 /* Walking Directions */
 "direction.depart" = "出發";

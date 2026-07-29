@@ -1,0 +1,33 @@
+{
+  "data": {
+    "vehicleRentalsByBbox": [
+      {
+        "__typename": "RentalVehicle",
+        "vehicleId": "lime_seattle:9f8b7460-b06e-4e2e-bbd4-01b40bbdbc0d",
+        "name": "Default vehicle type",
+        "lat": 47.6101,
+        "lon": -122.3358,
+        "allowPickupNow": true,
+        "operative": true,
+        "rentalNetwork": {
+          "networkId": "lime_seattle",
+          "url": null
+        },
+        "rentalUris": null,
+        "vehicleType": {
+          "formFactor": "BICYCLE",
+          "propulsionType": "ELECTRIC_ASSIST"
+        },
+        "fuel": {
+          "percent": null,
+          "range": 26602
+        }
+      }
+    ]
+  },
+  "errors": [
+    {
+      "message": "Exception while fetching data (/vehicleRentalsByBbox) : feed bird_seattle timed out"
+    }
+  ]
+}

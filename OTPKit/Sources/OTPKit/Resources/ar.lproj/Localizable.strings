@@ -216,6 +216,14 @@
 "transport_mode.walk" = "المشي";
 "transport_mode.bike" = "الدراجة";
 "transport_mode.car" = "السيارة";
+"transport_mode.bike_rental" = "دراجات مشتركة";
+
+"rental.vehicle_type.bike" = "دراجة";
+"rental.vehicle_type.ebike" = "دراجة كهربائية";
+"rental.vehicle_type.scooter" = "سكوتر";
+"rental.vehicle_type.car" = "سيارة";
+"rental.vehicle_type.moped" = "دراجة نارية صغيرة";
+"rental.vehicle_type.vehicle" = "مركبة";
 
 /* Walking Directions */
 "direction.depart" = "انطلق";

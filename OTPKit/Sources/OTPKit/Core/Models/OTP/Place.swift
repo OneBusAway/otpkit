@@ -36,18 +36,24 @@ public struct Place: Codable, Hashable {
     // StopCode of the stop
     public let stopCode: String?
 
+    /// Identifier of the vehicle rental entity at this place — a station's `stationId` or a
+    /// free-floating vehicle's `vehicleId`, whichever the leg references. Nil for non-rental places.
+    public let bikeShareId: String?
+
     /// Custom initializer for creating Place instances
     public init(name: String,
                 lon: Double,
                 lat: Double,
                 vertexType: String,
                 stopId: String? = nil,
-                stopCode: String? = nil) {
+                stopCode: String? = nil,
+                bikeShareId: String? = nil) {
         self.name = name
         self.lon = lon
         self.lat = lat
         self.vertexType = vertexType
         self.stopId = stopId
         self.stopCode = stopCode
+        self.bikeShareId = bikeShareId
     }
 }

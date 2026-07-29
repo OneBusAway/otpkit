@@ -1,0 +1,117 @@
+{
+  "data": {
+    "vehicleRentalsByBbox": [
+      {
+        "__typename": "VehicleRentalStation",
+        "stationId": "pronto:BT-01",
+        "name": "Pine St & 9th Ave",
+        "lat": 47.6134,
+        "lon": -122.3325,
+        "vehiclesAvailable": 3,
+        "spacesAvailable": 15,
+        "allowPickupNow": true,
+        "allowDropoffNow": true,
+        "operative": true,
+        "rentalNetwork": {
+          "networkId": "pronto",
+          "url": "https://www.prontocycleshare.com"
+        },
+        "rentalUris": {
+          "ios": "https://pronto.example.com/stations/BT-01",
+          "android": null,
+          "web": "https://pronto.example.com/stations/BT-01"
+        },
+        "availableVehicles": {
+          "total": 3,
+          "byType": [
+            {
+              "count": 3,
+              "vehicleType": {
+                "formFactor": "BICYCLE"
+              }
+            }
+          ]
+        },
+        "availableSpaces": {
+          "total": 15
+        }
+      },
+      {
+        "__typename": "RentalVehicle",
+        "vehicleId": "lime_seattle:9f8b7460-b06e-4e2e-bbd4-01b40bbdbc0d",
+        "name": "Default vehicle type",
+        "lat": 47.6101,
+        "lon": -122.3358,
+        "allowPickupNow": true,
+        "operative": true,
+        "rentalNetwork": {
+          "networkId": "lime_seattle",
+          "url": null
+        },
+        "rentalUris": null,
+        "vehicleType": {
+          "formFactor": "BICYCLE",
+          "propulsionType": "ELECTRIC_ASSIST"
+        },
+        "fuel": {
+          "percent": null,
+          "range": 26602
+        }
+      },
+      {
+        "__typename": "RentalVehicle",
+        "vehicleId": "lime_seattle:2a919739-89e2-48e4-a3d8-dfbd2a29f674",
+        "name": "Default vehicle type",
+        "lat": 47.6088,
+        "lon": -122.3402,
+        "allowPickupNow": true,
+        "operative": true,
+        "rentalNetwork": {
+          "networkId": "lime_seattle",
+          "url": null
+        },
+        "rentalUris": null,
+        "vehicleType": {
+          "formFactor": "SCOOTER_STANDING",
+          "propulsionType": "ELECTRIC"
+        },
+        "fuel": {
+          "percent": 0.62,
+          "range": 18926
+        }
+      },
+      {
+        "__typename": "RentalVehicle",
+        "vehicleId": "future_mobility:hoverboard-1",
+        "name": "Hoverboard",
+        "lat": 47.6144,
+        "lon": -122.3287,
+        "allowPickupNow": true,
+        "operative": false,
+        "rentalNetwork": {
+          "networkId": "future_mobility",
+          "url": null
+        },
+        "rentalUris": null,
+        "vehicleType": {
+          "formFactor": "HOVERBOARD",
+          "propulsionType": "ELECTRIC"
+        },
+        "fuel": null
+      },
+      {
+        "__typename": "RentalVehicle",
+        "vehicleId": "mystery_wheels:untyped-1",
+        "name": "Untyped vehicle",
+        "lat": 47.6152,
+        "lon": -122.3311,
+        "allowPickupNow": null,
+        "operative": null,
+        "rentalNetwork": null,
+        "rentalUris": null,
+        "vehicleType": null,
+        "fuel": null
+      }
+    ]
+  }
+}

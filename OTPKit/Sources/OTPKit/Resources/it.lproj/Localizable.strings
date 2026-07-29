@@ -216,6 +216,14 @@
 "transport_mode.walk" = "A piedi";
 "transport_mode.bike" = "Bicicletta";
 "transport_mode.car" = "Auto";
+"transport_mode.bike_rental" = "Bike sharing";
+
+"rental.vehicle_type.bike" = "bici";
+"rental.vehicle_type.ebike" = "bici elettrica";
+"rental.vehicle_type.scooter" = "monopattino";
+"rental.vehicle_type.car" = "auto";
+"rental.vehicle_type.moped" = "ciclomotore";
+"rental.vehicle_type.vehicle" = "veicolo";
 
 /* Walking Directions */
 "direction.depart" = "Parti";

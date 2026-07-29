@@ -63,6 +63,22 @@ enum TestFixtures {
         }
     }
 
+    /// A mock APIService that also advertises vehicle rental capability, for testing
+    /// capability-gated behavior like `availableTransportModes`.
+    class MockRentalAPIService: MockAPIService, VehicleRentalService {
+        var mockRentals: [VehicleRental] = []
+
+        func fetchVehicleRentals(
+            in boundingBox: VehicleRentalBoundingBox,
+            formFactors: Set<VehicleFormFactor>?
+        ) async throws -> VehicleRentalFetchResult {
+            if shouldThrowError {
+                throw mockError
+            }
+            return VehicleRentalFetchResult(rentals: mockRentals)
+        }
+    }
+
     // MARK: - Simple Fixture Builders
 
     static func makePlace(name: String = "Test") -> Place {

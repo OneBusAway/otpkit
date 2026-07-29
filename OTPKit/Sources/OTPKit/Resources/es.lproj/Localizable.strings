@@ -216,6 +216,14 @@
 "transport_mode.walk" = "A pie";
 "transport_mode.bike" = "Bicicleta";
 "transport_mode.car" = "Coche";
+"transport_mode.bike_rental" = "Bicicleta compartida";
+
+"rental.vehicle_type.bike" = "bici";
+"rental.vehicle_type.ebike" = "bici eléctrica";
+"rental.vehicle_type.scooter" = "patinete";
+"rental.vehicle_type.car" = "coche";
+"rental.vehicle_type.moped" = "ciclomotor";
+"rental.vehicle_type.vehicle" = "vehículo";
 
 /* Walking Directions */
 "direction.depart" = "Sal";

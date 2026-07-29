@@ -17,8 +17,9 @@
 import Foundation
 import OSLog
 
-/// Actor-based GraphQL API client for OTP 2.x trip planning via the GTFS GraphQL API.
-public actor GraphQLAPIService: APIService {
+/// Actor-based GraphQL API client for OTP 2.x trip planning and vehicle rentals
+/// via the GTFS GraphQL API.
+public actor GraphQLAPIService: APIService, VehicleRentalService {
     public nonisolated let baseURL: URL
     public nonisolated let dataLoader: URLDataLoader
 
@@ -40,18 +41,15 @@ public actor GraphQLAPIService: APIService {
 
     /// Fetches a trip plan using a `TripPlanRequest`
     public func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
-        var urlRequest = URLRequest(url: endpointURL)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: [
-            "query": Self.planQuery,
-            "variables": Self.planVariables(for: request)
-        ])
+        let urlRequest = try makeGraphQLRequest(
+            query: Self.planQuery,
+            variables: Self.planVariables(for: request)
+        )
 
         Logger.main.info("Fetching trip plan via GraphQL: \(self.endpointURL.absoluteString)")
 
         let data = try await dataLoader.validatedData(for: urlRequest)
-        let envelope = try JSONDecoder.otpDecoder().decode(GraphQLResponseEnvelope.self, from: data)
+        let envelope = try JSONDecoder.otpDecoder().decode(GraphQLEnvelope<GraphQLPlanData>.self, from: data)
 
         if let firstError = envelope.errors?.first {
             throw OTPKitError.apiError(firstError.message)
@@ -68,7 +66,77 @@ public actor GraphQLAPIService: APIService {
         )
     }
 
+    // MARK: - Vehicle Rentals
+
+    /// Fetches rental stations and free-floating vehicles in a bounding box.
+    ///
+    /// Unlike `fetchPlan`, this tolerates GraphQL partial success: a response carrying
+    /// both data and errors returns the data, with the error messages surfaced in
+    /// `VehicleRentalFetchResult.partialErrors`. Unrecognized `RentalPlace` union
+    /// members are skipped (and logged), not treated as a failed fetch.
+    public func fetchVehicleRentals(
+        in boundingBox: VehicleRentalBoundingBox,
+        formFactors: Set<VehicleFormFactor>?
+    ) async throws -> VehicleRentalFetchResult {
+        let urlRequest = try makeGraphQLRequest(
+            query: Self.rentalsQuery,
+            variables: [
+                "minLat": boundingBox.minimumLatitude,
+                "maxLat": boundingBox.maximumLatitude,
+                "minLon": boundingBox.minimumLongitude,
+                "maxLon": boundingBox.maximumLongitude
+            ]
+        )
+
+        Logger.main.info("Fetching vehicle rentals via GraphQL: \(self.endpointURL.absoluteString)")
+
+        let data = try await dataLoader.validatedData(for: urlRequest)
+        return try await Self.decodeRentals(data, formFactors: formFactors)
+    }
+
+    /// Decodes and filters a rentals payload. Nonisolated *async* so it hops to the
+    /// global concurrent executor — a multi-thousand-entity decode must never hold the
+    /// actor and serialize a concurrent `fetchPlan` behind it.
+    private nonisolated static func decodeRentals(
+        _ data: Data,
+        formFactors: Set<VehicleFormFactor>?
+    ) async throws -> VehicleRentalFetchResult {
+        let envelope = try JSONDecoder.otpDecoder().decode(GraphQLEnvelope<GraphQLRentalsData>.self, from: data)
+
+        guard let payload = envelope.data, payload.vehicleRentalsByBbox != nil else {
+            if let firstError = envelope.errors?.first {
+                throw OTPKitError.apiError(firstError.message)
+            }
+            throw OTPKitError.invalidResponse()
+        }
+        let rentals = payload.rentals
+
+        let filtered: [VehicleRental]
+        if let formFactors {
+            filtered = rentals.filter { $0.matches(formFactors: formFactors) }
+        } else {
+            filtered = rentals
+        }
+
+        return VehicleRentalFetchResult(
+            rentals: filtered,
+            partialErrors: envelope.errors?.map(\.message) ?? []
+        )
+    }
+
     // MARK: - Request Building
+
+    /// Assembles the POST request shared by every GraphQL operation.
+    private func makeGraphQLRequest(query: String, variables: [String: Any]) throws -> URLRequest {
+        var urlRequest = URLRequest(url: endpointURL)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: [
+            "query": query,
+            "variables": variables
+        ])
+        return urlRequest
+    }
 
     /// Builds the GraphQL `variables` payload for a trip plan request.
     private static func planVariables(for request: TripPlanRequest) -> [String: Any] {
@@ -77,21 +145,24 @@ public actor GraphQLAPIService: APIService {
             "to": ["lat": request.destination.latitude, "lon": request.destination.longitude],
             "date": request.date.formattedTripDate,
             "time": request.time.formattedTripTime,
-            "transportModes": request.transportModes.map { ["mode": graphQLModeName(for: $0)] },
+            "transportModes": request.transportModes.map { graphQLTransportMode(for: $0) },
             "arriveBy": request.arriveBy,
             "wheelchair": request.wheelchairAccessible,
             "maxWalkDistance": Double(request.maxWalkDistance)
         ]
     }
 
-    /// The GraphQL `Mode` enum value for a transport mode. `TransportMode.rawValue` is the
-    /// OTP 1.x REST token, which mostly — but not always — matches the GraphQL vocabulary.
-    private static func graphQLModeName(for mode: TransportMode) -> String {
+    /// The GraphQL `TransportMode` input value for a transport mode. `TransportMode.rawValue`
+    /// is the OTP 1.x REST token, which mostly — but not always — matches the GraphQL
+    /// vocabulary; rentals additionally need the `RENT` qualifier.
+    private static func graphQLTransportMode(for mode: TransportMode) -> [String: String] {
         switch mode {
         case .bike:
-            return "BICYCLE"
+            return ["mode": "BICYCLE"]
+        case .bikeRental:
+            return ["mode": "BICYCLE", "qualifier": "RENT"]
         case .transit, .walk, .car:
-            return mode.rawValue
+            return ["mode": mode.rawValue]
         }
     }
 
@@ -178,11 +249,20 @@ public actor GraphQLAPIService: APIService {
               textColor
               agency { name }
             }
-            from { name lon lat vertexType stop { gtfsId code } }
-            to { name lon lat vertexType stop { gtfsId code } }
+            from {
+              name lon lat vertexType stop { gtfsId code }
+              vehicleRentalStation { stationId }
+              rentalVehicle { vehicleId }
+            }
+            to {
+              name lon lat vertexType stop { gtfsId code }
+              vehicleRentalStation { stationId }
+              rentalVehicle { vehicleId }
+            }
             legGeometry { points length }
             distance
             transitLeg
+            rentedBike
             duration
             realTime
             departureDelay
@@ -191,6 +271,56 @@ public actor GraphQLAPIService: APIService {
             intermediatePlaces { name lon lat vertexType stop { gtfsId code } }
             steps { distance streetName relativeDirection lon lat }
           }
+        }
+      }
+    }
+    """
+
+    /// The GTFS GraphQL API `vehicleRentalsByBbox` query. Returns the `RentalPlace`
+    /// union; `__typename` discriminates stations from free-floating vehicles.
+    static let rentalsQuery = """
+    query VehicleRentalsByBbox(
+      $minLat: CoordinateValue!
+      $maxLat: CoordinateValue!
+      $minLon: CoordinateValue!
+      $maxLon: CoordinateValue!
+    ) {
+      vehicleRentalsByBbox(
+        minimumLatitude: $minLat
+        maximumLatitude: $maxLat
+        minimumLongitude: $minLon
+        maximumLongitude: $maxLon
+      ) {
+        __typename
+        ... on VehicleRentalStation {
+          stationId
+          name
+          lat
+          lon
+          vehiclesAvailable
+          spacesAvailable
+          allowPickupNow
+          allowDropoffNow
+          operative
+          rentalNetwork { networkId url }
+          rentalUris { ios android web }
+          availableVehicles {
+            total
+            byType { count vehicleType { formFactor } }
+          }
+          availableSpaces { total }
+        }
+        ... on RentalVehicle {
+          vehicleId
+          name
+          lat
+          lon
+          allowPickupNow
+          operative
+          rentalNetwork { networkId url }
+          rentalUris { ios android web }
+          vehicleType { formFactor propulsionType }
+          fuel { percent range }
         }
       }
     }

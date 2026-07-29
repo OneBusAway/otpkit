@@ -1,0 +1,125 @@
+{
+  "data": {
+    "plan": {
+      "date": 1785340800000,
+      "from": {
+        "name": "Origin",
+        "lon": -122.3331,
+        "lat": 47.6097,
+        "vertexType": "NORMAL"
+      },
+      "to": {
+        "name": "Destination",
+        "lon": -122.3493,
+        "lat": 47.6205,
+        "vertexType": "NORMAL"
+      },
+      "routingErrors": [],
+      "itineraries": [
+        {
+          "duration": 932,
+          "startTime": 1785341233000,
+          "endTime": 1785342165000,
+          "walkTime": 233,
+          "waitingTime": 0,
+          "walkDistance": 305.2,
+          "elevationLost": 0.0,
+          "elevationGained": 0.0,
+          "numberOfTransfers": 0,
+          "legs": [
+            {
+              "startTime": 1785341233000,
+              "endTime": 1785341466000,
+              "mode": "WALK",
+              "route": null,
+              "from": {
+                "name": "Origin",
+                "lon": -122.3331,
+                "lat": 47.6097,
+                "vertexType": "NORMAL",
+                "stop": null,
+                "vehicleRentalStation": null,
+                "rentalVehicle": null
+              },
+              "to": {
+                "name": "Default vehicle type",
+                "lon": -122.334764,
+                "lat": 47.609818,
+                "vertexType": "BIKESHARE",
+                "stop": null,
+                "vehicleRentalStation": null,
+                "rentalVehicle": {
+                  "vehicleId": "lime_seattle:9e18440a-e282-4ac5-94d0-2659f6311bed"
+                }
+              },
+              "legGeometry": {
+                "points": "eyu`Hnn~aVBmA?_A",
+                "length": 3
+              },
+              "distance": 305.2,
+              "transitLeg": false,
+              "rentedBike": false,
+              "duration": 233.0,
+              "realTime": false,
+              "departureDelay": 0,
+              "arrivalDelay": 0,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": [
+                {
+                  "distance": 305.2,
+                  "streetName": "Pine Street",
+                  "relativeDirection": "DEPART",
+                  "lon": -122.3331,
+                  "lat": 47.6097
+                }
+              ]
+            },
+            {
+              "startTime": 1785341466000,
+              "endTime": 1785342165000,
+              "mode": "BICYCLE",
+              "route": null,
+              "from": {
+                "name": "Default vehicle type",
+                "lon": -122.334764,
+                "lat": 47.609818,
+                "vertexType": "BIKESHARE",
+                "stop": null,
+                "vehicleRentalStation": null,
+                "rentalVehicle": {
+                  "vehicleId": "lime_seattle:9e18440a-e282-4ac5-94d0-2659f6311bed"
+                }
+              },
+              "to": {
+                "name": "Pine St & 9th Ave",
+                "lon": -122.3493,
+                "lat": 47.6205,
+                "vertexType": "BIKESHARE",
+                "stop": null,
+                "vehicleRentalStation": {
+                  "stationId": "pronto:BT-01"
+                },
+                "rentalVehicle": null
+              },
+              "legGeometry": {
+                "points": "kzu`Hpt~aVoBnCiAtB",
+                "length": 3
+              },
+              "distance": 1830.4,
+              "transitLeg": false,
+              "rentedBike": true,
+              "duration": 699.0,
+              "realTime": false,
+              "departureDelay": 0,
+              "arrivalDelay": 0,
+              "headsign": null,
+              "intermediatePlaces": null,
+              "steps": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

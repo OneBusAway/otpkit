@@ -94,6 +94,22 @@ class GraphQLAPIServiceTests: OTPTestCase {
         XCTAssertEqual(modes.map { $0["mode"] as? String }, ["BICYCLE", "WALK"])
     }
 
+    func testFetchPlanSendsBikeRentalQualifier() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        _ = try await service.fetchPlan(createTripPlanRequest(transportModes: [.bikeRental, .walk]))
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        let modes = try XCTUnwrap(variables["transportModes"] as? [[String: Any]])
+        // BICYCLE_RENT is a REST-only token; GraphQL expresses rentals as a qualified BICYCLE.
+        XCTAssertEqual(modes.map { $0["mode"] as? String }, ["BICYCLE", "WALK"])
+        XCTAssertEqual(modes[0]["qualifier"] as? String, "RENT")
+        XCTAssertNil(modes[1]["qualifier"])
+    }
+
     // MARK: - Response Mapping
 
     func testFetchPlanMapsItineraries() async throws {
@@ -178,6 +194,185 @@ class GraphQLAPIServiceTests: OTPTestCase {
         XCTAssertEqual(params.wheelchair, "false")
     }
 
+    func testFetchPlanMapsRentalLegs() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_rental.json"))
+
+        let response = try await service.fetchPlan(createTripPlanRequest(transportModes: [.bikeRental, .walk]))
+
+        let legs = try XCTUnwrap(response.plan?.itineraries.first?.legs)
+        XCTAssertEqual(legs.count, 2)
+
+        let walkLeg = legs[0]
+        XCTAssertEqual(walkLeg.mode, "WALK")
+        XCTAssertEqual(walkLeg.rentedBike, false)
+        XCTAssertNil(walkLeg.from.bikeShareId)
+        // The walk leg ends at the free-floating vehicle being picked up.
+        XCTAssertEqual(walkLeg.to.bikeShareId, "lime_seattle:9e18440a-e282-4ac5-94d0-2659f6311bed")
+
+        let rideLeg = legs[1]
+        XCTAssertEqual(rideLeg.mode, "BICYCLE")
+        XCTAssertEqual(rideLeg.rentedBike, true)
+        XCTAssertEqual(rideLeg.from.bikeShareId, "lime_seattle:9e18440a-e282-4ac5-94d0-2659f6311bed")
+        // Docked dropoff maps the station id into the same field.
+        XCTAssertEqual(rideLeg.to.bikeShareId, "pronto:BT-01")
+    }
+
+    // MARK: - Vehicle Rentals
+
+    func testFetchVehicleRentalsSendsRequest() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_mixed.json"))
+
+        _ = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertEqual(request.url?.absoluteString, "https://sound-transit-otp.ibi-transit.com/otp/gtfs/v1")
+
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let query = try XCTUnwrap(payload["query"] as? String)
+        XCTAssertTrue(query.contains("vehicleRentalsByBbox("))
+
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        XCTAssertEqual(variables["minLat"] as? Double, 47.5)
+        XCTAssertEqual(variables["maxLat"] as? Double, 47.7)
+        XCTAssertEqual(variables["minLon"] as? Double, -122.4)
+        XCTAssertEqual(variables["maxLon"] as? Double, -122.2)
+    }
+
+    func testFetchVehicleRentalsMapsStationsAndVehicles() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_mixed.json"))
+
+        let result = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+
+        XCTAssertEqual(result.rentals.count, 5)
+        XCTAssertTrue(result.partialErrors.isEmpty)
+
+        guard case .station(let station) = result.rentals[0] else {
+            return XCTFail("Expected first entity to be a station")
+        }
+        XCTAssertEqual(station.stationId, "pronto:BT-01")
+        XCTAssertEqual(station.name, "Pine St & 9th Ave")
+        XCTAssertEqual(station.vehiclesAvailableCount, 3)
+        XCTAssertEqual(station.docksAvailableCount, 15)
+        XCTAssertTrue(station.isOperative)
+        XCTAssertEqual(station.rentalUris?.ios, "https://pronto.example.com/stations/BT-01")
+
+        guard case .vehicle(let vehicle) = result.rentals[1] else {
+            return XCTFail("Expected second entity to be a vehicle")
+        }
+        XCTAssertEqual(vehicle.vehicleId, "lime_seattle:9f8b7460-b06e-4e2e-bbd4-01b40bbdbc0d")
+        XCTAssertEqual(vehicle.vehicleType?.formFactor, .bicycle)
+        // Battery is absent on the live Seattle feed; range is the reliable stat.
+        XCTAssertNil(vehicle.fuel?.percent)
+        XCTAssertEqual(vehicle.fuel?.range, 26602)
+        XCTAssertNil(vehicle.rentalUris)
+    }
+
+    func testFetchVehicleRentalsUnknownFormFactorDecodesAsOther() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_mixed.json"))
+
+        let result = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+
+        guard case .vehicle(let hoverboard) = result.rentals[3] else {
+            return XCTFail("Expected fourth entity to be a vehicle")
+        }
+        // A form factor OTP adds later must degrade to .other, never fail the whole decode.
+        XCTAssertEqual(hoverboard.vehicleType?.formFactor, .other)
+        XCTAssertFalse(hoverboard.isOperative)
+    }
+
+    func testFetchVehicleRentalsFiltersBicycles() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_mixed.json"))
+
+        let result = try await service.fetchVehicleRentals(
+            in: seattleBoundingBox,
+            formFactors: [.bicycle, .cargoBicycle]
+        )
+
+        // Station stocks bicycles, one vehicle is a bicycle, and the untyped vehicle
+        // is included fail-open. The scooter and the unknown form factor are excluded.
+        XCTAssertEqual(result.rentals.map(\.id), [
+            "pronto:BT-01",
+            "lime_seattle:9f8b7460-b06e-4e2e-bbd4-01b40bbdbc0d",
+            "mystery_wheels:untyped-1"
+        ])
+    }
+
+    func testFetchVehicleRentalsFiltersScooters() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_mixed.json"))
+
+        let result = try await service.fetchVehicleRentals(
+            in: seattleBoundingBox,
+            formFactors: [.scooter, .scooterSeated, .scooterStanding]
+        )
+
+        // The bicycle-only station is excluded; the untyped vehicle is fail-open included.
+        XCTAssertEqual(result.rentals.map(\.id), [
+            "lime_seattle:2a919739-89e2-48e4-a3d8-dfbd2a29f674",
+            "mystery_wheels:untyped-1"
+        ])
+    }
+
+    func testFetchVehicleRentalsPartialSuccessReturnsDataAndErrors() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_rentals_partial_error.json"))
+
+        let result = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+
+        XCTAssertEqual(result.rentals.count, 1)
+        XCTAssertEqual(result.partialErrors.count, 1)
+        XCTAssertTrue(result.partialErrors[0].contains("timed out"))
+    }
+
+    func testFetchVehicleRentalsThrowsOnTopLevelGraphQLError() async throws {
+        let errorJSON = """
+        {"errors":[{"message":"Validation error: unknown field"}]}
+        """
+        mockDataLoader.mockResponse(data: Data(errorJSON.utf8))
+
+        do {
+            _ = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+            XCTFail("Expected fetchVehicleRentals to throw")
+        } catch let error as OTPKitError {
+            guard case .apiError(let message, _) = error else {
+                return XCTFail("Expected apiError, got \(error)")
+            }
+            XCTAssertTrue(message.contains("Validation error"))
+        }
+    }
+
+    func testFetchVehicleRentalsSkipsUnknownTypename() async throws {
+        let json = """
+        {"data":{"vehicleRentalsByBbox":[
+            {"__typename":"RentalDrone","droneId":"x"},
+            {"__typename":"RentalVehicle","vehicleId":"lime_seattle:abc","name":"Default vehicle type",
+             "lat":47.61,"lon":-122.33,"allowPickupNow":true,"operative":true,
+             "rentalNetwork":null,"rentalUris":null,"vehicleType":null,"fuel":null}
+        ]}}
+        """
+        mockDataLoader.mockResponse(data: Data(json.utf8))
+
+        let result = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+
+        // A union member OTP adds later degrades to a skipped entry — it must never
+        // abort the decode of the thousands of entities around it.
+        XCTAssertEqual(result.rentals.map(\.id), ["lime_seattle:abc"])
+    }
+
+    func testFetchVehicleRentalsThrowsOnHTTPError() async throws {
+        mockDataLoader.mockResponse(data: Data("{}".utf8), statusCode: 502)
+
+        do {
+            _ = try await service.fetchVehicleRentals(in: seattleBoundingBox, formFactors: nil)
+            XCTFail("Expected fetchVehicleRentals to throw")
+        } catch let error as OTPKitError {
+            guard case .apiError(_, let statusCode) = error else {
+                return XCTFail("Expected apiError, got \(error)")
+            }
+            XCTAssertEqual(statusCode, 502)
+        }
+    }
+
     // MARK: - Error Handling
 
     func testFetchPlanMapsRoutingErrors() async throws {
@@ -250,6 +445,15 @@ class GraphQLAPIServiceTests: OTPTestCase {
 private extension GraphQLAPIServiceTests {
     static let testDate = DateFormatter.tripDateFormatter.date(from: "05-10-2024")!
     static let testTime = DateFormatter.tripAPITimeFormatter.date(from: "08:00")!
+
+    var seattleBoundingBox: VehicleRentalBoundingBox {
+        VehicleRentalBoundingBox(
+            minimumLatitude: 47.5,
+            maximumLatitude: 47.7,
+            minimumLongitude: -122.4,
+            maximumLongitude: -122.2
+        )
+    }
 
     func createTripPlanRequest(transportModes: [TransportMode] = [.transit, .walk]) -> TripPlanRequest {
         TestFixtures.makeTripPlanRequest(

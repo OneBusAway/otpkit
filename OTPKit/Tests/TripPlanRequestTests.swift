@@ -79,6 +79,20 @@ struct TripPlanRequestTests {
 
     // MARK: - transportModesString Tests
 
+    @Test("transportModesString spells bike rental as the OTP 1.x REST wire token")
+    func transportModesStringBikeRental() {
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(),
+            time: Date(),
+            transportModes: [.bikeRental, .walk]
+        )
+
+        // REST passes raw values through untouched, so the raw value IS the wire token.
+        #expect(request.transportModesString == "BICYCLE_RENT,WALK")
+    }
+
     @Test("transportModesString with single mode")
     func transportModesStringSingleMode() {
         let request = TripPlanRequest(

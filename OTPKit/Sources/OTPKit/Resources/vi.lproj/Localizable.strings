@@ -216,6 +216,14 @@
 "transport_mode.walk" = "Đi bộ";
 "transport_mode.bike" = "Xe đạp";
 "transport_mode.car" = "Ô tô";
+"transport_mode.bike_rental" = "Xe đạp công cộng";
+
+"rental.vehicle_type.bike" = "xe đạp";
+"rental.vehicle_type.ebike" = "xe đạp điện";
+"rental.vehicle_type.scooter" = "xe scooter";
+"rental.vehicle_type.car" = "ô tô";
+"rental.vehicle_type.moped" = "xe máy nhỏ";
+"rental.vehicle_type.vehicle" = "phương tiện";
 
 /* Walking Directions */
 "direction.depart" = "Xuất phát";

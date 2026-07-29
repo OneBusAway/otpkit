@@ -216,6 +216,14 @@
 "transport_mode.walk" = "À pied";
 "transport_mode.bike" = "Vélo";
 "transport_mode.car" = "Voiture";
+"transport_mode.bike_rental" = "Vélo en libre-service";
+
+"rental.vehicle_type.bike" = "vélo";
+"rental.vehicle_type.ebike" = "vélo électrique";
+"rental.vehicle_type.scooter" = "trottinette";
+"rental.vehicle_type.car" = "voiture";
+"rental.vehicle_type.moped" = "cyclomoteur";
+"rental.vehicle_type.vehicle" = "véhicule";
 
 /* Walking Directions */
 "direction.depart" = "Partez";

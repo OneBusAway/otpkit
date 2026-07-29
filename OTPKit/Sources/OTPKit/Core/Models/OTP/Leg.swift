@@ -75,6 +75,11 @@ public struct Leg: Codable, Hashable {
     /// Optional flag indicating whether this leg involves transit.
     public let transitLeg: Bool?
 
+    /// True when this leg is ridden on a rented vehicle (bikeshare/micromobility).
+    /// Present in both OTP 1.x REST and 2.x GraphQL responses; the ride leg's `mode`
+    /// is plain "BICYCLE", so this flag is the only reliable rental discriminator.
+    public let rentedBike: Bool?
+
     /// Duration of the leg in seconds.
     public let duration: Int
 
@@ -124,7 +129,8 @@ public struct Leg: Codable, Hashable {
         headsign: String?,
         intermediateStops: [Place]?,
         departureDelay: Int? = nil,
-        arrivalDelay: Int? = nil
+        arrivalDelay: Int? = nil,
+        rentedBike: Bool? = nil
     ) {
         self.startTime = startTime
         self.endTime = endTime
@@ -148,6 +154,7 @@ public struct Leg: Codable, Hashable {
         self.intermediateStops = intermediateStops
         self.departureDelay = departureDelay
         self.arrivalDelay = arrivalDelay
+        self.rentedBike = rentedBike
     }
 
     /// Merges `Itinerary` `Leg`s that are part of the same route on the same vehicle.
@@ -178,7 +185,8 @@ public struct Leg: Codable, Hashable {
             headsign: leg1.headsign,
             intermediateStops: leg1.intermediateStops,
             departureDelay: leg1.departureDelay,
-            arrivalDelay: leg2.arrivalDelay
+            arrivalDelay: leg2.arrivalDelay,
+            rentedBike: leg1.rentedBike
         )
     }
 
