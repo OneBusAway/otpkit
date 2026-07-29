@@ -165,10 +165,7 @@ public enum OTPAnnotationType {
         case .intermediateStop:
             return .gray
         case .rentalVehicle:
-            // Rental purple (#7B4FD1): every rental surface — browse layer pins and
-            // trip-planner pickup/dropoff markers — shares this color so rentals
-            // read as one system.
-            return Color(red: 0x7B / 255.0, green: 0x4F / 255.0, blue: 0xD1 / 255.0)
+            return .otpRentalPurple
         case .routeLegend:
             return .clear // Custom view will handle coloring
         }

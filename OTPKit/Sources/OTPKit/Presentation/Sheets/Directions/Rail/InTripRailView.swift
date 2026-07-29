@@ -111,6 +111,16 @@ struct InTripRailView: View {
                 RideRowContent(progress: progress, legIndex: index)
             case .getOff(let index):
                 GetOffRowContent(progress: progress, legIndex: index, state: row.state)
+            case .pickUpVehicle(let index):
+                PickUpVehicleRowContent(
+                    leg: progress.legs[index],
+                    state: row.state,
+                    isExpanded: isFocused
+                )
+            case .rideRental(let index):
+                RideRentalRowContent(progress: progress, legIndex: index)
+            case .dropOffVehicle(let index):
+                DropOffVehicleRowContent(progress: progress, legIndex: index, state: row.state)
             case .arrive:
                 ArriveRowContent()
             }
@@ -137,6 +147,8 @@ struct InTripRailView: View {
             return .destination
         case (.walk, _):
             return .ring(Color(.systemGray3))
+        case (.pickUpVehicle, _), (.rideRental, _), (.dropOffVehicle, _):
+            return .ring(.otpRentalPurple)
         case (.board(let index), _), (.getOff(let index), _), (.ride(let index), _):
             return .ring(progress.legs[index].routeUIColor ?? Color(.systemGray2))
         }
@@ -153,7 +165,12 @@ struct InTripRailView: View {
                 return .thin
             }
             return .bar(progress.legs[index].routeUIColor ?? Color(.systemGray2))
-        case .walk, .getOff:
+        case .pickUpVehicle(let index), .rideRental(let index):
+            if row.state == .done, case .pickUpVehicle = row.kind, !isRiding(index) {
+                return .thin
+            }
+            return .bar(.otpRentalPurple)
+        case .walk, .getOff, .dropOffVehicle:
             return .thin
         }
     }

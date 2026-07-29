@@ -313,3 +313,14 @@
 "rail.last_step" = "Huling hakbang";
 "rail.arrive_time_fmt" = "Dating %@";
 "rail.now" = "ngayon";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Magbisikleta papuntang %@";
+"leg.ride_rental_bike_to" = "Sakyan ang rentahang bisikleta papuntang %@";
+"place.rental_bike" = "rentahang bisikleta";
+"rail.now_riding_rental" = "Nakasakay sa rentahang bisikleta";
+"rail.pick_up_bike" = "Kunin ang rentahang bisikleta";
+"rail.picked_up_bike" = "Nakuha na ang rentahang bisikleta";
+"rail.ride_bike_to_fmt" = "Sumakay papuntang %@";
+"rail.drop_off_bike" = "Ibalik ang bisikleta";
+"rail.ride_distance_duration_fmt" = "%1$@, mga %2$@";

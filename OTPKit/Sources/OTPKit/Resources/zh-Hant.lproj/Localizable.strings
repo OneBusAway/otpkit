@@ -313,3 +313,14 @@
 "rail.last_step" = "最後一步";
 "rail.arrive_time_fmt" = "抵達 %@";
 "rail.now" = "現在";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "騎車前往%@";
+"leg.ride_rental_bike_to" = "騎共享單車前往%@";
+"place.rental_bike" = "共享單車";
+"rail.now_riding_rental" = "正在騎共享單車";
+"rail.pick_up_bike" = "取用共享單車";
+"rail.picked_up_bike" = "已取用共享單車";
+"rail.ride_bike_to_fmt" = "騎行前往%@";
+"rail.drop_off_bike" = "歸還單車";
+"rail.ride_distance_duration_fmt" = "%1$@，約%2$@";

@@ -289,4 +289,121 @@ struct TripProgressTests {
         #expect(leg.departureStatus == .late(minutes: 7))
         #expect(leg.arrivalStatus == .late(minutes: 6))
     }
+
+    // MARK: - Rental legs
+
+    /// Walk 3m to the vehicle → ride the rental 10m → walk 2m to the destination.
+    func makeRentalItinerary() -> Itinerary {
+        let walkEnd = tripStart.addingTimeInterval(180)
+        let rideEnd = walkEnd.addingTimeInterval(600)
+        let arrivalTime = rideEnd.addingTimeInterval(120)
+
+        let vehiclePlace = Place(name: "Default vehicle type", lon: -122.34, lat: 47.615,
+                                 vertexType: "BIKESHARE", bikeShareId: "lime_seattle:abc")
+        let dropoffPlace = Place(name: "3rd Ave & Pine St", lon: -122.33, lat: 47.61,
+                                 vertexType: "BIKESHARE", bikeShareId: "pronto:BT-01")
+
+        let walkLeg = Leg(
+            startTime: tripStart, endTime: walkEnd, mode: "WALK",
+            routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil,
+            from: Place(name: "Home", lon: -122.35, lat: 47.62, vertexType: "NORMAL"),
+            to: vehiclePlace,
+            legGeometry: LegGeometry(points: "AA@@", length: 4),
+            distance: 250, transitLeg: false, duration: 180, realTime: nil,
+            streetNames: nil, pathway: nil, steps: nil, headsign: nil, intermediateStops: nil,
+            rentedBike: false
+        )
+
+        let rideLeg = Leg(
+            startTime: walkEnd, endTime: rideEnd, mode: "BICYCLE",
+            routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil,
+            from: vehiclePlace, to: dropoffPlace,
+            legGeometry: LegGeometry(points: "AA@@", length: 4),
+            distance: 2100, transitLeg: false, duration: 600, realTime: nil,
+            streetNames: nil, pathway: nil, steps: nil, headsign: nil, intermediateStops: nil,
+            rentedBike: true
+        )
+
+        let finalWalkLeg = Leg(
+            startTime: rideEnd, endTime: arrivalTime, mode: "WALK",
+            routeType: nil, routeColor: nil, routeTextColor: nil, route: nil, agencyName: nil,
+            from: dropoffPlace,
+            to: Place(name: "Pike Place Market", lon: -122.34, lat: 47.609, vertexType: "NORMAL"),
+            legGeometry: LegGeometry(points: "AA@@", length: 4),
+            distance: 140, transitLeg: false, duration: 120, realTime: nil,
+            streetNames: nil, pathway: nil, steps: nil, headsign: nil, intermediateStops: nil,
+            rentedBike: false
+        )
+
+        return Itinerary(
+            duration: Int(arrivalTime.timeIntervalSince(tripStart)),
+            startTime: tripStart,
+            endTime: arrivalTime,
+            walkTime: 300, transitTime: 0, waitingTime: 0,
+            walkDistance: 390, walkLimitExceeded: false,
+            elevationLost: 0, elevationGained: 0,
+            transfers: 0,
+            legs: [walkLeg, rideLeg, finalWalkLeg]
+        )
+    }
+
+    func rentalProgress(at offset: TimeInterval) -> TripProgress {
+        TripProgress(itinerary: makeRentalItinerary(), now: tripStart.addingTimeInterval(offset))
+    }
+
+    @Test func rentalRideCountsAsRiding() {
+        // 180s..780s is the ride window.
+        #expect(rentalProgress(at: 400).phase == .riding(legIndex: 1))
+    }
+
+    @Test func rentalLegProducesPickupRideAndDropoffRows() {
+        let rows = rentalProgress(at: 400).rows
+        let kinds = rows.map(\.kind)
+
+        #expect(kinds.contains(.pickUpVehicle(legIndex: 1)))
+        #expect(kinds.contains(.rideRental(legIndex: 1)))
+        #expect(kinds.contains(.dropOffVehicle(legIndex: 1)))
+
+        // Exactly one current row: the synthetic riding row.
+        let currentRows = rows.filter { $0.state == .current }
+        #expect(currentRows.map(\.kind) == [.rideRental(legIndex: 1)])
+    }
+
+    @Test func rentalRideRowAbsentWhenNotRiding() {
+        let kinds = rentalProgress(at: 60).rows.map(\.kind)
+        #expect(!kinds.contains(.rideRental(legIndex: 1)))
+        #expect(kinds.contains(.pickUpVehicle(legIndex: 1)))
+    }
+
+    @Test func rentalActivityNameIsRentalSpecific() {
+        let name = rentalProgress(at: 400).localizedActivityName
+        #expect(name == OTPLoc("rail.now_riding_rental", comment: ""))
+    }
+
+    @Test func rentalSegmentIsMarkedRental() {
+        let segments = rentalProgress(at: 400).segments
+        #expect(segments[1].isRental)
+        #expect(!segments[1].isTransit)
+        #expect(!segments[0].isRental)
+    }
+
+    @Test func stopsRemainingIsNilForRentalLegs() {
+        #expect(rentalProgress(at: 400).stopsRemaining(onLegAt: 1) == nil)
+    }
+
+    @Test func placeholderVehicleNameNeverSurfaces() {
+        let itinerary = makeRentalItinerary()
+        // The walk leg ends at the vehicle, whose feed name is the placeholder.
+        #expect(itinerary.legs[0].riderFacingToName == OTPLoc("place.rental_bike", comment: ""))
+        // Real names pass through untouched.
+        #expect(itinerary.legs[1].riderFacingToName == "3rd Ave & Pine St")
+    }
+
+    @Test func legsNeverMergeAcrossARentalBoundary() {
+        let itinerary = makeRentalItinerary()
+        // relevantLegs must keep the rental ride distinct from its neighbors.
+        #expect(itinerary.relevantLegs.filter(\.isRentalRide).count == 1)
+        #expect(!Leg.shouldMergeLegs(leg1: itinerary.legs[0], leg2: itinerary.legs[1]))
+        #expect(!Leg.shouldMergeLegs(leg1: itinerary.legs[1], leg2: itinerary.legs[2]))
+    }
 }

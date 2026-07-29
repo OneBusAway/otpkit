@@ -314,3 +314,14 @@
 "rail.last_step" = "Last step";
 "rail.arrive_time_fmt" = "Arrive %@";
 "rail.now" = "now";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Bike to %@";
+"leg.ride_rental_bike_to" = "Ride rental bike to %@";
+"place.rental_bike" = "rental bike";
+"rail.now_riding_rental" = "Riding a rental bike";
+"rail.pick_up_bike" = "Pick up rental bike";
+"rail.picked_up_bike" = "Picked up rental bike";
+"rail.ride_bike_to_fmt" = "Ride to %@";
+"rail.drop_off_bike" = "Drop off bike";
+"rail.ride_distance_duration_fmt" = "%1$@, about %2$@";

@@ -37,6 +37,9 @@ struct TripProgressBarView: View {
 
     private func segmentView(_ segment: TripProgress.Segment) -> some View {
         let fillColor: Color = {
+            if segment.isRental {
+                return .otpRentalPurple
+            }
             if segment.isTransit {
                 return progress.legs[segment.legIndex].routeUIColor ?? theme.primaryColor
             }

@@ -313,3 +313,14 @@
 "rail.last_step" = "الخطوة الأخيرة";
 "rail.arrive_time_fmt" = "الوصول %@";
 "rail.now" = "الآن";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "اذهب بالدراجة إلى %@";
+"leg.ride_rental_bike_to" = "اركب الدراجة المستأجرة إلى %@";
+"place.rental_bike" = "دراجة مستأجرة";
+"rail.now_riding_rental" = "تركب دراجة مستأجرة";
+"rail.pick_up_bike" = "استلم الدراجة المستأجرة";
+"rail.picked_up_bike" = "تم استلام الدراجة المستأجرة";
+"rail.ride_bike_to_fmt" = "اركب إلى %@";
+"rail.drop_off_bike" = "أعد الدراجة";
+"rail.ride_distance_duration_fmt" = "%1$@، حوالي %2$@";

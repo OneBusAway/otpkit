@@ -313,3 +313,14 @@
 "rail.last_step" = "Última etapa";
 "rail.arrive_time_fmt" = "Chegada %@";
 "rail.now" = "agora";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Vá de bicicleta até %@";
+"leg.ride_rental_bike_to" = "Pedale a bicicleta compartilhada até %@";
+"place.rental_bike" = "bicicleta compartilhada";
+"rail.now_riding_rental" = "Pedalando uma bicicleta compartilhada";
+"rail.pick_up_bike" = "Pegue a bicicleta compartilhada";
+"rail.picked_up_bike" = "Bicicleta compartilhada retirada";
+"rail.ride_bike_to_fmt" = "Pedale até %@";
+"rail.drop_off_bike" = "Devolva a bicicleta";
+"rail.ride_distance_duration_fmt" = "%1$@, cerca de %2$@";

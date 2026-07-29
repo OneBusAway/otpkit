@@ -49,6 +49,14 @@ enum RailText {
                       Formatters.formatDateToTime(leg.startTime))
     }
 
+    /// The rider-facing name of a rental place, or nil when the feed sent a known
+    /// placeholder ("Default vehicle type") that must never reach the UI.
+    static func rentalPlaceName(_ name: String) -> String? {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, trimmed.lowercased() != "default vehicle type" else { return nil }
+        return trimmed
+    }
+
     /// "12 stops" / "1 stop".
     static func stops(_ count: Int) -> String {
         count == 1
@@ -104,7 +112,7 @@ struct WalkRowContent: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(OTPLoc("rail.walk_fmt",
                             comment: "Walking instruction: distance, then destination",
-                            Formatters.formatDistance(Int(leg.distance)), leg.to.name))
+                            Formatters.formatDistance(Int(leg.distance)), leg.riderFacingToName))
                     .font(.body.weight(.semibold))
 
                 Text(OTPLoc("rail.about_duration_fmt",
@@ -346,6 +354,104 @@ struct GetOffRowContent: View {
                 Text(OTPLoc("rail.get_off_at_fmt",
                             comment: "The stop where the rider gets off", leg.to.name))
                     .font(.body.weight(.semibold))
+
+                if let wait = RailText.waitDescription(progress: progress, afterLegAt: legIndex) {
+                    Text(wait)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Rental rows
+
+/// Pickup point of a rental ride: "Pick up rental bike", with the station or
+/// vehicle name when the feed provides a real one.
+struct PickUpVehicleRowContent: View {
+    let leg: Leg
+    let state: RailRow.State
+    let isExpanded: Bool
+
+    var body: some View {
+        if state == .done {
+            Text(OTPLoc("rail.picked_up_bike", comment: "Collapsed row for a rental vehicle already picked up"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        } else {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(OTPLoc("rail.pick_up_bike", comment: "Instruction to pick up the rental bike"))
+                    .font(.body.weight(.semibold))
+
+                if let name = RailText.rentalPlaceName(leg.from.name) {
+                    Text(name)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                if isExpanded {
+                    Text(OTPLoc("rail.ride_distance_duration_fmt",
+                                comment: "Distance, then approximate duration of the rental ride",
+                                Formatters.formatDistance(Int(leg.distance)),
+                                Formatters.formatTimeDuration(leg.duration)))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+/// The synthetic row present only while riding a rental: destination and time
+/// remaining inside the now-card.
+struct RideRentalRowContent: View {
+    let progress: TripProgress
+    let legIndex: Int
+
+    private var leg: Leg { progress.legs[legIndex] }
+
+    var body: some View {
+        NowCard {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(OTPLoc("rail.ride_bike_to_fmt",
+                            comment: "Riding instruction: where the rental ride ends", leg.riderFacingToName))
+                    .font(.title3.weight(.semibold))
+
+                Text(OTPLoc("rail.ride_distance_duration_fmt",
+                            comment: "Distance, then approximate duration of the rental ride",
+                            Formatters.formatDistance(Int(leg.distance)),
+                            Formatters.formatTimeDuration(leg.duration)))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+/// "Drop off bike", with the dropoff station named when the ride ends docked.
+struct DropOffVehicleRowContent: View {
+    let progress: TripProgress
+    let legIndex: Int
+    let state: RailRow.State
+
+    private var leg: Leg { progress.legs[legIndex] }
+
+    var body: some View {
+        if state == .done {
+            Text(OTPLoc("rail.drop_off_bike", comment: "Instruction to drop off the rental bike"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        } else {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(OTPLoc("rail.drop_off_bike", comment: "Instruction to drop off the rental bike"))
+                    .font(.body.weight(.semibold))
+
+                if let name = RailText.rentalPlaceName(leg.to.name) {
+                    Text(name)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
 
                 if let wait = RailText.waitDescription(progress: progress, afterLegAt: legIndex) {
                     Text(wait)

@@ -313,3 +313,14 @@
 "rail.last_step" = "마지막 단계";
 "rail.arrive_time_fmt" = "도착 %@";
 "rail.now" = "지금";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "%@까지 자전거 타기";
+"leg.ride_rental_bike_to" = "공유 자전거로 %@까지 이동";
+"place.rental_bike" = "공유 자전거";
+"rail.now_riding_rental" = "공유 자전거 탑승 중";
+"rail.pick_up_bike" = "공유 자전거 픽업";
+"rail.picked_up_bike" = "공유 자전거 픽업 완료";
+"rail.ride_bike_to_fmt" = "%@까지 타고 가기";
+"rail.drop_off_bike" = "자전거 반납";
+"rail.ride_distance_duration_fmt" = "%1$@, 약 %2$@";

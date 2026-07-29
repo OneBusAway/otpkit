@@ -71,6 +71,8 @@ struct ItineraryPreviewView: View {
     private func legView(for leg: Leg) -> some View {
         if leg.walkMode {
             ItineraryLegWalkView(leg: leg)
+        } else if leg.isRentalRide || LegMode(otpMode: leg.mode) == .bicycle {
+            ItineraryLegBikeView(leg: leg)
         } else if let routeType = leg.routeType, routeType != .nonTransit {
             ItineraryLegVehicleView(leg: leg)
         } else {
