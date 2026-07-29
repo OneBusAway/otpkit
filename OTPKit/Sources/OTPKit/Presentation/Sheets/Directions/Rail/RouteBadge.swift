@@ -35,7 +35,8 @@ struct RouteBadge: View {
 }
 
 extension Color {
-    /// True when the color is light enough that black text reads better than white.
+    /// True when black text has the higher WCAG contrast ratio against this
+    /// color than white text does.
     var isPerceptuallyLight: Bool {
         let uiColor = UIColor(self)
         var red: CGFloat = 0
@@ -45,9 +46,13 @@ extension Color {
         guard uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
             return false
         }
-        // WCAG luminance coefficients applied to gamma-encoded sRGB — an
-        // approximation, but plenty for a black-vs-white text decision.
-        let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        return luminance > 0.6
+        func linearized(_ component: CGFloat) -> Double {
+            let value = Double(component)
+            return value <= 0.03928 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)
+        }
+        let luminance = 0.2126 * linearized(red) + 0.7152 * linearized(green) + 0.0722 * linearized(blue)
+        // Contrast vs black is (L + 0.05) / 0.05; vs white it's 1.05 / (L + 0.05).
+        // Black wins when (L + 0.05)² ≥ 0.05 × 1.05, i.e. L ≥ ~0.179.
+        return (luminance + 0.05) * (luminance + 0.05) >= 0.05 * 1.05
     }
 }

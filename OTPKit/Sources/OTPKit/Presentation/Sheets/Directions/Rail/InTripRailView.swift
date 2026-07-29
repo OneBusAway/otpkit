@@ -45,7 +45,9 @@ struct InTripRailView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
-                .padding(.bottom, 24)
+                // Enough clearance that the floating Back-to-now pill never
+                // covers the final Arrive row.
+                .padding(.bottom, 72)
             }
             .overlay(alignment: .bottom) {
                 if showsBackToNow {
@@ -59,6 +61,12 @@ struct InTripRailView: View {
                     }
                     .padding(.bottom, 12)
                 }
+            }
+            .onAppear {
+                // onChange never fires for the initial value, so a sheet opened
+                // mid-trip needs its own jump to the current row.
+                guard focusedLegIndex == nil, let currentRowID else { return }
+                scrollProxy.scrollTo(currentRowID, anchor: .center)
             }
             .onChange(of: currentRowID) { _, newValue in
                 // Auto-advance scrolls the rail only while tethered; untethered,

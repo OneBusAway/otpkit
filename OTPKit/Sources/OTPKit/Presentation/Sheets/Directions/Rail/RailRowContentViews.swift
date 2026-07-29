@@ -253,16 +253,17 @@ struct BoardRowContent: View {
         }
     }
 
-    @ViewBuilder
     private var subtitleLine: some View {
-        if let headsign = leg.headsign {
-            let stops = progress.totalStops(onLegAt: legIndex).map(RailText.stops) ??
-                Formatters.formatTimeDuration(leg.duration)
-            Text(OTPLoc("rail.toward_stops_fmt",
-                        comment: "Vehicle headsign, then ride summary", headsign, stops))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
+        // Without a headsign (some agencies omit it) the stop count or duration
+        // still stands on its own — never drop the whole line.
+        let stops = progress.totalStops(onLegAt: legIndex).map(RailText.stops) ??
+            Formatters.formatTimeDuration(leg.duration)
+        let text = leg.headsign.map {
+            OTPLoc("rail.toward_stops_fmt", comment: "Vehicle headsign, then ride summary", $0, stops)
+        } ?? stops
+        return Text(text)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
     }
 }
 

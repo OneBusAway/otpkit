@@ -273,6 +273,35 @@ public struct TripProgress {
         return gap > 60 ? gap : nil
     }
 
+    /// The next transit boarding worth naming to the rider. While walking (or
+    /// before the trip starts) the current leg's own boarding still counts;
+    /// riding or already waiting at the stop, only later boardings do —
+    /// "Waiting for the C Line · C Line at 9:42" would say the same thing
+    /// twice. Nil when no boarding remains ahead.
+    public var nextBoardingIndex: Int? {
+        let current: Int
+        switch phase {
+        case .notStarted:
+            current = 0
+        case .arrived:
+            current = legs.count - 1
+        default:
+            current = phase.legIndex ?? 0
+        }
+
+        let includesCurrentBoarding: Bool
+        switch phase {
+        case .riding, .waiting:
+            includesCurrentBoarding = false
+        default:
+            includesCurrentBoarding = true
+        }
+
+        return legs.indices.first {
+            ($0 > current || ($0 == current && includesCurrentBoarding)) && legs[$0].transitLeg == true
+        }
+    }
+
     /// True when the rider alights leg `index` and boards leg `index + 1` at the
     /// same stop — the "stay put, no street crossing" transfer.
     public func isSameStopTransfer(fromLegAt index: Int) -> Bool {

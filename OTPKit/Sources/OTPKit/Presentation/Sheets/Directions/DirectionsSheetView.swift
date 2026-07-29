@@ -19,6 +19,7 @@ struct DirectionsSheetView: View {
     @EnvironmentObject private var tripPlannerVM: TripPlannerViewModel
     @EnvironmentObject private var mapCoordinator: MapCoordinator
     @Environment(\.otpTheme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var showEndConfirmation = false
 
     let trip: Trip
@@ -36,8 +37,21 @@ struct DirectionsSheetView: View {
     @State private var tripStarted = false
 
     /// The compact tip detent: the current instruction is one line, so the map
-    /// keeps most of the screen.
-    static let tipDetent: PresentationDetent = .height(160)
+    /// keeps most of the screen. A custom detent so it can resolve taller at
+    /// accessibility text sizes instead of clipping Dynamic Type.
+    static let tipDetent: PresentationDetent = .custom(TipDetent.self)
+
+    private static let tipHeight: CGFloat = 160
+    private static let accessibilityTipHeight: CGFloat = 300
+
+    private struct TipDetent: CustomPresentationDetent {
+        static func height(in context: Context) -> CGFloat? {
+            let height = context.dynamicTypeSize.isAccessibilitySize
+                ? DirectionsSheetView.accessibilityTipHeight
+                : DirectionsSheetView.tipHeight
+            return min(height, context.maxDetentValue)
+        }
+    }
 
     public init(trip: Trip, sheetDetent: Binding<PresentationDetent>) {
         self.trip = trip
@@ -206,7 +220,9 @@ struct DirectionsSheetView: View {
         let screenHeight = UIScreen.main.bounds.height
         switch sheetDetent {
         case DirectionsSheetView.tipDetent:
-            return 160
+            return dynamicTypeSize.isAccessibilitySize
+                ? DirectionsSheetView.accessibilityTipHeight
+                : DirectionsSheetView.tipHeight
         case .medium:
             return screenHeight * 0.5
         default:

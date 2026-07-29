@@ -150,6 +150,19 @@ struct TripProgressTests {
         #expect(progress(at: 0).waitAfterLeg(at: 1) == nil) // contiguous legs
     }
 
+    @Test func nextBoardingCountsTheCurrentLegOnlyUntilTheRiderIsAtTheStop() {
+        // Pre-trip and while walking toward the stop, the upcoming boarding is
+        // the answer to "what's next."
+        #expect(progress(at: -240).nextBoardingIndex == 1)
+        #expect(progress(at: 60).nextBoardingIndex == 1)
+        // Waiting at the stop or riding, that boarding is already the current
+        // activity, and no later boarding exists on this itinerary.
+        #expect(progress(at: 300).nextBoardingIndex == nil)
+        #expect(progress(at: 1000).nextBoardingIndex == nil)
+        #expect(progress(at: 2280).nextBoardingIndex == nil)
+        #expect(progress(at: 3000).nextBoardingIndex == nil)
+    }
+
     @Test func stopsRemainingCountsDownAsTheRideElapses() {
         // 6 stops total (5 intermediate + alighting).
         #expect(progress(at: 300).stopsRemaining(onLegAt: 1) == 6)

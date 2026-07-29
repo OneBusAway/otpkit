@@ -20,8 +20,19 @@ struct TipContentView: View {
     @Binding var focusedLegIndex: Int?
 
     @Environment(\.otpTheme) private var theme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
+        // At accessibility sizes the detent grows (see TipDetent), and anything
+        // still taller scrolls rather than clips.
+        if dynamicTypeSize.isAccessibilitySize {
+            ScrollView { tipBody }
+        } else {
+            tipBody
+        }
+    }
+
+    private var tipBody: some View {
         VStack(spacing: 0) {
             HStack(alignment: .top, spacing: 10) {
                 stepperButton(systemImage: "chevron.left", enabled: canStepBack) {
@@ -257,21 +268,8 @@ private extension TipContentView {
                           stepNumber, progress.legs.count)
         }
 
-        // Name the next boarding so the footer answers "what's next." While
-        // walking (or pre-trip) the current leg's own boarding still counts;
-        // riding or already waiting at the stop, only later boardings do —
-        // "Waiting for the C Line · C Line at 9:42" says nothing twice.
-        let includesCurrentBoarding: Bool
-        switch progress.phase {
-        case .riding, .waiting:
-            includesCurrentBoarding = false
-        default:
-            includesCurrentBoarding = true
-        }
-        let nextTransitIndex = progress.legs.indices.first {
-            ($0 > current || ($0 == current && includesCurrentBoarding)) && progress.legs[$0].transitLeg == true
-        }
-        if let nextTransitIndex {
+        // Name the next boarding so the footer answers "what's next."
+        if let nextTransitIndex = progress.nextBoardingIndex {
             let nextLeg = progress.legs[nextTransitIndex]
             return OTPLoc("rail.next_leg_fmt",
                           comment: "Current activity, then the next route and its time",
