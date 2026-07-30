@@ -5,6 +5,7 @@
 //  Created by Manu on 2025-09-18.
 //
 
+import CoreLocation
 import UIKit
 import SwiftUI
 

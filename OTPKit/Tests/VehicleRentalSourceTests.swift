@@ -287,7 +287,11 @@ struct VehicleRentalSourceTests {
     func failureReported() async throws {
         let service = ScriptedRentalService(results: [
             .success(VehicleRentalFetchResult(rentals: [Self.makeRental(id: "a")])),
-            .failure(ScriptedError())
+            .failure(ScriptedError()),
+            // The script's last result is sticky, so the recovery fetch below needs
+            // its own success entry — otherwise the failure repeats forever and the
+            // snapshot this test waits on is never emitted.
+            .success(VehicleRentalFetchResult(rentals: [Self.makeRental(id: "a")]))
         ])
         let source = Self.makeSource(service: service)
         var snapshots = source.snapshots.makeAsyncIterator()
