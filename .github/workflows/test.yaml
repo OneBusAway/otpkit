@@ -13,7 +13,7 @@ on:
 
 jobs:
   lint:
-    runs-on: blacksmith-6vcpu-macos-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
       run: swiftlint --strict
 
   build:
-    runs-on: blacksmith-6vcpu-macos-latest
+    runs-on: macos-latest
     needs: lint
 
     steps:
