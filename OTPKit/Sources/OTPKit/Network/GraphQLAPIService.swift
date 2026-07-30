@@ -19,7 +19,10 @@ import OSLog
 
 /// Actor-based GraphQL API client for OTP 2.x trip planning and vehicle rentals
 /// via the GTFS GraphQL API.
-public actor GraphQLAPIService: APIService, VehicleRentalService {
+///
+/// Most of the type body is the two static GraphQL documents; the lint pragmas
+/// below account for them, not for logic.
+public actor GraphQLAPIService: APIService, VehicleRentalService { // swiftlint:disable:this type_body_length
     public nonisolated let baseURL: URL
     public nonisolated let dataLoader: URLDataLoader
 
@@ -42,7 +45,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
     /// Fetches a trip plan using a `TripPlanRequest`
     public func fetchPlan(_ request: TripPlanRequest) async throws -> OTPResponse {
         let urlRequest = try makeGraphQLRequest(
-            query: Self.planQuery,
+            query: Self.planQuery(includingVia: request.viaPoint != nil),
             variables: Self.planVariables(for: request)
         )
 
@@ -140,16 +143,26 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
 
     /// Builds the GraphQL `variables` payload for a trip plan request.
     private static func planVariables(for request: TripPlanRequest) -> [String: Any] {
-        [
+        var variables: [String: Any] = [
             "from": ["lat": request.origin.latitude, "lon": request.origin.longitude],
             "to": ["lat": request.destination.latitude, "lon": request.destination.longitude],
             "date": request.date.formattedTripDate,
             "time": request.time.formattedTripTime,
-            "transportModes": request.transportModes.map { graphQLTransportMode(for: $0) },
+            "transportModes": request.wireTransportModes.map { graphQLTransportMode(for: $0) },
             "arriveBy": request.arriveBy,
             "wheelchair": request.wheelchairAccessible,
             "maxWalkDistance": Double(request.maxWalkDistance)
         ]
+
+        // Omitted entirely when absent: a null `via` and a missing `via` are not
+        // guaranteed to be treated identically by every OTP build.
+        if let viaPoint = request.viaPoint {
+            variables["via"] = [
+                ["visit": ["coordinate": ["latitude": viaPoint.latitude, "longitude": viaPoint.longitude]]]
+            ]
+        }
+
+        return variables
     }
 
     /// The GraphQL `TransportMode` input value for a transport mode. `TransportMode.rawValue`
@@ -161,6 +174,10 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
             return ["mode": "BICYCLE"]
         case .bikeRental:
             return ["mode": "BICYCLE", "qualifier": "RENT"]
+        case .transitBikeRental:
+            // Unreachable: `wireTransportModes` expands composites before this
+            // mapping ever runs; the arm exists only for switch exhaustiveness.
+            return ["mode": "TRANSIT"]
         case .transit, .walk, .car:
             return ["mode": mode.rawValue]
         }
@@ -203,7 +220,16 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
 
     /// The GTFS GraphQL API `plan` query. Requests only the fields OTPKit's models consume,
     /// mirroring what the OTP 1.x REST API returns.
-    static let planQuery = """
+    ///
+    /// The `via` argument only exists in the query document when the request actually
+    /// carries a via point: GraphQL validates documents statically, and `plan`'s `via`
+    /// argument (with its `PlanViaLocationInput` type) only exists on OTP 2.7+ — a
+    /// document that always declared it would break every plan request, transit
+    /// included, against older 2.x servers.
+    static func planQuery(includingVia: Bool) -> String { // swiftlint:disable:this function_body_length
+        let viaDeclaration = includingVia ? "\n      $via: [PlanViaLocationInput!]" : ""
+        let viaArgument = includingVia ? "\n        via: $via" : ""
+        return """
     query TripPlan(
       $from: InputCoordinates!
       $to: InputCoordinates!
@@ -212,7 +238,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
       $transportModes: [TransportMode!]
       $arriveBy: Boolean
       $wheelchair: Boolean
-      $maxWalkDistance: Float
+      $maxWalkDistance: Float\(viaDeclaration)
     ) {
       plan(
         from: $from
@@ -222,7 +248,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
         transportModes: $transportModes
         arriveBy: $arriveBy
         wheelchair: $wheelchair
-        maxWalkDistance: $maxWalkDistance
+        maxWalkDistance: $maxWalkDistance\(viaArgument)
       ) {
         date
         from { name lon lat vertexType }
@@ -275,6 +301,7 @@ public actor GraphQLAPIService: APIService, VehicleRentalService {
       }
     }
     """
+    }
 
     /// The GTFS GraphQL API `vehicleRentalsByBbox` query. Returns the `RentalPlace`
     /// union; `__typename` discriminates stations from free-floating vehicles.

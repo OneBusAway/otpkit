@@ -215,7 +215,8 @@
 "transport_mode.walk" = "步行";
 "transport_mode.bike" = "骑行";
 "transport_mode.car" = "驾车";
-"transport_mode.bike_rental" = "共享单车";
+"transport_mode.bike_rental" = "仅共享单车";
+"transport_mode.transit_bike_rental" = "公交 + 共享单车";
 
 "rental.vehicle_type.bike" = "单车";
 "rental.vehicle_type.ebike" = "电动单车";
@@ -311,3 +312,14 @@
 "rail.last_step" = "最后一步";
 "rail.arrive_time_fmt" = "%@ 到达";
 "rail.now" = "现在";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "骑车前往%@";
+"leg.ride_rental_bike_to" = "骑共享单车前往%@";
+"place.rental_bike" = "共享单车";
+"rail.now_riding_rental" = "正在骑共享单车";
+"rail.pick_up_bike" = "取用共享单车";
+"rail.picked_up_bike" = "已取用共享单车";
+"rail.ride_bike_to_fmt" = "骑行前往%@";
+"rail.drop_off_bike" = "归还单车";
+"rail.ride_distance_duration_fmt" = "%1$@，约%2$@";

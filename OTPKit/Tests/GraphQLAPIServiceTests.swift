@@ -110,6 +110,72 @@ class GraphQLAPIServiceTests: OTPTestCase {
         XCTAssertNil(modes[1]["qualifier"])
     }
 
+    func testFetchPlanSendsViaPoint() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 47.6097, longitude: -122.3331),
+            destination: CLLocationCoordinate2D(latitude: 47.6205, longitude: -122.3493),
+            date: Self.testDate,
+            time: Self.testTime,
+            transportModes: TransportMode.transitBikeRental.apiModes,
+            maxWalkDistance: 800,
+            viaPoint: CLLocationCoordinate2D(latitude: 47.6095, longitude: -122.337)
+        )
+        _ = try await service.fetchPlan(request)
+
+        let urlRequest = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(urlRequest.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+
+        let query = try XCTUnwrap(payload["query"] as? String)
+        XCTAssertTrue(query.contains("via: $via"))
+
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        let via = try XCTUnwrap(variables["via"] as? [[String: Any]])
+        XCTAssertEqual(via.count, 1)
+        let visit = try XCTUnwrap(via[0]["visit"] as? [String: Any])
+        let coordinate = try XCTUnwrap(visit["coordinate"] as? [String: Any])
+        XCTAssertEqual(coordinate["latitude"] as? Double, 47.6095)
+        XCTAssertEqual(coordinate["longitude"] as? Double, -122.337)
+    }
+
+    func testFetchPlanOmitsViaWhenAbsent() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        _ = try await service.fetchPlan(createTripPlanRequest())
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        // Absent, not null: not every OTP build treats a null via as "no via".
+        XCTAssertNil(variables["via"])
+
+        // The query document itself must not mention via either: GraphQL validates
+        // documents statically, and `plan`'s via argument only exists on OTP 2.7+ —
+        // declaring it unconditionally would break every request against older servers.
+        let query = try XCTUnwrap(payload["query"] as? String)
+        XCTAssertFalse(query.contains("$via"))
+        XCTAssertFalse(query.contains("via:"))
+    }
+
+    func testFetchPlanExpandsCompositeModeToWireModes() async throws {
+        mockDataLoader.mockResponse(data: Fixtures.loadData(file: "graphql_plan_success.json"))
+
+        // A host passing the composite mode directly must get the expanded wire
+        // modes, never the fabricated TRANSIT_BICYCLE_RENT raw value.
+        _ = try await service.fetchPlan(createTripPlanRequest(transportModes: [.transitBikeRental]))
+
+        let request = try XCTUnwrap(mockDataLoader.lastRequest)
+        let body = try XCTUnwrap(request.httpBody)
+        let payload = try XCTUnwrap(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+        let variables = try XCTUnwrap(payload["variables"] as? [String: Any])
+        let modes = try XCTUnwrap(variables["transportModes"] as? [[String: Any]])
+        XCTAssertEqual(modes.map { $0["mode"] as? String }, ["TRANSIT", "WALK", "BICYCLE"])
+        XCTAssertEqual(modes[2]["qualifier"] as? String, "RENT")
+    }
+
     // MARK: - Response Mapping
 
     func testFetchPlanMapsItineraries() async throws {

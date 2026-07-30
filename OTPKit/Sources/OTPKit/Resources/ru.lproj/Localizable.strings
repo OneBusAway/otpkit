@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Пешком";
 "transport_mode.bike" = "Велосипед";
 "transport_mode.car" = "Автомобиль";
-"transport_mode.bike_rental" = "Велопрокат";
+"transport_mode.bike_rental" = "Только велопрокат";
+"transport_mode.transit_bike_rental" = "Транспорт + велопрокат";
 
 "rental.vehicle_type.bike" = "велосипед";
 "rental.vehicle_type.ebike" = "электровелосипед";
@@ -312,3 +313,14 @@
 "rail.last_step" = "Последний шаг";
 "rail.arrive_time_fmt" = "Прибытие в %@";
 "rail.now" = "сейчас";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Поезжайте на велосипеде до %@";
+"leg.ride_rental_bike_to" = "Поезжайте на прокатном велосипеде до %@";
+"place.rental_bike" = "прокатный велосипед";
+"rail.now_riding_rental" = "Едете на прокатном велосипеде";
+"rail.pick_up_bike" = "Возьмите прокатный велосипед";
+"rail.picked_up_bike" = "Прокатный велосипед взят";
+"rail.ride_bike_to_fmt" = "Поезжайте до %@";
+"rail.drop_off_bike" = "Верните велосипед";
+"rail.ride_distance_duration_fmt" = "%1$@, около %2$@";

@@ -140,6 +140,8 @@ public enum OTPAnnotationType {
     case embark
     case debark
     case intermediateStop
+    /// A rental vehicle or station that is part of the planned route (pickup/dropoff).
+    case rentalVehicle
 
     /// Returns the appropriate color for this annotation type
     public var color: Color {
@@ -162,6 +164,8 @@ public enum OTPAnnotationType {
             return .orange
         case .intermediateStop:
             return .gray
+        case .rentalVehicle:
+            return .otpRentalPurple
         case .routeLegend:
             return .clear // Custom view will handle coloring
         }
@@ -190,6 +194,8 @@ public enum OTPAnnotationType {
             return "magnifyingglass"
         case .intermediateStop:
             return "circle.fill"
+        case .rentalVehicle:
+            return "bicycle.circle.fill"
         case .routeLegend:
             return "" // Custom view will handle display
         }

@@ -11,6 +11,8 @@ import MapKit
 import SwiftUI
 import OSLog
 
+// swiftlint:disable file_length
+
 /// Coordinates all map operations between OTPKit and the external map provider
 /// This class manages routes, annotations, and user interactions with the map
 @MainActor
@@ -212,7 +214,9 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
             return .gray
         case "BUS", "TRAM", "TRAIN", "SUBWAY", "FERRY":
             return .blue
-        case "BIKE", "CAR":
+        // OTP 2.x spells bicycle legs "BICYCLE" (rental rides included); "BIKE" is
+        // the OTP 1.x REST spelling.
+        case "BIKE", "BICYCLE", "CAR":
             return .orange
         default:
             return .gray
@@ -238,7 +242,7 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
             return "bus"
         case "TRAM":
             return "tram"
-        case "BIKE":
+        case "BIKE", "BICYCLE":
             return "bicycle"
         case "CAR":
             return "car"
@@ -297,6 +301,12 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
     }
 
     private func addStationAnnotations(for leg: Leg, index: Int, totalLegs: Int) {
+        // Rental legs get pickup/dropoff markers; transit legs get embark/debark markers.
+        if leg.isRentalRide {
+            addRentalAnnotations(for: leg, index: index)
+            return
+        }
+
         // Only add embark/debark markers for transit legs
         guard leg.transitLeg == true else { return }
         // Add annotation for "from" location (embark point)
@@ -329,6 +339,26 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
         // Add intermediate stop markers
             addIntermediateStopAnnotations(for: leg, index: index)
     }
+    /// Marks the rental pickup and dropoff points of a rental ride leg. Rental places
+    /// carry a `bikeShareId` instead of a `vertexType`/`stopId`, so the transit-station
+    /// checks never match them. Only vehicles on the planned route are annotated — the
+    /// browse layer is a separate surface owned by the host.
+    private func addRentalAnnotations(for leg: Leg, index: Int) {
+        let endpoints = [(leg.from, "rental_pickup_\(index)"), (leg.to, "rental_dropoff_\(index)")]
+        for (place, identifier) in endpoints where place.bikeShareId != nil {
+            mapProvider.addAnnotation(
+                coordinate: CLLocationCoordinate2D(latitude: place.lat, longitude: place.lon),
+                title: Leg.riderFacingName(of: place),
+                subtitle: nil,
+                identifier: identifier,
+                type: .rentalVehicle,
+                routeName: nil,
+                routeBackgroundColor: nil,
+                routeTextColor: nil
+            )
+        }
+    }
+
     private func addIntermediateStopAnnotations(for leg: Leg, index: Int) {
         guard leg.transitLeg == true, let stops = leg.intermediateStops, !stops.isEmpty else { return }
         let routeColor = leg.routeColor.flatMap { UIColor(hex: $0) }
@@ -377,3 +407,5 @@ public class MapCoordinator: ObservableObject { // swiftlint:disable:this type_b
         Logger.main.info("Annotation selected: \(identifier)")
     }
 }
+
+// swiftlint:enable file_length

@@ -93,6 +93,55 @@ struct TripPlanRequestTests {
         #expect(request.transportModesString == "BICYCLE_RENT,WALK")
     }
 
+    @Test("Transit + Bikeshare expands to the REST mode list from the spec")
+    func transportModesStringTransitBikeRental() {
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(),
+            time: Date(),
+            transportModes: TransportMode.transitBikeRental.apiModes
+        )
+
+        // The composite mode itself never reaches the wire; its apiModes do.
+        #expect(request.transportModesString == "TRANSIT,WALK,BICYCLE_RENT")
+    }
+
+    @Test("A composite mode passed directly still serializes to primitive wire tokens")
+    func compositeModeExpandsAndDeduplicates() {
+        let request = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(),
+            time: Date(),
+            transportModes: [.transitBikeRental, .walk]
+        )
+
+        // The fabricated TRANSIT_BICYCLE_RENT raw value must never reach the wire,
+        // and the duplicate walk collapses in first-appearance order.
+        #expect(request.transportModesString == "TRANSIT,WALK,BICYCLE_RENT")
+    }
+
+    @Test("viaPoint participates in equality")
+    func viaPointEquality() {
+        let base = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(timeIntervalSince1970: 0),
+            time: Date(timeIntervalSince1970: 0)
+        )
+        let withVia = TripPlanRequest(
+            origin: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            destination: CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            date: Date(timeIntervalSince1970: 0),
+            time: Date(timeIntervalSince1970: 0),
+            viaPoint: CLLocationCoordinate2D(latitude: 47.6, longitude: -122.3)
+        )
+
+        #expect(base != withVia)
+        #expect(base == base)
+    }
+
     @Test("transportModesString with single mode")
     func transportModesStringSingleMode() {
         let request = TripPlanRequest(

@@ -46,7 +46,8 @@ public actor RestAPIService: APIService {
             mode: request.transportModesString,
             arriveBy: request.arriveBy,
             maxWalkDistance: request.maxWalkDistance,
-            wheelchair: request.wheelchairAccessible
+            wheelchair: request.wheelchairAccessible,
+            intermediatePlaces: request.viaPoint.map { [$0.formattedForAPI] } ?? []
         )
     }
 
@@ -59,7 +60,8 @@ public actor RestAPIService: APIService {
         mode: String,
         arriveBy: Bool,
         maxWalkDistance: Int,
-        wheelchair: Bool
+        wheelchair: Bool,
+        intermediatePlaces: [String] = []
     ) async throws -> OTPResponse {
         var components = URLComponents(
             url: buildURL(endpoint: "plan"),
@@ -77,6 +79,11 @@ public actor RestAPIService: APIService {
             .init(name: "wheelchair", value: wheelchair ? "true" : "false"),
             .init(name: "showIntermediateStops", value: "true")
         ]
+
+        // OTP 1.x routes through each intermediatePlaces value ("lat,lon") in order.
+        components.queryItems?.append(contentsOf: intermediatePlaces.map {
+            .init(name: "intermediatePlaces", value: $0)
+        })
 
         let request = URLRequest(url: components.url!)
 

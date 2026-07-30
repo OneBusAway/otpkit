@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Lakad";
 "transport_mode.bike" = "Bisikleta";
 "transport_mode.car" = "Kotse";
-"transport_mode.bike_rental" = "Rentahan ng Bisikleta";
+"transport_mode.bike_rental" = "Rentahan ng Bisikleta Lamang";
+"transport_mode.transit_bike_rental" = "Transit + Rentahan ng Bisikleta";
 
 "rental.vehicle_type.bike" = "bisikleta";
 "rental.vehicle_type.ebike" = "e-bike";
@@ -312,3 +313,14 @@
 "rail.last_step" = "Huling hakbang";
 "rail.arrive_time_fmt" = "Dating %@";
 "rail.now" = "ngayon";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Magbisikleta papuntang %@";
+"leg.ride_rental_bike_to" = "Sakyan ang rentahang bisikleta papuntang %@";
+"place.rental_bike" = "rentahang bisikleta";
+"rail.now_riding_rental" = "Nakasakay sa rentahang bisikleta";
+"rail.pick_up_bike" = "Kunin ang rentahang bisikleta";
+"rail.picked_up_bike" = "Nakuha na ang rentahang bisikleta";
+"rail.ride_bike_to_fmt" = "Sumakay papuntang %@";
+"rail.drop_off_bike" = "Ibalik ang bisikleta";
+"rail.ride_distance_duration_fmt" = "%1$@, mga %2$@";

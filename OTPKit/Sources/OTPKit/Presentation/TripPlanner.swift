@@ -5,6 +5,7 @@
 //  Created by Manu on 2025-09-18.
 //
 
+import CoreLocation
 import UIKit
 import SwiftUI
 
@@ -63,7 +64,40 @@ public class TripPlanner {
 
     // MARK: - Presentation & Dismissal
 
-    public func createTripPlannerView(origin: Location? = nil, destination: Location? = nil, onClose: @escaping VoidBlock) -> some View {
+    /// Creates the trip planner UI, optionally prefilled.
+    ///
+    /// - Parameters:
+    ///   - origin: Prefilled origin location.
+    ///   - destination: Prefilled destination location.
+    ///   - viaPoint: An intermediate coordinate every planned trip must pass through —
+    ///     the "plan a trip using this bike" entry point passes the vehicle's location.
+    ///     Note: OTP servers may require a transit mode in the request to route through
+    ///     a via point, so pair this with `.transitBikeRental` rather than `.bikeRental`.
+    ///   - transportMode: Preselected transport mode. Ignored when the injected API
+    ///     service cannot support it (e.g. rental modes on an OTP 1.x REST backend).
+    ///   - onClose: Called when the rider dismisses the planner.
+    public func createTripPlannerView(
+        origin: Location? = nil,
+        destination: Location? = nil,
+        viaPoint: CLLocationCoordinate2D? = nil,
+        transportMode: TransportMode? = nil,
+        onClose: @escaping VoidBlock
+    ) -> some View {
+        // The prefill is all-or-nothing: a via point paired with an unsupported mode
+        // must not be applied alone, or the planner would route the rider through a
+        // rental vehicle's location in a mode that can't use it. Nil parameters
+        // leave existing state untouched, so re-invoking the factory is harmless.
+        let modeIsAvailable = transportMode.map { viewModel.availableTransportModes.contains($0) } ?? true
+        if modeIsAvailable {
+            if let transportMode {
+                viewModel.selectTransportMode(transportMode)
+            }
+            if let viaPoint {
+                // After the mode change: selecting a mode clears any stale via point.
+                viewModel.viaPoint = viaPoint
+            }
+        }
+
         let view = TripPlannerView(
             viewModel: viewModel,
             mapCoordinator: mapCoordinator,

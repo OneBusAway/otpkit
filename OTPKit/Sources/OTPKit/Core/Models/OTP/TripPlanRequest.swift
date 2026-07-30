@@ -35,6 +35,10 @@ public struct TripPlanRequest: Codable, Hashable {
     public let wheelchairAccessible: Bool
     /// Whether the time parameter refers to arrival time (true) or departure time (false)
     public let arriveBy: Bool
+    /// An intermediate coordinate the trip must pass through, e.g. a specific rental
+    /// vehicle's location for "plan a trip using this bike". Servers may require a
+    /// transit mode in `transportModes` to route through a via point.
+    public let viaPoint: CLLocationCoordinate2D?
 
     /// Creates a new trip plan request
     /// - Parameters:
@@ -46,6 +50,7 @@ public struct TripPlanRequest: Codable, Hashable {
     ///   - maxWalkDistance: The maximum walking distance in meters (defaults to 1000)
     ///   - wheelchairAccessible: Whether the route should be wheelchair accessible (defaults to false)
     ///   - arriveBy: Whether the time parameter refers to arrival time (defaults to false)
+    ///   - viaPoint: An intermediate coordinate the trip must pass through (defaults to nil)
     public init(
         origin: CLLocationCoordinate2D,
         destination: CLLocationCoordinate2D,
@@ -54,7 +59,8 @@ public struct TripPlanRequest: Codable, Hashable {
         transportModes: [TransportMode] = [.transit, .walk],
         maxWalkDistance: Int = 1000,
         wheelchairAccessible: Bool = false,
-        arriveBy: Bool = false
+        arriveBy: Bool = false,
+        viaPoint: CLLocationCoordinate2D? = nil
     ) {
         self.origin = origin
         self.destination = destination
@@ -64,11 +70,20 @@ public struct TripPlanRequest: Codable, Hashable {
         self.maxWalkDistance = maxWalkDistance
         self.wheelchairAccessible = wheelchairAccessible
         self.arriveBy = arriveBy
+        self.viaPoint = viaPoint
     }
 
-    /// Converts the transport modes to the API string format
+    /// Converts the transport modes to the OTP 1.x REST `mode` parameter: wire tokens,
+    /// comma-joined. Composite UI modes expand to their primitives, deduplicated in
+    /// first-appearance order.
     public var transportModesString: String {
-        transportModes.map { $0.rawValue }.joined(separator: ",")
+        wireTransportModes.map { $0.rawValue }.joined(separator: ",")
+    }
+
+    /// The primitive, deduplicated modes requests actually serialize.
+    public var wireTransportModes: [TransportMode] {
+        var seen = Set<TransportMode>()
+        return transportModes.flatMap(\.wireModes).filter { seen.insert($0).inserted }
     }
 
     /// Validates the request parameters
@@ -108,6 +123,8 @@ public struct TripPlanRequest: Codable, Hashable {
         hasher.combine(maxWalkDistance)
         hasher.combine(wheelchairAccessible)
         hasher.combine(arriveBy)
+        hasher.combine(viaPoint?.latitude)
+        hasher.combine(viaPoint?.longitude)
     }
 
     public static func == (lhs: TripPlanRequest, rhs: TripPlanRequest) -> Bool {
@@ -120,7 +137,9 @@ public struct TripPlanRequest: Codable, Hashable {
                lhs.transportModes == rhs.transportModes &&
                lhs.maxWalkDistance == rhs.maxWalkDistance &&
                lhs.wheelchairAccessible == rhs.wheelchairAccessible &&
-               lhs.arriveBy == rhs.arriveBy
+               lhs.arriveBy == rhs.arriveBy &&
+               lhs.viaPoint?.latitude == rhs.viaPoint?.latitude &&
+               lhs.viaPoint?.longitude == rhs.viaPoint?.longitude
     }
 }
 

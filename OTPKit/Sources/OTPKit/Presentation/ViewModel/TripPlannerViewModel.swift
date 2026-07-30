@@ -30,6 +30,9 @@ public class TripPlannerViewModel: ObservableObject {
     @Published var departureTime: Date?
     /// User-selected departure date
     @Published var departureDate: Date?
+    /// An intermediate coordinate every planned trip must pass through — e.g. a rental
+    /// vehicle's location for "plan a trip using this bike". Cleared on reset.
+    @Published var viaPoint: CLLocationCoordinate2D?
 
     // MARK: - Advanced Options
 
@@ -164,7 +167,7 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Whether the API service can actually plan trips for the given mode.
     private static func isModeAvailable(_ mode: TransportMode, apiService: APIService) -> Bool {
-        mode != .bikeRental || apiService is VehicleRentalService
+        !mode.requiresVehicleRentalSupport || apiService is VehicleRentalService
     }
 
     /// The default selected mode: the first capability-available configured mode.
@@ -183,6 +186,12 @@ public class TripPlannerViewModel: ObservableObject {
     /// Update the selected transport mode
     /// - Parameter mode: The transport mode to select
     func selectTransportMode(_ mode: TransportMode) {
+        // A via point exists to route through a specific rental vehicle. A rider who
+        // switches modes has abandoned that plan — keeping the via would silently
+        // force every later trip through a detour with no visible cause.
+        if mode != selectedTransportMode {
+            viaPoint = nil
+        }
         selectedTransportMode = mode
     }
 
@@ -216,7 +225,8 @@ public class TripPlannerViewModel: ObservableObject {
             transportModes: selectedTransportMode.apiModes,
             maxWalkDistance: maxWalkingDistance.meters,
             wheelchairAccessible: isWheelchairAccessible,
-            arriveBy: timePreference == .arriveBy
+            arriveBy: timePreference == .arriveBy,
+            viaPoint: viaPoint
         )
 
         // Start loading state
@@ -387,6 +397,7 @@ public class TripPlannerViewModel: ObservableObject {
         // Clear location selections
         selectedOrigin = nil
         selectedDestination = nil
+        viaPoint = nil
 
         // Clear trip planning results
         tripPlanResponse = nil

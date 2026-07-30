@@ -216,7 +216,8 @@
 "transport_mode.walk" = "Đi bộ";
 "transport_mode.bike" = "Xe đạp";
 "transport_mode.car" = "Ô tô";
-"transport_mode.bike_rental" = "Xe đạp công cộng";
+"transport_mode.bike_rental" = "Chỉ xe đạp công cộng";
+"transport_mode.transit_bike_rental" = "Phương tiện công cộng + xe đạp công cộng";
 
 "rental.vehicle_type.bike" = "xe đạp";
 "rental.vehicle_type.ebike" = "xe đạp điện";
@@ -312,3 +313,14 @@
 "rail.last_step" = "Bước cuối";
 "rail.arrive_time_fmt" = "Đến lúc %@";
 "rail.now" = "bây giờ";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Đạp xe đến %@";
+"leg.ride_rental_bike_to" = "Đi xe đạp thuê đến %@";
+"place.rental_bike" = "xe đạp thuê";
+"rail.now_riding_rental" = "Đang đi xe đạp thuê";
+"rail.pick_up_bike" = "Nhận xe đạp thuê";
+"rail.picked_up_bike" = "Đã nhận xe đạp thuê";
+"rail.ride_bike_to_fmt" = "Đi đến %@";
+"rail.drop_off_bike" = "Trả xe đạp";
+"rail.ride_distance_duration_fmt" = "%1$@, khoảng %2$@";

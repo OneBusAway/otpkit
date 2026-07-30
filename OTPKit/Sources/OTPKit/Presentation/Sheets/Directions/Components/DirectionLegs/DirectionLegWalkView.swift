@@ -19,7 +19,7 @@ struct DirectionLegWalkView: View {
             } rightContent: {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(OTPLoc("leg.walk_to", comment: "Instruction to walk to a place", leg.to.name))
+                        Text(OTPLoc("leg.walk_to", comment: "Instruction to walk to a place", leg.riderFacingToName))
                             .font(.title3)
                             .fontWeight(.bold)
                             .fixedSize(horizontal: false, vertical: true)

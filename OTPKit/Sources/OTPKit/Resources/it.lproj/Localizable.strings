@@ -216,7 +216,8 @@
 "transport_mode.walk" = "A piedi";
 "transport_mode.bike" = "Bicicletta";
 "transport_mode.car" = "Auto";
-"transport_mode.bike_rental" = "Bike sharing";
+"transport_mode.bike_rental" = "Solo bike sharing";
+"transport_mode.transit_bike_rental" = "Trasporto pubblico + bike sharing";
 
 "rental.vehicle_type.bike" = "bici";
 "rental.vehicle_type.ebike" = "bici elettrica";
@@ -312,3 +313,14 @@
 "rail.last_step" = "Ultimo passaggio";
 "rail.arrive_time_fmt" = "Arrivo alle %@";
 "rail.now" = "ora";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Vai in bici fino a %@";
+"leg.ride_rental_bike_to" = "Pedala con la bici in sharing fino a %@";
+"place.rental_bike" = "bici in sharing";
+"rail.now_riding_rental" = "In sella a una bici in sharing";
+"rail.pick_up_bike" = "Prendi la bici in sharing";
+"rail.picked_up_bike" = "Bici in sharing presa";
+"rail.ride_bike_to_fmt" = "Pedala fino a %@";
+"rail.drop_off_bike" = "Riconsegna la bici";
+"rail.ride_distance_duration_fmt" = "%1$@, circa %2$@";

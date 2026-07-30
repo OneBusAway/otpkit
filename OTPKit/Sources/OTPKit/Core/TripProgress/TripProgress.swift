@@ -16,6 +16,11 @@
 
 import Foundation
 
+// swiftlint:disable file_length
+// The pure in-trip state machine: phases, rows, and the rider questions they
+// answer all live together deliberately — splitting them would scatter one
+// state machine across files.
+
 /// Where the rider is in an itinerary right now.
 ///
 /// This is the `currentLeg` cursor of the in-trip panel's two-cursor model: it
@@ -30,7 +35,7 @@ public enum TripPhase: Equatable {
     /// The rider has finished the previous leg and is waiting to board transit.
     case waiting(boardingLegIndex: Int)
 
-    /// The rider is aboard a transit leg.
+    /// The rider is aboard a transit leg or riding a rental vehicle.
     case riding(legIndex: Int)
 
     /// The itinerary's end time has passed.
@@ -64,6 +69,12 @@ public struct RailRow: Identifiable, Equatable {
         case ride(legIndex: Int)
         /// Alight from this leg.
         case getOff(legIndex: Int)
+        /// Pick up the rental vehicle that starts this rental ride leg.
+        case pickUpVehicle(legIndex: Int)
+        /// Currently riding this rental leg. Present only while `TripPhase.riding` it.
+        case rideRental(legIndex: Int)
+        /// Drop off the rental vehicle at the end of this rental ride leg.
+        case dropOffVehicle(legIndex: Int)
         /// The final destination.
         case arrive
     }
@@ -91,7 +102,8 @@ public struct RailRow: Identifiable, Equatable {
     /// The index of the leg this row belongs to, if any.
     public var legIndex: Int? {
         switch kind {
-        case .walk(let index), .board(let index), .ride(let index), .getOff(let index):
+        case .walk(let index), .board(let index), .ride(let index), .getOff(let index),
+             .pickUpVehicle(let index), .rideRental(let index), .dropOffVehicle(let index):
             return index
         case .arrive:
             return nil
@@ -127,16 +139,20 @@ public struct TripProgress {
         }
 
         for (index, leg) in legs.enumerated() {
-            // Inside the leg's own time window.
+            // Inside the leg's own time window. Rental rides count as riding even
+            // though they are not transit legs.
             if now >= leg.startTime && now < leg.endTime {
-                return leg.transitLeg == true ? .riding(legIndex: index) : .walking(legIndex: index)
+                let isAboard = leg.transitLeg == true || leg.isRentalRide
+                return isAboard ? .riding(legIndex: index) : .walking(legIndex: index)
             }
 
-            // In the gap between this leg and the next: waiting if the next leg
-            // is transit (the rider is at the stop), otherwise treat the gap as
-            // part of the upcoming walk.
+            // In the gap between this leg and the next: waiting if the next leg is
+            // transit (the rider is at the stop) or a rental pickup (the rider is
+            // walking up to the vehicle — sub-minute walks get merged away, leaving
+            // a real gap). Otherwise the gap is part of the upcoming walk.
             if now < leg.startTime {
-                return leg.transitLeg == true ? .waiting(boardingLegIndex: index) : .walking(legIndex: index)
+                let isBoardable = leg.transitLeg == true || leg.isRentalRide
+                return isBoardable ? .waiting(boardingLegIndex: index) : .walking(legIndex: index)
             }
         }
 
@@ -153,20 +169,18 @@ public struct TripProgress {
         for (index, leg) in legs.enumerated() {
             if leg.transitLeg == true {
                 rows.append(boardRow(for: leg, at: index, phase: phase))
-
-                if case .riding(let ridingIndex) = phase, ridingIndex == index {
-                    rows.append(
-                        RailRow(
-                            id: "ride-\(index)",
-                            kind: .ride(legIndex: index),
-                            state: .current,
-                            time: now,
-                            status: nil
-                        )
-                    )
+                if isRiding(index, phase: phase) {
+                    rows.append(currentRideRow(id: "ride-\(index)", kind: .ride(legIndex: index)))
                 }
-
-                rows.append(getOffRow(for: leg, at: index))
+                rows.append(legEndRow(id: "getoff-\(index)", kind: .getOff(legIndex: index), for: leg))
+            } else if leg.isRentalRide {
+                // Rental legs get pickup → ride → dropoff semantics, mirroring the
+                // transit board → ride → get off shape so the rail reads uniformly.
+                rows.append(pickUpVehicleRow(for: leg, at: index, phase: phase))
+                if isRiding(index, phase: phase) {
+                    rows.append(currentRideRow(id: "riderental-\(index)", kind: .rideRental(legIndex: index)))
+                }
+                rows.append(legEndRow(id: "dropoff-\(index)", kind: .dropOffVehicle(legIndex: index), for: leg))
             } else {
                 rows.append(walkRow(for: leg, at: index, phase: phase))
             }
@@ -214,14 +228,39 @@ public struct TripProgress {
         )
     }
 
-    private func getOffRow(for leg: Leg, at index: Int) -> RailRow {
-        RailRow(
-            id: "getoff-\(index)",
-            kind: .getOff(legIndex: index),
-            state: now >= leg.endTime ? .done : .upcoming,
-            time: leg.endTime,
+    /// The pickup row goes current during a `.waiting` gap before the ride — the
+    /// stretch where the rider is walking up to the parked vehicle. During the ride
+    /// itself the current row is the synthetic `rideRental` row.
+    private func pickUpVehicleRow(for leg: Leg, at index: Int, phase: TripPhase) -> RailRow {
+        let state: RailRow.State
+        if case .waiting(let boardingIndex) = phase, boardingIndex == index {
+            state = .current
+        } else {
+            state = now >= leg.startTime ? .done : .upcoming
+        }
+
+        return RailRow(
+            id: "pickup-\(index)",
+            kind: .pickUpVehicle(legIndex: index),
+            state: state,
+            time: leg.startTime,
             status: nil
         )
+    }
+
+    /// The synthetic row present only while the rider is aboard this leg.
+    private func currentRideRow(id: String, kind: RailRow.Kind) -> RailRow {
+        RailRow(id: id, kind: kind, state: .current, time: now, status: nil)
+    }
+
+    /// A leg's final moment: get off transit, or drop off the rental vehicle.
+    private func legEndRow(id: String, kind: RailRow.Kind, for leg: Leg) -> RailRow {
+        RailRow(id: id, kind: kind, state: now >= leg.endTime ? .done : .upcoming, time: leg.endTime, status: nil)
+    }
+
+    private func isRiding(_ index: Int, phase: TripPhase) -> Bool {
+        if case .riding(let ridingIndex) = phase { return ridingIndex == index }
+        return false
     }
 
     /// The rider's current activity, localized ("Walking", "Waiting for the C Line",
@@ -233,10 +272,16 @@ public struct TripProgress {
         case .walking:
             return OTPLoc("rail.now_walking", comment: "The rider is currently walking")
         case .waiting(let index):
+            if legs[index].isRentalRide {
+                return OTPLoc("rail.pick_up_bike", comment: "Instruction to pick up the rental bike")
+            }
             return OTPLoc("rail.now_waiting_fmt",
                           comment: "The rider is waiting for this route",
                           legs[index].riderFacingRouteName)
         case .riding(let index):
+            if legs[index].isRentalRide {
+                return OTPLoc("rail.now_riding_rental", comment: "The rider is riding a rental bike")
+            }
             return OTPLoc("rail.now_riding_fmt",
                           comment: "The rider is aboard this route",
                           legs[index].riderFacingRouteName)
@@ -366,6 +411,8 @@ public struct TripProgress {
         public let fillFraction: Double
         /// True when this leg is a transit leg (drawn in the route color).
         public let isTransit: Bool
+        /// True when this leg is a rental ride (drawn in rental purple).
+        public let isRental: Bool
     }
 
     /// Proportional segments for the tip-detent progress bar.
@@ -389,8 +436,11 @@ public struct TripProgress {
                 legIndex: index,
                 widthFraction: duration / totalDuration,
                 fillFraction: fill,
-                isTransit: leg.transitLeg == true
+                isTransit: leg.transitLeg == true,
+                isRental: leg.isRentalRide
             )
         }
     }
 }
+
+// swiftlint:enable file_length

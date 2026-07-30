@@ -216,7 +216,8 @@
 "transport_mode.walk" = "À pied";
 "transport_mode.bike" = "Vélo";
 "transport_mode.car" = "Voiture";
-"transport_mode.bike_rental" = "Vélo en libre-service";
+"transport_mode.bike_rental" = "Vélo en libre-service uniquement";
+"transport_mode.transit_bike_rental" = "Transports en commun + vélo en libre-service";
 
 "rental.vehicle_type.bike" = "vélo";
 "rental.vehicle_type.ebike" = "vélo électrique";
@@ -312,3 +313,14 @@
 "rail.last_step" = "Dernière étape";
 "rail.arrive_time_fmt" = "Arrivée %@";
 "rail.now" = "maintenant";
+
+/* Vehicle rental legs */
+"leg.bike_to" = "Allez à vélo jusqu'à %@";
+"leg.ride_rental_bike_to" = "Roulez en vélo en libre-service jusqu'à %@";
+"place.rental_bike" = "vélo en libre-service";
+"rail.now_riding_rental" = "En vélo en libre-service";
+"rail.pick_up_bike" = "Prenez le vélo en libre-service";
+"rail.picked_up_bike" = "Vélo en libre-service pris";
+"rail.ride_bike_to_fmt" = "Roulez jusqu'à %@";
+"rail.drop_off_bike" = "Déposez le vélo";
+"rail.ride_distance_duration_fmt" = "%1$@, environ %2$@";

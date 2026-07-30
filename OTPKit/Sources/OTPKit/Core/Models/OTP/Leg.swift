@@ -49,6 +49,12 @@ public struct Leg: Codable, Hashable {
         mode.lowercased() == "walk"
     }
 
+    /// True when this leg is ridden on a rented vehicle. The ride leg's `mode` is
+    /// plain "BICYCLE", so `rentedBike` is the only reliable rental discriminator.
+    public var isRentalRide: Bool {
+        rentedBike == true
+    }
+
     public let routeType: RouteType?
 
     public let routeColor: String?
@@ -196,6 +202,12 @@ public struct Leg: Codable, Hashable {
     ///   - leg2: The later leg
     /// - Returns: Whether or not to merge the legs.
     public static func shouldMergeLegs(leg1: Leg, leg2: Leg) -> Bool {
+        // A merge must never cross a rental boundary: a merged leg keeps leg1's
+        // rentedBike flag, which would silently absorb a pickup or dropoff. In
+        // practice rental legs are non-transit and can't match the conditions
+        // below anyway — this guard keeps that invariant explicit.
+        guard leg1.isRentalRide == leg2.isRentalRide else { return false }
+
         return leg1.route != nil &&
         leg2.route != nil &&
         leg1.route == leg2.route &&
@@ -262,6 +274,21 @@ public struct Leg: Codable, Hashable {
     /// localized mode name so raw OTP wire tokens never reach the UI.
     public var riderFacingRouteName: String {
         route ?? modeDisplayName
+    }
+
+    /// The rider-facing name of this leg's ending place. Rental feeds ship the
+    /// literal placeholder "Default vehicle type" as a free-floating vehicle's
+    /// name; it is replaced with a localized generic so it never reaches the UI.
+    public var riderFacingToName: String {
+        Self.riderFacingName(of: to)
+    }
+
+    static func riderFacingName(of place: Place) -> String {
+        let trimmed = place.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isRentalPlaceholderName || (trimmed.isEmpty && place.bikeShareId != nil) {
+            return OTPLoc("place.rental_bike", comment: "Generic name for a rental bike location")
+        }
+        return trimmed
     }
 
     // MARK: - Real-Time Status

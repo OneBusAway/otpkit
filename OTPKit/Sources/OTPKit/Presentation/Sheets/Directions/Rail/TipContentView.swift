@@ -99,7 +99,7 @@ struct TipContentView: View {
                 walkIcon
                 title(OTPLoc("rail.walk_fmt",
                              comment: "Walking instruction: distance, then destination",
-                             Formatters.formatDistance(Int(leg.distance)), leg.to.name),
+                             Formatters.formatDistance(Int(leg.distance)), leg.riderFacingToName),
                       subtitle: progress.currentStep(onLegAt: index)?.localizedInstruction)
                 trailingCountdown(
                     Formatters.formatCountdown(leg.endTime.timeIntervalSince(progress.now)),
@@ -109,22 +109,43 @@ struct TipContentView: View {
 
         case .waiting(let index):
             let leg = progress.legs[index]
-            HStack(alignment: .top, spacing: 12) {
-                RouteBadge(leg: leg)
-                title(RailText.boardingCountdown(for: leg, now: progress.now),
-                      subtitle: OTPLoc("rail.at_stop_fmt",
-                                       comment: "The stop the rider boards at", leg.from.name))
-                trailingTime(leg.startTime, status: leg.departureStatus)
+            if leg.isRentalRide {
+                HStack(alignment: .top, spacing: 12) {
+                    bikeIcon
+                    title(OTPLoc("rail.pick_up_bike", comment: "Instruction to pick up the rental bike"),
+                          subtitle: RailText.rentalPlaceName(leg.from.name))
+                    trailingTime(leg.startTime, status: nil)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 12) {
+                    RouteBadge(leg: leg)
+                    title(RailText.boardingCountdown(for: leg, now: progress.now),
+                          subtitle: OTPLoc("rail.at_stop_fmt",
+                                           comment: "The stop the rider boards at", leg.from.name))
+                    trailingTime(leg.startTime, status: leg.departureStatus)
+                }
             }
 
         case .riding(let index):
             let leg = progress.legs[index]
-            HStack(alignment: .top, spacing: 12) {
-                RouteBadge(leg: leg)
-                title(progress.stopsRemaining(onLegAt: index).map(RailText.stopsToGo) ?? RailText.routeName(leg),
-                      subtitle: OTPLoc("rail.get_off_at_fmt",
-                                       comment: "The stop where the rider gets off", leg.to.name))
-                trailingTime(leg.endTime, status: leg.arrivalStatus)
+            if leg.isRentalRide {
+                HStack(alignment: .top, spacing: 12) {
+                    bikeIcon
+                    title(OTPLoc("rail.ride_bike_to_fmt",
+                                 comment: "Riding instruction: where the rental ride ends",
+                                 leg.riderFacingToName),
+                          subtitle: OTPLoc("rail.drop_off_bike",
+                                           comment: "Instruction to drop off the rental bike"))
+                    trailingTime(leg.endTime, status: nil)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 12) {
+                    RouteBadge(leg: leg)
+                    title(progress.stopsRemaining(onLegAt: index).map(RailText.stopsToGo) ?? RailText.routeName(leg),
+                          subtitle: OTPLoc("rail.get_off_at_fmt",
+                                           comment: "The stop where the rider gets off", leg.to.name))
+                    trailingTime(leg.endTime, status: leg.arrivalStatus)
+                }
             }
 
         case .arrived:
@@ -146,11 +167,19 @@ struct TipContentView: View {
                       subtitle: leg.headsign.map {
                           OTPLoc("rail.toward_fmt", comment: "Vehicle headsign", $0)
                       } ?? leg.to.name)
+            } else if leg.isRentalRide {
+                bikeIcon
+                title(OTPLoc("rail.ride_bike_to_fmt",
+                             comment: "Riding instruction: where the rental ride ends",
+                             leg.riderFacingToName),
+                      subtitle: OTPLoc("rail.about_duration_fmt",
+                                       comment: "Approximate duration of a walking leg",
+                                       Formatters.formatTimeDuration(leg.duration)))
             } else {
                 walkIcon
                 title(OTPLoc("rail.walk_fmt",
                              comment: "Walking instruction: distance, then destination",
-                             Formatters.formatDistance(Int(leg.distance)), leg.to.name),
+                             Formatters.formatDistance(Int(leg.distance)), leg.riderFacingToName),
                       subtitle: OTPLoc("rail.about_duration_fmt",
                                        comment: "Approximate duration of a walking leg",
                                        Formatters.formatTimeDuration(leg.duration)))
@@ -162,11 +191,19 @@ struct TipContentView: View {
     // MARK: - Pieces
 
     private var walkIcon: some View {
-        Image(systemName: "figure.walk")
+        modeIcon("figure.walk", background: Color(.label))
+    }
+
+    private var bikeIcon: some View {
+        modeIcon("bicycle", background: .otpRentalPurple)
+    }
+
+    private func modeIcon(_ systemName: String, background: Color) -> some View {
+        Image(systemName: systemName)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.white)
             .frame(width: 32, height: 32)
-            .background(Color(.label), in: RoundedRectangle(cornerRadius: 9))
+            .background(background, in: RoundedRectangle(cornerRadius: 9))
             .accessibilityHidden(true)
     }
 
