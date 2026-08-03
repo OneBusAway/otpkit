@@ -56,10 +56,10 @@
 "time_selection.select_time_accessibility" = "Wybierz godzinę odjazdu";
 
 /* Time Preference */
-"time_preference.leave_now_title" = "Wyjedź teraz";
+"time_preference.leave_now_title" = "Ruszaj teraz";
 "time_preference.depart_at_title" = "Odjazd o";
 "time_preference.arrive_by_title" = "Przyjazd do";
-"time_preference.leave_now_desc" = "Rozpocznij podróż od razu";
+"time_preference.leave_now_desc" = "Rozpoczęcie podróży od razu";
 "time_preference.depart_at_desc" = "Wyjazd o określonej godzinie";
 "time_preference.arrive_by_desc" = "Przyjazd o określonej godzinie";
 
@@ -123,9 +123,9 @@
 "common.generic_error" = "Wystąpił błąd";
 
 /* Trip Planner */
-"trip_planner.title" = "Planowanie podróży";
-"trip_planner.find_routes" = "Znajdź trasy";
-"trip_planner.go" = "Jedź";
+"trip_planner.title" = "Planuj podróż";
+"trip_planner.find_routes" = "Znajdź";
+"trip_planner.go" = "Ruszaj";
 
 /* Location Picker */
 "location_picker.choose_start" = "Wybierz początek";
@@ -184,7 +184,7 @@
 "leg.arrives_at" = "Przyjazd o %@";
 "leg.walk_to" = "Idź pieszo do %@";
 "leg.walk_distance_duration" = "%1$@, około %2$@";
-"leg.step_turn" = "%1$@ w %2$@, przejdź %3$@.";
+"leg.step_turn" = "%1$@ na %2$@, przejdź %3$@.";
 "leg.step_continue" = "Idź wzdłuż %1$@ przez %2$@.";
 "leg.unknown_mode" = "Nieznany środek transportu";
 "leg.mode_duration" = "%1$@: %2$@";
