@@ -16,6 +16,17 @@ private struct RentalServiceCall: Sendable {
     let formFactors: Set<VehicleFormFactor>?
 }
 
+/// Thrown when `waitForCalls` gives up, so a source that stops issuing fetches
+/// fails the test with a readable message instead of suspending until xcodebuild
+/// kills the run.
+private struct CallWaitTimeout: Error, CustomStringConvertible {
+    let expected: Int
+    let observed: Int
+    var description: String {
+        "waitForCalls timed out waiting for \(expected) fetch(es); observed \(observed)"
+    }
+}
+
 @Suite("VehicleRentalSource")
 struct VehicleRentalSourceTests {
 
@@ -25,7 +36,7 @@ struct VehicleRentalSourceTests {
         private(set) var calls: [RentalServiceCall] = []
         private var results: [Result<VehicleRentalFetchResult, Error>]
         private var delay: Duration = .zero
-        private var callCountWaiters: [(threshold: Int, continuation: CheckedContinuation<Void, Never>)] = []
+        private var callCountWaiters: [UUID: (threshold: Int, continuation: CheckedContinuation<Void, Error>)] = [:]
 
         init(results: [Result<VehicleRentalFetchResult, Error>]) {
             self.results = results
@@ -39,17 +50,41 @@ struct VehicleRentalSourceTests {
         /// fetch to be genuinely in flight wait on this rather than sleeping for a
         /// fraction of `delay`: a contended CI runner can overrun any such sleep,
         /// which makes the assertion race the scheduler instead of testing the source.
-        func waitForCalls(_ count: Int) async {
+        ///
+        /// The deadline is a backstop, not a timing assumption — it is far longer
+        /// than any healthy fetch needs, and exists only so a regression surfaces as
+        /// a failed expectation rather than a hung job.
+        func waitForCalls(_ count: Int, timeout: Duration = .seconds(10)) async throws {
             guard calls.count < count else { return }
-            await withCheckedContinuation { continuation in
-                callCountWaiters.append((count, continuation))
+
+            let id = UUID()
+            let timeoutTask = Task { [weak self] in
+                // A thrown sleep means the wait already finished and cancelled us.
+                do { try await Task.sleep(for: timeout) } catch { return }
+                await self?.timeOutWaiter(id, expected: count)
+            }
+            defer { timeoutTask.cancel() }
+
+            try await withCheckedThrowingContinuation { continuation in
+                callCountWaiters[id] = (count, continuation)
             }
         }
 
         private func notifyCallCountWaiters() {
-            let ready = callCountWaiters.filter { calls.count >= $0.threshold }
-            callCountWaiters.removeAll { calls.count >= $0.threshold }
-            for waiter in ready { waiter.continuation.resume() }
+            // Removing before resuming keeps a continuation from being resumed
+            // twice, which would trap. Iteration is over a copy, so mutating the
+            // dictionary inside the loop is safe.
+            for (id, waiter) in callCountWaiters where calls.count >= waiter.threshold {
+                callCountWaiters.removeValue(forKey: id)
+                waiter.continuation.resume()
+            }
+        }
+
+        private func timeOutWaiter(_ id: UUID, expected: Int) {
+            guard let waiter = callCountWaiters.removeValue(forKey: id) else { return }
+            waiter.continuation.resume(
+                throwing: CallWaitTimeout(expected: expected, observed: calls.count)
+            )
         }
 
         func fetchVehicleRentals(
@@ -245,7 +280,7 @@ struct VehicleRentalSourceTests {
         }
 
         await source.setViewport(Self.seattleBox)
-        await service.waitForCalls(1)  // the first fetch is now in flight and parked
+        try await service.waitForCalls(1)  // the first fetch is now in flight and parked
         await service.setDelay(.zero)  // so the superseding fetch can complete
         await source.setViewport(Self.pannedBox(0.01))
 

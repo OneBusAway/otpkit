@@ -17,6 +17,8 @@
 import Testing
 import CoreLocation
 import Foundation
+import SwiftUI
+import ViewInspector
 @testable import OTPKit
 
 /// Covers the embedded-chrome integration path: a host that supplies its own
@@ -27,59 +29,139 @@ import Foundation
 struct TripPlannerChromeTests {
 
     private func makePlanner(
-        mapProvider: MockMapProvider
+        mapProvider: MockMapProvider,
+        apiService: TestFixtures.MockAPIService = TestFixtures.MockAPIService()
     ) -> TripPlanner {
         TripPlanner(
             otpConfig: TestFixtures.makeOTPConfiguration(),
-            apiService: TestFixtures.MockAPIService(),
+            apiService: apiService,
             mapProvider: mapProvider,
             notificationCenter: NotificationCenter()
         )
     }
 
-    @Test("Both chrome modes build a view without touching planner state")
-    func chromeModesBuildIndependently() {
+    /// Puts a real trip on the planner: origin and destination annotations on the
+    /// map, and an itinerary in the view model. Without this, assertions about
+    /// clearing pass vacuously — `MapCoordinator.clearLocations()` removes both
+    /// annotation identifiers whether or not anything was ever drawn.
+    private func planTrip(on planner: TripPlanner) async {
+        let viewModel = planner.viewModel
+        viewModel.handleLocationSelection(TestHelpers.location(title: "Origin"), for: .origin)
+        viewModel.handleLocationSelection(TestHelpers.location(title: "Destination"), for: .destination)
+        viewModel.planTrip()
+        await viewModel.activePlanTask?.value
+    }
+
+    // MARK: - Framing
+
+    @Test("standalone wraps the planner in its own navigation chrome")
+    func standaloneSuppliesNavigationChrome() throws {
+        let planner = makePlanner(mapProvider: MockMapProvider())
+        let view = TripPlannerView(
+            viewModel: planner.viewModel,
+            mapCoordinator: planner.mapCoordinator,
+            chrome: .standalone
+        ) {}
+
+        let body = try view.inspect()
+        #expect(throws: Never.self) { try body.find(ViewType.NavigationStack.self) }
+    }
+
+    @Test("embedded renders the body alone, leaving navigation to the host")
+    func embeddedOmitsNavigationChrome() throws {
+        let planner = makePlanner(mapProvider: MockMapProvider())
+        let view = TripPlannerView(
+            viewModel: planner.viewModel,
+            mapCoordinator: planner.mapCoordinator,
+            chrome: .embedded
+        )
+
+        let body = try view.inspect()
+        // The distinguishing property of `.embedded`: no container of OTPKit's own,
+        // so the host's navigation title and toolbar survive.
+        #expect(throws: (any Error).self) { try body.find(ViewType.NavigationStack.self) }
+        // The body itself is still there — `.embedded` drops the chrome, not the planner.
+        #expect(throws: Never.self) { try body.find(ViewType.ScrollView.self) }
+    }
+
+    // MARK: - Prefill
+
+    @Test("Rebuilding the view in either chrome mode preserves a planned trip")
+    func chromeModesPreservePlannedTrip() async throws {
         let mapProvider = MockMapProvider()
         let planner = makePlanner(mapProvider: mapProvider)
+        await planTrip(on: planner)
+
+        let routesClearedWhilePlanning = mapProvider.clearAllRoutesCalls
 
         _ = planner.createTripPlannerView(chrome: .standalone) {}
-        _ = planner.createTripPlannerView(chrome: .embedded) {}
+        _ = planner.createTripPlannerView(chrome: .embedded)
 
-        // Chrome only decides how the body is framed. Choosing it must not clear a
-        // trip or redraw the map, because a host may rebuild the view repeatedly.
-        #expect(mapProvider.clearAllRoutesCalls == 0)
-        #expect(mapProvider.clearAllAnnotationsCalls == 0)
+        // Chrome only decides how the body is framed. A SwiftUI host rebuilds its
+        // views freely, so neither the rider's selections nor the map may be
+        // disturbed by doing so.
+        #expect(planner.viewModel.selectedOrigin != nil)
+        #expect(planner.viewModel.selectedDestination != nil)
+        #expect(mapProvider.clearAllRoutesCalls == routesClearedWhilePlanning)
+        #expect(mapProvider.removeAnnotationCalls.isEmpty)
     }
 
     @Test("Chrome defaults to standalone, preserving existing integrations")
-    func chromeDefaultsToStandalone() {
-        let mapProvider = MockMapProvider()
-        let planner = makePlanner(mapProvider: mapProvider)
+    func chromeDefaultsToStandalone() throws {
+        let planner = makePlanner(mapProvider: MockMapProvider())
 
-        // Compiles only while `chrome` has a default, which is what keeps the
-        // parameter additive for callers that predate it.
-        _ = planner.createTripPlannerView {}
+        // The pre-existing call shape: no `chrome`, close handler as a trailing
+        // closure. It must still compile and still produce standalone chrome.
+        let view = planner.createTripPlannerView {}
 
-        #expect(mapProvider.clearAllRoutesCalls == 0)
+        #expect(throws: Never.self) { try view.inspect().find(ViewType.NavigationStack.self) }
     }
 
-    @Test("reset() clears the route an embedded host cannot close out of")
-    func resetClearsMapState() {
+    // MARK: - reset()
+
+    @Test("reset() clears the trip an embedded host cannot close out of")
+    func resetClearsPlannedTrip() async throws {
         let mapProvider = MockMapProvider()
         let planner = makePlanner(mapProvider: mapProvider)
+        await planTrip(on: planner)
+
+        _ = planner.createTripPlannerView(chrome: .embedded)
+
+        // Precondition: there is genuinely something to clear.
+        #expect(planner.viewModel.selectedOrigin != nil)
+        #expect(planner.viewModel.selectedDestination != nil)
+        #expect(planner.viewModel.tripPlanResponse != nil)
+        #expect(mapProvider.addAnnotationCalls.contains { $0.identifier == "origin" })
+        #expect(mapProvider.addAnnotationCalls.contains { $0.identifier == "destination" })
+
+        planner.reset()
+
+        // View model state is the assertion that bites: the map provider removes
+        // both annotation identifiers unconditionally, so map calls alone would
+        // pass even if `reset()` did nothing.
+        #expect(planner.viewModel.selectedOrigin == nil)
+        #expect(planner.viewModel.selectedDestination == nil)
+        #expect(planner.viewModel.viaPoint == nil)
+        #expect(planner.viewModel.tripPlanResponse == nil)
+        #expect(planner.viewModel.selectedItinerary == nil)
+        #expect(mapProvider.clearAllRoutesCalls > 0)
+        #expect(mapProvider.removeAnnotationCalls.contains("origin"))
+        #expect(mapProvider.removeAnnotationCalls.contains("destination"))
+    }
+
+    @Test("reset() clears a via point set through the factory")
+    func resetClearsViaPoint() throws {
+        let planner = makePlanner(mapProvider: MockMapProvider())
 
         _ = planner.createTripPlannerView(
             viaPoint: CLLocationCoordinate2D(latitude: 47.6, longitude: -122.3),
             transportMode: .transit,
             chrome: .embedded
-        ) {}
+        )
+        #expect(planner.viewModel.viaPoint != nil)
 
         planner.reset()
 
-        // `resetTripPlanner()` routes through the map coordinator, so a cleared
-        // route and cleared locations are the observable proof it ran.
-        #expect(mapProvider.clearAllRoutesCalls > 0)
-        #expect(mapProvider.removeAnnotationCalls.contains("origin"))
-        #expect(mapProvider.removeAnnotationCalls.contains("destination"))
+        #expect(planner.viewModel.viaPoint == nil)
     }
 }

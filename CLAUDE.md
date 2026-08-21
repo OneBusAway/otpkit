@@ -45,7 +45,7 @@ Optional pre-push hooks via pre-commit (`pre-commit install --hook-type pre-push
 2. An `APIService` implementation.
 3. An `OTPMapProvider` implementation.
 
-`TripPlanner` internally wires up `MapCoordinator` and `TripPlannerViewModel`, and `createTripPlannerView(origin:destination:viaPoint:transportMode:onClose:)` returns the SwiftUI UI (`TripPlannerView`), which the demo hosts in a `PanelHostingController` bottom sheet. Cross-object events flow through `NotificationCenter` (injectable; see `Core/Notifications.swift`).
+`TripPlanner` internally wires up `MapCoordinator` and `TripPlannerViewModel`, and `createTripPlannerView(origin:destination:viaPoint:transportMode:chrome:onClose:)` returns the SwiftUI UI (`TripPlannerView`), which the demo hosts in a `PanelHostingController` bottom sheet. `chrome` (`TripPlannerChrome`) decides whether the planner supplies its own `NavigationStack`, title and close button (`.standalone`, the default) or renders the body alone inside navigation the host owns (`.embedded`); an embedded host owns dismissal, leaves `onClose` nil, and calls `TripPlanner.reset()` when it dismisses. Cross-object events flow through `NotificationCenter` (injectable; see `Core/Notifications.swift`).
 
 ### The map is inversion-of-control
 

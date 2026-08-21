@@ -8,25 +8,6 @@
 import SwiftUI
 import MapKit
 
-/// How `TripPlannerView` frames its own content.
-public enum TripPlannerChrome: Sendable {
-    /// Wrap the planner in its own `NavigationStack`, navigation title and close
-    /// button. Suits a full-screen or modally presented planner, and is the default
-    /// so existing integrations are unaffected.
-    case standalone
-
-    /// Render the planner body alone, leaving the navigation container, title and
-    /// close affordance to the host.
-    ///
-    /// For hosts that present the planner inside navigation they already own — a
-    /// sheet in their own stack, say — where `standalone` would produce two headers
-    /// and two close buttons. The host is then responsible for dismissal, and should
-    /// call `TripPlanner.reset()` as it dismisses so the next presentation starts
-    /// clean; `onClose` is never invoked in this mode, because the control that
-    /// would call it belongs to the host.
-    case embedded
-}
-
 /// Main view for planning trips, showing controls and results.
 ///
 /// Supplies its own navigation chrome by default; pass `chrome: .embedded` to render
@@ -46,29 +27,40 @@ public struct TripPlannerView: View {
     /// Whether this view supplies its own navigation container and close button.
     private let chrome: TripPlannerChrome
 
-    private let onClose: VoidBlock
+    private let onClose: VoidBlock?
 
     /// Initializes the TripPlannerView with a map provider, configuration, and optional locations
     /// This is the main entry point for using OTPKit
     /// - Parameters:
     ///   - viewModel: The TripPlannerViewModel
     ///   - mapCoordinator: The MapCoordinator object
-    ///   - origin: Optional starting location (if nil, current location will be used)
-    ///   - destination: Optional destination location
+    ///   - origin: Prefilled starting location. Nil leaves any existing selection
+    ///     alone; the view falls back to the current location only when nothing is
+    ///     selected yet.
+    ///   - destination: Prefilled destination location. Nil leaves any existing
+    ///     selection alone.
     ///   - chrome: Whether the view supplies its own navigation container, title and
     ///     close button. Defaults to `.standalone`.
-    ///   - onClose: A callback invoked when the close button is tapped. Never called
-    ///     when `chrome` is `.embedded`, which renders no close button.
+    ///   - onClose: A callback invoked when the close button is tapped. Leave it nil
+    ///     when `chrome` is `.embedded`, which renders no close button and so can
+    ///     never call it.
     public init(
         viewModel: TripPlannerViewModel,
         mapCoordinator: MapCoordinator,
         origin: Location? = nil,
         destination: Location? = nil,
         chrome: TripPlannerChrome = .standalone,
-        onClose: @escaping VoidBlock
+        onClose: VoidBlock? = nil
     ) {
-        viewModel.selectedOrigin = origin
-        viewModel.selectedDestination = destination
+        // Only a supplied value is applied. Assigning nil here would clear the
+        // rider's selection every time the host rebuilt the view, which SwiftUI
+        // hosts do freely; `TripPlanner.reset()` is the way to clear on purpose.
+        if let origin {
+            viewModel.selectedOrigin = origin
+        }
+        if let destination {
+            viewModel.selectedDestination = destination
+        }
 
         self._tripPlannerVM = StateObject(wrappedValue: viewModel)
         self._mapCoordinator = StateObject(wrappedValue: mapCoordinator)
@@ -99,8 +91,10 @@ public struct TripPlannerView: View {
     // MARK: - Layout
 
     /// The planner body, identical in both chrome modes. Navigation-scoped modifiers
-    /// stay out of here: `navigationTitle` and `toolbar` are no-ops without an
-    /// enclosing container, so they belong to the `.standalone` branch alone.
+    /// stay out of here: an `.embedded` planner sits inside the host's own
+    /// `NavigationStack`, where `navigationTitle` and `toolbar` would take effect and
+    /// overwrite the host's title and bar items. They belong to `.standalone`, which
+    /// supplies the container they are meant to configure.
     private var plannerContent: some View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVStack(spacing: 0, pinnedViews: []) {
@@ -143,7 +137,7 @@ public struct TripPlannerView: View {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
                                 tripPlannerVM.resetTripPlanner()
-                                self.onClose()
+                                self.onClose?()
                             }
                         }
                     }
