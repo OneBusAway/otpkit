@@ -258,26 +258,23 @@ struct VehicleRentalSourceTests {
         #expect(calls.first?.boundingBox == Self.seattleBox)
     }
 
-    @Test("A superseded in-flight fetch is cancelled, not reported as a failure")
+    // `waitForCalls` carries its own deadline, but the stream reads below do not:
+    // the time limit is what keeps a source that stops emitting from hanging the job.
+    @Test("A superseded in-flight fetch is cancelled, not reported as a failure", .timeLimit(.minutes(1)))
     func supersededFetchIsCancelled() async throws {
         let first = [Self.makeRental(id: "stale")]
         let second = [Self.makeRental(id: "fresh")]
         let service = ScriptedRentalService(results: [
             .success(VehicleRentalFetchResult(rentals: first)),
-            .success(VehicleRentalFetchResult(rentals: second))
+            .success(VehicleRentalFetchResult(rentals: second)),
+            .failure(ScriptedError())
         ])
         // Long enough that the first fetch can only ever leave this sleep by being
         // cancelled, so the test never depends on how fast the runner is.
         await service.setDelay(.seconds(30))
         let source = Self.makeSource(service: service)
         var snapshots = source.snapshots.makeAsyncIterator()
-
-        let failures = Box()
-        let failureWatcher = Task {
-            for await failure in source.fetchFailures {
-                await failures.append(failure.message)
-            }
-        }
+        var failures = source.fetchFailures.makeAsyncIterator()
 
         await source.setViewport(Self.seattleBox)
         try await service.waitForCalls(1)  // the first fetch is now in flight and parked
@@ -288,9 +285,14 @@ struct VehicleRentalSourceTests {
         #expect(snapshot.added.map(\.id) == ["fresh"])
         #expect(await service.calls.count == 2)
 
-        try await Task.sleep(for: .milliseconds(50))
-        #expect(await failures.values.isEmpty)
-        failureWatcher.cancel()
+        // Waiting on a real failure is what proves the cancellation stayed silent, and
+        // it beats sleeping and asserting the stream is still empty: that only says
+        // nothing arrived *yet*. A third fetch fails for real, and the first failure to
+        // come out of the stream has to be that one — had the superseded fetch reported
+        // itself, it would already be buffered ahead of this and surface here instead.
+        await source.setViewport(Self.pannedBox(0.02))
+        let failure = try #require(await failures.next())
+        #expect(failure.underlyingError is ScriptedError)
     }
 
     @Test("A nil viewport clears everything immediately")
@@ -454,12 +456,5 @@ struct VehicleRentalSourceTests {
         await source.setViewport(Self.seattleBox)
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.added.map(\.id) == ["a"])
-    }
-
-    // MARK: - Helpers
-
-    private actor Box {
-        private(set) var values: [String] = []
-        func append(_ value: String) { values.append(value) }
     }
 }
