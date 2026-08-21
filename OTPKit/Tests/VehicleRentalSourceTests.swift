@@ -25,6 +25,7 @@ struct VehicleRentalSourceTests {
         private(set) var calls: [RentalServiceCall] = []
         private var results: [Result<VehicleRentalFetchResult, Error>]
         private var delay: Duration = .zero
+        private var callCountWaiters: [(threshold: Int, continuation: CheckedContinuation<Void, Never>)] = []
 
         init(results: [Result<VehicleRentalFetchResult, Error>]) {
             self.results = results
@@ -34,11 +35,29 @@ struct VehicleRentalSourceTests {
             self.delay = delay
         }
 
+        /// Suspends until at least `count` fetches have started. Tests that need a
+        /// fetch to be genuinely in flight wait on this rather than sleeping for a
+        /// fraction of `delay`: a contended CI runner can overrun any such sleep,
+        /// which makes the assertion race the scheduler instead of testing the source.
+        func waitForCalls(_ count: Int) async {
+            guard calls.count < count else { return }
+            await withCheckedContinuation { continuation in
+                callCountWaiters.append((count, continuation))
+            }
+        }
+
+        private func notifyCallCountWaiters() {
+            let ready = callCountWaiters.filter { calls.count >= $0.threshold }
+            callCountWaiters.removeAll { calls.count >= $0.threshold }
+            for waiter in ready { waiter.continuation.resume() }
+        }
+
         func fetchVehicleRentals(
             in boundingBox: VehicleRentalBoundingBox,
             formFactors: Set<VehicleFormFactor>?
         ) async throws -> VehicleRentalFetchResult {
             calls.append(RentalServiceCall(boundingBox: boundingBox, formFactors: formFactors))
+            notifyCallCountWaiters()
 
             // Claim the scripted result at call time, before any delay: a cancelled
             // call must still consume its result so later calls stay aligned with
@@ -212,7 +231,9 @@ struct VehicleRentalSourceTests {
             .success(VehicleRentalFetchResult(rentals: first)),
             .success(VehicleRentalFetchResult(rentals: second))
         ])
-        await service.setDelay(.milliseconds(200))
+        // Long enough that the first fetch can only ever leave this sleep by being
+        // cancelled, so the test never depends on how fast the runner is.
+        await service.setDelay(.seconds(30))
         let source = Self.makeSource(service: service)
         var snapshots = source.snapshots.makeAsyncIterator()
 
@@ -224,7 +245,8 @@ struct VehicleRentalSourceTests {
         }
 
         await source.setViewport(Self.seattleBox)
-        try await Task.sleep(for: .milliseconds(50))  // let the first fetch get in flight
+        await service.waitForCalls(1)  // the first fetch is now in flight and parked
+        await service.setDelay(.zero)  // so the superseding fetch can complete
         await source.setViewport(Self.pannedBox(0.01))
 
         let snapshot = try #require(await snapshots.next())
