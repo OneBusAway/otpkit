@@ -134,10 +134,15 @@ public struct TripPlannerView: View {
                     .navigationTitle(OTPLoc("trip_planner.title", comment: "Title of the trip planning screen"))
                     .toolbarTitleDisplayMode(.inlineLarge)
                     .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
-                                tripPlannerVM.resetTripPlanner()
-                                self.onClose?()
+                        // Only when there is somewhere to go. `onClose` is optional for
+                        // `.embedded`, and a close button that resets the trip and then
+                        // does nothing would leave the rider staring at a blank planner.
+                        if let onClose {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
+                                    tripPlannerVM.resetTripPlanner()
+                                    onClose()
+                                }
                             }
                         }
                     }
