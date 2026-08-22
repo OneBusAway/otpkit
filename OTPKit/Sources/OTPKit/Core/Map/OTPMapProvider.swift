@@ -13,6 +13,16 @@ import SwiftUI
 /// Protocol defining the interface for map operations that OTPKit requires.
 /// Implementers of this protocol can provide their own map view (MKMapView, custom map, etc.)
 /// while allowing OTPKit to control map content and interactions.
+///
+/// Main-actor isolated because every call arrives from a main-actor context — from
+/// `MapCoordinator` inside the package, and from host UI code outside it — and because
+/// conformances drive UI. Conforming types inherit this isolation, so the members of a
+/// custom provider are main-actor isolated too.
+///
+/// Stating that here rather than leaving it implicit lets hosts building in the Swift 6
+/// language mode with main-actor default isolation conform directly, instead of opting
+/// the conformance out of isolation and hopping back in every method body.
+@MainActor
 public protocol OTPMapProvider: AnyObject {
 
     // MARK: - Route Display

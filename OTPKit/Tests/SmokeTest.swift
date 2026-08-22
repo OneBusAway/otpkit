@@ -27,6 +27,9 @@ func testFixturesCreatePlace() {
     #expect(place.lon == -122.0)
 }
 
+// `MockMapProvider` conforms to `OTPMapProvider`, which is `@MainActor`, so the
+// mock picks up that isolation and the test has to run there too.
+@MainActor
 @Test("MockMapProvider - tracks addRoute calls")
 func mockMapProviderTracksRouteCalls() {
     let mockMap = MockMapProvider()

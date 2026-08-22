@@ -125,7 +125,7 @@ Both are Swift actors conforming to `APIService`; you can also implement `APISer
 
 - **Transport modes:** pass `enabledTransportModes` to `OTPConfiguration` (defaults to transit, walk, bike, car). Rental modes like `.bikeRental` are opt-in and need an OTP 2.x server with rental data.
 - **Theme:** pass an `OTPThemeConfiguration` to adjust colors.
-- **Map behavior:** implement `OTPMapProvider` to control exactly how routes and stops render on your map.
+- **Map behavior:** implement `OTPMapProvider` to control exactly how routes and stops render on your map. The protocol is `@MainActor`, so conformances inherit main-actor isolation — write your provider as main-actor isolated rather than opting the conformance out.
 
 ### Localization
 
