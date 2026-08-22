@@ -16,6 +16,17 @@ private struct RentalServiceCall: Sendable {
     let formFactors: Set<VehicleFormFactor>?
 }
 
+/// Thrown when `waitForCalls` gives up, so a source that stops issuing fetches
+/// fails the test with a readable message instead of suspending until xcodebuild
+/// kills the run.
+private struct CallWaitTimeout: Error, CustomStringConvertible {
+    let expected: Int
+    let observed: Int
+    var description: String {
+        "waitForCalls timed out waiting for \(expected) fetch(es); observed \(observed)"
+    }
+}
+
 @Suite("VehicleRentalSource")
 struct VehicleRentalSourceTests {
 
@@ -25,6 +36,7 @@ struct VehicleRentalSourceTests {
         private(set) var calls: [RentalServiceCall] = []
         private var results: [Result<VehicleRentalFetchResult, Error>]
         private var delay: Duration = .zero
+        private var callCountWaiters: [UUID: (threshold: Int, continuation: CheckedContinuation<Void, Error>)] = [:]
 
         init(results: [Result<VehicleRentalFetchResult, Error>]) {
             self.results = results
@@ -34,11 +46,53 @@ struct VehicleRentalSourceTests {
             self.delay = delay
         }
 
+        /// Suspends until at least `count` fetches have started. Tests that need a
+        /// fetch to be genuinely in flight wait on this rather than sleeping for a
+        /// fraction of `delay`: a contended CI runner can overrun any such sleep,
+        /// which makes the assertion race the scheduler instead of testing the source.
+        ///
+        /// The deadline is a backstop, not a timing assumption — it is far longer
+        /// than any healthy fetch needs, and exists only so a regression surfaces as
+        /// a failed expectation rather than a hung job.
+        func waitForCalls(_ count: Int, timeout: Duration = .seconds(10)) async throws {
+            guard calls.count < count else { return }
+
+            let id = UUID()
+            let timeoutTask = Task { [weak self] in
+                // A thrown sleep means the wait already finished and cancelled us.
+                do { try await Task.sleep(for: timeout) } catch { return }
+                await self?.timeOutWaiter(id, expected: count)
+            }
+            defer { timeoutTask.cancel() }
+
+            try await withCheckedThrowingContinuation { continuation in
+                callCountWaiters[id] = (count, continuation)
+            }
+        }
+
+        private func notifyCallCountWaiters() {
+            // Removing before resuming keeps a continuation from being resumed
+            // twice, which would trap. Iteration is over a copy, so mutating the
+            // dictionary inside the loop is safe.
+            for (id, waiter) in callCountWaiters where calls.count >= waiter.threshold {
+                callCountWaiters.removeValue(forKey: id)
+                waiter.continuation.resume()
+            }
+        }
+
+        private func timeOutWaiter(_ id: UUID, expected: Int) {
+            guard let waiter = callCountWaiters.removeValue(forKey: id) else { return }
+            waiter.continuation.resume(
+                throwing: CallWaitTimeout(expected: expected, observed: calls.count)
+            )
+        }
+
         func fetchVehicleRentals(
             in boundingBox: VehicleRentalBoundingBox,
             formFactors: Set<VehicleFormFactor>?
         ) async throws -> VehicleRentalFetchResult {
             calls.append(RentalServiceCall(boundingBox: boundingBox, formFactors: formFactors))
+            notifyCallCountWaiters()
 
             // Claim the scripted result at call time, before any delay: a cancelled
             // call must still consume its result so later calls stay aligned with
@@ -204,36 +258,41 @@ struct VehicleRentalSourceTests {
         #expect(calls.first?.boundingBox == Self.seattleBox)
     }
 
-    @Test("A superseded in-flight fetch is cancelled, not reported as a failure")
+    // `waitForCalls` carries its own deadline, but the stream reads below do not:
+    // the time limit is what keeps a source that stops emitting from hanging the job.
+    @Test("A superseded in-flight fetch is cancelled, not reported as a failure", .timeLimit(.minutes(1)))
     func supersededFetchIsCancelled() async throws {
         let first = [Self.makeRental(id: "stale")]
         let second = [Self.makeRental(id: "fresh")]
         let service = ScriptedRentalService(results: [
             .success(VehicleRentalFetchResult(rentals: first)),
-            .success(VehicleRentalFetchResult(rentals: second))
+            .success(VehicleRentalFetchResult(rentals: second)),
+            .failure(ScriptedError())
         ])
-        await service.setDelay(.milliseconds(200))
+        // Long enough that the first fetch can only ever leave this sleep by being
+        // cancelled, so the test never depends on how fast the runner is.
+        await service.setDelay(.seconds(30))
         let source = Self.makeSource(service: service)
         var snapshots = source.snapshots.makeAsyncIterator()
-
-        let failures = Box()
-        let failureWatcher = Task {
-            for await failure in source.fetchFailures {
-                await failures.append(failure.message)
-            }
-        }
+        var failures = source.fetchFailures.makeAsyncIterator()
 
         await source.setViewport(Self.seattleBox)
-        try await Task.sleep(for: .milliseconds(50))  // let the first fetch get in flight
+        try await service.waitForCalls(1)  // the first fetch is now in flight and parked
+        await service.setDelay(.zero)  // so the superseding fetch can complete
         await source.setViewport(Self.pannedBox(0.01))
 
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.added.map(\.id) == ["fresh"])
         #expect(await service.calls.count == 2)
 
-        try await Task.sleep(for: .milliseconds(50))
-        #expect(await failures.values.isEmpty)
-        failureWatcher.cancel()
+        // Waiting on a real failure is what proves the cancellation stayed silent, and
+        // it beats sleeping and asserting the stream is still empty: that only says
+        // nothing arrived *yet*. A third fetch fails for real, and the first failure to
+        // come out of the stream has to be that one — had the superseded fetch reported
+        // itself, it would already be buffered ahead of this and surface here instead.
+        await source.setViewport(Self.pannedBox(0.02))
+        let failure = try #require(await failures.next())
+        #expect(failure.underlyingError is ScriptedError)
     }
 
     @Test("A nil viewport clears everything immediately")
@@ -397,12 +456,5 @@ struct VehicleRentalSourceTests {
         await source.setViewport(Self.seattleBox)
         let snapshot = try #require(await snapshots.next())
         #expect(snapshot.added.map(\.id) == ["a"])
-    }
-
-    // MARK: - Helpers
-
-    private actor Box {
-        private(set) var values: [String] = []
-        func append(_ value: String) { values.append(value) }
     }
 }
