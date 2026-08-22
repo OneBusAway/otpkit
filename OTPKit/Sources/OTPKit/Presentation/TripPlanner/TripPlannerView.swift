@@ -9,7 +9,9 @@ import SwiftUI
 import MapKit
 
 /// Main view for planning trips, showing controls and results.
-/// Full-screen interface with navigation bar, top controls, and inline results.
+///
+/// Supplies its own navigation chrome by default; pass `chrome: .embedded` to render
+/// the body alone inside a host's own navigation.
 public struct TripPlannerView: View {
     /// ViewModel managing trip planning state and logic
     @StateObject private var tripPlannerVM: TripPlannerViewModel
@@ -22,71 +24,52 @@ public struct TripPlannerView: View {
 
     @State private var directionSheetDetent: PresentationDetent = DirectionsSheetView.tipDetent
 
-    private let onClose: VoidBlock
+    /// Whether this view supplies its own navigation container and close button.
+    private let chrome: TripPlannerChrome
+
+    private let onClose: VoidBlock?
 
     /// Initializes the TripPlannerView with a map provider, configuration, and optional locations
     /// This is the main entry point for using OTPKit
     /// - Parameters:
     ///   - viewModel: The TripPlannerViewModel
     ///   - mapCoordinator: The MapCoordinator object
-    ///   - origin: Optional starting location (if nil, current location will be used)
-    ///   - destination: Optional destination location
-    ///   - onClose: A callback invoked when the close button is tapped.
+    ///   - origin: Prefilled starting location. Nil leaves any existing selection
+    ///     alone; the view falls back to the current location only when nothing is
+    ///     selected yet.
+    ///   - destination: Prefilled destination location. Nil leaves any existing
+    ///     selection alone.
+    ///   - chrome: Whether the view supplies its own navigation container, title and
+    ///     close button. Defaults to `.standalone`.
+    ///   - onClose: A callback invoked when the close button is tapped. Leave it nil
+    ///     when `chrome` is `.embedded`, which renders no close button and so can
+    ///     never call it.
     public init(
         viewModel: TripPlannerViewModel,
         mapCoordinator: MapCoordinator,
         origin: Location? = nil,
         destination: Location? = nil,
-        onClose: @escaping VoidBlock
+        chrome: TripPlannerChrome = .standalone,
+        onClose: VoidBlock? = nil
     ) {
-        viewModel.selectedOrigin = origin
-        viewModel.selectedDestination = destination
+        // Only a supplied value is applied. Assigning nil here would clear the
+        // rider's selection every time the host rebuilt the view, which SwiftUI
+        // hosts do freely; `TripPlanner.reset()` is the way to clear on purpose.
+        if let origin {
+            viewModel.selectedOrigin = origin
+        }
+        if let destination {
+            viewModel.selectedDestination = destination
+        }
 
         self._tripPlannerVM = StateObject(wrappedValue: viewModel)
         self._mapCoordinator = StateObject(wrappedValue: mapCoordinator)
+        self.chrome = chrome
         self.onClose = onClose
     }
 
     public var body: some View {
-        NavigationStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 0, pinnedViews: []) {
-                    // Top controls for location selection and trip planning
-                    TopControlsOverlay(selectedMode: $selectedMode)
-                        .padding(.bottom, 24)
-
-                    // Trip results (shown inline when available)
-                    if !tripPlannerVM.itineraries.isEmpty {
-                        tripResultsSection
-                            .transition(.asymmetric(
-                                insertion: .move(edge: .top).combined(with: .opacity),
-                                removal: .opacity
-                            ))
-                    }
-
-                    // Bottom spacer for proper scrolling and safe area
-                    Spacer(minLength: 120)
-                }
-                .padding(.top, 8)
-            }
-            .scrollDismissesKeyboard(.interactively)
-            .navigationTitle(OTPLoc("trip_planner.title", comment: "Title of the trip planning screen"))
-            .toolbarTitleDisplayMode(.inlineLarge)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
-                        tripPlannerVM.resetTripPlanner()
-                        self.onClose()
-                    }
-                }
-            }
-            .overlay {
-                // Loading overlay
-                if tripPlannerVM.isLoading {
-                    LoadingOverlay()
-                }
-            }
-        }
+        framedContent
         .task {
             // Auto-set current location as origin if no origin is provided
             if tripPlannerVM.selectedOrigin == nil {
@@ -103,6 +86,70 @@ public struct TripPlannerView: View {
         )
         .sheet(item: $tripPlannerVM.activeSheet, content: sheetView)
         .environmentObject(tripPlannerVM)
+    }
+
+    // MARK: - Layout
+
+    /// The planner body, identical in both chrome modes. Navigation-scoped modifiers
+    /// stay out of here: an `.embedded` planner sits inside the host's own
+    /// `NavigationStack`, where `navigationTitle` and `toolbar` would take effect and
+    /// overwrite the host's title and bar items. They belong to `.standalone`, which
+    /// supplies the container they are meant to configure.
+    private var plannerContent: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack(spacing: 0, pinnedViews: []) {
+                // Top controls for location selection and trip planning
+                TopControlsOverlay(selectedMode: $selectedMode)
+                    .padding(.bottom, 24)
+
+                // Trip results (shown inline when available)
+                if !tripPlannerVM.itineraries.isEmpty {
+                    tripResultsSection
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .opacity
+                        ))
+                }
+
+                // Bottom spacer for proper scrolling and safe area
+                Spacer(minLength: 120)
+            }
+            .padding(.top, 8)
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .overlay {
+            // Loading overlay
+            if tripPlannerVM.isLoading {
+                LoadingOverlay()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var framedContent: some View {
+        switch chrome {
+        case .standalone:
+            NavigationStack {
+                plannerContent
+                    .navigationTitle(OTPLoc("trip_planner.title", comment: "Title of the trip planning screen"))
+                    .toolbarTitleDisplayMode(.inlineLarge)
+                    .toolbar {
+                        // Only when there is somewhere to go. `onClose` is optional for
+                        // `.embedded`, and a close button that resets the trip and then
+                        // does nothing would leave the rider staring at a blank planner.
+                        if let onClose {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button(OTPLoc("common.close", comment: "Close button"), systemImage: "xmark") {
+                                    tripPlannerVM.resetTripPlanner()
+                                    onClose()
+                                }
+                            }
+                        }
+                    }
+            }
+        case .embedded:
+            plannerContent
+        }
     }
 
     // MARK: - Trip Results Section

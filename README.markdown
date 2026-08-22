@@ -99,6 +99,19 @@ class ViewController: UIViewController {
 
 `createTripPlannerView` returns a plain SwiftUI view, so you're not locked into the bottom-sheet presentation — host it however your app's navigation works. It also accepts optional prefill parameters (`origin`, `destination`, `viaPoint`, `transportMode`) for deep-linking straight into a planned trip.
 
+If you're presenting the planner inside navigation you already own, pass `chrome: .embedded` so OTPKit doesn't add a second header and close button:
+
+```swift
+.sheet(isPresented: $showingPlanner, onDismiss: { planner.reset() }) {
+    NavigationStack {
+        planner.createTripPlannerView(chrome: .embedded)
+            .navigationTitle("Plan a trip")
+    }
+}
+```
+
+An embedded planner has no close button of its own, so dismissal is yours to handle: leave `onClose` nil and call `TripPlanner.reset()` at your dismissal point, or the next presentation reopens on the previous trip.
+
 ### Which API service do I use?
 
 | Your OTP server | Use | Notes |
