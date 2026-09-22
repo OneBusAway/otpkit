@@ -100,6 +100,8 @@ public class TripPlannerViewModel: ObservableObject {
     /// NotificationCenter object for sending notifications.
     private let notificationCenter: NotificationCenter
 
+    private let currentLocationProvider: @MainActor () async -> Location?
+
     /// Flag to prevent saving during initialization
     private var isInitializationComplete = false
 
@@ -108,12 +110,16 @@ public class TripPlannerViewModel: ObservableObject {
         config: OTPConfiguration,
         apiService: APIService,
         mapCoordinator: MapCoordinator,
-        notificationCenter: NotificationCenter = NotificationCenter.default
+        notificationCenter: NotificationCenter = NotificationCenter.default,
+        currentLocationProvider: @escaping @MainActor () async -> Location? = {
+            await LocationManager.shared.getCurrentLocation()
+        }
     ) {
         self.config = config
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
         self.notificationCenter = notificationCenter
+        self.currentLocationProvider = currentLocationProvider
 
         // Set the first *available* transport mode as default, fallback to transit.
         // (Static helper because computed properties aren't usable until init completes.)
@@ -132,10 +138,12 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Sets the current location as the origin for trip planning
     func setCurrentLocationAsOrigin() async {
-        if let currentLocation = await LocationManager.shared.getCurrentLocation() {
-            selectedOrigin = currentLocation
-            mapCoordinator.setOrigin(currentLocation)
-        }
+        // Checked after the lookup, which can take seconds: an origin the rider
+        // picked in the meantime wins.
+        guard let currentLocation = await currentLocationProvider(),
+              selectedOrigin == nil else { return }
+        selectedOrigin = currentLocation
+        mapCoordinator.setOrigin(currentLocation)
     }
 
     // MARK: - Computed Properties
@@ -390,6 +398,12 @@ public class TripPlannerViewModel: ObservableObject {
     }
 
     // MARK: - Reset Functionality
+
+    func endTrip() async {
+        resetTripPlanner()
+        notificationCenter.post(name: Notifications.tripEnded, object: nil)
+        await setCurrentLocationAsOrigin()
+    }
 
     /// Reset all trip planner state to initial values
     /// Clears locations, itineraries, and returns to clean state
