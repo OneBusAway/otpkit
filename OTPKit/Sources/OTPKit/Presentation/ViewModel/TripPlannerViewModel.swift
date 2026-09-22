@@ -102,6 +102,8 @@ public class TripPlannerViewModel: ObservableObject {
 
     private let currentLocationProvider: @MainActor () async -> Location?
 
+    private var resetCount = 0
+
     /// Flag to prevent saving during initialization
     private var isInitializationComplete = false
 
@@ -138,9 +140,11 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Sets the current location as the origin for trip planning
     func setCurrentLocationAsOrigin() async {
+        let resetCountAtStart = resetCount
         // Checked after the lookup, which can take seconds: an origin the rider
-        // picked in the meantime wins.
+        // picked, or a reset, in the meantime wins.
         guard let currentLocation = await currentLocationProvider(),
+              resetCount == resetCountAtStart,
               selectedOrigin == nil else { return }
         selectedOrigin = currentLocation
         mapCoordinator.setOrigin(currentLocation)
@@ -399,15 +403,11 @@ public class TripPlannerViewModel: ObservableObject {
 
     // MARK: - Reset Functionality
 
-    func endTrip() async {
-        resetTripPlanner()
-        notificationCenter.post(name: Notifications.tripEnded, object: nil)
-        await setCurrentLocationAsOrigin()
-    }
-
     /// Reset all trip planner state to initial values
     /// Clears locations, itineraries, and returns to clean state
     func resetTripPlanner() {
+        resetCount += 1
+
         // Clear location selections
         selectedOrigin = nil
         selectedDestination = nil
@@ -450,6 +450,16 @@ public class TripPlannerViewModel: ObservableObject {
 
         // Dismiss any active sheets
         activeSheet = nil
+    }
+}
+
+// MARK: - Ending a Trip
+
+extension TripPlannerViewModel {
+    func endTrip() async {
+        resetTripPlanner()
+        notificationCenter.post(name: Notifications.tripEnded, object: nil)
+        await setCurrentLocationAsOrigin()
     }
 }
 // swiftlint:enable file_length

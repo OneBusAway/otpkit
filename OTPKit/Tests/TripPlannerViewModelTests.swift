@@ -726,6 +726,20 @@ struct TripPlannerViewModelTests {
         #expect(viewModel?.selectedOrigin?.title == "Chosen")
     }
 
+    @Test("endTrip sets no origin when the planner is reset during the location lookup")
+    func endTripIgnoresLookupAfterReset() async {
+        var viewModel: TripPlannerViewModel?
+        viewModel = createViewModel(currentLocationProvider: {
+            // The rider closes the planner before the location fix arrives.
+            viewModel?.resetTripPlanner()
+            return TestHelpers.location(title: "Here")
+        })
+
+        await viewModel?.endTrip()
+
+        #expect(viewModel?.selectedOrigin == nil)
+    }
+
     @Test("endTrip posts tripEnded")
     func endTripPostsTripEnded() async {
         let notificationCenter = NotificationCenter()
