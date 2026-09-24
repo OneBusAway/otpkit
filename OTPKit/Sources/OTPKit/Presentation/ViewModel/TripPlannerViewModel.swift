@@ -100,10 +100,6 @@ public class TripPlannerViewModel: ObservableObject {
     /// NotificationCenter object for sending notifications.
     private let notificationCenter: NotificationCenter
 
-    private let currentLocationProvider: @MainActor () async -> Location?
-
-    private var resetCount = 0
-
     /// Flag to prevent saving during initialization
     private var isInitializationComplete = false
 
@@ -112,16 +108,12 @@ public class TripPlannerViewModel: ObservableObject {
         config: OTPConfiguration,
         apiService: APIService,
         mapCoordinator: MapCoordinator,
-        notificationCenter: NotificationCenter = NotificationCenter.default,
-        currentLocationProvider: @escaping @MainActor () async -> Location? = {
-            await LocationManager.shared.getCurrentLocation()
-        }
+        notificationCenter: NotificationCenter = NotificationCenter.default
     ) {
         self.config = config
         self.apiService = apiService
         self.mapCoordinator = mapCoordinator
         self.notificationCenter = notificationCenter
-        self.currentLocationProvider = currentLocationProvider
 
         // Set the first *available* transport mode as default, fallback to transit.
         // (Static helper because computed properties aren't usable until init completes.)
@@ -140,11 +132,9 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Sets the current location as the origin for trip planning
     func setCurrentLocationAsOrigin() async {
-        let resetCountAtStart = resetCount
         // Checked after the lookup, which can take seconds: an origin the rider
-        // picked, or a reset, in the meantime wins.
-        guard let currentLocation = await currentLocationProvider(),
-              resetCount == resetCountAtStart,
+        // picked in the meantime wins.
+        guard let currentLocation = await LocationManager.shared.getCurrentLocation(),
               selectedOrigin == nil else { return }
         selectedOrigin = currentLocation
         mapCoordinator.setOrigin(currentLocation)
@@ -406,8 +396,6 @@ public class TripPlannerViewModel: ObservableObject {
     /// Reset all trip planner state to initial values
     /// Clears locations, itineraries, and returns to clean state
     func resetTripPlanner() {
-        resetCount += 1
-
         // Clear location selections
         selectedOrigin = nil
         selectedDestination = nil
@@ -458,7 +446,6 @@ public class TripPlannerViewModel: ObservableObject {
 extension TripPlannerViewModel {
     func endTrip() async {
         resetTripPlanner()
-        notificationCenter.post(name: Notifications.tripEnded, object: nil)
         await setCurrentLocationAsOrigin()
     }
 }

@@ -42,9 +42,7 @@ struct TripPlannerViewModelTests {
 
     func createViewModel(
         enabledModes: [TransportMode] = [.transit, .walk, .bike],
-        mockAPIService: TestFixtures.MockAPIService? = nil,
-        notificationCenter: NotificationCenter = NotificationCenter(),
-        currentLocationProvider: @escaping @MainActor () async -> Location? = { nil }
+        mockAPIService: TestFixtures.MockAPIService? = nil
     ) -> TripPlannerViewModel {
         // Clear UserDefaults before each test to ensure clean state
         let defaults = UserDefaults.standard
@@ -61,9 +59,7 @@ struct TripPlannerViewModelTests {
         return TripPlannerViewModel(
             config: config,
             apiService: apiService,
-            mapCoordinator: mapCoordinator,
-            notificationCenter: notificationCenter,
-            currentLocationProvider: currentLocationProvider
+            mapCoordinator: mapCoordinator
         )
     }
 
@@ -681,77 +677,5 @@ struct TripPlannerViewModelTests {
         #expect(viewModel.departureTime == nil)
         #expect(viewModel.departureDate == nil)
         #expect(viewModel.activeSheet == nil)
-    }
-
-    // MARK: - End Trip Tests
-
-    @Test("endTrip restores current location as origin so another trip can be planned")
-    func endTripRestoresCurrentLocationOrigin() async {
-        let here = TestHelpers.location(title: "Here")
-        let viewModel = createViewModel(currentLocationProvider: { here })
-        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
-        viewModel.selectedDestination = TestHelpers.location(title: "Destination")
-
-        await viewModel.endTrip()
-
-        #expect(viewModel.selectedOrigin?.title == "Here")
-        #expect(viewModel.selectedDestination == nil)
-
-        viewModel.selectedDestination = TestHelpers.location(title: "New Destination")
-        #expect(viewModel.canPlanTrip == true)
-    }
-
-    @Test("endTrip leaves origin nil when no location is available")
-    func endTripWithoutLocation() async {
-        let viewModel = createViewModel(currentLocationProvider: { nil })
-        viewModel.selectedOrigin = TestHelpers.location(title: "Origin")
-
-        await viewModel.endTrip()
-
-        #expect(viewModel.selectedOrigin == nil)
-    }
-
-    @Test("endTrip keeps an origin chosen while the location lookup was in flight")
-    func endTripKeepsOriginChosenDuringLookup() async {
-        let chosen = TestHelpers.location(title: "Chosen")
-        var viewModel: TripPlannerViewModel?
-        viewModel = createViewModel(currentLocationProvider: {
-            // The rider picks an origin before the location fix arrives.
-            viewModel?.selectedOrigin = chosen
-            return TestHelpers.location(title: "Here")
-        })
-
-        await viewModel?.endTrip()
-
-        #expect(viewModel?.selectedOrigin?.title == "Chosen")
-    }
-
-    @Test("endTrip sets no origin when the planner is reset during the location lookup")
-    func endTripIgnoresLookupAfterReset() async {
-        var viewModel: TripPlannerViewModel?
-        viewModel = createViewModel(currentLocationProvider: {
-            // The rider closes the planner before the location fix arrives.
-            viewModel?.resetTripPlanner()
-            return TestHelpers.location(title: "Here")
-        })
-
-        await viewModel?.endTrip()
-
-        #expect(viewModel?.selectedOrigin == nil)
-    }
-
-    @Test("endTrip posts tripEnded")
-    func endTripPostsTripEnded() async {
-        let notificationCenter = NotificationCenter()
-        let viewModel = createViewModel(notificationCenter: notificationCenter)
-        var postCount = 0
-        let observer = notificationCenter.addObserver(
-            forName: Notifications.tripEnded, object: nil, queue: nil
-        ) { _ in postCount += 1 }
-        defer { notificationCenter.removeObserver(observer) }
-
-        await viewModel.endTrip()
-
-        #expect(postCount == 1)
     }
 }
