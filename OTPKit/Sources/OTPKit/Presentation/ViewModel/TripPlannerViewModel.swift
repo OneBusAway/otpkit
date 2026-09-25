@@ -132,10 +132,12 @@ public class TripPlannerViewModel: ObservableObject {
 
     /// Sets the current location as the origin for trip planning
     func setCurrentLocationAsOrigin() async {
-        if let currentLocation = await LocationManager.shared.getCurrentLocation() {
-            selectedOrigin = currentLocation
-            mapCoordinator.setOrigin(currentLocation)
-        }
+        // Checked after the lookup, which can take seconds: an origin the rider
+        // picked in the meantime wins.
+        guard let currentLocation = await LocationManager.shared.getCurrentLocation(),
+              selectedOrigin == nil else { return }
+        selectedOrigin = currentLocation
+        mapCoordinator.setOrigin(currentLocation)
     }
 
     // MARK: - Computed Properties
@@ -436,6 +438,15 @@ public class TripPlannerViewModel: ObservableObject {
 
         // Dismiss any active sheets
         activeSheet = nil
+    }
+}
+
+// MARK: - Ending a Trip
+
+extension TripPlannerViewModel {
+    func endTrip() async {
+        resetTripPlanner()
+        await setCurrentLocationAsOrigin()
     }
 }
 // swiftlint:enable file_length

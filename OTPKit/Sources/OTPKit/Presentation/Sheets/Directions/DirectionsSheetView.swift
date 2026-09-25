@@ -74,7 +74,7 @@ struct DirectionsSheetView: View {
             titleVisibility: .visible
         ) {
             Button(OTPLoc("directions.end_trip", comment: "Confirms ending the active trip"), role: .destructive) {
-                tripPlannerVM.resetTripPlanner()
+                Task { await tripPlannerVM.endTrip() }
             }
             Button(OTPLoc("directions.end_trip_cancel", comment: "Declines ending the active trip"), role: .cancel) {}
         } message: {
