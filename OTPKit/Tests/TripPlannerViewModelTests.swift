@@ -42,7 +42,8 @@ struct TripPlannerViewModelTests {
 
     func createViewModel(
         enabledModes: [TransportMode] = [.transit, .walk, .bike],
-        mockAPIService: TestFixtures.MockAPIService? = nil
+        mockAPIService: TestFixtures.MockAPIService? = nil,
+        notificationCenter: NotificationCenter = .default
     ) -> TripPlannerViewModel {
         // Clear UserDefaults before each test to ensure clean state
         let defaults = UserDefaults.standard
@@ -59,8 +60,38 @@ struct TripPlannerViewModelTests {
         return TripPlannerViewModel(
             config: config,
             apiService: apiService,
-            mapCoordinator: mapCoordinator
+            mapCoordinator: mapCoordinator,
+            notificationCenter: notificationCenter
         )
+    }
+
+    static let emptyPlanOrigin = TestHelpers.location(title: "Origin", lat: 37.78, lon: -122.41)
+    static let emptyPlanDestination = TestHelpers.location(title: "Destination", lat: 37.80, lon: -122.40)
+
+    /// Runs `planTrip()` against `response` on a private notification center and returns the
+    /// reasons of every `tripPlanEmpty` notification it posted.
+    func tripPlanEmptyReasons(for response: OTPResponse) async -> [String] {
+        await tripPlanEmptyNotifications(for: response).map { $0.userInfo?[Notifications.tripPlanEmptyReasonKey] as? String ?? "" }
+    }
+
+    /// Runs `planTrip()` against `response` on a private notification center and returns every
+    /// `tripPlanEmpty` notification it posted.
+    func tripPlanEmptyNotifications(for response: OTPResponse) async -> [Notification] {
+        let mockAPIService = TestFixtures.MockAPIService()
+        mockAPIService.mockResponse = response
+        let center = NotificationCenter()
+        var notifications: [Notification] = []
+        let token = center.addObserver(forName: Notifications.tripPlanEmpty, object: nil, queue: nil) { note in
+            notifications.append(note)
+        }
+        defer { center.removeObserver(token) }
+
+        let viewModel = createViewModel(mockAPIService: mockAPIService, notificationCenter: center)
+        viewModel.selectedOrigin = Self.emptyPlanOrigin
+        viewModel.selectedDestination = Self.emptyPlanDestination
+        viewModel.planTrip()
+        await waitForLoadingComplete(viewModel)
+        return notifications
     }
 
     // MARK: - Initialization Tests
@@ -268,6 +299,37 @@ struct TripPlannerViewModelTests {
         #expect(viewModel.tripPlanResponse != nil)
         #expect(viewModel.showingError == false)
         #expect(mockAPIService.fetchPlanCallCount == 1)
+    }
+
+    @Test("planTrip posts tripPlanEmpty when the plan has no itineraries")
+    func planTripPostsEmptyForEmptyPlan() async throws {
+        let reasons = await tripPlanEmptyReasons(for: TestHelpers.response(with: []))
+        #expect(reasons == ["empty"])
+    }
+
+    @Test("planTrip posts tripPlanEmpty when the server reports an error")
+    func planTripPostsEmptyForServerError() async throws {
+        let errorResponse = try JSONDecoder().decode(OTPResponse.self, from: Fixtures.loadData(file: "otp_response_error.json"))
+        let reasons = await tripPlanEmptyReasons(for: errorResponse)
+        #expect(reasons == ["error"])
+    }
+
+    @Test("tripPlanEmpty carries the planned origin and destination")
+    func tripPlanEmptyCarriesEndpoints() async throws {
+        let notifications = await tripPlanEmptyNotifications(for: TestHelpers.response(with: []))
+        let userInfo = try #require(notifications.first?.userInfo)
+        let origin = Self.emptyPlanOrigin
+        let destination = Self.emptyPlanDestination
+        #expect(userInfo[Notifications.tripPlanEmptyOriginLatitudeKey] as? Double == origin.latitude)
+        #expect(userInfo[Notifications.tripPlanEmptyOriginLongitudeKey] as? Double == origin.longitude)
+        #expect(userInfo[Notifications.tripPlanEmptyDestinationLatitudeKey] as? Double == destination.latitude)
+        #expect(userInfo[Notifications.tripPlanEmptyDestinationLongitudeKey] as? Double == destination.longitude)
+    }
+
+    @Test("planTrip does not post tripPlanEmpty when itineraries are returned")
+    func planTripDoesNotPostEmptyForItineraries() async throws {
+        let reasons = await tripPlanEmptyReasons(for: TestHelpers.response(with: [TestHelpers.itinerary()]))
+        #expect(reasons.isEmpty)
     }
 
     @Test("planTrip sets loading state correctly")

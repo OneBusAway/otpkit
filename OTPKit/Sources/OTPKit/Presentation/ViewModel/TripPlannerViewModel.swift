@@ -98,7 +98,7 @@ public class TripPlannerViewModel: ObservableObject {
     private let mapCoordinator: MapCoordinator
 
     /// NotificationCenter object for sending notifications.
-    private let notificationCenter: NotificationCenter
+    let notificationCenter: NotificationCenter
 
     /// Flag to prevent saving during initialization
     private var isInitializationComplete = false
@@ -290,10 +290,14 @@ public class TripPlannerViewModel: ObservableObject {
 
             tripPlanResponse = nil
             showError(error.messageCode.displayMessage)
+            postTripPlanEmpty(reason: "error")
         } else {
             tripPlanResponse = response
             HapticManager.shared.success()
             notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
+            if itineraries.isEmpty {
+                postTripPlanEmpty(reason: "empty")
+            }
         }
     }
 
