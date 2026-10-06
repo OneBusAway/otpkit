@@ -12,6 +12,23 @@ import Foundation
 /// and/or `TripPlannerViewModel`.
 public struct Notifications {
     public static let itinerariesUpdated = NSNotification.Name("org.onebusaway.otpkit.itinerariesUpdated")
+    /// Posted when a plan request completes without a usable itinerary: the server answered with an
+    /// error (for example `PATH_NOT_FOUND`) or with an empty plan. `userInfo[tripPlanEmptyReasonKey]`
+    /// is `tripPlanEmptyReasonError` or `tripPlanEmptyReasonEmpty`, and the origin and destination of
+    /// that request travel under the coordinate keys as `Double`s. Hosts use this to offer alternatives
+    /// such as on-demand services.
+    public static let tripPlanEmpty = NSNotification.Name("org.onebusaway.otpkit.tripPlanEmpty")
+    /// The `userInfo` key under which `tripPlanEmpty` carries its reason.
+    public static let tripPlanEmptyReasonKey = "reason"
+    /// `tripPlanEmpty` reason: the server answered with an error such as `PATH_NOT_FOUND`.
+    public static let tripPlanEmptyReasonError = "error"
+    /// `tripPlanEmpty` reason: the server answered with a plan that has no itineraries.
+    public static let tripPlanEmptyReasonEmpty = "empty"
+    /// `userInfo` keys under which `tripPlanEmpty` carries the planned endpoints, as `Double`s.
+    public static let tripPlanEmptyOriginLatitudeKey = "originLatitude"
+    public static let tripPlanEmptyOriginLongitudeKey = "originLongitude"
+    public static let tripPlanEmptyDestinationLatitudeKey = "destinationLatitude"
+    public static let tripPlanEmptyDestinationLongitudeKey = "destinationLongitude"
     public static let itineraryPreviewStarted = NSNotification.Name("org.onebusaway.otpkit.itineraryPreviewStarted")
     public static let itineraryPreviewEnded = NSNotification.Name("org.onebusaway.otpkit.itineraryPreviewEnded")
     public static let tripStarted = NSNotification.Name("org.onebusaway.otpkit.tripStarted")
