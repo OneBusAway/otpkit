@@ -236,14 +236,19 @@ public class TripPlannerViewModel: ObservableObject {
         errorMessage = nil
         showingError = false
 
+        // A newer plan supersedes any request still in flight; its late response must not
+        // overwrite this one's results or notify the host about stale endpoints.
+        activePlanTask?.cancel()
         activePlanTask = Task {
             do {
                 let response = try await apiService.fetchPlan(request)
                 await MainActor.run {
-                    self.handlePlanResponse(response)
+                    guard !Task.isCancelled else { return }
+                    self.handlePlanResponse(response, for: request)
                 }
             } catch {
                 await MainActor.run {
+                    guard !Task.isCancelled else { return }
                     self.handleError(error)
                 }
             }
@@ -281,7 +286,7 @@ public class TripPlannerViewModel: ObservableObject {
         }
     }
 
-    private func handlePlanResponse(_ response: OTPResponse) {
+    private func handlePlanResponse(_ response: OTPResponse, for request: TripPlanRequest) {
         isLoading = false
 
         if let error = response.error {
@@ -290,13 +295,15 @@ public class TripPlannerViewModel: ObservableObject {
 
             tripPlanResponse = nil
             showError(error.messageCode.displayMessage)
-            postTripPlanEmpty(reason: "error")
+            postTripPlanEmpty(reason: Notifications.tripPlanEmptyReasonError, for: request)
         } else {
+            // Classify from the response itself: an itinerariesUpdated observer may change state.
+            let isEmpty = response.plan?.itineraries.isEmpty ?? true
             tripPlanResponse = response
             HapticManager.shared.success()
             notificationCenter.post(name: Notifications.itinerariesUpdated, object: nil)
-            if itineraries.isEmpty {
-                postTripPlanEmpty(reason: "empty")
+            if isEmpty {
+                postTripPlanEmpty(reason: Notifications.tripPlanEmptyReasonEmpty, for: request)
             }
         }
     }
@@ -400,6 +407,10 @@ public class TripPlannerViewModel: ObservableObject {
     /// Reset all trip planner state to initial values
     /// Clears locations, itineraries, and returns to clean state
     func resetTripPlanner() {
+        // Drop any plan still in flight so its response can't repopulate the cleared state.
+        activePlanTask?.cancel()
+        activePlanTask = nil
+
         // Clear location selections
         selectedOrigin = nil
         selectedDestination = nil

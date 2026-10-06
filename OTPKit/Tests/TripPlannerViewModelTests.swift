@@ -75,8 +75,12 @@ struct TripPlannerViewModelTests {
     }
 
     /// Runs `planTrip()` against `response` on a private notification center and returns every
-    /// `tripPlanEmpty` notification it posted.
-    func tripPlanEmptyNotifications(for response: OTPResponse) async -> [Notification] {
+    /// `tripPlanEmpty` notification it posted. `whileInFlight` runs after the request starts and
+    /// before its response is handled.
+    func tripPlanEmptyNotifications(
+        for response: OTPResponse,
+        whileInFlight: (TripPlannerViewModel) -> Void = { _ in }
+    ) async -> [Notification] {
         let mockAPIService = TestFixtures.MockAPIService()
         mockAPIService.mockResponse = response
         let center = NotificationCenter()
@@ -90,7 +94,9 @@ struct TripPlannerViewModelTests {
         viewModel.selectedOrigin = Self.emptyPlanOrigin
         viewModel.selectedDestination = Self.emptyPlanDestination
         viewModel.planTrip()
-        await waitForLoadingComplete(viewModel)
+        let inFlight = viewModel.activePlanTask
+        whileInFlight(viewModel)
+        await inFlight?.value
         return notifications
     }
 
@@ -304,14 +310,14 @@ struct TripPlannerViewModelTests {
     @Test("planTrip posts tripPlanEmpty when the plan has no itineraries")
     func planTripPostsEmptyForEmptyPlan() async throws {
         let reasons = await tripPlanEmptyReasons(for: TestHelpers.response(with: []))
-        #expect(reasons == ["empty"])
+        #expect(reasons == [Notifications.tripPlanEmptyReasonEmpty])
     }
 
     @Test("planTrip posts tripPlanEmpty when the server reports an error")
     func planTripPostsEmptyForServerError() async throws {
         let errorResponse = try JSONDecoder().decode(OTPResponse.self, from: Fixtures.loadData(file: "otp_response_error.json"))
         let reasons = await tripPlanEmptyReasons(for: errorResponse)
-        #expect(reasons == ["error"])
+        #expect(reasons == [Notifications.tripPlanEmptyReasonError])
     }
 
     @Test("tripPlanEmpty carries the planned origin and destination")
@@ -324,6 +330,24 @@ struct TripPlannerViewModelTests {
         #expect(userInfo[Notifications.tripPlanEmptyOriginLongitudeKey] as? Double == origin.longitude)
         #expect(userInfo[Notifications.tripPlanEmptyDestinationLatitudeKey] as? Double == destination.latitude)
         #expect(userInfo[Notifications.tripPlanEmptyDestinationLongitudeKey] as? Double == destination.longitude)
+    }
+
+    @Test("tripPlanEmpty carries the requested endpoints even if the selection changed in flight")
+    func tripPlanEmptyUsesRequestEndpoints() async throws {
+        let notifications = await tripPlanEmptyNotifications(for: TestHelpers.response(with: [])) { viewModel in
+            viewModel.selectedOrigin = TestHelpers.location(title: "Elsewhere", lat: 47.6, lon: -122.3)
+        }
+        let userInfo = try #require(notifications.first?.userInfo)
+        #expect(userInfo[Notifications.tripPlanEmptyOriginLatitudeKey] as? Double == Self.emptyPlanOrigin.latitude)
+        #expect(userInfo[Notifications.tripPlanEmptyOriginLongitudeKey] as? Double == Self.emptyPlanOrigin.longitude)
+    }
+
+    @Test("a plan cancelled by reset does not post tripPlanEmpty")
+    func resetCancelsInFlightPlan() async throws {
+        let notifications = await tripPlanEmptyNotifications(for: TestHelpers.response(with: [])) { viewModel in
+            viewModel.resetTripPlanner()
+        }
+        #expect(notifications.isEmpty)
     }
 
     @Test("planTrip does not post tripPlanEmpty when itineraries are returned")

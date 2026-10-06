@@ -7,21 +7,22 @@
 //  LICENSE file in the root directory of this source tree.
 //
 
+import CoreLocation
 import Foundation
+
 // MARK: - Empty plan notification
 
 extension TripPlannerViewModel {
-    /// Tells the host that the plan came back with nothing usable, with the endpoints it was planned between.
-    func postTripPlanEmpty(reason: String) {
-        var userInfo: [String: Any] = [Notifications.tripPlanEmptyReasonKey: reason]
-        if let origin = selectedOrigin {
-            userInfo[Notifications.tripPlanEmptyOriginLatitudeKey] = origin.latitude
-            userInfo[Notifications.tripPlanEmptyOriginLongitudeKey] = origin.longitude
-        }
-        if let destination = selectedDestination {
-            userInfo[Notifications.tripPlanEmptyDestinationLatitudeKey] = destination.latitude
-            userInfo[Notifications.tripPlanEmptyDestinationLongitudeKey] = destination.longitude
-        }
+    /// Tells the host that the plan came back with nothing usable, with the endpoints of the request
+    /// that produced it (not the current selection, which the rider may have changed since).
+    func postTripPlanEmpty(reason: String, for request: TripPlanRequest) {
+        let userInfo: [String: Any] = [
+            Notifications.tripPlanEmptyReasonKey: reason,
+            Notifications.tripPlanEmptyOriginLatitudeKey: request.origin.latitude,
+            Notifications.tripPlanEmptyOriginLongitudeKey: request.origin.longitude,
+            Notifications.tripPlanEmptyDestinationLatitudeKey: request.destination.latitude,
+            Notifications.tripPlanEmptyDestinationLongitudeKey: request.destination.longitude
+        ]
         notificationCenter.post(name: Notifications.tripPlanEmpty, object: nil, userInfo: userInfo)
     }
 }
